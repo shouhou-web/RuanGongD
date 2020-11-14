@@ -1,0 +1,81 @@
+@import "./normalize.css";
+@import "./common.css";
+
+/*:root 伪类获取根元素html，定义变量*/
+:root {
+  --image-background: linear-gradient(90deg, #a1c4fd, #c2e9fb);
+  --color-text: #212121;
+  /* --color-main: #a1c4fd; */
+  --color-main: rgb(168, 191, 207);
+  --color-high-text: #ff5777;
+  --color-tint: #ff8198;
+  --color-background-main: #e2ebf0;
+  --color-background-sub: #e6f3ff;
+  --color-background-third: #f5faff;
+  --box-shadow: 0 2px 12px rgba(225, 225, 225, 0.5);
+  --font-size: 14px;
+  --line-height: 1.5;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  overflow-y: hidden;
+}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  user-select: none; /* 禁止用户鼠标在页面上选中文字/图片等 */
+  -webkit-tap-highlight-color: transparent; /* webkit是苹果浏览器引擎，tap点击，highlight背景高亮，color颜色，颜色用数值调节 */
+  background: var(--color-background-main);
+  color: var(--color-text);
+}
+
+input {
+  outline: none;
+  overflow: visible;
+}
+
+a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.clear-fix::after {
+  clear: both;
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  visibility: hidden;
+}
+
+.clear-fix {
+  zoom: 1;
+}
+
+.arrow-right {
+  border-top: 1px solid #999;
+  border-left: 1px solid #999;
+  width: 9px;
+  height: 9px;
+  background-color: transparent;
+  transform: rotate(135deg);
+  display: inline-block;
+  margin-left: 0.1rem;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
