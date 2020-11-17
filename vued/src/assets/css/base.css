@@ -5,8 +5,7 @@
 :root {
   --image-background: linear-gradient(90deg, #a1c4fd, #c2e9fb);
   --color-text: #212121;
-  /* --color-main: #a1c4fd; */
-  --color-main: rgb(168, 191, 207);
+  --color-main: #a1c4fd;
   --color-high-text: #ff5777;
   --color-tint: #ff8198;
   --color-background-main: #e2ebf0;

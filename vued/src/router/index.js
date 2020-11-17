@@ -3,9 +3,30 @@ import VueRouter from "vue-router";
 import store from "../store/index";
 
 // 示例组件
-const Test = () => import("views/Test.vue")
+const Test = () => import("views/Test.vue");
+
+// 论坛相关组件
+const Forum = () => import("views/Forum/Forum.vue");
+
 // 首页相关组件
 const Home = () => import("views/Home/Home.vue");
+
+// 文献相关组件
+const Literature = () => import("views/Literature/Literature.vue");
+const Manage = () => import("views/Literature/Manage.vue");
+const Classify = () => import("views/Literature/Classify.vue");
+const Search = () => import("views/Literature/Search.vue");
+const Publication = () => import("views/Literature/Publication.vue");
+
+// 消息相关组件
+const Message = () => import("views/Message/Message.vue");
+
+// 个人相关组件
+const Profile = () => import("views/Profile/Profile.vue");
+const Intro = () => import("views/Profile/Intro.vue");
+
+// 管理员相关组件
+const Root = () => import("views/Root/Root.vue");
 
 //1.安装插件
 Vue.use(VueRouter);
