@@ -39,6 +39,11 @@ const routes = [
     component: Test
     // redirect重定向
     // redirect: "/home/workSpace"
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: Profile
   }
 ];
 
