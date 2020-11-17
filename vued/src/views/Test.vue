@@ -40,7 +40,7 @@ export default {
       this.$refs.hover.showHover({
         title: "hhh",
         submitBtn: "芜湖",
-        cancelBtn: "起飞",
+        cancelBtn: "起飞"
       });
     },
     submit(e) {
@@ -48,9 +48,9 @@ export default {
     },
     cancel() {
       console.log("起飞");
-    },
+    }
   },
-  components: {},
+  components: {}
 };
 </script>
 

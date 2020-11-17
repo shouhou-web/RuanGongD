@@ -1,6 +1,8 @@
 <template>
   <!-- 社交系统主界面 -->
-  <div id="forum"></div>
+  <div id="forum">
+    <div></div>
+  </div>
 </template>
 
 <script>

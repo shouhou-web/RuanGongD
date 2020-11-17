@@ -19,14 +19,14 @@ import FullscrrenLoading from "components/common/fullscreen-loading/FullscreenLo
 export default {
   name: "App",
   components: {
-    FullscrrenLoading,
+    FullscrrenLoading
   },
   created() {
     if (sessionStorage.getItem("user") != null) {
       // 获取本地临时存储
       this.$store.commit("login", JSON.parse(sessionStorage.getItem("user")));
     }
-  },
+  }
 };
 </script>
 

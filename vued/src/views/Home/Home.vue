@@ -1,4 +1,5 @@
 <template>
+  <!-- Home -->
   <div id="home"></div>
 </template>
 
@@ -9,7 +10,7 @@ export default {
     return {};
   },
   methods: {},
-  components: {},
+  components: {}
 };
 </script>
 
