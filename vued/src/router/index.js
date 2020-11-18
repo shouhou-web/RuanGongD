@@ -6,7 +6,8 @@ import store from "../store/index";
 const Test = () => import("views/Test.vue");
 
 // 论坛相关组件
-const Forum = () => import("views/Forum/Forum.vue");
+const ForumHome = () => import("views/Forum/ForumHome.vue");
+const ForumSector = () => import("views/Forum/ForumSector.vue");
 
 // 首页相关组件
 const Home = () => import("views/Home/Home.vue");
