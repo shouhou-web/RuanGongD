@@ -1,13 +1,5 @@
 <template>
   <div id="app">
-    <m-header>
-      <template v-slot:left>
-        导航栏左部
-      </template>
-      <template v-slot:right>
-        导航栏右部
-      </template>
-    </m-header>
     <router-view></router-view>
     <!-- 全局加载组件 -->
     <fullscrren-loading class="loading"></fullscrren-loading>
