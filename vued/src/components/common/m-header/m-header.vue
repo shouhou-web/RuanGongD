@@ -22,7 +22,11 @@ export default {
       default: "var(--color-main)",
     },
   },
-  methods: {},
+  methods: {
+    created() {
+      console.log(this.bgColor)
+    }
+  },
 };
 </script>
 <style scoped>
