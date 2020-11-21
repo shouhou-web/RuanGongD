@@ -78,20 +78,36 @@ export default {
       isOpen: false,
       typeList: [
         {
-          key: "ZT",
+          key: "SU",
           value: "主题"
         },
         {
-          key: "GJC",
+          key: "KY",
           value: "关键词"
         },
         {
-          key: "YZ",
+          key: "TI",
+          value: "篇名"
+        },
+        {
+          key: "AU",
+          value: "作者"
+        },
+        {
+          key: "FI",
           value: "第一作者"
         },
         {
-          key: "EZ",
-          value: "第二作者"
+          key: "AF",
+          value: "作者单位"
+        },
+        {
+          key: "LY",
+          value: "文献来源"
+        },
+        {
+          key: "RF",
+          value: "参考文献"
         }
       ],
       logicalList: [

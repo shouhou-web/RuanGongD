@@ -30,7 +30,7 @@
             <!-- 输入框 -->
             <input v-model="item.value" type="text" maxlength="120" />
           </div>
-          <span class="search__sub">
+          <span class="search__sub" @click="search">
             DDL一下
           </span>
         </div>
@@ -73,6 +73,7 @@
 </template>
 
 <script>
+import { advance } from "network/search.js";
 export default {
   name: "Home",
   data() {
@@ -81,12 +82,12 @@ export default {
       searchList: [
         {
           logical: "NULL",
-          type: "ZT",
+          type: "SU",
           value: ""
         },
         {
           logical: "AND",
-          type: "ZT",
+          type: "KY",
           value: ""
         }
       ]
@@ -107,6 +108,16 @@ export default {
     },
     deleteItem(index) {
       this.searchList.splice(index, 1);
+    },
+    search() {
+      console.log(this.searchList);
+      advance(this.searchList, "1900", "2020")
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   },
   components: {}
