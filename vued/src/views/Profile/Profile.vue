@@ -18,7 +18,6 @@
               {{ retUserState() }}
             </div>
           </div>
-
         </div>
       </div>
       <div id="publish" class="publish-style">
@@ -35,7 +34,9 @@
         <div :class="{ 'sliceRight': this.chosenModle == true, 'sliceLeft': this.chosenModle == false}"></div>
       </div>
     </div>
-    <div id="profile-fourthlayer" class="fourthlayer-outterstyle">
+    <div id="profile-fourthlayer"
+         class="fourthlayer-outterstyle"
+         :class="{ 'bg-whenLeft': this.chosenModle == false, 'bg-whenRight': this.chosenModle == true}">
       <div id="leftpart" class="leftpart-style"></div>
       <div id="rightpart" class="rightpart-style"></div>
     </div>
@@ -85,26 +86,36 @@ export default {
   height: 150px;
   display: flex;
   flex-direction: row;
+  transition: all 300ms linear;
 }
 
 .fourthlayer-outterstyle {
   width: 100vw;
-  height: auto;
+  height: calc(100vh - 235px);
   display: flex;
   flex-direction: row;
+  transition: all 300ms linear;
+}
+
+.bg-whenRight {
+  background-color: #d3e2ba;
+}
+
+.bg-whenLeft {
+  background-color: #cadeee;
 }
 
 .leftpart-style {
   margin: 2%;
   width: 66%;
-  height: 300px;
+  height: auto;
   background-color: white;
 }
 
 .rightpart-style {
   margin: 2%;
   width: 26%;
-  height: 200px;
+  height: auto;
   background-color: white;
 }
 
@@ -165,8 +176,8 @@ export default {
   /*background-color: rgba(233, 233, 233, 0.651);*/
   margin-left: 10px;
   width: auto;
-  max-height: 50px;
-  color: #8eacc5;
+  min-width: max-content;
+  color: #999999;
 }
 
 .userdegree-style {
@@ -177,9 +188,7 @@ export default {
   font-size: 1vh;
   font-family: Console;
   /*min-height: 40px;*/
-  max-width: 90px;
-  min-width: 50px;
-  max-height: 50px;
+  min-width: max-content;
 }
 
 .userinfo-style {
@@ -209,10 +218,11 @@ export default {
   display: flex;
   flex-direction: column;
   width: 100vw;
-  height: 40px;
+  height: 30px;
   /*border: 1px solid red;*/
   background-color: white;
   justify-content: center;
+  transition: all 300ms linear;
 }
 
 .secondlayer-tagstyle {

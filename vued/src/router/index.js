@@ -44,6 +44,11 @@ const routes = [
     path: "/profile",
     name: "Profile",
     component: Profile
+  },
+  {
+    path: "/intro",
+    name: "Intro",
+    component: Intro
   }
 ];
 
