@@ -41,6 +41,21 @@ const routes = [
     component: Test
     // redirect重定向
     // redirect: "/home/workSpace"
+  },
+  {
+    path: "/forumHome",
+    name: "ForumHome",
+    component: ForumHome
+  },
+  {
+    path: "/forumSector",
+    name: "ForumSector",
+    component: ForumSector
+  },
+  {
+    path: "/userPosts",
+    name: "UserPost",
+    component: UserPosts
   }
 ];
 
