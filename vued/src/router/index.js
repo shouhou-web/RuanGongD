@@ -36,7 +36,7 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Test
+    component: Literature
     // redirect重定向
     // redirect: "/home/workSpace"
   }
