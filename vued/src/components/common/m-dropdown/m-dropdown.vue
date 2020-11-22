@@ -1,30 +1,51 @@
 <template>
-  <div>
-    <div @mouseenter="show" class="m-nav--show">
+  <!-- 悬浮下拉导航栏 -->
+  <div v-if="isHover" class="m-hover">
+    <div @mouseenter="showHover" class="m-hover--show">
       <slot name="show"></slot>
     </div>
     <!-- 隐藏层 -->
     <div
       class="m-nav--hide"
       :style="{
-        'margin-left': mlAll,
+        'margin-left': mlAll
       }"
     >
       <div
         class="m-nav__triangle"
         :style="{
           'margin-left': mlTri,
-          'border-bottom-color': color,
+          'border-bottom-color': color
         }"
       ></div>
       <div
         class="m-nav__main"
         :style="{
-          'background-color': color,
+          'background-color': color
         }"
       >
         <slot name="hide"></slot>
       </div>
+    </div>
+  </div>
+  <!-- 点击下拉导航栏 -->
+  <div v-else-if="isClick" @mouseleave="closeClick" class="m-click">
+    <div @click="showClick" class="m-click--show">
+      <span>{{ curValue }}</span>
+      <span class="tri"></span>
+    </div>
+    <!-- 隐藏层 -->
+    <div v-if="isOpen" class="m-click--hide">
+      <ul>
+        <li
+          @click="chooseThis(index)"
+          v-for="(item, index) in clickList"
+          :key="index"
+          :class="{ onShow: item.key == cur }"
+        >
+          {{ item.value }}
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -35,31 +56,108 @@ export default {
   props: {
     color: {
       type: String,
-      default: "#fff",
+      default: "#fff"
     },
     position: {
       type: String,
-      default: "middle",
+      default: "middle"
     },
+    type: {
+      type: String,
+      default: "hover"
+    },
+    cur: {
+      type: String,
+      default: "ZT"
+    }
   },
   data() {
     return {
       mlAll: 0,
       mlTri: 0,
+      isOpen: false,
+      typeList: [
+        {
+          key: "SU",
+          value: "主题"
+        },
+        {
+          key: "KY",
+          value: "关键词"
+        },
+        {
+          key: "TI",
+          value: "篇名"
+        },
+        {
+          key: "AU",
+          value: "作者"
+        },
+        {
+          key: "FI",
+          value: "第一作者"
+        },
+        {
+          key: "AF",
+          value: "作者单位"
+        },
+        {
+          key: "LY",
+          value: "文献来源"
+        },
+        {
+          key: "RF",
+          value: "参考文献"
+        }
+      ],
+      logicalList: [
+        {
+          key: "AND",
+          value: "与"
+        },
+        {
+          key: "OR",
+          value: "或"
+        },
+        {
+          key: "NOT",
+          value: "非"
+        }
+      ],
+      clickList: []
     };
   },
   computed: {
-    // hide() {
-    //   console.log("hide");
-    //   return document.getElementById("hide");
-    // },
-    // show() {
-    //   console.log("show");
-    //   return document.getElementById("show");
-    // }
+    isHover() {
+      return this.type == "hover";
+    },
+    isClick() {
+      if (this.type == "click-type") this.clickList = this.typeList;
+      else if (this.type == "click-logical") this.clickList = this.logicalList;
+      return this.type == "click-type" || this.type == "click-logical";
+    },
+    curValue() {
+      return this.clickList.filter(n => {
+        return n.key == this.cur;
+      })[0].value;
+    }
   },
   methods: {
-    show() {
+    showClick() {
+      this.isOpen = true;
+    },
+    closeClick() {
+      this.isOpen = false;
+    },
+    showHover(e) {
+      // console.log(e)
+      // let nav = document.getElementById('m-nav');
+      // console.log(nav);
+      // let hide = nav.removeChild(nav.childNodes[1]);
+      // console.log(hide)
+      // console.log(document.getElementsByTagName('body'))
+      // document.body.appendChild(hide)
+
       let showList = document.getElementsByClassName("m-nav--show");
       let hideList = document.getElementsByClassName("m-nav--hide");
       let show = 0,
@@ -72,7 +170,7 @@ export default {
           break;
         }
       }
-      console.log(this.position);
+      // console.log(this.position);
       if (this.position == "middle") {
         this.mlAll = -(hide / 2 - show / 2) + "px";
       } else if (this.position == "right") {
@@ -82,14 +180,80 @@ export default {
         this.mlAll = -((hide * 2) / 3 - show / 2) + "px";
         this.mlTri = -show / 2 + hide / 2 + "px";
       }
-      console.log(this.mlTri, this.mlAll);
+      // console.log(this.mlTri, this.mlAll);
     },
-  },
+    chooseThis(index) {
+      this.isOpen = false;
+      this.$emit("change-dropdown", this.clickList[index].key);
+    }
+  }
 };
 </script>
 
 <style>
-.m-nav--show {
+.m-click {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+  position: relative;
+  width: 82px;
+}
+
+.m-click--show {
+  cursor: pointer;
+  position: relative;
+}
+
+.m-click--show .tri {
+  margin-top: 3px;
+  margin-left: 3px;
+  border: 4px solid #888;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+}
+
+.m-click--hide {
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  line-height: 30px;
+  margin-top: 20px;
+  width: 80px;
+  z-index: 10;
+}
+
+.m-click--hide ul {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+
+.m-click--show,
+.m-click--hide li {
+  white-space: nowrap;
+}
+
+.m-click--hide li {
+  background-color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  padding: 0 5px;
+  width: 100%;
+}
+
+.m-click--hide li:hover,
+.m-click--hide .onShow {
+  background-color: #6698fd;
+  color: #fff;
+  transition: 0.2s;
+}
+
+.m-click--show {
   align-items: center;
   display: flex;
   width: fit-content;
