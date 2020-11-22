@@ -62,12 +62,14 @@
 </template>
 
 <script>
+import { getAllSectors } from "network/forum.js";
 export default {
   name: "ForumHome",
   data() {
     return {
       editStr: "由 ",
-      sectors: [
+      sectors: []
+      /*sectors: [
         {
           sectorId: "01",
           sectorName: "测试分区1",
@@ -90,7 +92,7 @@ export default {
           postName: "测试动态",
           editTime: "MM月dd日 HH:mm"
         }
-      ]
+      ]*/
     };
   },
   methods: {
@@ -110,17 +112,38 @@ export default {
     },
     goToUser(id) {
       //todo: 跳转到用户
+      this.$router.push({
+        path: "/",
+        query: {}
+      });
     },
     goToSector(id) {
       //todo: 跳转到分区
+      this.$router.push({
+        path: "/",
+        query: {}
+      });
     },
     goToPost(id) {
       //todo: 跳转到动态
+      this.$router.push({
+        path: "/",
+        query: {}
+      });
     }
   },
   components: {},
   created() {
     //todo: 获取分区信息
+    getAllSectors()
+      .then(res => {
+        console.log("getAllSectors");
+        console.log(res);
+        this.sectors = res.data.sectors;
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 };
 </script>
@@ -129,7 +152,7 @@ export default {
 #forumHome {
   margin: 20px auto;
   width: 100vw;
-  background-image: url();
+  /*background-image: url();*/
 }
 .sectorCard {
   margin: 1px auto;
