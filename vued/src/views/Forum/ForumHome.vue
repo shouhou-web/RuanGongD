@@ -1,22 +1,27 @@
 <template>
-  <!-- 论坛主界面 -->
+  <!-- 讨论区主界面 -->
   <div id="forumHome">
     <ul>
       <li v-for="(item, index) in sectors" :key="index">
-        <v-card class="sectorCard" max-width="800" elevation="1" tile>
+        <v-card class="sectorCard" elevation="1" tile>
+          <!--预留首部
+          <v-footer padless v-if="index == 0">
+            <div></div>
+          </v-footer>
+          -->
           <el-row>
-            <el-col :span="10">
+            <el-col :span="12">
               <v-card-title>
                 <div class="sectorName" @click="goToSector(item.sectorId)">
                   {{ item.sectorName }}
                 </div>
               </v-card-title>
             </el-col>
-            <el-col :span="3">
+            <el-col :span="2">
               <v-card-subtitle>
                 <div class="postNum">
                   <div class="sectorPostNum">
-                    {{ _postNum(item.postNum) }}
+                    {{ handleNum(item.postNum) }}
                   </div>
                   <div class="sectorPostNumStr">
                     条 动态
@@ -26,7 +31,7 @@
             </el-col>
             <el-col :span="2">
               <v-card-text>
-                <v-avatar tile>
+                <v-avatar>
                   <img
                     class="avatar"
                     alt="Avatar"
@@ -36,11 +41,11 @@
                 </v-avatar>
               </v-card-text>
             </el-col>
-            <el-col :span="9">
+            <el-col :span="8">
               <v-card-text>
                 <div class="post">
                   <div class="title" @click="goToPost(item.postId)">
-                    {{ _postTitle(item.postName) }}
+                    {{ handleTitle(item.postName) }}
                   </div>
                   <div class="info">
                     <span>
@@ -49,7 +54,7 @@
                     <span class="userName" @click="goToUser(item.userId)">
                       {{ item.userName }}</span
                     >
-                    <span> {{ _postInfo(item.editTime) }}</span>
+                    <span> {{ handleInfo(item.editTime) }}</span>
                   </div>
                 </div>
               </v-card-text>
@@ -68,8 +73,8 @@ export default {
   data() {
     return {
       editStr: "由 ",
-      sectors: []
-      /*sectors: [
+      //sectors: []
+      sectors: [
         {
           sectorId: "01",
           sectorName: "测试分区1",
@@ -92,44 +97,52 @@ export default {
           postName: "测试动态",
           editTime: "MM月dd日 HH:mm"
         }
-      ]*/
+      ]
     };
   },
   methods: {
-    _postNum(str) {
-      var num = parseInt(str);
+    handleNum(str) {
+      let num = parseInt(str);
       if (num >= 1000000) return (num / 1000000).toFixed(1) + "m";
       if (num >= 1000) return (num / 1000).toFixed(1) + "k";
       return num.toString();
     },
-    _postTitle(str) {
-      var maxLength = 17;
+    handleTitle(str) {
+      let maxLength = 17;
       if (str.length > maxLength) return str.substring(0, maxLength - 2) + "..";
       return str;
     },
-    _postInfo(time) {
+    handleInfo(time) {
       return " , 于 " + time;
     },
     goToUser(id) {
       //todo: 跳转到用户
+      /*
       this.$router.push({
         path: "/",
         query: {}
       });
+      */
     },
     goToSector(id) {
       //todo: 跳转到分区
       this.$router.push({
-        path: "/",
-        query: {}
+        path: "/forumSector",
+        query: {
+          sectorId: id,
+          page: "0",
+          sort: "0"
+        }
       });
     },
     goToPost(id) {
       //todo: 跳转到动态
+      /*
       this.$router.push({
         path: "/",
         query: {}
       });
+      */
     }
   },
   components: {},
@@ -172,15 +185,20 @@ export default {
   transform: translateY(-45%);
 }
 .sectorPostNum {
-  text-align: right;
+  display: flex;
+  justify-content: flex-end;
   font-size: 20px;
 }
 .sectorPostNumStr {
-  text-align: right;
+  display: flex;
+  justify-content: flex-end;
   font-size: 10px;
   color: grey;
 }
 .avatar {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-45%);
   cursor: pointer;
 }
 .post {
