@@ -1,19 +1,30 @@
 <template>
   <!-- 一个用户的所有动态 -->
   <div id="UserPosts">
-    <div></div>
+    <div class="tempdisplay">
+      <create-post></create-post>
+      <!-- 先暂时放这 -->
+    </div>
   </div>
 </template>
 
 <script>
+import CreatePost from "./childCpn/create-post.vue";
 export default {
   name: "UserPosts",
   data() {
     return {};
   },
   methods: {},
-  components: {},
+  components: { CreatePost },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.tempdisplay {
+  display: flex;
+  justify-content: center;
+  margin: 40px auto;
+  width: 80%;
+}
+</style>
