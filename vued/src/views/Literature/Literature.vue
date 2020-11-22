@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import LTest from '@/views/Literature/Literature.vue';
-import Lefthead from './Literature-cpn/lefthead.vue';
+import LTest from './childCpn/test.vue';
+import Lefthead from './childCpn/lefthead.vue';
 
 export default {
   name: "Literature",
@@ -24,7 +24,6 @@ export default {
   },
   methods: {
   },
-  components: {},
 };
 </script>
 

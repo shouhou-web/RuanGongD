@@ -47,7 +47,7 @@
 
 <script>
 export default {
-  name: "LWtest",
+  name: "LTest",
   props:{
     isCollapse:{
         type:Boolean,
