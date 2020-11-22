@@ -8,6 +8,8 @@
         <v-card-text>
           <el-input type="textarea" v-model="postContent" placeholder="请输入动态内容" resize="none"></el-input>
           <!-- TODO: 选择分区，选择标签 -->
+
+          <!-- 选择标签考虑使用 https://www.vue-treeselect.cn/ -->
         </v-card-text>
 
         <v-card-actions>
@@ -16,7 +18,6 @@
             <l-button @click="dialog = false" type="info" size="small">取消</l-button>
           </div>
         </v-card-actions>
-        
         <v-divider></v-divider>
       </v-card>
     </v-dialog>
@@ -26,23 +27,60 @@
 </template>
 
 <script>
+import { createPost } from "network/forum.js";
 export default {
-  name: 'CreatePost',
+  name: "CreatePost",
   props: {},
   data() {
     return {
       dialog: false, // 是否展示悬浮窗
       userId: 1, // 用户 ID
-      postContent: '', // 动态内容
-      imgUrl: [''], // 上传图片的 Url（如果要做）
+      postContent: "", // 动态内容
+      postSectorId: "",
+      postSectorName: "",
+      postTags: [""],
+      imgUrl: [""], // 上传图片的 Url（如果要做）
       citeId: 1, // 引用的文献 ID
+      sectorList: [
+        {
+          sectorId: 1,
+          sectorName: "软妹工程",
+        },
+        {
+          sectorId: 2,
+          sectorName: "计蒜姬科学与技术",
+        },
+        {
+          sectorId: 3,
+          sectorName: "人工智障",
+        },
+      ],
     };
   },
   methods: {
     submit() {
-      // loading
-      // submit data
-      dialog = false;
+      createPost(this.userId, this.postContent, this.postSectorId, this.postTags, this.citeId)
+        .then((res) => {
+          console.log("createPost");
+          console.log(res);
+          if (res.data.result == "true") {
+            this.dialog = false;
+            this.$message({
+              type: "success",
+              message: "动态发表成功！",
+            });
+          } else {
+            this.$message.error({
+              message: "动态发表失败，请稍后再试",
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          this.$message.error({
+            message: "动态发表失败，请稍后再试",
+          });
+        });
     },
     // show() {
     //   this.$refs.hover.showHover({
@@ -53,6 +91,18 @@ export default {
     // },
   },
   components: {},
+  created() {
+    // todo: 获取所有分区，以及每个分区下的 tag
+    getAllTags()
+      .then((res) => {
+        console.log("getAllTags");
+        console.log(res);
+        // TODO
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },
 };
 </script>
 
