@@ -19,10 +19,10 @@ export default {
   props: {
     bgColor: {
       type: String,
-      default: "var(--color-main)",
-    },
+      default: "var(--color-main)"
+    }
   },
-  methods: {},
+  methods: {}
 };
 </script>
 <style scoped>

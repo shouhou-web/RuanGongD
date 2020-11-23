@@ -36,9 +36,14 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Test
+    component: Root
     // redirect重定向
     // redirect: "/home/workSpace"
+  },
+  {
+    path: "/Root",
+    name: "Root",
+    component: Root
   }
 ];
 
