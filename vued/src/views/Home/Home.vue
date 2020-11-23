@@ -69,6 +69,16 @@
         </div>
       </li>
     </ul>
+    <!-- 时间选择 -->
+    <div v-if="isAdvance" class="date">
+      <span class="date__title">发表时间：</span>
+      <span class="date__key">{{ start }}</span>
+      <input type="date" v-model="start" />
+      <span class="date__and">--</span>
+      <span class="date__key"> {{ end }} </span>
+      <input type="date" v-model="end" />
+      <span class="date__btn" v-if="start || end" @click="cancelTime">+</span>
+    </div>
   </div>
 </template>
 
@@ -78,19 +88,21 @@ export default {
   name: "Home",
   data() {
     return {
-      isAdvance: true,
+      isAdvance: false,
       searchList: [
         {
           logical: "NULL",
           type: "SU",
-          value: ""
+          value: "",
         },
         {
           logical: "AND",
           type: "KY",
-          value: ""
-        }
-      ]
+          value: "",
+        },
+      ],
+      start: "",
+      end: "",
     };
   },
   methods: {
@@ -102,25 +114,51 @@ export default {
     addItem(index) {
       this.searchList.push({
         logical: "AND",
-        type: "ZT",
-        value: ""
+        type: "SU",
+        value: "",
       });
     },
     deleteItem(index) {
       this.searchList.splice(index, 1);
     },
     search() {
-      console.log(this.searchList);
+      // 搜索
+      console.log(this.searchList, this.start, this.end);
       advance(this.searchList, "1900", "2020")
-        .then(res => {
+        .then((res) => {
           console.log(res);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
-    }
+    },
+    cancelTime() {
+      // 取消选择时间
+      this.start = "";
+      this.end = "";
+    },
+    _dateAddDays(dateStr, dayCount) {
+      // 调整日期
+      var tempDate = new Date(dateStr.replace(/-/g, "/")); //把日期字符串转换成日期格式
+      var resultDate = new Date((tempDate / 1000 + 86400 * dayCount) * 1000); //增加n天后的日期
+      var resultDateStr =
+        resultDate.getFullYear() + "-" + (resultDate.getMonth() + 1) + "-"; //将日期转化为字符串格式
+      if (resultDate.getDate() > "10") resultDateStr += resultDate.getDate();
+      else resultDateStr += "0" + resultDate.getDate();
+      console.log(resultDateStr);
+      return resultDateStr;
+    },
   },
-  components: {}
+  watch: {
+    start: function (val, oldVal) {
+      if (val > this.end && this.end != "")
+        this.end = this._dateAddDays(this.start, 1);
+    },
+    end: function (val, oldVal) {
+      if (val < this.start) this.start = this._dateAddDays(this.end, -1);
+    },
+  },
+  components: {},
 };
 </script>
 
@@ -154,6 +192,7 @@ export default {
   border: 1.5px solid var(--color-main);
   display: flex;
   padding: 14px 0;
+  width: 610px;
 }
 
 .search__main {
@@ -185,10 +224,11 @@ export default {
   border: 0;
   outline: none;
   margin: 0 10px;
-  width: 400px;
+  /* width: 400px; */
 }
 
-.search__icon {
+.search__icon,
+.date__btn {
   align-items: center;
   background-color: #fff;
   color: #bcbcbc;
@@ -202,6 +242,11 @@ export default {
   width: 29px;
 }
 
+.date__btn {
+  transform: rotate(45deg);
+}
+
+.date__btn:hover,
 .search__icon:hover {
   color: #53a2e3;
 }
@@ -209,14 +254,56 @@ export default {
 .search__sub {
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
+  background-color: var(--color-main);
+  color: #fff;
+  cursor: pointer;
   padding: 15.5px;
   letter-spacing: 1px;
 }
 
-.search__sub {
-  /* border: .1px solid var(--color-main); */
-  background-color: var(--color-main);
-  color: #fff;
-  cursor: pointer;
+.date {
+  align-items: center;
+  display: flex;
+  line-height: 20px;
+  margin: 0 auto;
+  width: 710px;
+  height: 28px;
+  padding: 14px 15px 14px 0;
+}
+
+.date__title {
+  display: inline-block;
+  vertical-align: top;
+  padding: 0 11px;
+  margin: 5px 0;
+  color: #888;
+}
+
+.date__key {
+  width: 90px;
+}
+
+.date__and {
+  margin: 0 10px;
+}
+
+.date input {
+  border: 0;
+  font-size: 12px;
+  text-align: center;
+}
+
+.date input::-webkit-calendar-picker-indicator {
+  margin-left: 0px;
+  border: 0;
+}
+
+.date input::-webkit-calendar-picker-indicator:active {
+  border: 0 !important;
+}
+
+/* 控制年字 */
+input[type="date"]::-webkit-datetime-edit {
+  display: none;
 }
 </style>
