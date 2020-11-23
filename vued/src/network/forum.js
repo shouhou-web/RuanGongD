@@ -36,16 +36,18 @@ export function getAllTags() {
 
 /**
  * 发表动态
+ * @param {userId, postName, postContent, postSectorId, postTags, citeId}
  * citeId == -1 是表示未引用
  * @returns {postId, result}
  *  动态ID，是否成功("true" or "false")
  */
 // TODO: 是否可以发表图片待定
-export function createPost(userId, postContent, postSectorId, postTags, citeId) {
+export function createPost(userId, postName, postContent, postSectorId, postTags, citeId) {
   return request(baseURL, {
     url: "/createPost",
     params: {
       userId,
+      postName,
       postContent,
       postSectorId,
       postTags,
