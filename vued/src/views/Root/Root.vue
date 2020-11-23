@@ -156,17 +156,17 @@ export default {
 </script>
 
 <style scoped>
-#report {
+.root-report-cards {
   height: calc(100vh - 36px);
   overflow: auto;
 }
-#report::-webkit-scrollbar {
+.root-report-cards::-webkit-scrollbar {
   width: 5px;
 }
-#report::-webkit-scrollbar-track {
+.root-report-cards::-webkit-scrollbar-track {
   background-color: transparent;
 }
-#report::-webkit-scrollbar-thumb {
+.root-report-cards::-webkit-scrollbar-thumb {
   background-color: #e83015;
   border-radius: 10px;
 }
@@ -184,10 +184,12 @@ export default {
 .root-report-cards {
   /* border: 2px solid #e3b4b8; */
   left: 30%;
-  margin-top: 20px;
+  /* margin-top: 20px; */
+  padding-top: 20px;
+  padding-right: 10%;
   margin-bottom: 20px;
   position: relative;
-  width: 60%;
+  width: 70%;
 }
 .root-report-card {
   margin-top: 20px;
