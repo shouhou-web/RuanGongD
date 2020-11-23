@@ -10,12 +10,13 @@ const Forum = () => import("views/Forum/Forum.vue");
 
 // 首页相关组件
 const Home = () => import("views/Home/Home.vue");
+const Search = () => import("views/Home/Search.vue");
 
 // 文献相关组件
 const Literature = () => import("views/Literature/Literature.vue");
 const Manage = () => import("views/Literature/Manage.vue");
 const Classify = () => import("views/Literature/Classify.vue");
-const Search = () => import("views/Literature/Search.vue");
+// const Search = () => import("views/Literature/Search.vue");
 const Publication = () => import("views/Literature/Publication.vue");
 
 // 消息相关组件
@@ -39,6 +40,11 @@ const routes = [
     component: Home
     // redirect重定向
     // redirect: "/home/workSpace"
+  },
+  {
+    path: "/search",
+    name: "Search",
+    component: Search
   }
 ];
 
