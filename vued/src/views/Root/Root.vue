@@ -160,13 +160,13 @@ export default {
   height: calc(100vh - 36px);
   overflow: auto;
 }
-#report ::-webkit-scrollbar {
+#report::-webkit-scrollbar {
   width: 5px;
 }
-#report ::-webkit-scrollbar-track {
+#report::-webkit-scrollbar-track {
   background-color: transparent;
 }
-#report ::-webkit-scrollbar-thumb {
+#report::-webkit-scrollbar-thumb {
   background-color: #e83015;
   border-radius: 10px;
 }
