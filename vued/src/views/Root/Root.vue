@@ -79,7 +79,7 @@ export default {
           reportContent:
             "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
           reporterID: "Tonylyc",
-          reportType: 1
+          reportType: 1,
         },
         {
           id: 2,
@@ -90,7 +90,7 @@ export default {
             "Tonylyc is a very handsome boy!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
           reporterJob: "本科生",
           reporterID: "Tonylyc",
-          reportType: 2
+          reportType: 2,
         },
         {
           id: 3,
@@ -101,19 +101,63 @@ export default {
           reporterID: "Tonylyc",
           reporteeID: "Shouhou",
           reporteeJob: "本科生",
-          reportType: 3
-        }
-      ]
+          reportType: 3,
+        },
+        {
+          id: 2,
+          commentID: "E387HB9CS1234-245",
+          commentContent: "Test this Card with Comment No.1",
+          reporterImgPath: "lyc",
+          reportContent:
+            "Tonylyc is a very handsome boy!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+          reporterJob: "本科生",
+          reporterID: "Tonylyc",
+          reportType: 2,
+        },
+        {
+          id: 3,
+          reporterImgPath: "lyc",
+          reportContent:
+            "Tonylyc is a very handsome boy!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+          reporterJob: "本科生",
+          reporterID: "Tonylyc",
+          reporteeID: "Shouhou",
+          reporteeJob: "本科生",
+          reportType: 3,
+        },
+        {
+          id: 2,
+          commentID: "E387HB9CS1234-245",
+          commentContent: "Test this Card with Comment No.1",
+          reporterImgPath: "lyc",
+          reportContent:
+            "Tonylyc is a very handsome boy!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+          reporterJob: "本科生",
+          reporterID: "Tonylyc",
+          reportType: 2,
+        },
+        {
+          id: 3,
+          reporterImgPath: "lyc",
+          reportContent:
+            "Tonylyc is a very handsome boy!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+          reporterJob: "本科生",
+          reporterID: "Tonylyc",
+          reporteeID: "Shouhou",
+          reporteeJob: "本科生",
+          reportType: 3,
+        },
+      ],
     };
   },
   methods: {},
-  components: { LRootCard }
+  components: { LRootCard },
 };
 </script>
 
 <style scoped>
 #report {
-  --height: calc(100vh - 36px);
+  height: calc(100vh - 36px);
   overflow: auto;
 }
 #report ::-webkit-scrollbar {
