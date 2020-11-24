@@ -3,7 +3,7 @@ const CKEditorWebpackPlugin = require("@ckeditor/ckeditor5-dev-webpack-plugin");
 const { styles } = require("@ckeditor/ckeditor5-dev-utils");
 
 module.exports = {
-  transpileDependencies: [/ckeditor5-[^/\\]+[/\\]src[/\\].+\.js$/],
+  transpileDependencies: [/ckeditor5-[^/\\]+[/\\]src[/\\].+\.js$/, 'vue-echarts', 'resize-detector'],
   configureWebpack: {
     plugins: [
       // CKEditor needs its own plugin to be built using webpack.

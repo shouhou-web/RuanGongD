@@ -19,7 +19,7 @@ export default {
   props: {
     bgColor: {
       type: String,
-      default: "var(--color-main)",
+      default: "#e83015",
     },
   },
   methods: {
