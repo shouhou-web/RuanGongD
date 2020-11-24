@@ -128,7 +128,7 @@ export function isFollowed(userId, sectorId) {
  */
 export function followSector(userId, sectorId) {
   return request(baseURL, {
-    url: "/fFollowSector",
+    url: "/followSector",
     params: { userId, sectorId },
     method: "post"
   });
