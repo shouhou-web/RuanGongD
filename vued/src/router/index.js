@@ -83,6 +83,11 @@ const routes = [
     path: "/userPosts",
     name: "UserPost",
     component: UserPosts
+  },
+  {
+    path: "/intro",
+    name: "Intro",
+    component: Intro
   }
 ];
 
