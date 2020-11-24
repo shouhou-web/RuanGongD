@@ -1,18 +1,16 @@
 <template>
-  <!-- 社交系统主界面 -->
-  <div id="forum">
-    <div></div>
-  </div>
+  <!-- 讨论区动态界面 -->
+  <div id="forumPost"></div>
 </template>
 
 <script>
 export default {
-  name: "Forum",
+  name: "ForumPost",
   data() {
     return {};
   },
   methods: {},
-  components: {},
+  components: {}
 };
 </script>
 

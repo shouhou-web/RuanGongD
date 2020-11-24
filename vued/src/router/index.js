@@ -6,7 +6,10 @@ import store from "../store/index";
 const Test = () => import("views/Test.vue");
 
 // 论坛相关组件
-const Forum = () => import("views/Forum/Forum.vue");
+const ForumHome = () => import("views/Forum/ForumHome.vue");
+const ForumSector = () => import("views/Forum/ForumSector.vue");
+const ForumPost = () => import("views/Forum/ForumPost.vue");
+const UserPosts = () => import("views/Forum/UserPosts.vue");
 
 // 首页相关组件
 const Home = () => import("views/Home/Home.vue");
@@ -42,6 +45,7 @@ const routes = [
     // redirect: "/home/workSpace"
   },
   {
+<<<<<<< HEAD
     path: "/search",
     name: "Search",
     component: Search
@@ -55,6 +59,26 @@ const routes = [
     path: "/Root",
     name: "Root",
     component: Root
+=======
+    path: "/forumHome",
+    name: "ForumHome",
+    component: ForumHome
+  },
+  {
+    path: "/forumSector",
+    name: "ForumSector",
+    component: ForumSector
+  },
+  {
+    path: "/forumPost",
+    name: "ForumPost",
+    component: ForumSector
+  },
+  {
+    path: "/userPosts",
+    name: "UserPost",
+    component: UserPosts
+>>>>>>> forum
   }
 ];
 
