@@ -51,29 +51,11 @@ export function getAllTags() {
  *  动态ID，是否成功("true" or "false")
  */
 // TODO: 是否可以发表图片待定
-<<<<<<< HEAD
-export function createPost(
-  userId,
-  postContent,
-  postSectorId,
-  postTags,
-  citeId
-) {
-  return request(baseURL, {
-    url: "/createPost",
-    params: {
-      userId,
-      postContent,
-      postSectorId,
-      postTags,
-      citeId
-=======
 export function createPost(createPostForm) {
   return request(baseURL, {
     url: "/createPost",
     params: {
       createPostForm
->>>>>>> 043bc3191e1f3d1ade24023fb59ea43869eb01e6
     },
     method: "post"
   });
