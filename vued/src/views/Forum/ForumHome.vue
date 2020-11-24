@@ -68,6 +68,7 @@
 
 <script>
 import { getAllSectors } from "network/forum.js";
+import MHeader from "../../components/common/m-header/m-header.vue";
 export default {
   name: "ForumHome",
   data() {
@@ -130,8 +131,9 @@ export default {
         path: "/forumSector",
         query: {
           sectorId: id,
-          page: "0",
-          sort: "0"
+          page: "1",
+          sort: "0",
+          keyword: ""
         }
       });
     },
@@ -145,7 +147,7 @@ export default {
       */
     }
   },
-  components: {},
+  components: { MHeader },
   created() {
     //todo: 获取分区信息
     getAllSectors()
@@ -163,9 +165,13 @@ export default {
 
 <style scoped>
 #forumHome {
-  margin: 20px auto;
-  width: 100vw;
+  margin: 0px auto;
+  width: var(--width-main);
   /*background-image: url();*/
+}
+.m-header {
+  width: 100vw;
+  margin-bottom: 20px;
 }
 .sectorCard {
   margin: 1px auto;
