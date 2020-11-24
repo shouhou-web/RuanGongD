@@ -157,7 +157,7 @@ export default {
 
 <style scoped>
 .root-report-cards {
-  height: calc(100vh - 36px);
+  height: calc(100vh - 56px);
   overflow: auto;
 }
 .root-report-cards::-webkit-scrollbar {
@@ -184,7 +184,6 @@ export default {
 .root-report-cards {
   /* border: 2px solid #e3b4b8; */
   left: 30%;
-  /* margin-top: 20px; */
   padding-top: 20px;
   padding-right: 10%;
   margin-bottom: 20px;
@@ -192,10 +191,11 @@ export default {
   width: 70%;
 }
 .root-report-card {
-  margin-top: 20px;
-  padding-bottom: 10px;
+  padding-bottom: 30px;
+  padding-top: 10px;
   padding-right: 20px;
   padding-left: 20px;
+  width: 80%;
 }
 .root-report--profile {
   align-content: center;
