@@ -17,7 +17,7 @@ export function getAllSectors() {
   return request(baseURL, {
     url: "/getAllSectors",
     params: {},
-    method: "post",
+    method: "post"
   });
 }
 
@@ -30,7 +30,7 @@ export function getAllTags() {
   return request(baseURL, {
     url: "/getAllTags",
     params: {},
-    method: "post",
+    method: "post"
   });
 }
 
@@ -41,7 +41,13 @@ export function getAllTags() {
  *  动态ID，是否成功("true" or "false")
  */
 // TODO: 是否可以发表图片待定
-export function createPost(userId, postContent, postSectorId, postTags, citeId) {
+export function createPost(
+  userId,
+  postContent,
+  postSectorId,
+  postTags,
+  citeId
+) {
   return request(baseURL, {
     url: "/createPost",
     params: {
@@ -49,9 +55,9 @@ export function createPost(userId, postContent, postSectorId, postTags, citeId) 
       postContent,
       postSectorId,
       postTags,
-      citeId,
+      citeId
     },
-    method: "post",
+    method: "post"
   });
 }
 
