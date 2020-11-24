@@ -197,7 +197,7 @@ export default {
   flex-direction: column;
   margin-left: 10px;
   position: relative;
-  width: 82px;
+  width: 85px;
 }
 
 .m-click--show {
