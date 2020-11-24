@@ -11,7 +11,11 @@
       <img src="@/assets/image/logo.png" alt="" />
     </div>
     <search-advance @change-list="changeList" @change-time="changeTime" />
-    <!-- 时间选择 -->
+    <div class="footer">
+      <div class="item1"></div>
+      <div class="item2"></div>
+      <div class="item3"></div>
+    </div>
   </div>
 </template>
 
@@ -55,5 +59,20 @@ export default {
 
 .logo img {
   width: 114px;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  width: var(--width-main);
+  margin: 40px auto;
+}
+
+.item1,
+.item2,
+.item3 {
+  background-color: #eee;
+  width: 300px;
+  height: 350px;
 }
 </style>
