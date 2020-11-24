@@ -23,8 +23,10 @@ export function getAllSectors() {
 
 /**
  * 获取所有分区，以及每个分区下的默认标签
- * @returns {tags}  // TODO 还没想好怎么约定一次性返回所有分区和标签的映射数据格式
- *  全部标签
+ * @returns {sectorList[{sectorId, sectorName, sectorTags[]}]}
+ *  sectorId: 分区 id
+ *  sectorName: 分区名
+ *  sectorTags[]: 分区下所有默认标签
  */
 export function getAllTags() {
   return request(baseURL, {
@@ -36,11 +38,20 @@ export function getAllTags() {
 
 /**
  * 发表动态
- * citeId == -1 是表示未引用
+ * @param {createPostForm{userId, postName, postContent, sectorId, postTags[], citeId}}
+ *  createPostForm是一个对象
+ *    userId: 发动态的用户 id
+ *    postName: 动态标题
+ *    postContent: 动态内容
+ *    sectorId: 分区 id
+ *    postTags[]: 动态的标签数组，可为空数组
+ *    citeId: 引用的文献 id
+ *      citeId == -1 表示未引用文献
  * @returns {postId, result}
  *  动态ID，是否成功("true" or "false")
  */
 // TODO: 是否可以发表图片待定
+<<<<<<< HEAD
 export function createPost(
   userId,
   postContent,
@@ -56,6 +67,13 @@ export function createPost(
       postSectorId,
       postTags,
       citeId
+=======
+export function createPost(createPostForm) {
+  return request(baseURL, {
+    url: "/createPost",
+    params: {
+      createPostForm
+>>>>>>> 043bc3191e1f3d1ade24023fb59ea43869eb01e6
     },
     method: "post"
   });
