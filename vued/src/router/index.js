@@ -55,7 +55,12 @@ const routes = [
     component: Profile
   },
   {
-    path: "/Root",
+    path: "/literature",
+    name: "Literature",
+    component: Literature
+  },
+  {
+    path: "/root",
     name: "Root",
     component: Root
   },
@@ -95,17 +100,6 @@ router.beforeEach((to, from, next) => {
   // ${//to and from are Route Object,next() must be called to resolve the hook}
   // 这里是修改名字的全局守护路由，暂不应用
   // document.title = to.matched[0].meta.title;
-  if (to.path === "/home/workSpace/recent") {
-    store.commit("homeleftnav", 1);
-    store.commit("homemidnav", 1);
-  } else if (to.path === "/home/workSpace/iMade") {
-    store.commit("homeleftnav", 1);
-    store.commit("homemidnav", 2);
-  } else if (to.path === "/home/workSpace/myCollection") {
-    store.commit("homeleftnav", 1);
-    store.commit("homemidnav", 3);
-  } else if (to.path === "/home/trash") store.commit("homeleftnav", 2);
-  else if (to.path === "/home/teamSpace") store.commit("homeleftnav", 3);
   next();
 });
 
