@@ -45,6 +45,11 @@ const routes = [
     path: "/search",
     name: "Search",
     component: Search
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: Profile
   }
 ];
 
