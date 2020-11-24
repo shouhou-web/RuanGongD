@@ -50,6 +50,11 @@ const routes = [
     path: "/profile",
     name: "Profile",
     component: Profile
+  },
+  {
+    path: "/Root",
+    name: "Root",
+    component: Root
   }
 ];
 
