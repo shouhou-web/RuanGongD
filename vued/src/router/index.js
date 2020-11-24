@@ -45,7 +45,6 @@ const routes = [
     // redirect: "/home/workSpace"
   },
   {
-<<<<<<< HEAD
     path: "/search",
     name: "Search",
     component: Search
@@ -59,7 +58,8 @@ const routes = [
     path: "/Root",
     name: "Root",
     component: Root
-=======
+  },
+  {
     path: "/forumHome",
     name: "ForumHome",
     component: ForumHome
@@ -78,7 +78,6 @@ const routes = [
     path: "/userPosts",
     name: "UserPost",
     component: UserPosts
->>>>>>> forum
   }
 ];
 
