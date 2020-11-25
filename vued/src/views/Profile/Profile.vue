@@ -159,7 +159,7 @@ export default {
       },
       onefollowingLiterature: {
         title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
-        authors: ["Keyu Tian"],
+        authors: ["Ma Hanyuan"],
         tags: ["tag 1", "tag 2"],
         read_time: 10,
       }
