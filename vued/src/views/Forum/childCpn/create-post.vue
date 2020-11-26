@@ -9,7 +9,7 @@
           <el-form :model="createPostForm" ref="createPostForm" label-width="80px" :rules="postRule">
             <el-form-item label="动态标题" prop="postName">
               <el-input
-                class="form-title"
+                class="post-name"
                 placeholder="请输入动态标题"
                 v-model="createPostForm.postName"
                 clearable
@@ -20,7 +20,7 @@
 
             <el-form-item label="动态内容" prop="postContent">
               <el-input
-                class="form-content"
+                class="post-content"
                 type="textarea"
                 v-model="createPostForm.postContent"
                 placeholder="请输入动态内容"
@@ -31,17 +31,28 @@
             </el-form-item>
 
             <el-form-item label="分区" prop="sectorId">
-              <el-select v-model="createPostForm.sectorId" placeholder="请选择动态分区">
+              <!-- <el-select class="post-sector" v-model="createPostForm.sectorId" placeholder="请选择动态分区">
                 <el-option
                   v-for="sector in sectorList"
                   :key="sector.sectorId"
                   :label="sector.sectorName"
                   :value="sector.sectorId"
                 ></el-option>
-              </el-select>
+              </el-select> -->
+              <v-select
+                class="post-sector"
+                v-model="createPostForm.sectorId"
+                hint="请选择动态分区"
+                :items="sectorList"
+                item-text="sectorName"
+                item-value="sectorId"
+                persistent-hint
+                hide-details="true"
+                outlined
+                dense
+              ></v-select>
             </el-form-item>
             <el-form-item label="标签" prop="postTags">
-              <!-- TODO: 样式统一 -->
               <v-combobox
                 :items="getSectorTags"
                 :search-input.sync="search"
@@ -57,10 +68,12 @@
               ></v-combobox>
               <!-- https://vuetifyjs.com/en/components/combobox/#advanced-custom-options -->
             </el-form-item>
-
-            <!-- TODO: 点击引用文献后怎么设计？ -->
             <el-form-item label="引用文献">
-              <el-button icon="el-icon-paperclip" @click="citeLiterature"></el-button>
+              <v-btn icon @click="citeLiterature">
+                <v-icon color="blue darken-2">
+                  mdi-message-text
+                </v-icon>
+              </v-btn>
             </el-form-item>
           </el-form>
         </v-card-text>
@@ -106,13 +119,13 @@ export default {
           {
             required: true,
             message: "请输入动态内容",
-            trigger: "change",
+            trigger: "blur",
           },
           {
             min: 5,
             max: 1500,
             message: "动态内容长度在 5-1500 个字符之间",
-            trigger: "change",
+            trigger: "blur",
           },
         ],
         sectorId: [
@@ -235,7 +248,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .footer {
   display: flex;
   justify-content: space-between;
@@ -249,7 +262,23 @@ export default {
   justify-content: flex-end;
 }
 
-.form-title {
+.post-name {
   font-weight: bold;
+}
+
+.el-input__inner,
+.el-textarea__inner {
+  border-color: rgba(158, 158, 158);
+}
+
+.el-input__inner:hover,
+.el-textarea__inner:hover {
+  border-color: rgba(36, 36, 36);
+}
+
+.el-input__inner:focus,
+.el-textarea__inner:focus {
+  border-color: rgba(64, 158, 255);
+  border-width: 2px;
 }
 </style>
