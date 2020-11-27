@@ -80,8 +80,12 @@
 
         <v-card-actions>
           <div class="footer">
-            <l-button @click="submit('createPostForm')" size="small">发表</l-button>
-            <l-button @click="dialog = false" type="info" size="small">取消</l-button>
+            <v-btn @click="submit('createPostForm')" color="#4F6EF2">
+              <font color="white">发表</font>
+            </v-btn>
+            <v-btn @click="dialog = false">取消</v-btn>
+            <!-- <l-button @click="submit('createPostForm')" size="small">发表</l-button>
+            <l-button @click="dialog = false" type="info" size="small">取消</l-button> -->
           </div>
         </v-card-actions>
         <v-divider></v-divider>
