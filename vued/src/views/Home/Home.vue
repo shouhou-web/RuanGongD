@@ -8,9 +8,9 @@
     </m-header>
     <!-- 主页面 -->
     <div class="logo">
-      <img src="@/assets/image/logo.png" alt="" />
+      <img src="@/assets/image/home/logo.png" alt="" />
     </div>
-    <search-advance @change-list="changeList" @change-time="changeTime" />
+    <search-advance @change-list="changeList" @change-time="changeTime" :isShow="true"/>
     <div class="footer">
       <div class="item1"></div>
       <div class="item2"></div>

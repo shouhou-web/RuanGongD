@@ -68,7 +68,7 @@ export default {
     },
     cur: {
       type: String,
-      default: "ZT"
+      default: "SU"
     }
   },
   data() {
@@ -137,6 +137,7 @@ export default {
       return this.type == "click-type" || this.type == "click-logical";
     },
     curValue() {
+      console.log(this.cur)
       return this.clickList.filter(n => {
         return n.key == this.cur;
       })[0].value;
