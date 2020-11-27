@@ -10,7 +10,7 @@
           </div>
           <div class="username">
             <div class="user-nickname">{{ userNickName }}</div>
-            <div class="user-degree">
+            <div class="user-degree" @click="openChangeProfileHover">
               {{ retUserDegree() }}
               <img src="../../assets/icons/profile/edit.svg" class="profile-icon">
             </div>
@@ -27,28 +27,11 @@
     </div>
     <div class="profile-content">
       <div class="content-left">
-        <div class="one-follow-literature">
-          <div class="title">{{ onefollowingLiterature.title }}</div>
-          <div class="tags">
-            <div class="tag" v-for="(a_tag, i) in onefollowingLiterature.tags">
-              <div :class="{'first-tag': i==0, 'leftpart-tags': i != 0}">{{a_tag}}</div>
-            </div>
-          </div>
-          <div class="authors">
-            <div v-for="(name, i) in onefollowingLiterature.authors" class="author-list">
-              <img :src="userImgSrc" class="authorImg">
-              <div class="authorname">{{name}}</div>
-            </div>
-          </div>
-          <div class="read-time">
-            <div class="read-time-content">
-              {{onefollowingLiterature.read_time}} Reads
-            </div>
-          </div>
-          <div class="literature-ops">
-            <div class="one-op"></div>
-          </div>
-        </div>
+        <y-literature v-for="(onefollowingLiterature, i) in favorLiteratures"
+                      :title="onefollowingLiterature.title"
+                      :authors="onefollowingLiterature.authors"
+                      :tags="onefollowingLiterature.tags"
+                      :read_time="onefollowingLiterature.read_time"></y-literature>
       </div>
       <div class="content-right">
         <div class="user-intro">
@@ -85,38 +68,29 @@
           <div class="following">
             <div class="follow-part-head">following (1)</div>
             <div class="following-content">
-              <div id="one-following" class="one-following">
+              <div class="one-following" v-for="(onefollowingUser, i) in followUsers">
                 <img :src="onefollowingUser.imgSrc" class="intro-img img-plus">
                 <div class="following-info">
                   <div class="name-style">{{ onefollowingUser.name }}</div>
                   <div class="intro-style">{{ onefollowingUser.intro }}</div>
                 </div>
-                <div class="following-op">
-                  unfollow
-                </div>
+                <div class="following-op" @click="cancleFollow(onefollowingUser.followingID)">unfollow</div>
               </div>
             </div>
           </div>
           <div class="befollowed">
             <div class="follow-part-head">be followed (2)</div>
             <div class="befollowed-content">
-              <div id="one-following" class="one-following">
-                <img :src="onefollowingUser.imgSrc" class="intro-img img-plus">
+              <div class="one-following" v-for="(befollowed, i) in followers">
+                <img :src="befollowed.imgSrc" class="intro-img img-plus">
                 <div class="following-info">
-                  <div class="name-style">{{ onefollowingUser.name }}</div>
-                  <div class="intro-style">{{ onefollowingUser.intro }}</div>
+                  <div class="name-style">{{ befollowed.name }}</div>
+                  <div class="intro-style">{{ befollowed.intro }}</div>
                 </div>
-                <div class="befollowed-op-followed">
+                <div class="befollowed-op-followed" v-if="befollowed.isfollowed">
                   followed
                 </div>
-              </div>
-              <div id="one-following" class="one-following">
-                <img :src="onefollowingUser.imgSrc" class="intro-img img-plus">
-                <div class="following-info">
-                  <div class="name-style">{{ onefollowingUser.name }}</div>
-                  <div class="intro-style">{{ onefollowingUser.intro }}</div>
-                </div>
-                <div class="befollowed-op-to-follow">
+                <div class="befollowed-op-to-follow" v-if="!befollowed.isfollowed" @click="doFollow(befollowed.followerID)">
                   follow
                 </div>
               </div>
@@ -129,6 +103,7 @@
 </template>
 
 <script>
+import yLiterature from '@/components/common/y-literature/y-literature'
 export default {
   name: "Profile",
   data() {
@@ -142,28 +117,96 @@ export default {
       userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
 
       // user收藏文献集合
-      favorLiteratures: [],
+      favorLiteratures: [
+        {
+          title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
+            authors: [
+            {
+              userID: 0,
+              userName: 'Yu Haomiao',
+              userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
+            }
+          ],
+          tags: ["tag 1", "tag 2"],
+          read_time: 10,
+        },
+        {
+          title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
+          authors: [
+            {
+              userID: 0,
+              userName: 'Yu Haomiao',
+              userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
+            }
+          ],
+          tags: ["tag 1", "tag 2"],
+          read_time: 10,
+        },
+        {
+          title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
+          authors: [
+            {
+              userID: 0,
+              userName: 'Yu Haomiao',
+              userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
+            }
+          ],
+          tags: ["tag 1", "tag 2"],
+          read_time: 10,
+        },
+      ],
 
       // user关注用户集合
-      followUsers: [],
+      followUsers: [
+        {
+          followingID: 1,
+          imgSrc: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3824999008,143707972&fm=26&gp=0.jpg",
+          name: "Ma Hanyuan",
+          intro: "Beihang University (BUAA)"
+        },
+      ],
 
+      // 关注我的用户集合
+      followers: [
+        {
+          followerID: 1,
+          imgSrc: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3824999008,143707972&fm=26&gp=0.jpg",
+          name: "Ma Hanyuan",
+          intro: "Beihang University (BUAA)",
+          isfollowed: true
+        },
+        {
+          followerID: 2,
+          imgSrc: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3824999008,143707972&fm=26&gp=0.jpg",
+          name: "Ma Hanyuan",
+          intro: "Beihang University (BUAA)",
+          isfollowed: false
+        },
+      ],
+
+      introID: 0,
       introImg: "https://i1.rgstatic.net/ii/institution.image/AS%3A267456919080961%401440778106588_l",
       introName: "Beihang University (BUAA)",
       introLocation: "Beijing, China",
       introDepartment: "Software Engineering Institute (SEI)",
 
-      onefollowingUser: {
-        imgSrc: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3824999008,143707972&fm=26&gp=0.jpg",
-        name: "Ma Hanyuan",
-        intro: "Beihang University (BUAA)"
-      },
-      onefollowingLiterature: {
-        title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
-        authors: ["Ma Hanyuan"],
-        tags: ["tag 1", "tag 2"],
-        read_time: 10,
-      }
+      newNickName: '',
+      newDegree: 0,
+      inputOnblur: false,
+      selectFollowingUserID: 0,
+
+      options: [
+        { text: '高中', value: '0' },
+        { text: '本科生', value: '1' },
+        { text: '研究生', value: '2' },
+        { text: '博士生', value: '3' },
+        { text: '博士后', value: '4' },
+      ]
     };
+  },
+  created() {
+    this.newNickName = this.userNickName
+    this.newDegree = this.userDegree
   },
   methods: {
     retUserDegree() {
@@ -174,8 +217,24 @@ export default {
       else if (this.userDegree == 4) return "博士后";
       else return "";
     },
+    openChangeProfileHover() {
+      this.$refs.changeProfile.showHover({
+        title: "修改个人资料",
+        submitBtn: "取消",
+        cancelBtn: "提交"
+      });
+    },
+
+    cancleFollow(selectUserID) {
+      this.$notify.info("已取消关注")
+    },
+    doFollow(selectUserID) {
+      this.$notify.success("关注成功")
+    }
   },
-  components: {},
+  components: {
+    'y-literature': yLiterature
+  },
 };
 </script>
 
@@ -599,6 +658,12 @@ export default {
   margin-top: 8%;
 }
 
+.following-op:hover {
+  height: fit-content;
+  border-bottom: 1px solid red;
+  cursor: pointer;
+}
+
 .befollowed-op-followed {
   margin: 0 auto;
   color: #dddddd;
@@ -612,6 +677,12 @@ export default {
   margin-top: 8%;
 }
 
+.befollowed-op-to-follow:hover {
+  height: fit-content;
+  cursor: pointer;
+  border-bottom: 1px solid black;
+}
+
 .befollowed-content {
   padding-bottom: 20px;
 }
@@ -620,8 +691,62 @@ export default {
   width: 15px;
 }
 
-.click-hover {
-  border-bottom: 1px solid #777777;
-  cursor: pointer;
+.change-profile-outter {
+  width: 420px;
+  height: auto;
+  background-color: white;
+}
+
+.change-degree {
+  margin-left: 60px;
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.change-nickname {
+  margin-left: 60px;
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.hover-input-header {
+  font-size: 0.9rem;
+  color: #000000;
+  font-weight: 700;
+  transition: ease-in-out 0.5s;
+}
+
+.hover-input-header-hover {
+  font-size: 0.9rem;
+  width: fit-content;
+  color: #4F6EF2;
+  transition: ease-in-out 0.5s;
+  font-weight: 700;
+}
+
+.hover-input {
+  width: 70%;
+  padding: 5px;
+  margin-top: 5px;
+  border: 1px solid #dddddd;
+}
+
+.hover-select {
+  width: 70%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 5px;
+  margin-top: 5px;
+  border: 1px solid #dddddd;
+  font-size: 0.8rem;
+}
+
+.option {
 }
 </style>
