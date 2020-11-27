@@ -2,15 +2,17 @@
   <!-- 动态页面 -->
   <div id="post">
     <m-header></m-header>
+
+    <!-- 动态 -->
     <div class="post-container">
       <div class="card">
         <div class="card-item">
           <div class="post-header">
             <div class="avatar">
-              <v-avatar size="48px"> <img src="https://i.loli.net/2020/11/26/soiOjIlZFpELuTW.png"/></v-avatar>
+              <v-avatar size="48px"> <img :src="postInfo.creatorAvatar"/></v-avatar>
             </div>
             <div class="name">
-              Codevka
+              {{ postInfo.creatorName }}
             </div>
             <div class="action">
               <v-btn icon v-if="isAuthor == true">
@@ -26,26 +28,29 @@
             </div>
           </div>
           <div class="post-body">
-            <div class="post-name">Lorem ipsum dolor sit amet, consectetur adipisicing elit</div>
-            <div class="post-content">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-              ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-              fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-              mollit anim id est laborum.
+            <div class="post-name">{{ postInfo.postName }}</div>
+            <div class="post-attr">
+              <div class="post-reply-number">
+                <v-icon size="0.875rem">
+                  mdi-reply
+                </v-icon>
+                {{ postInfo.replyNum }}
+              </div>
+              <div class="post-view-number">
+                <v-icon size="0.875rem">
+                  mdi-eye
+                </v-icon>
+                {{ postInfo.viewNum }}
+              </div>
+              <div class="post-time">发布于 {{ postInfo.createTime }}</div>
             </div>
+            <div class="post-content">{{ postInfo.postContent }}</div>
             <div class="post-tags">
-              <div class="tag-item">
-                <div class="tag-content">Lorem</div>
-              </div>
-              <div class="tag-item">
-                <div class="tag-content">ipsum</div>
-              </div>
-              <div class="tag-item">
-                <div class="tag-content">dolor</div>
+              <div class="tag-item" v-for="tag in postInfo.postTags" :key="tag">
+                <div class="tag-content">{{ tag }}</div>
               </div>
             </div>
-            <div class="post-reply-button">
+            <div class="post-reply-button" @click="jumpToReply">
               <v-btn color="#4F6EF2">
                 <font color="white">回复动态</font>
               </v-btn>
@@ -54,7 +59,17 @@
         </div>
       </div>
     </div>
+
+    <!-- 评论区 -->
     <div class="comment-container">
+      <div class="card">
+        <div class="card-header"></div>
+        <div class="card-item"></div>
+      </div>
+    </div>
+
+    <!-- 输入评论 -->
+    <div class="input-container">
       <div class="card">
         <div class="card-header"></div>
         <div class="card-item"></div>
@@ -64,15 +79,75 @@
 </template>
 
 <script>
+import { getPostInfo } from "network/forum.js";
 export default {
   name: "post",
   data() {
     return {
       isAuthor: false,
+      userId: "1",
+      postId: "123",
+      postInfo: {
+        creatorId: "1",
+        creatorName: "Codevka",
+        creatorAvatar: "https://i.loli.net/2020/11/26/soiOjIlZFpELuTW.png",
+        postName: "Lorem ipsum dolor sit amet, consectetur adipisicing elit",
+        postContent:
+          "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        createTime: "2020-11-26",
+        postTags: ["Lorem", "ipsum", "dolor"],
+        viewNum: "1926",
+        replyNum: "817",
+      },
+      comments: [
+        {
+          commenterId: "123",
+          commenterName: "BI",
+          commenterAvatar: "https://i.loli.net/2020/11/27/9fbGvYknV8KejFS.png",
+          floor: 2,
+          commentContent: "AI nb!",
+          commentTime: "10分钟前",
+        },
+        {
+          commenterId: "2333",
+          commenterName: "AI",
+          commenterAvatar: "https://i.loli.net/2020/11/27/3tz2XEraSwl8skK.png",
+          floor: 1,
+          commentContent: "BI nb!",
+          commentTime: "今天 08:37",
+        },
+      ],
     };
   },
-  methods: {},
+  methods: {
+    jumpToReply() {
+      // 聚焦到回复输入框
+      console.log("jump!");
+    },
+  },
   components: {},
+  created() {
+    this.postId = this.$route.query.postId;
+    this.userId = this.$route.state.userID; // TODO 等待统一
+    console.log("postId: " + this.postId + "\nuserId: " + this.userId);
+    getPostInfo(this.userId, this.postId)
+      .then((res) => {
+        console.log("getPostInfo");
+        console.log(res);
+        this.postInfo.postName = res.data.postName;
+        this.postInfo.postContent = res.data.postContent;
+        this.postInfo.replyNum = res.data.replyNum;
+        this.postInfo.viewNum = res.data.viewNum;
+        this.postInfo.creatorId = res.data.creatorId;
+        this.postInfo.creatorAvatar = res.data.creatorAvatar;
+        this.postInfo.createTime = res.data.createTime;
+        this.postInfo.postTags = res.data.tags;
+        this.comments = res.data.comments;
+      })
+      .cache((err) => {
+        console.log(err);
+      });
+  },
 };
 </script>
 
@@ -88,7 +163,7 @@ export default {
   margin: 0 auto;
 }
 
-.comment-input {
+.input-container {
   width: 600px;
   margin: 0 auto;
 }
@@ -138,7 +213,6 @@ export default {
 .action {
   display: flex;
   align-items: flex-end;
-  /* border: 1px solid red; */
 }
 
 .post-body {
@@ -146,17 +220,40 @@ export default {
 }
 
 .post-name {
-  /* border: 1px solid purple; */
   font-weight: bold;
   margin-bottom: 10px;
   line-height: 1.2;
   font-size: 1.375rem;
   height: fit-content;
+}
 
+.post-attr {
+  display: flex;
+  line-height: 1.3;
+  flex-direction: row;
+  height: fit-content;
+  margin-bottom: 5px;
+  font-size: 13px;
+  color: #555;
+}
+
+/* TODO 这里 CSS 需要调整 */
+
+.post-reply-number {
+  width: 45px;
+}
+
+.post-view-number {
+  width: 380px;
+}
+
+.post-time {
+  display: inline;
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 
 .post-content {
-  /* border: 1px solid blue; */
   height: fit-content;
   line-height: 1.25;
   font-size: 14px;
@@ -164,12 +261,10 @@ export default {
 }
 
 .post-reply-button {
-  /* border: 1px solid red; */
   height: fit-content;
 }
 
 .post-tags {
-  /* border: 1px solid green; */
   margin-bottom: 30px;
   height: fit-content;
 }

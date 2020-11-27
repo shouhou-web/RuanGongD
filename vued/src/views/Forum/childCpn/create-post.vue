@@ -1,4 +1,3 @@
-<!-- TODO: 上传图片（如果要做），引用文献 -->
 <template>
   <div data-app="true">
     <v-dialog v-model="dialog" persistent max-width="800">
@@ -31,14 +30,6 @@
             </el-form-item>
 
             <el-form-item label="分区" prop="sectorId">
-              <!-- <el-select class="post-sector" v-model="createPostForm.sectorId" placeholder="请选择动态分区">
-                <el-option
-                  v-for="sector in sectorList"
-                  :key="sector.sectorId"
-                  :label="sector.sectorName"
-                  :value="sector.sectorId"
-                ></el-option>
-              </el-select> -->
               <v-select
                 class="post-sector"
                 v-model="createPostForm.sectorId"
@@ -52,6 +43,7 @@
                 dense
               ></v-select>
             </el-form-item>
+            <!-- TODO: tag 长度限定，空白过滤 -->
             <el-form-item label="标签" prop="postTags">
               <v-combobox
                 :items="getSectorTags"
@@ -66,9 +58,9 @@
                 dense
                 color="rgb(64, 158, 255)"
               ></v-combobox>
-              <!-- https://vuetifyjs.com/en/components/combobox/#advanced-custom-options -->
             </el-form-item>
             <el-form-item label="引用文献">
+              <!-- TODO: 如何引用文献？ -->
               <v-btn icon @click="citeLiterature">
                 <v-icon color="blue darken-2">
                   mdi-message-text
@@ -84,8 +76,6 @@
               <font color="white">发表</font>
             </v-btn>
             <v-btn @click="dialog = false">取消</v-btn>
-            <!-- <l-button @click="submit('createPostForm')" size="small">发表</l-button>
-            <l-button @click="dialog = false" type="info" size="small">取消</l-button> -->
           </div>
         </v-card-actions>
         <v-divider></v-divider>
@@ -104,6 +94,7 @@ export default {
   data() {
     return {
       dialog: false, // 是否展示悬浮窗
+      userId: "1", // 用户id
       search: "", // 搜索的 tag
       postRule: {
         postName: [
@@ -146,7 +137,6 @@ export default {
         postContent: "", // 动态内容
         sectorId: "", // 动态所在分区 ID
         postTags: [], // 动态标签数组
-        // imgUrl: [""], // 上传图片的 Url（如果要做）
         citeId: "-1", // 引用的文献 ID
       },
       sectorList: [
@@ -192,6 +182,7 @@ export default {
           console.log(res);
           if (res.data.result == "true") {
             this.dialog = false;
+            // TODO 跳转到动态页面
             this.$message({
               type: "success",
               message: "动态发表成功！",
@@ -238,16 +229,18 @@ export default {
     },
   },
   created() {
-    // TODO 获取所有分区，以及每个分区下的 tag
-    // getAllTags()
-    //   .then((res) => {
-    //     console.log("getAllTags");
-    //     console.log(res);
-    //     // TODO
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    // 获取所有分区，以及每个分区下的 tag
+    getAllTags()
+      .then((res) => {
+        console.log("getAllTags");
+        console.log(res);
+        this.sectorList = res.data.sectorList;
+        this.userId = this.$route.state.userID; // TODO 等待统一
+        this.createPostForm.userId = this.userId;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
 };
 </script>

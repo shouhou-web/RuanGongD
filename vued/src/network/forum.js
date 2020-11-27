@@ -26,7 +26,7 @@ export function getAllSectors() {
   return request(baseURL, {
     url: "/getAllSectors",
     params: {},
-    method: "post"
+    method: "post",
   });
 }
 
@@ -41,7 +41,7 @@ export function getAllTags() {
   return request(baseURL, {
     url: "/getAllTags",
     params: {},
-    method: "post"
+    method: "post",
   });
 }
 
@@ -59,14 +59,47 @@ export function getAllTags() {
  * @returns {postId, result}
  *  动态ID,是否成功("true" or "false")
  */
-// TODO: 是否可以发表图片待定
 export function createPost(createPostForm) {
   return request(baseURL, {
     url: "/createPost",
     params: {
-      createPostForm
+      createPostForm,
     },
-    method: "post"
+    method: "post",
+  });
+}
+
+/**
+ * 获取单条动态信息
+ * @param {userId}
+ *  userId: 用户id
+ *  postId: 要获取的动态id
+ * @returns {postName, postContent, replyNum, viewNum, creatorId, creatorAvatar, creatorName, createTime, tags[], comments[{commenterId, commenterName, commenterAvatar, floor, commentContent, commentTime}]}
+ *  postName: 动态标题
+ *  postContent: 动态内容
+ *  replyNum: 动态的评论数
+ *  viewNum: 动态的被查看次数
+ *  creatorId: 创建者id
+ *  creatorAvatar: 创建者头像链接
+ *  creatorName: 创建者名称
+ *  createTime: 创建时间
+ *  tags[]: 标签数组，里面元素是string
+ *  comments[]: 评论数组，里面元素是对象
+ *    commenterId: 评论者id
+ *    commenterName: 评论者名称
+ *    commenterAvatar: 评论者头像链接
+ *    floor: 楼层，从 2 开始
+ *    commentContent: 评论内容
+ *    commentTime: 评论时间
+ */
+export function getPostInfo(userId, postId) {
+  return request(baseURL, {
+    url: "/getPostInfo",
+    params: {
+      userId,
+      postId,
+    },
+    method: "post",
   });
 }
 
@@ -97,7 +130,7 @@ export function getPosts(sectorId, start, num, sort, keyword) {
   return request(baseURL, {
     url: "/getPosts",
     params: { sectorId, start, num, sort, keyword },
-    method: "post"
+    method: "post",
   });
 }
 
@@ -113,7 +146,7 @@ export function isFollowed(userId, sectorId) {
   return request(baseURL, {
     url: "/isFollowed",
     params: { userId, sectorId },
-    method: "post"
+    method: "post",
   });
 }
 
@@ -130,6 +163,6 @@ export function followSector(userId, sectorId) {
   return request(baseURL, {
     url: "/followSector",
     params: { userId, sectorId },
-    method: "post"
+    method: "post",
   });
 }
