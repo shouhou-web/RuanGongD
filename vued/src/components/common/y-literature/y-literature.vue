@@ -1,6 +1,6 @@
 <template>
   <div class="one-follow-literature">
-    <div class="title">{{ title }}</div>
+    <div class="title" @click="gotoLiterature()">{{ title }}</div>
     <div class="tags">
       <div v-for="(a_tag, i) in tags">
         <div :class="{'first-tag': i==0, 'leftpart-tags': i != 0}">{{a_tag}}</div>
@@ -25,9 +25,15 @@ export default {
   name: "y-literature",
   props: {
     title: '',
+    id: '',
     authors: [],
     tags: [],
     read_time: 0
+  },
+  methods: {
+    gotoLiterature() {
+      this.$notify.success("跳转ing")
+    },
   }
 }
 </script>

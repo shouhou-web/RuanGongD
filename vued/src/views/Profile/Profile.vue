@@ -7,6 +7,9 @@
         <div class="profile-info">
           <div class="headshot">
             <img :src="userImgSrc" class="headshot-img">
+            <a class="headshot__hide" title="修改头像" @click="openChangeHeadshot">
+              <img src="../../assets/image/edit.png" class="headshot__inner--samll">
+            </a>
           </div>
           <div class="username">
             <div class="user-nickname">{{ userNickName }}</div>
@@ -28,6 +31,7 @@
     <div class="profile-content">
       <div class="content-left">
         <y-literature v-for="(onefollowingLiterature, i) in favorLiteratures"
+                      :id="onefollowingLiterature.literatureID"
                       :title="onefollowingLiterature.title"
                       :authors="onefollowingLiterature.authors"
                       :tags="onefollowingLiterature.tags"
@@ -99,6 +103,27 @@
         </div>
       </div>
     </div>
+    <m-hover ref="changeProfile" @submit="submit" @cancel="cancel">
+      <div class="change-profile-outter">
+        <div class="change-nickname">
+          <div class="hover-input-header">change nickname</div>
+          <div class="hover-input">
+            <input v-model="newNickName"></input>
+          </div>
+        </div>
+        <div class="change-degree">
+          <div class="hover-input-header">change degree</div>
+          <div>
+            <select v-model="newDegree" class="hover-input">
+              <option v-for="option in options" v-bind:value="option.value">
+                {{ option.text }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </m-hover>
+    <m-hover ref="changeHeadshot" @submit="submit" @cancel="cancel"></m-hover>
   </div>
 </template>
 
@@ -119,6 +144,7 @@ export default {
       // user收藏文献集合
       favorLiteratures: [
         {
+          literatureID: 0,
           title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
             authors: [
             {
@@ -131,6 +157,7 @@ export default {
           read_time: 10,
         },
         {
+          literatureID: 1,
           title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
           authors: [
             {
@@ -143,6 +170,7 @@ export default {
           read_time: 10,
         },
         {
+          literatureID: 2,
           title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
           authors: [
             {
@@ -224,7 +252,13 @@ export default {
         cancelBtn: "提交"
       });
     },
-
+    openChangeHeadshot() {
+      this.$refs.changeHeadshot.showHover({
+        title: "修改头像",
+        submitBtn: "取消",
+        cancelBtn: "提交"
+      });
+    },
     cancleFollow(selectUserID) {
       this.$notify.info("已取消关注")
     },
@@ -280,6 +314,35 @@ export default {
   margin: 0 auto;
   border-radius: 50%;
   max-width: 80%;
+}
+
+.headshot__hide {
+  width: 104px;
+  height: 104px;
+  align-items: center;
+  border-radius: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  opacity: 0;
+  position: absolute;
+  left: 185px;
+  top: 78px;
+  right: 0;
+  bottom: 0;
+  transition: ease-in-out 0.3s;
+}
+
+.headshot:hover .headshot__hide {
+  opacity: 1;
+  cursor: pointer;
+  transition: ease-in-out 0.3s;
+}
+
+.headshot__inner--samll {
+  border-radius: 50%;
+  height: 40%;
+  width: 40%;
 }
 
 .username {
@@ -692,7 +755,7 @@ export default {
 }
 
 .change-profile-outter {
-  width: 420px;
+  width: 400px;
   height: auto;
   background-color: white;
 }
@@ -717,20 +780,12 @@ export default {
 
 .hover-input-header {
   font-size: 0.9rem;
-  color: #000000;
-  font-weight: 700;
+  color: #777777;
   transition: ease-in-out 0.5s;
-}
-
-.hover-input-header-hover {
-  font-size: 0.9rem;
-  width: fit-content;
-  color: #4F6EF2;
-  transition: ease-in-out 0.5s;
-  font-weight: 700;
 }
 
 .hover-input {
+  font-size: 0.8rem;
   width: 70%;
   padding: 5px;
   margin-top: 5px;
@@ -749,4 +804,5 @@ export default {
 
 .option {
 }
+
 </style>
