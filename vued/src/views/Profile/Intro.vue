@@ -29,7 +29,7 @@
         <div class="members">
           <div class="member-header">
             <div>all members (100)</div>
-            <div class="look-all">
+            <div class="look-all" @click="openAllMemberList">
               <div>look all</div>
               <img src="../../assets/icons/profile/look.svg" class="profile-icon">
             </div>
@@ -39,44 +39,7 @@
             <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
             <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
             <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="../../assets/icons/profile/more.svg" class="more-icon">
+<!--            <img src="../../assets/icons/profile/more.svg" class="more-icon">-->
           </div>
         </div>
         <div class="literatures">
@@ -132,24 +95,163 @@
             <div class="chart-type">line chart</div>
             <div class="chart-name">门户文献发布量统计</div>
           </div>
-          <div class="oneChart-style"><v-chart :options="lineChart"></v-chart></div>
+          <div class="oneChart-style" v-if="introLiteraturesPublishedData != null"><v-chart :options="lineChart"></v-chart></div>
+          <div class="oneChart-style" v-if="introLiteraturesPublishedData == null"><img src="../../assets/image/no-data.png"></div>
         </div>
         <div class="chart-part">
           <div class="chart-header">
             <div class="chart-type">pie chart</div>
             <div class="chart-name">门户文献tag统计</div>
           </div>
-          <div class="oneChart-style"><v-chart :options="pieChart"></v-chart></div>
+          <div class="oneChart-style" v-if="introLiteraturesTopTags != null"><v-chart :options="pieChart"></v-chart></div>
+          <div class="oneChart-style" v-if="introLiteraturesTopTags == null"><img src="../../assets/image/no-data.png"></div>
         </div>
         <div class="chart-part">
           <div class="chart-header">
             <div class="chart-type">bar chart</div>
             <div class="chart-name">门户活跃用户统计</div>
           </div>
-          <div class="oneChart-style"><v-chart :options="barChart"></v-chart></div>
+          <div class="oneChart-style" v-if="introWorkInfo != null"><v-chart :options="barChart"></v-chart></div>
+          <div class="oneChart-style" v-if="introWorkInfo == null">
+            <img src="../../assets/image/no-data.png">
+          </div>
         </div>
       </div>
     </div>
+    <m-hover ref="allMember">
+      <div class="all-members-list-outter">
+        <div class="one-member">
+          <div class="one-member-headshot">
+            <img :src="userImgSrc" class="member-headshot-style">
+          </div>
+          <div class="one-member-info">
+            <div class="member-name">{{userName}}</div>
+            <div class="member-degree">{{retUserDegree(userDegree)}}</div>
+          </div>
+          <div class="one-member-follow-statue">
+            <div v-if="followStatue" class="red-font" @click="cancleFollow">followed</div>
+            <div v-if="!followStatue" class="black-font" @click="doFollow">unfollow</div>
+          </div>
+        </div>
+        <div class="one-member">
+          <div class="one-member-headshot">
+            <img :src="userImgSrc" class="member-headshot-style">
+          </div>
+          <div class="one-member-info">
+            <div class="member-name">{{userName}}</div>
+            <div class="member-degree">{{retUserDegree(userDegree)}}</div>
+          </div>
+          <div class="one-member-follow-statue">
+            <div v-if="followStatue" class="red-font" @click="cancleFollow">followed</div>
+            <div v-if="!followStatue" class="black-font" @click="doFollow">unfollow</div>
+          </div>
+        </div>
+        <div class="one-member">
+          <div class="one-member-headshot">
+            <img :src="userImgSrc" class="member-headshot-style">
+          </div>
+          <div class="one-member-info">
+            <div class="member-name">{{userName}}</div>
+            <div class="member-degree">{{retUserDegree(userDegree)}}</div>
+          </div>
+          <div class="one-member-follow-statue">
+            <div v-if="followStatue" class="red-font" @click="cancleFollow">followed</div>
+            <div v-if="!followStatue" class="black-font" @click="doFollow">unfollow</div>
+          </div>
+        </div>
+        <div class="one-member">
+          <div class="one-member-headshot">
+            <img :src="userImgSrc" class="member-headshot-style">
+          </div>
+          <div class="one-member-info">
+            <div class="member-name">{{userName}}</div>
+            <div class="member-degree">{{retUserDegree(userDegree)}}</div>
+          </div>
+          <div class="one-member-follow-statue">
+            <div v-if="followStatue" class="red-font" @click="cancleFollow">followed</div>
+            <div v-if="!followStatue" class="black-font" @click="doFollow">unfollow</div>
+          </div>
+        </div>
+        <div class="one-member">
+          <div class="one-member-headshot">
+            <img :src="userImgSrc" class="member-headshot-style">
+          </div>
+          <div class="one-member-info">
+            <div class="member-name">{{userName}}</div>
+            <div class="member-degree">{{retUserDegree(userDegree)}}</div>
+          </div>
+          <div class="one-member-follow-statue">
+            <div v-if="followStatue" class="red-font" @click="cancleFollow">followed</div>
+            <div v-if="!followStatue" class="black-font" @click="doFollow">unfollow</div>
+          </div>
+        </div>
+        <div class="one-member">
+          <div class="one-member-headshot">
+            <img :src="userImgSrc" class="member-headshot-style">
+          </div>
+          <div class="one-member-info">
+            <div class="member-name">{{userName}}</div>
+            <div class="member-degree">{{retUserDegree(userDegree)}}</div>
+          </div>
+          <div class="one-member-follow-statue">
+            <div v-if="followStatue" class="red-font" @click="cancleFollow">followed</div>
+            <div v-if="!followStatue" class="black-font" @click="doFollow">unfollow</div>
+          </div>
+        </div>
+        <div class="one-member">
+          <div class="one-member-headshot">
+            <img :src="userImgSrc" class="member-headshot-style">
+          </div>
+          <div class="one-member-info">
+            <div class="member-name">{{userName}}</div>
+            <div class="member-degree">{{retUserDegree(userDegree)}}</div>
+          </div>
+          <div class="one-member-follow-statue">
+            <div v-if="followStatue" class="red-font" @click="cancleFollow">followed</div>
+            <div v-if="!followStatue" class="black-font" @click="doFollow">unfollow</div>
+          </div>
+        </div>
+        <div class="one-member">
+          <div class="one-member-headshot">
+            <img :src="userImgSrc" class="member-headshot-style">
+          </div>
+          <div class="one-member-info">
+            <div class="member-name">{{userName}}</div>
+            <div class="member-degree">{{retUserDegree(userDegree)}}</div>
+          </div>
+          <div class="one-member-follow-statue">
+            <div v-if="followStatue" class="red-font" @click="cancleFollow">followed</div>
+            <div v-if="!followStatue" class="black-font" @click="doFollow">unfollow</div>
+          </div>
+        </div>
+        <div class="one-member">
+          <div class="one-member-headshot">
+            <img :src="userImgSrc" class="member-headshot-style">
+          </div>
+          <div class="one-member-info">
+            <div class="member-name">{{userName}}</div>
+            <div class="member-degree">{{retUserDegree(userDegree)}}</div>
+          </div>
+          <div class="one-member-follow-statue">
+            <div v-if="followStatue" class="red-font" @click="cancleFollow">followed</div>
+            <div v-if="!followStatue" class="black-font" @click="doFollow">unfollow</div>
+          </div>
+        </div>
+        <div class="one-member">
+          <div class="one-member-headshot">
+            <img :src="userImgSrc" class="member-headshot-style">
+          </div>
+          <div class="one-member-info">
+            <div class="member-name">{{userName}}</div>
+            <div class="member-degree">{{retUserDegree(userDegree)}}</div>
+          </div>
+          <div class="one-member-follow-statue">
+            <div v-if="followStatue" class="red-font" @click="cancleFollow">followed</div>
+            <div v-if="!followStatue" class="black-font" @click="doFollow">unfollow</div>
+          </div>
+        </div>
+      </div>
+    </m-hover>
   </div>
 </template>
 
@@ -171,59 +273,51 @@ export default {
       introPublish: 100,
       introMemberNum: 20,
       introImgSrc: "https://i1.rgstatic.net/ii/institution.image/AS%3A267456919080961%401440778106588_l",
-      introPos: "Beijing China",
+      introPos: "Bei jing China",
+
+      userName: 'Ma Zhengchang',
+      userDegree: 1,
       userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
+
+      followStatue: false,
+
+      introLiteraturesPublishedData: [100, 200, 500, 100],
+      introLiteraturesTopTags: [
+        {value: 335, name: '直接访问'},
+        {value: 310, name: '邮件营销'},
+        {value: 234, name: '联盟广告'},
+        {value: 135, name: '视频广告'},
+        {value: 15, name: '搜索引擎1'},
+        {value: 153, name: '搜索引擎2'},
+        {value: 122, name: '搜索引擎3'}
+      ],
+      introWorkInfo: {
+        members: ['mgg', 'Tony', 'samshui', '1', '2', '3'],
+        publishCount: [100, 200, 150, 1, 2, 200]
+      },
+
       lineChart: {
         tooltip: {
           trigger: 'axis',
-          axisPointer: {
-            type: 'cross'
-          }
+          axisPointer: {type: 'cross'}
         },
         xAxis: {
           type: 'category',
-          boundaryGap: false,
-          data: ['00:00', '01:15', '02:30', '03:45', '05:00', '06:15', '07:30', '08:45', '10:00', '11:15', '12:30', '13:45', '15:00', '16:15', '17:30', '18:45', '20:00', '21:15', '22:30', '23:45']
+          boundaryGap: true,
+          data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
         },
         yAxis: {
           type: 'value',
-          axisLabel: {
-            formatter: '{value}'
-          },
-          axisPointer: {
-            snap: true
-          }
-        },
-        visualMap: {
-          show: false,
-          dimension: 0,
-          pieces: [{
-            lte: 6,
-            color: 'green'
-          }, {
-            gt: 6,
-            lte: 8,
-            color: 'red'
-          }, {
-            gt: 8,
-            lte: 14,
-            color: 'green'
-          }, {
-            gt: 14,
-            lte: 17,
-            color: 'red'
-          }, {
-            gt: 17,
-            color: 'green'
-          }]
+          axisLabel: { formatter: '{value}' },
+          axisPointer: { snap: true }
         },
         series: [
           {
             name: '发布量',
             type: 'line',
             smooth: true,
-            data: [300, 280, 250, 260, 270, 300, 550, 500, 400, 390, 380, 390, 400, 500, 600, 750, 800, 700, 600, 400],
-          }
+            data: [300, 280, 250, 260, 270, 300, 550, 500, 400, 390, 380, 390],
+          },
         ]
       },
       pieChart: {
@@ -233,9 +327,9 @@ export default {
         },
         series: [
           {
-            name: 'TAG',
+            name: '相关标签',
             type: 'pie',
-            radius: ['50%', '70%'],
+            radius: ['60%', '70%'],
             avoidLabelOverlap: false,
             label: {
               show: false,
@@ -244,44 +338,40 @@ export default {
             emphasis: {
               label: {
                 show: true,
-                fontSize: '30',
-                fontWeight: 'bold'
+                fontSize: '25',
+                fontWeight: 'bold',
+                fontFamily: 'SimSun',
               }
             },
             labelLine: {
               show: false
             },
-            data: [
-              {value: 335, name: '直接访问'},
-              {value: 310, name: '邮件营销'},
-              {value: 234, name: '联盟广告'},
-              {value: 135, name: '视频广告'},
-              {value: 1548, name: '搜索引擎'}
-            ]
+            data: []
           }
         ]
       },
       barChart: {
         tooltip: {
           trigger: 'item',
-          formatter: '{b}: {c}'
+          formatter: '{b}: {c}篇',
         },
         xAxis: {
           type: 'category',
-          data: ['mgg', 'Tue', 'Tony', 'Thu', 'samshui', 'Sat', 'who']
+          data: []
         },
         yAxis: {
           type: 'value'
         },
-        series: [{
-          data: [120, 200, 150, 80, 70, 110, 130],
-          type: 'bar',
-          showBackground: true,
-          backgroundStyle: {
-            color: 'rgba(220, 220, 220, 0.8)'
+        series: [
+          {
+            data: [],
+            type: 'bar',
+            showBackground: false,
+            backgroundStyle: {color: 'rgba(220, 220, 220, 0.8)'}
           }
-        }]
+        ]
       },
+
       onefollowingLiterature: {
         title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
         authors: ["Ma Hanyuan"],
@@ -290,7 +380,35 @@ export default {
       }
     }
   },
-  methods: {},
+  methods: {
+    openAllMemberList() {
+      this.$refs.allMember.showHover({
+        title: "所有用户",
+        submitBtn: null,
+        cancelBtn: null
+      })
+    },
+    retUserDegree(userDegree) {
+      if (userDegree == 0) return "高中";
+      else if (userDegree == 1) return "Bachelor of Engineering";
+      else if (userDegree == 2) return "研究生";
+      else if (userDegree == 3) return "博士生";
+      else if (userDegree == 4) return "博士后";
+      else return "";
+    },
+    cancleFollow() {
+      this.$notify.info("已取消关注")
+    },
+    doFollow() {
+      this.$notify.success("关注成功")
+    }
+  },
+  created() {
+    this.lineChart.series[0].data = this.introLiteraturesPublishedData;
+    this.pieChart.series[0].data = this.introLiteraturesTopTags;
+    this.barChart.xAxis.data = this.introWorkInfo.members;
+    this.barChart.series[0].data = this.introWorkInfo.publishCount;
+  },
   components: {
     'v-chart': ECharts
   },
@@ -351,7 +469,7 @@ export default {
 .intro-name {
   margin-left: 2%;
   margin-top: 7%;
-  line-height: 1,2;
+  line-height: 1.2;
   color: #111;
   font-size: 1.375rem;
 }
@@ -360,7 +478,7 @@ export default {
   max-width: fit-content;
   margin-left: 2%;
   margin-top: 1%;
-  line-height: 1,2;
+  line-height: 1.2;
   color: #555;
   font-size: 0.875rem;
   cursor: pointer;
@@ -646,5 +764,93 @@ export default {
 }
 
 .one-op {
+}
+
+.all-members-list-outter {
+  margin: 0 auto;
+  width: 400px;
+  height: auto;
+  padding: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  max-height: 500px;
+  overflow: auto;
+}
+
+.one-member {
+  border: 1px solid #dddddd;
+  width: 100%;
+  height: 70px;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+}
+
+.one-member-headshot {
+  margin-left: 5px;
+  width: 60px;
+  height: 60px;
+  padding-top: 4px;
+}
+
+.member-headshot-style {
+  width: 100%;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+
+.one-member-info {
+  width: 50%;
+  max-width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-top: 5%;
+  padding-left: 2%;
+}
+
+.member-name {
+  margin-left: 10px;
+  width: 170px;
+  height: fit-content;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+  max-width: 170px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.member-name:hover {
+  cursor: pointer;
+  width: fit-content;
+  border-bottom: 1px solid black;
+}
+
+.member-degree {
+  margin-left: 10px;
+  width: 170px;
+  height: fit-content;
+  font-size: 0.7rem;
+  color: #777777;
+}
+
+.one-member-follow-statue {
+  padding-top: 26px;
+  text-align: center;
+  width: calc(97% - 170px - 60px);
+  font-size: 0.7rem;
+}
+
+.one-member-follow-statue:hover {
+  cursor: pointer;
+}
+
+.red-font {
+  color: red;
+}
+
+.black-font {
+  color: black;
 }
 </style>
