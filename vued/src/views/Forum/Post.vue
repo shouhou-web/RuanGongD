@@ -1,6 +1,6 @@
 <template>
   <!-- 动态页面 -->
-  <div id="post">
+  <div id="post" data-app="true">
     <m-header></m-header>
 
     <!-- 动态 -->
@@ -15,13 +15,13 @@
               {{ postInfo.creatorName }}
             </div>
             <div class="action">
-              <v-btn icon v-if="isAuthor == true">
+              <v-btn icon v-if="postInfo.creatorId == userId" @click="deleteDialog = true">
                 <!-- 是作者：可以删除动态 -->
                 <v-icon>
                   mdi-delete
                 </v-icon>
               </v-btn>
-              <v-btn icon v-else>
+              <v-btn icon v-else @click="reportDialog = true">
                 <!-- 不是作者：可以举报动态 -->
                 <v-icon>
                   mdi-alert-octagon
@@ -53,7 +53,7 @@
               </div>
             </div>
             <div class="post-reply-button" @click="jumpToReply">
-              <v-btn color="#4F6EF2">
+              <v-btn color="var(--color-main)">
                 <font color="white">回复动态</font>
               </v-btn>
             </div>
@@ -65,7 +65,7 @@
     <!-- 评论区 -->
     <div class="comment-container">
       <div class="card">
-        <div class="child-card" v-for="comment in comments" :key="comment">
+        <div class="child-card" v-for="comment in comments" :key="comment.floor">
           <div class="card-divider" v-if="comment.floor != 1"></div>
           <div class="card-header">
             <div class="avatar">
@@ -90,13 +90,45 @@
       </div>
     </div>
 
-    <!-- 输入评论 -->
+    <!-- TODO 输入评论 -->
     <div class="input-container">
       <div class="card">
         <div class="card-header"></div>
         <div class="card-item"></div>
       </div>
     </div>
+
+    <!-- TODO 举报对话框  -->
+    <v-dialog v-model="reportDialog" max-width="800">
+      <v-card elevation="3">
+        <v-card-title>举报动态</v-card-title>
+        <v-card-text>举报</v-card-text>
+        <v-card-actions>
+          <div class="footer">
+            <v-btn color="var(--color-main)" @click="reportPost">
+              <font color="white">举报</font>
+            </v-btn>
+            <v-btn @click="reportDialog = false">取消</v-btn>
+          </div>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- TODO 删除对话框  -->
+    <v-dialog v-model="deleteDialog" max-width="800">
+      <v-card elevation="3">
+        <v-card-title>删除动态</v-card-title>
+        <v-card-text>删除</v-card-text>
+        <v-card-actions>
+          <div class="footer">
+            <v-btn color="#ff6060" @click="deletePost">
+              <font color="white">删除</font>
+            </v-btn>
+            <v-btn @click="deleteDialog = false">取消</v-btn>
+          </div>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -107,8 +139,10 @@ export default {
   data() {
     return {
       isAuthor: false,
-      userId: "1",
+      userId: "2",
       postId: "123",
+      reportDialog: false, // 是否展示举报界面
+      deleteDialog: false, // 是否展示删除界面
       postInfo: {
         creatorId: "1",
         creatorName: "Codevka",
@@ -167,9 +201,19 @@ export default {
     };
   },
   methods: {
+    // 聚焦到回复输入框
     jumpToReply() {
-      // 聚焦到回复输入框
       console.log("jump!");
+    },
+
+    // 举报动态
+    reportPost() {
+      console.log("report post");
+    },
+
+    // 删除动态
+    deletePost(postId) {
+      console.log("delete post");
     },
   },
   components: {},
@@ -370,7 +414,7 @@ export default {
   align-items: center;
   color: white;
   padding: 5px;
-  background-color: #4f6ef2;
+  background-color: var(--color-main);
   margin: auto;
   margin-left: 10px;
   border-radius: 5px;
@@ -385,5 +429,13 @@ export default {
   margin-bottom: 5px;
   font-size: 13px;
   color: #555;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  margin: auto;
+  padding-bottom: 10px;
+  width: 30%;
 }
 </style>

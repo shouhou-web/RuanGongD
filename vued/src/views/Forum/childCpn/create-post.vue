@@ -72,7 +72,7 @@
 
         <v-card-actions>
           <div class="footer">
-            <v-btn @click="submit('createPostForm')" color="#4F6EF2">
+            <v-btn @click="submit('createPostForm')" color="var(--color-main)">
               <font color="white">发表</font>
             </v-btn>
             <v-btn @click="dialog = false">取消</v-btn>
