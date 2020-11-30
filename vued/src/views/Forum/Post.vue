@@ -11,16 +11,18 @@
             <div class="avatar">
               <v-avatar size="48px"> <img :src="postInfo.creatorAvatar"/></v-avatar>
             </div>
-            <div class="name">
+            <div class="poster-name">
               {{ postInfo.creatorName }}
             </div>
             <div class="action">
               <v-btn icon v-if="isAuthor == true">
+                <!-- 是作者：可以删除动态 -->
                 <v-icon>
                   mdi-delete
                 </v-icon>
               </v-btn>
               <v-btn icon v-else>
+                <!-- 不是作者：可以举报动态 -->
                 <v-icon>
                   mdi-alert-octagon
                 </v-icon>
@@ -63,8 +65,28 @@
     <!-- 评论区 -->
     <div class="comment-container">
       <div class="card">
-        <div class="card-header"></div>
-        <div class="card-item"></div>
+        <div class="child-card" v-for="comment in comments" :key="comment">
+          <div class="card-divider" v-if="comment.floor != 1"></div>
+          <div class="card-header">
+            <div class="avatar">
+              <v-avatar size="32px"> <img :src="comment.commenterAvatar"/></v-avatar>
+            </div>
+            <div class="commenter-name">
+              {{ comment.commenterName }}
+            </div>
+            <div class="poster-tag" v-if="comment.commenterId == postInfo.creatorId">
+              楼主
+            </div>
+            <div class="comment-time">
+              {{ comment.commentTime }}
+            </div>
+          </div>
+          <div class="card-item">
+            <div class="post-content">
+              {{ comment.commentContent }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -106,7 +128,7 @@ export default {
           commenterAvatar: "https://i.loli.net/2020/11/27/9fbGvYknV8KejFS.png",
           floor: 2,
           commentContent: "AI nb!",
-          commentTime: "10分钟前",
+          commentTime: "今天 11:45",
         },
         {
           commenterId: "2333",
@@ -114,7 +136,32 @@ export default {
           commenterAvatar: "https://i.loli.net/2020/11/27/3tz2XEraSwl8skK.png",
           floor: 1,
           commentContent: "BI nb!",
-          commentTime: "今天 08:37",
+          commentTime: "1926-08-17",
+        },
+        {
+          commenterId: "1234",
+          commenterName: "CI",
+          commenterAvatar: "https://i.loli.net/2020/11/27/3tz2XEraSwl8skK.png",
+          floor: 3,
+          commentContent: "DI nb!",
+          commentTime: "8 分钟前",
+        },
+        {
+          commenterId: "21",
+          commenterName: "Spam  Bot",
+          commenterAvatar: "https://i.loli.net/2020/11/30/jm2i7g9qL61SkE8.png",
+          floor: 4,
+          commentContent:
+            "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+          commentTime: "刚刚",
+        },
+        {
+          commenterId: "1",
+          commenterName: "Codevka",
+          commenterAvatar: "https://i.loli.net/2020/11/26/soiOjIlZFpELuTW.png",
+          floor: 5,
+          commentContent: "No spam.",
+          commentTime: "刚刚",
         },
       ],
     };
@@ -128,25 +175,30 @@ export default {
   components: {},
   created() {
     this.postId = this.$route.query.postId;
-    this.userId = this.$route.state.userID; // TODO 等待统一
+    // this.userId = this.$route.state.userID; // TODO 等待统一
     console.log("postId: " + this.postId + "\nuserId: " + this.userId);
-    getPostInfo(this.userId, this.postId)
-      .then((res) => {
-        console.log("getPostInfo");
-        console.log(res);
-        this.postInfo.postName = res.data.postName;
-        this.postInfo.postContent = res.data.postContent;
-        this.postInfo.replyNum = res.data.replyNum;
-        this.postInfo.viewNum = res.data.viewNum;
-        this.postInfo.creatorId = res.data.creatorId;
-        this.postInfo.creatorAvatar = res.data.creatorAvatar;
-        this.postInfo.createTime = res.data.createTime;
-        this.postInfo.postTags = res.data.tags;
-        this.comments = res.data.comments;
-      })
-      .cache((err) => {
-        console.log(err);
-      });
+
+    // getPostInfo(this.userId, this.postId)
+    //   .then((res) => {
+    //     console.log("getPostInfo");
+    //     console.log(res);
+    //     this.postInfo.postName = res.data.postName;
+    //     this.postInfo.postContent = res.data.postContent;
+    //     this.postInfo.replyNum = res.data.replyNum;
+    //     this.postInfo.viewNum = res.data.viewNum;
+    //     this.postInfo.creatorId = res.data.creatorId;
+    //     this.postInfo.creatorAvatar = res.data.creatorAvatar;
+    //     this.postInfo.createTime = res.data.createTime;
+    //     this.postInfo.postTags = res.data.tags;
+    //     this.comments = res.data.comments;
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+
+    this.comments.sort(function(a, b) {
+      return a.floor - b.floor;
+    }); // 对 comments 按楼层升序排序
   },
 };
 </script>
@@ -156,6 +208,7 @@ export default {
   width: 600px;
   height: 100%;
   margin: 0 auto;
+  margin-top: 50px;
 }
 
 .comment-container {
@@ -180,8 +233,15 @@ export default {
   padding: 20px 30px 20px 30px;
 }
 
+.card-header {
+  padding-top: 5px;
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+
 .card-item {
-  padding-bottom: 7.5px;
+  padding-bottom: 3px;
   display: block;
   margin: 0;
 }
@@ -201,11 +261,11 @@ export default {
   align-items: center;
 }
 
-.name {
+.poster-name {
   display: flex;
   align-items: center;
   width: 500px;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
   margin-left: 10px;
 }
@@ -213,6 +273,7 @@ export default {
 .action {
   display: flex;
   align-items: flex-end;
+  margin-left: auto;
 }
 
 .post-body {
@@ -232,12 +293,10 @@ export default {
   line-height: 1.3;
   flex-direction: row;
   height: fit-content;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
   font-size: 13px;
   color: #555;
 }
-
-/* TODO 这里 CSS 需要调整 */
 
 .post-reply-number {
   width: 45px;
@@ -249,14 +308,15 @@ export default {
 
 .post-time {
   display: inline;
-  justify-content: flex-end;
   align-items: flex-end;
+  margin-left: auto;
 }
 
 .post-content {
   height: fit-content;
-  line-height: 1.25;
+  line-height: 1.35;
   font-size: 14px;
+  margin-top: 10px;
   margin-bottom: 15px;
 }
 
@@ -276,7 +336,7 @@ export default {
 }
 
 .tag-content {
-  font-size: 0.8rem;
+  font-size: 0.67rem;
   display: inline-block;
   line-height: 1.3;
   color: #555;
@@ -288,5 +348,42 @@ export default {
   margin-bottom: -0.16em;
   border-radius: 9999px;
   white-space: nowrap;
+}
+
+.card-divider {
+  height: 1px;
+  background: rgb(223, 223, 223);
+  margin: 10px 0 10px 0;
+}
+
+.commenter-name {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.poster-tag {
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  color: white;
+  padding: 5px;
+  background-color: #4f6ef2;
+  margin: auto;
+  margin-left: 10px;
+  border-radius: 5px;
+  height: fit-content;
+}
+
+.comment-time {
+  display: flex;
+  align-items: flex-end;
+  line-height: 1.3;
+  margin-left: auto;
+  margin-bottom: 5px;
+  font-size: 13px;
+  color: #555;
 }
 </style>
