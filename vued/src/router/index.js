@@ -60,6 +60,11 @@ const routes = [
     component: Literature
   },
   {
+    path: "/manage",
+    name: "Manage",
+    component: Manage
+  },
+  {
     path: "/root",
     name: "Root",
     component: Root
