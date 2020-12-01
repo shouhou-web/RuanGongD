@@ -1,7 +1,7 @@
 <template>
   <!-- 检索结果 -->
   <div id="search">
-    <m-header></m-header>
+    <m-app-header></m-app-header>
     <!-- 检索框 -->
     <div class="search">
       <search-advance

@@ -43,7 +43,7 @@
         <slot name="reportee" v-if="type != 3"></slot>
         <img
           class="l-root-card--reportee-pic"
-          :src="require('../pics/' + imgPath1 + '.jpg')"
+          :src="require('assets/image/root/' + imgPath1 + '.jpg')"
           v-if="type == 3"
         />
         <slot name="reporteeProfile"></slot>
@@ -130,6 +130,7 @@ export default {
   background-color: #ffffff;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
+  border: 3px solid #e83015;
   display: flex;
   flex-direction: column;
   padding: 10px;

@@ -109,7 +109,7 @@ export default {
 
 #suspended .wrapper {
   background-color: #fff;
-  border-radius: 12px;
+  border-radius: 4px;
 }
 
 #suspended .title {
