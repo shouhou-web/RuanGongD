@@ -1,174 +1,101 @@
 <template>
   <!-- 个人信息界面 -->
   <div id="profile" class="profile">
-    <div id="profileLeftPart" class="leftPart">
-      <div class="userImg">
-        <img :src="userImgSrc" class="image">
-      </div>
-      <div class="userProfile-outter-style">
-        <div class="userName">
-          <img src="../../assets/icons/profile/userName.svg" class="icon-style">
-          <div class="userProfile-inner-style">
-            <div class="userNickName-style">{{ userNickName }}</div>
-            <div class="userName-style">{{ userName }}</div>
+    <m-header></m-header>
+    <div class="profile-header">
+      <div class="user-profile">
+        <div class="profile-info">
+          <div class="headshot">
+            <img :src="userImgSrc" class="headshot-img">
+            <a class="headshot__hide" title="修改头像" @click="openChangeHeadshot">
+              <img src="../../assets/image/edit.png" class="headshot__inner--samll">
+            </a>
+          </div>
+          <div class="username">
+            <div class="user-nickname">{{ userNickName }}</div>
+            <div class="user-degree" @click="openChangeProfileHover">
+              {{ retUserDegree() }}
+              <img src="../../assets/icons/profile/edit.svg" class="profile-icon">
+            </div>
+          </div>
+          <div class="publish">
+            <div class="publish-button">发表文献</div>
           </div>
         </div>
-        <div class="userDegree">
-          <img src="../../assets/icons/profile/userDegree.svg" class="icon-style">
-          <div class="userProfile-inner-style">
-            <div class="userDegree-style">{{ retUserDegree() }}</div>
-          </div>
-        </div>
-        <div class="userIntroSimple">
-          <img src="../../assets/icons/profile/userIntro.svg" class="icon-style">
-          <div class="userProfile-inner-style">
-            <div class="userIntro-style">{{ userIntro }}</div>
-          </div>
+        <div class="profile-op">
+          <div class="op-favor">Favor</div>
+          <div class="bar"></div>
         </div>
       </div>
-      <div class="userOp">
-        <div class="op-style" title="关注该用户">
-          <img src="../../assets/icons/profile/follow.svg" class="opIcon-style">
-        </div>
-        <div class="op-style" title="举报该用户">
-          <img src="../../assets/icons/profile/report.svg" class="opIcon-style">
-        </div>
-        <div class="op-style" title="编辑信息">
-          <img src="../../assets/icons/profile/editProfile.svg" class="opIcon-style">
-        </div>
-      </div>
-      <div class="leftBottom"></div>
     </div>
-    <div id="profileRightPart" class="rightPart">
-      <div id="introDoor" :class="{ 'userIntroRight-style': userIntroState }">
-        <div class="introTitle">
-          I
-          n
-          t
-          r
-          o
-        </div>
-        <div class="introImg">
-          <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2335021541,4046898952&fm=26&gp=0.jpg" class="introImg-style">
-        </div>
-        <div class="introInfo">
-          <font>
-            北京航空航天大学软件学院是2002年经国家教育部和国家计委联合批准成立的全国37所国家示范性软件学院之一，学院致力于培养全面和谐发展、创新型、国际化、市场急需的有爱国报国情怀的工程实用性人才。经过十多年的发展，软件学院在人才培养上逐渐形成了自己的培养模式和培养特色，受到业界普遍认可。
-          </font>
-        </div>
-        <div class="gotoIntro" title="前往该门户主页">
-          <img src="../../assets/icons/profile/rightArrow.svg" class="gotoIcon">
-        </div>
+    <div class="profile-content">
+      <div class="content-left">
+        <y-literature v-for="(onefollowingLiterature, i) in favorLiteratures"
+                      :id="onefollowingLiterature.literatureID"
+                      :title="onefollowingLiterature.title"
+                      :authors="onefollowingLiterature.authors"
+                      :tags="onefollowingLiterature.tags"
+                      :read_time="onefollowingLiterature.read_time"></y-literature>
       </div>
-      <div id="userStorage" class="userStorage">
-        <div id="myFavorite" class="favor">
-          <div class="favorTag">收藏</div>
-          <div class="favorites">
-            <div class="one-favorite">
-              <div class="favorTitle" title="查看文献">文献标题</div>
-              <div class="author">
-                <img src="../../assets/icons/profile/author.svg" class="icon-style2">
-                <div class="authorName">马兔兔</div>
-              </div>
-              <div class="baseInfo">
-                <img src="../../assets/icons/profile/tag.svg" class="icon-style2">
-                <div class="authorName">12k</div>
-              </div>
-              <div class="favorContent">
-                文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容
-                文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容
-              </div>
+      <div class="content-right">
+        <div class="user-intro">
+          <div class="user-intro-header">
+            <div class="user-intro-header-content">
+              Current affiliation
             </div>
-            <div class="one-favorite">
-              <div class="favorTitle" title="查看文献">文献标题</div>
-              <div class="author">
-                <img src="../../assets/icons/profile/author.svg" class="icon-style2">
-                <div class="authorName">马兔兔</div>
-              </div>
-              <div class="baseInfo">
-                <img src="../../assets/icons/profile/tag.svg" class="icon-style2">
-                <div class="authorName">12k</div>
-              </div>
-              <div class="favorContent">
-                文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容
-                文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容
-              </div>
-            </div>
-            <div class="one-favorite">
-              <div class="favorTitle" title="查看文献">文献标题</div>
-              <div class="author">
-                <img src="../../assets/icons/profile/author.svg" class="icon-style2">
-                <div class="authorName">马兔兔</div>
-              </div>
-              <div class="baseInfo">
-                <img src="../../assets/icons/profile/tag.svg" class="icon-style2">
-                <div class="authorName">12k</div>
-              </div>
-              <div class="favorContent">
-                文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容
-                文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容
-              </div>
-            </div>
-            <div class="one-favorite">
-              <div class="favorTitle" title="查看文献">文献标题</div>
-              <div class="author">
-                <img src="../../assets/icons/profile/author.svg" class="icon-style2">
-                <div class="authorName">马兔兔</div>
-              </div>
-              <div class="baseInfo">
-                <img src="../../assets/icons/profile/tag.svg" class="icon-style2">
-                <div class="authorName">12k</div>
-              </div>
-              <div class="favorContent">
-                文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容
-                文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容
-              </div>
-            </div>
-            <div class="one-favorite">
-            <div class="favorTitle" title="查看文献">文献标题</div>
-            <div class="author">
-              <img src="../../assets/icons/profile/author.svg" class="icon-style2">
-              <div class="authorName">马兔兔</div>
-            </div>
-            <div class="baseInfo">
-              <img src="../../assets/icons/profile/tag.svg" class="icon-style2">
-              <div class="authorName">12k</div>
-            </div>
-            <div class="favorContent">
-              文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容
-              文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容文献内容
+            <div class="user-intro-change">
+              Edit
+              <img src="../../assets/icons/profile/edit.svg" class="profile-icon">
             </div>
           </div>
+          <div class="user-intro-content">
+            <div class="intro-content">
+              <div class="intro-content-details">
+                <div class="intro-font-1">{{ introName }}</div>
+                <div class="intro-font-2">
+                  {{introLocation}}
+                </div>
+                <div class="intro-font-2">
+                  {{introDepartment}}
+                </div>
+              </div>
+            </div>
+            <div class="intro-img">
+              <img :src="introImg" class="intro-img-details">
+            </div>
           </div>
         </div>
-        <div id="myFollow" class="follow">
-          <div class="followTag">关注</div>
-          <div class="follows">
-            <div class="one-follow">
-              <div class="follow-img">
-                <img src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1285063713,2753463619&fm=26&gp=0.jpg" class="follow-img-style" title="进入该用户主页">
+        <div class="user-follow">
+          <div class="follow-header">
+            <div class="follow-header-content">Follow</div>
+          </div>
+          <div class="following">
+            <div class="follow-part-head">following (1)</div>
+            <div class="following-content">
+              <div class="one-following" v-for="(onefollowingUser, i) in followUsers">
+                <img :src="onefollowingUser.imgSrc" class="intro-img img-plus">
+                <div class="following-info">
+                  <div class="name-style">{{ onefollowingUser.name }}</div>
+                  <div class="intro-style">{{ onefollowingUser.intro }}</div>
+                </div>
+                <div class="following-op" @click="cancleFollow(onefollowingUser.followingID)">unfollow</div>
               </div>
-              <div class="follow-info">
-                <div class="one-info-userNickName">
-                  <img src="../../assets/icons/profile/userName.svg" class="icon-style2">
-                  <div class="inner-style">MGG</div>
-                  <div class="one-info-userName">(Ma Hanyuan)</div>
+            </div>
+          </div>
+          <div class="befollowed">
+            <div class="follow-part-head">be followed (2)</div>
+            <div class="befollowed-content">
+              <div class="one-following" v-for="(befollowed, i) in followers">
+                <img :src="befollowed.imgSrc" class="intro-img img-plus">
+                <div class="following-info">
+                  <div class="name-style">{{ befollowed.name }}</div>
+                  <div class="intro-style">{{ befollowed.intro }}</div>
                 </div>
-                <div class="one-info-userDegree">
-                  <img src="../../assets/icons/profile/userDegree.svg" class="icon-style2">
-                  <div class="inner-style-not-important">本科生</div>
+                <div class="befollowed-op-followed" v-if="befollowed.isfollowed">
+                  followed
                 </div>
-                <div class="one-info-intro">
-                  <img src="../../assets/icons/profile/userIntro.svg" class="icon-style2">
-                  <div class="inner-style-not-important">猫猫头公司</div>
-                </div>
-              </div>
-              <div class="follow-op">
-                <div class="unfollow">
-                  <img src="../../assets/icons/profile/unfollow.svg" class="icon-style2-pointer" title="取消关注">
-                </div>
-                <div class="message">
-                  <img src="../../assets/icons/profile/message.svg" class="icon-style2-pointer" title="发送消息">
+                <div class="befollowed-op-to-follow" v-if="!befollowed.isfollowed" @click="doFollow(befollowed.followerID)">
+                  follow
                 </div>
               </div>
             </div>
@@ -176,570 +103,706 @@
         </div>
       </div>
     </div>
+    <m-hover ref="changeProfile" @submit="submit" @cancel="cancel">
+      <div class="change-profile-outter">
+        <div class="change-nickname">
+          <div class="hover-input-header">change nickname</div>
+          <div class="hover-input">
+            <input v-model="newNickName"></input>
+          </div>
+        </div>
+        <div class="change-degree">
+          <div class="hover-input-header">change degree</div>
+          <div>
+            <select v-model="newDegree" class="hover-input">
+              <option v-for="option in options" v-bind:value="option.value">
+                {{ option.text }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </m-hover>
+    <m-hover ref="changeHeadshot" @submit="submit" @cancel="cancel"></m-hover>
   </div>
 </template>
 
 <script>
+import yLiterature from '@/components/common/y-literature/y-literature'
 export default {
   name: "Profile",
   data() {
     return {
       // 用户信息
       userName: 'Yu Haomiao',
-      userNickName: 'samshui',
+      userNickName: 'Yu Haomiao',
       userDegree: 1,
       userIntroState: true,
       userIntro: "北航软件学院",
-      userImgSrc: "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2660483526,1880492462&fm=26&gp=0.jpg",
+      userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
 
       // user收藏文献集合
-      favorLiteratures: [],
+      favorLiteratures: [
+        {
+          literatureID: 0,
+          title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
+            authors: [
+            {
+              userID: 0,
+              userName: 'Yu Haomiao',
+              userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
+            }
+          ],
+          tags: ["tag 1", "tag 2"],
+          read_time: 10,
+        },
+        {
+          literatureID: 1,
+          title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
+          authors: [
+            {
+              userID: 0,
+              userName: 'Yu Haomiao',
+              userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
+            }
+          ],
+          tags: ["tag 1", "tag 2"],
+          read_time: 10,
+        },
+        {
+          literatureID: 2,
+          title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
+          authors: [
+            {
+              userID: 0,
+              userName: 'Yu Haomiao',
+              userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
+            }
+          ],
+          tags: ["tag 1", "tag 2"],
+          read_time: 10,
+        },
+      ],
 
       // user关注用户集合
-      followUsers: []
+      followUsers: [
+        {
+          followingID: 1,
+          imgSrc: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3824999008,143707972&fm=26&gp=0.jpg",
+          name: "Ma Hanyuan",
+          intro: "Beihang University (BUAA)"
+        },
+      ],
+
+      // 关注我的用户集合
+      followers: [
+        {
+          followerID: 1,
+          imgSrc: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3824999008,143707972&fm=26&gp=0.jpg",
+          name: "Ma Hanyuan",
+          intro: "Beihang University (BUAA)",
+          isfollowed: true
+        },
+        {
+          followerID: 2,
+          imgSrc: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3824999008,143707972&fm=26&gp=0.jpg",
+          name: "Ma Hanyuan",
+          intro: "Beihang University (BUAA)",
+          isfollowed: false
+        },
+      ],
+
+      introID: 0,
+      introImg: "https://i1.rgstatic.net/ii/institution.image/AS%3A267456919080961%401440778106588_l",
+      introName: "Beihang University (BUAA)",
+      introLocation: "Beijing, China",
+      introDepartment: "Software Engineering Institute (SEI)",
+
+      newNickName: '',
+      newDegree: 0,
+      inputOnblur: false,
+      selectFollowingUserID: 0,
+
+      options: [
+        { text: '高中', value: '0' },
+        { text: '本科生', value: '1' },
+        { text: '研究生', value: '2' },
+        { text: '博士生', value: '3' },
+        { text: '博士后', value: '4' },
+      ]
     };
+  },
+  created() {
+    this.newNickName = this.userNickName
+    this.newDegree = this.userDegree
   },
   methods: {
     retUserDegree() {
       if (this.userDegree == 0) return "高中";
-      else if (this.userDegree == 1) return "本科生";
+      else if (this.userDegree == 1) return "Bachelor of Engineering";
       else if (this.userDegree == 2) return "研究生";
       else if (this.userDegree == 3) return "博士生";
       else if (this.userDegree == 4) return "博士后";
       else return "";
     },
+    openChangeProfileHover() {
+      this.$refs.changeProfile.showHover({
+        title: "修改个人资料",
+        submitBtn: "取消",
+        cancelBtn: "提交"
+      });
+    },
+    openChangeHeadshot() {
+      this.$refs.changeHeadshot.showHover({
+        title: "修改头像",
+        submitBtn: "取消",
+        cancelBtn: "提交"
+      });
+    },
+    cancleFollow(selectUserID) {
+      this.$notify.info("已取消关注")
+    },
+    doFollow(selectUserID) {
+      this.$notify.success("关注成功")
+    }
   },
-  components: {},
+  components: {
+    'y-literature': yLiterature
+  },
 };
 </script>
 
 <style scoped>
 .profile {
+  font-family: Consolas;
+  /*letter-spacing: 2px;*/
+}
+
+.profile-header {
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  width: 100%;
+  height: 193px;
+  background-color: white;
+}
+
+.user-profile {
+  width: var(--width-main);
+  height: 100%;
+  /*border: 1px solid black;*/
+  margin: 0 auto;
+}
+
+.profile-info {
+  width: 100%;
+  height: 145px;
+  /*border: 1px solid yellow;*/
+
   display: flex;
   flex-direction: row;
 }
 
-.leftPart {
+.headshot {
+  width: 130px;
+  height: 100%;
+  /*border: 1px solid red;*/
   display: flex;
-  flex-direction: column;
-  width: 20vw;
-  height: 99vh;
-  background-color: white;
   align-items: center;
-  min-width: 240px;
 }
 
-.userProfile-outter-style {
-  width: 100%;
-  margin-top: 30px;
-  border-right: 2px dashed #f1cdcd;
-  padding: 5px;
+.headshot-img {
+  margin: 0 auto;
+  border-radius: 50%;
+  max-width: 80%;
 }
 
-.follow-userProfile-outter-style {
-
+.headshot__hide {
+  width: 104px;
+  height: 104px;
+  align-items: center;
+  border-radius: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  opacity: 0;
+  position: absolute;
+  left: 185px;
+  top: 78px;
+  right: 0;
+  bottom: 0;
+  transition: ease-in-out 0.3s;
 }
 
-.userImg {
-  margin-top: 10px;
-  width: 120px;
-  height: 120px;
-  min-width: 120px;
-  min-height: 120px;
+.headshot:hover .headshot__hide {
+  opacity: 1;
+  cursor: pointer;
+  transition: ease-in-out 0.3s;
 }
 
-.image {
-  border: 1px solid #acacac;
-  width: 100%;
+.headshot__inner--samll {
+  border-radius: 50%;
+  height: 40%;
+  width: 40%;
+}
+
+.username {
+  width: 665px;
   height: 100%;
-  border-radius: 5px;
-  box-shadow:10px 10px 10px rgba(214, 179, 179, 0.5);
-}
-
-.follow-img-style {
-  border: 1px solid #acacac;
-  width: 100%;
-  height: 100%;
-  border-radius: 5px;
-  box-shadow:10px 10px 10px rgba(214, 179, 179, 0.5);
-  cursor: pointer;
-}
-
-.userName {
-  width: 100%;
   /*border: 1px solid red;*/
-  font-family: Consolas,"Microsoft YaHei";
-  display: flex;
-  flex-direction: row;
-}
-
-.userProfile-inner-style {
-  /*border: 1px solid gray;*/
-  display: flex;
-  flex-direction: column;
-  margin: auto 0;
-  margin-left: 35px;
-}
-
-.userNickName-style {
-  display: flex;
-  flex-direction: row;
-  font-size: 20px;
-}
-
-.userName-style {
-  font-size: 15px;
-  color: #999999;
-}
-
-.follow-userProfile-inner-style {
-  /*border: 1px solid gray;*/
-  display: flex;
-  flex-direction: column;
-  margin: auto 0;
-  margin-left: 10px;
-}
-
-.follow-userNickName-style {
-  display: flex;
-  flex-direction: row;
-  font-size: 20px;
-}
-
-.follow-userName-style {
-  font-size: 15px;
-  color: #999999;
-}
-
-.icon-style {
-  width: 20px;
-  height: 20px;
-  margin: auto 0;
-  margin-left: 50px;
-}
-
-.icon-style2 {
-  width: 20px;
-  height: 20px;
-  margin: auto 0;
-}
-
-.icon-style2-pointer {
-  width: 20px;
-  height: 20px;
-  margin: auto 0;
-  cursor: pointer;
-}
-
-.userDegree {
-  margin-top: 15px;
-  width: 100%;
-  /*border: 1px solid red;*/
-  font-family: Consolas,"Microsoft YaHei";
-  display: flex;
-  flex-direction: row;
-}
-
-.userDegree-style {
-  font-size: 0.7vw;
-  color: #999999;
-  letter-spacing: 5px;
-}
-
-.userIntroSimple {
-  margin-top: 20px;
-  width: 100%;
-  /*border: 1px solid red;*/
-  font-family: Consolas,"Microsoft YaHei";
-  display: flex;
-  flex-direction: row;
-}
-
-.userIntro-style {
-  font-size: 0.7vw;
-  color: #999999;
-  letter-spacing: 5px;
-}
-
-.userOp {
-  margin: auto 0;
-  margin-top: 30px;
-  width: 80%;
-  height: 50px;
-  display: flex;
-  flex-display: row;
-  justify-content: space-between;
-  transition: ease-in-out 0.5s;
-  border: 1px solid #e9d5d5;
-  padding-left: 18px;
-  padding-right: 18px;
-}
-
-.userOp:hover {
-  transition: ease-in-out 0.5s;
-  box-shadow:10px 10px 10px rgba(214, 179, 179, 0.5);
-}
-
-.op-style {
-  margin: auto 0;
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-}
-
-.opIcon-style {
-  width: 20px;
-  height: 20px;
-  margin: 10px;
-}
-
-.leftBottom {
-  width: 100%;
-  height: 10vh;
-  background-color: #e83015;
-}
-
-.rightPart {
   display: flex;
   flex-direction: column;
 }
 
-.userIntroRight-style {
-  margin-top: 10px;
-  border: 1px solid #e83015;
-  border-radius: 5px;
-  background-color: white;
-  margin-left: 10vw;
-  width: 60vw;
-  height: 20vh;
-  display: flex;
-  flex-direction: row;
-}
-
-.introTitle {
-  min-width: 3%;
-  height: 100%;
-  background-color: #e83015;
-  color: white;
-  font-size: 2vw;
-  writing-mode: vertical-rl;
-  text-align: center;
-  font-family: "Comic Sans MS";
-}
-
-.introImg {
-  display: flex;
+.user-nickname {
   margin-left: 2%;
-  width: 140px;
-  height: 100%;
-  align-items: center;
-  border-right: 1px solid #c4c4c4;
+  margin-top: 7%;
+  line-height: 1,2;
+  color: #111;
+  font-size: 1.375rem;
 }
 
-.introInfo {
-  min-width: 50%;
-  max-width: 50%;
+.user-degree {
+  max-width: fit-content;
+  margin-left: 2%;
+  margin-top: 1%;
+  line-height: 1,2;
+  color: #555;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.user-degree:hover {
+  border-bottom: 1px solid #777777;
+  color: #545454;
+}
+
+.publish {
+  width: calc(100% - 130px - 665px);
   height: 100%;
-  /*border: 1px solid black;*/
-  margin-left: 10%;
-  font-size: 1vw;
-  letter-spacing: 2px;
+  /*border: 1px solid red;*/
   display: flex;
   align-items: center;
+}
+
+.publish-button {
+  margin: 0 auto;
   padding: 10px;
-  font-family: "FangSong";
+  width: 70%;
+  /*border: 1px solid black;*/
+  border-radius: 2px;
+  text-align: center;
+  background-color: #4F6EF2;
+  color: white;
+  font-size: 0.800rem;
+  letter-spacing: 2px;
 }
 
-
-.gotoIntro {
-  display: flex;
-  align-items: center;
-  width: 5vw;
-  height: 100%;
-  /*background-color: #e83015;*/
-  margin-left: 10%;
-  transition: ease-in-out 0.5s;
-}
-
-.introImg-style {
-  min-width: 120px;
-  max-width: 120px;
-  border: 1px solid #acacac;
-  border-radius: 5px;
-  box-shadow:10px 10px 10px rgba(214, 179, 179, 0.5);
-}
-
-.gotoIcon {
-  transition: ease-in-out 0.5s;
-  max-width: 40px;
-  min-width: 40px;
-  cursor: pointer;
-}
-
-.gotoIcon:hover {
-  transform: translateX(20px);
-  transition: ease-in-out 1s;
-  cursor: pointer;
-}
-
-.userStorage {
-  display: flex;
-  flex-direction: row;
-  border: 1px solid #e83015;
-  margin-left: 3vw;
-  margin-top: 3vh;
-  width: 75vw;
-  height: 65vh;
-  background-color: white;
-}
-
-.favor {
+.profile-op {
+  width: 100%;
+  height: 47px;
+  /*border: 1px solid gray;*/
   display: flex;
   flex-direction: column;
-  align-items: center;
-  border-right: 1px solid #e83015;
-  width: 60%;
-  height: 100%;
 }
 
-.favorTag {
-  max-width: 60px;
-  min-width: 60px;
-  text-align: center;
-  color: white;
-  font-size: 1.5vh;
-  background-color: #e83015;
-  padding: 5px;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
+.op-favor {
+  margin-top: 20px;
+  font-size: 0.8rem;
+  margin-left: 30px;
 }
 
-.favorites {
-  /*border: 1px solid black;*/
-  width: 100%;
-  height: calc(100% - 26px);
-  overflow: scroll;
-}
-
-.favorites::-webkit-scrollbar {
-  /*滚动条整体样式*/
-  width : 5px;  /*高宽分别对应横竖滚动条的尺寸*/
-  height: 1px;
-}
-
-.favorites::-webkit-scrollbar-thumb {
-  /*滚动条里面小方块*/
-  border-radius   : 10px;
-  background-color: #e83015;
-}
-
-.favorites::-webkit-scrollbar-track {
-  /*滚动条里面轨道*/
-  box-shadow   : inset 0 0 5px rgba(236, 186, 186, 0.2);
-  background   : none;
-  border-radius: 10px;
-}
-
-.one-favorite {
+.bar {
+  background-color: #4F6EF2;
+  border-radius: 2px;
+  height: 2px;
+  width: 50px;
   margin-top: 10px;
-  margin-left: 5%;
-  padding: 5px;
-  width: 90%;
-  border: 1px solid #ecdfdf;
-  height: auto;
-  transition: ease-in-out 0.5s;
+  margin-left: 20px;
 }
 
-.one-favorite:hover {
-  box-shadow:10px 10px 10px rgba(214, 179, 179, 0.5);
-  transition: ease-in-out 0.5s;
-}
-
-.favorTitle {
-  max-width: fit-content;
-  min-width: fit-content;
-  font-size: 1.5vw;
-  padding-bottom: 3px;
-  border-bottom: 1px solid #bababa;
-  cursor: pointer;
-}
-
-.favorContent {
-  color: #676767;
-  font-size: 0.8vw;
-  font-family: Consolas, "FangSong";
-  line-height: 1.5em;
-}
-
-.author {
-  /*border: 1px solid red;*/
-  margin-top: 5px;
-  width: 100%;
+.profile-content {
+  margin: 0 auto;
+  margin-top: 30px;
+  width: var(--width-main);
+  /*margin: 0 auto;*/
+  height: 100vh;
   display: flex;
   flex-direction: row;
 }
 
-.authorName {
-  margin-top: 5px;
-  margin-left: 10px;
-  font-size: 0.6vw;
+.content-left {
+  width: 65%;
+  height: 100%;
+  /*border: 1px solid #ddd;*/
+  /*background-color: white;*/
 }
 
-.baseInfo {
-  margin-top: 5px;
+.one-follow-literature {
   width: 100%;
+  height: 170px;
+  border: 1px solid #dddddd;
+  background-color: white;
+  padding: 30px 25px 27px 25px;
+}
+
+.title {
+  font-size: 0.9rem;
+  color: black;
+  font-weight: 700;
+  width: fit-content;
+  height: 25px;
+  line-height: 20px;
+  padding-left: 5px;
+  margin-bottom: 5px;
+}
+
+.title:hover {
+  cursor: pointer;
+  border-bottom: 1px solid black;
+}
+
+.tags {
+  width: 100%;
+  height: 32px;
   display: flex;
   flex-direction: row;
   margin-bottom: 5px;
 }
 
-.follow {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-left: 1px solid #e83015;
-  width: 35%;
-  height: 100%;
-  margin-left: 5%;
+.tag {
 }
 
-.followTag {
-  max-width: 60px;
-  min-width: 60px;
-  text-align: center;
+.first-tag {
+  border-radius: 3px;
+  width: fit-content;
+  padding: 3px;
+  margin: 5px;
+  font-size: 0.8rem;
   color: white;
-  font-size: 1.5vh;
-  background-color: #e83015;
-  padding: 5px;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
+  background-color: #4F6EF2;
 }
 
-.follows {
-  /*border: 1px solid black;*/
+.first-tag:hover {
+  cursor: pointer;
+}
+
+.leftpart-tags {
+  border-radius: 3px;
+  width: fit-content;
+  padding: 3px;
+  margin: 5px;
+  font-size: 0.8rem;
+  border: 1px solid #4F6EF2;
+  background-color: white;
+  color: #4F6EF2;
+}
+
+.leftpart-tags:hover {
+  cursor: pointer;
+}
+
+.authors {
   width: 100%;
-  height: calc(100% - 26px);
-  overflow: scroll;
+  height: 25px;
+  margin-bottom: 5px;
 }
 
-.follows::-webkit-scrollbar {
-  /*滚动条整体样式*/
-  width : 5px;  /*高宽分别对应横竖滚动条的尺寸*/
-  height: 1px;
-}
-
-.follows::-webkit-scrollbar-thumb {
-  /*滚动条里面小方块*/
-  border-radius   : 10px;
-  background-color: #e83015;
-}
-
-.follows::-webkit-scrollbar-track {
-  /*滚动条里面轨道*/
-  box-shadow   : inset 0 0 5px rgba(236, 186, 186, 0.2);
-  background   : none;
-  border-radius: 10px;
-}
-
-.one-follow {
+.author-list {
   display: flex;
   flex-direction: row;
-  border: 1px solid #ecdfdf;
-  margin-top: 10px;
-  margin-left: 5%;
-  padding: 5px;
-  width: 90%;
-  height: auto;
-  transition: ease-in-out 0.5s;
+  margin: 0 auto;
+  align-items: center;
 }
 
-.one-follow:hover {
-  box-shadow:10px 10px 10px rgba(214, 179, 179, 0.5);
-  transition: ease-in-out 0.5s;
+.authorImg {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-top: 1.5px;
+  margin-left: 5px;
 }
 
-.follow-img {
-  width: 20%;
+.authorname {
+  font-size: 0.8rem;
+  color: #000000;
+  margin-left: 2px;
+}
+
+.authorname:hover {
+  cursor: pointer;
+  border-bottom: 1px solid #000000;
+}
+
+.read-time {
+  width: 100%;
+  height: 25px;
+  font-size: 0.8rem;
+  color: #999999;
+  padding-left: 5px;
+}
+
+.read-time-content {
+  height: 100%;
+  margin-top: 3px;
+}
+
+.literature-ops {
+  margin: 0 auto;
+  width: 100%;
+  height: calc(100% - 75px - 32px);
+  display: flex;
+}
+
+.one-op {
+}
+
+.content-right {
+  margin-left: 3%;
+  width: 32%;
   height: 100%;
 }
 
-.follow-info {
-  margin-left: 5%;
-  width: 60%;
-  min-height: 100%;
-  max-height: 100%;
-  display: flex;
-  flex-direction: column;
+.user-intro {
+  width: 100%;
+  height: 193;
+  border: 1px solid #ddd;
+  background-color: white;
 }
 
-.follow-op {
+.user-intro-header {
+  height: 60px;
+  width: 100%;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.user-intro-header-content {
   margin-left: 5%;
-  width: 10%;
-  min-height: 100%;
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.user-intro-change {
+  margin-top: -3px;
+  margin-left: 37%;
+  font-size: 0.8rem;
+  color: #777;
+  cursor: pointer;
+}
+
+.user-intro-change:hover {
+  border-bottom: 1px solid #777777;
+  color: #4a4a4a;
+}
+
+.user-intro-content {
+  height: calc(100% - 60px);
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+}
+
+.intro-content {
+  width: calc(100% - 70px);
+  height: 100px;
+}
+
+.intro-content-details {
+  height: 100px;
+}
+
+.intro-font-1 {
+  max-width: fit-content;
+  color: #111111;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.intro-font-1:hover {
+  border-bottom: 1px solid #777777;
+  cursor: pointer;
+}
+
+.intro-font-2 {
+  margin-top: 18px;
+  color: #111111;
+  font-size: 0.8rem;
+}
+
+.intro-img {
+  border: 1px solid #e3e3e3;
+  width: 70px;
+  height: 70px;
+}
+
+.img-plus {
+  margin-left: 5%;
+  border-radius: 50%;
+}
+
+.intro-img-details {
+  max-width: 100%;
   max-height: 100%;
+}
+
+.user-follow {
+  width: 100%;
+  height: auto;
+  border: 1px solid #ddd;
+  background-color: white;
+  margin-top: 30px;
+}
+
+.follow-header {
+  width: 100%;
+  height: 55px;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+}
+
+.follow-header-content {
+  margin-left: 5%;
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.following {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 20px;
+}
+
+.befollowed {
+
+}
+
+.follow-part-head {
+  width: 100%;
+  height: 54px;
   /*border: 1px solid red;*/
+  font-size: 0.7rem;
+  padding: 5%;
+  color: #000000;
+}
+
+.following-content {
+}
+
+.following-info {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  margin-left: 2%;
+  margin-top: 5%;
 }
 
-.one-info-userNickName {
+.one-following {
+  width: 100%;
+  height: 75px;
   display: flex;
   flex-direction: row;
-  font-size: 1vw;
-  font-family: Consolas;
-  align-items: center;
 }
 
-.one-info-userName {
-  margin-left: 5px;
-  font-size: 0.8vw;
-  font-family: Consolas;
-  color: #868686;
+.name-style {
+  font-size: 1rem;
+  color: #555555;
 }
 
-.one-info-userDegree {
-  margin-top: 3%;
-  display: flex;
-  flex-direction: row;
-  font-size: 0.8vw;
-  font-family: Consolas;
-  align-items: center;
-}
-
-.one-info-intro {
-  margin-top: 3%;
-  display: flex;
-  flex-direction: row;
-  font-size: 0.8vw;
-  font-family: Consolas;
-  align-items: center;
-}
-
-.inner-style {
-  margin-left: 5px;
-}
-
-.inner-style-not-important {
-  margin-left: 5px;
-  font-size: 0.7vw;
+.intro-style {
+  font-size: 0.8rem;
   color: #999999;
-  letter-spacing: 5px;
 }
 
-.unfollow {
-  min-height: 50%;
-  max-height: 50%;
-  /*border: 1px solid red;*/
-  display: flex;
-  align-content: center;
+.following-op {
+  margin: 0 auto;
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 8%;
 }
 
-.message {
-  min-height: 50%;
-  max-height: 50%;
-  /*border: 1px solid red;*/
-  display: flex;
-  align-content: center;
+.following-op:hover {
+  height: fit-content;
+  border-bottom: 1px solid red;
+  cursor: pointer;
 }
+
+.befollowed-op-followed {
+  margin: 0 auto;
+  color: #dddddd;
+  font-size: 0.8rem;
+  margin-top: 8%;
+}
+
+.befollowed-op-to-follow {
+  margin: 0 auto;
+  font-size: 0.8rem;
+  margin-top: 8%;
+}
+
+.befollowed-op-to-follow:hover {
+  height: fit-content;
+  cursor: pointer;
+  border-bottom: 1px solid black;
+}
+
+.befollowed-content {
+  padding-bottom: 20px;
+}
+
+.profile-icon {
+  width: 15px;
+}
+
+.change-profile-outter {
+  width: 400px;
+  height: auto;
+  background-color: white;
+}
+
+.change-degree {
+  margin-left: 60px;
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.change-nickname {
+  margin-left: 60px;
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.hover-input-header {
+  font-size: 0.9rem;
+  color: #777777;
+  transition: ease-in-out 0.5s;
+}
+
+.hover-input {
+  font-size: 0.8rem;
+  width: 70%;
+  padding: 5px;
+  margin-top: 5px;
+  border: 1px solid #dddddd;
+}
+
+.hover-select {
+  width: 70%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 5px;
+  margin-top: 5px;
+  border: 1px solid #dddddd;
+  font-size: 0.8rem;
+}
+
+.option {
+}
+
 </style>
