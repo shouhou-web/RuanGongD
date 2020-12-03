@@ -10,7 +10,6 @@ const ForumHome = () => import("views/Forum/ForumHome.vue");
 const ForumSector = () => import("views/Forum/ForumSector.vue");
 const ForumPost = () => import("views/Forum/ForumPost.vue");
 const UserPosts = () => import("views/Forum/UserPosts.vue");
-const Post = () => import("views/Forum/Post.vue");
 
 // 首页相关组件
 const Home = () => import("views/Home/Home.vue");
@@ -84,11 +83,6 @@ const routes = [
     path: "/userPosts",
     name: "UserPost",
     component: UserPosts
-  },
-  {
-    path: "/post",
-    name: "Post",
-    component: Post
   },
   {
     path: "/intro",
