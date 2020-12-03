@@ -78,7 +78,7 @@ const routes = [
   {
     path: "/forumPost",
     name: "ForumPost",
-    component: ForumSector
+    component: ForumPost
   },
   {
     path: "/userPosts",
@@ -94,6 +94,11 @@ const routes = [
     path: "/intro",
     name: "Intro",
     component: Intro
+  },
+  {
+    path: "/message",
+    name: "Message",
+    component: Message
   }
 ];
 
