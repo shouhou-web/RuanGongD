@@ -1,6 +1,7 @@
 <template>
   <!-- 讨论区分区页面 -->
   <div id="forumSector" data-app>
+    <!-- <m-header></m-header> -->
     <div class="pageHeader">
       <div class="sectorName">{{ sectorName }}</div>
       <v-divider></v-divider>
@@ -158,6 +159,7 @@
 
 <script>
 import { getPosts, isFollowed, followSector } from "network/forum.js";
+import MHeader from "../../components/common/m-header/m-header.vue";
 export default {
   name: "ForumSector",
   data() {
@@ -220,29 +222,42 @@ export default {
       */
     },
     goToPost(id) {
-      //todo: 跳转到动态
-      /*
+      //跳转到动态
+
       this.$router.push({
-        path: "/",
-        query: {}
+        path: "/post",
+        query: { postId: id }
       });
-      */
     },
     followSector() {
       //todo: (或解除)关注分区
+      let textString = this.followed == "0" ? "关注分区" : "取消关注分区";
       followSector(this.currentUser, this.sectorId)
         .then(res => {
           console.log("followSector");
           console.log(res);
           if (res.data.result == "true") {
-            //todo : alartSuccess
+            // alartSuccess
+            this.$notify({
+              title: "操作成功",
+              message: "成功" + textString,
+              type: "success"
+            });
             this.followed = this.followed == "0" ? "1" : "0";
           } else {
-            //todo : alartFail
+            // alartFail
+            this.$notify.error({
+              title: "操作失败",
+              message: "无法" + textString
+            });
           }
         })
         .catch(err => {
           console.log(err);
+          this.$notify.error({
+            title: textString + "失败",
+            message: "请稍后再试"
+          });
         });
     },
     changePage(val) {
@@ -296,7 +311,7 @@ export default {
       //todo: userId
     }
   },
-  components: {},
+  components: { MHeader },
   created() {
     this.sectorId = this.$route.query.sectorId;
     this.page = this.$route.query.page || "1";
@@ -317,6 +332,7 @@ export default {
         '"'
     );
     let start = ((parseInt(this.page) - 1) * this.pageSize).toString();
+    //getPosts
     getPosts(this.sectorId, start, pageSize, this.sort, this.keyword)
       .then(res => {
         console.log("getPosts");
@@ -327,7 +343,16 @@ export default {
       .catch(err => {
         console.log(err);
       });
-    //todo: isFollowed
+    //isFollowed
+    isFollowed(this.currentUser, this.sectorId)
+      .then(res => {
+        console.log("getPosts");
+        console.log(res);
+        this.isFollowed = res.data.followedl;
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 };
 </script>
