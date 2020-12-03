@@ -25,15 +25,15 @@
         <div class="header__query">检索式：{{ answer.query }}</div>
         <div class="header__sort">
           <div class="">Sorted by</div>
-          <m-dropdown :cur="SU" type="click-type" />
+          <m-click-dropdown @change-dropdown="changeOrder" :cur="order" type="click-search" />
         </div>
       </div>
       <div class="answer__main">
         <div class="main__aside">
           <!-- <l-button>搜索</l-button> -->
-          <search-dropdown type="Author" :typeList="authorList" />
-          <search-dropdown type="Venue" :typeList="venueList" />
-          <search-dropdown type="Affiliation" :typeList="affList" />
+          <search-dropdown type="作者" :typeList="authorList" />
+          <search-dropdown type="文献来源" :typeList="venueList" />
+          <search-dropdown type="文献年份" :typeList="affList" />
         </div>
         <div class="main__content">
           <div class="content__fstline">
@@ -93,12 +93,14 @@
 <script>
 import searchAdvance from "./childCpn/search-advance";
 import searchDropdown from "./childCpn/search-dropdown";
+import MClickDropdown from "components/content/m-click-dropdown/m-click-dropdown";
 export default {
   name: "Search",
   data() {
     return {
       isShow: false,
       isAdvance: false,
+      order: "time",
       answer: {
         num: "3,567",
         query: "1884-2021: ((covid) WN ALL)"
@@ -136,38 +138,9 @@ export default {
       ],
       searchList: [
         {
-          title:
-            "Considerations for head and neck oncology practices during the coronavirus disease 2019 ( COVID ‐19) pandemic: Wuhan and Toronto experience",
-          author:
-            "Baig Abdul Mannan Department of Biological and Biomedical Sciences, Aga Khan University, Pakistan.",
-          venue: "Journal of medical virology",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title:
-            "Considerations for head and neck oncology practices during the coronavirus disease 2019 ( COVID ‐19) pandemic: Wuhan and Toronto experience",
-          author:
-            "Baig Abdul Mannan Department of Biological and Biomedical Sciences, Aga Khan University, Pakistan.",
-          venue: "Journal of medical virology",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title:
-            "Considerations for head and neck oncology practices during the coronavirus disease 2019 ( COVID ‐19) pandemic: Wuhan and Toronto experience",
-          author:
-            "Baig Abdul Mannan Department of Biological and Biomedical Sciences, Aga Khan University, Pakistan.",
-          venue: "Journal of medical virology",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title:
-            "Considerations for head and neck oncology practices during the coronavirus disease 2019 ( COVID ‐19) pandemic: Wuhan and Toronto experience",
-          author:
-            "Baig Abdul Mannan Department of Biological and Biomedical Sciences, Aga Khan University, Pakistan.",
-          venue: "Journal of medical virology",
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: "	朱毅; 赵红华; 程伟",
+          venue: "航空维修与工程",
           year: "2020-10-23",
           ciation: 1024
         }
@@ -186,11 +159,16 @@ export default {
       this.isAdvance = e;
       if (!e) this.isShow = false;
       else this.isShow = true;
+    },
+    changeOrder(e) {
+      console.log(e)
+      this.order = e;
     }
   },
   components: {
     searchAdvance,
-    searchDropdown
+    searchDropdown,
+    MClickDropdown
   }
 };
 </script>
@@ -202,11 +180,12 @@ export default {
   color: #505050;
   margin: 20px auto;
   width: var(--width-main);
+  height: 100vh;
 }
 
 .answer__header {
   align-items: flex-end;
-  background-color: #d5e9e3;
+  border-bottom: 1px solid #e4e4e4;
   display: flex;
   padding: 20px;
 }
@@ -214,15 +193,15 @@ export default {
 .header__num {
   float: left;
   padding-right: 10px;
-  font-size: 2.25rem;
+  font-size: 16px;
   width: auto;
-  line-height: 2.25rem;
+  line-height: 16px;
 }
 
 .header__query {
-  font-size: 16px;
+  font-size: 13px;
   flex: 1;
-  line-height: 16px;
+  line-height: 13px;
 }
 
 .header__sort {
@@ -236,7 +215,12 @@ export default {
 .main__aside {
   /* border: 1px solid #f2f2f2; */
   height: 100%;
-  width: 296px;
+  width: 15%;
+}
+
+.main__content {
+  width: 85%;
+  font-size: 14px;
 }
 
 .content__fstline,
@@ -252,7 +236,6 @@ export default {
   align-items: center;
   color: #778192;
   display: flex;
-  font-size: 14px;
   justify-content: center;
   line-height: 21px;
   text-align: center;
@@ -262,35 +245,42 @@ export default {
   background-color: #f6f8fa;
 }
 
+.line__title,
+.line__author,
+.line__venue,
+.line__year,
+.line__ciation {
+  padding: 10px 5px;
+}
+
 .line__title {
-  width: 352px;
+  flex: 1;
 }
 
 .line__author {
-  width: 113px;
+  width: 15%;
 }
 
 .line__venue {
-  width: 121px;
+  width: 13%;
 }
 
 .line__year {
-  width: 85px;
+  width: 75px;
 }
 
 .line__ciation {
-  width: 40px;
+  width: 8%;
 }
 
 .line__action {
-  width: 93px;
+  width: 10%;
 }
 
 .search {
   border: 1px solid #e4e4e4;
   background-color: #fff;
   border-radius: 5px;
-  box-shadow: 0 5px 5px #cdcdcd;
   padding: 20px;
 }
 

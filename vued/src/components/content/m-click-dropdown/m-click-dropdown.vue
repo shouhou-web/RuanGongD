@@ -95,12 +95,23 @@ export default {
           value: "非"
         }
       ],
+      searchList: [
+        {
+          key: "time",
+          value: "发表时间"
+        },
+        {
+          key: "ciation",
+          value: "被引"
+        }
+      ],
       clickList: []
     };
   },
   created() {
     if (this.type == "click-type") this.clickList = this.typeList;
     else if (this.type == "click-logical") this.clickList = this.logicalList;
+    else if (this.type == "click-search") this.clickList = this.searchList;
   },
   computed: {
     curValue() {
@@ -163,8 +174,8 @@ export default {
   align-items: center;
   display: flex;
   flex-direction: column;
-  margin-left: 10px;
   position: relative;
+  padding-left: 10px;
   width: 85px;
 }
 
@@ -220,7 +231,7 @@ export default {
 
 .m-click--hide .onShow {
   background-color: #6698fd;
-  color: #fff;
+  color: #fff !important;
   transition: 0.2s;
 }
 
