@@ -21,10 +21,10 @@
 
             <!-- 输入框 -->
             <input v-model="item.value" type="text" maxlength="120" />
+            <span class="search__sub" @click="search">
+              <img src="@/assets/icons/home/search.png" alt="" />
+            </span>
           </div>
-          <span class="search__sub" @click="search">
-            DDL一下
-          </span>
         </div>
         <!-- 高级检索框 -->
         <div class="search__advance" v-else-if="isAdvance && isShow">
@@ -69,8 +69,7 @@
 <script>
 import { advance } from "network/search.js";
 import SearchDate from "./search-date";
-import MClickDropdown from "components/content/m-click-dropdown/m-click-dropdpwn"
-
+import MClickDropdown from "components/content/m-click-dropdown/m-click-dropdown";
 export default {
   name: "Classify",
   props: {
@@ -194,6 +193,7 @@ export default {
 .search__advance {
   align-items: center;
   display: flex;
+  font-size: 14px;
   line-height: 20px;
   margin: 0 auto 10px;
   width: 710px;
@@ -201,43 +201,45 @@ export default {
 
 .search__main,
 .search__main--second {
-  border: 1.5px solid var(--color-main);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.12);
   display: flex;
-  padding: 14px 0;
-  width: 610px;
+  padding: 14px 14px 14px 0;
 }
 
 .search__main {
   border-right: #fff;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
+  width: 710px;
 }
 
 .search__main--second {
-  border-radius: 5px;
+  width: 610px;
 }
 
 .advance,
 .advance--nop {
   border-right: 1px solid grey;
   cursor: pointer;
-  padding: 0 15px;
+  text-align: center;
 }
 
 .advance--nop {
   padding: 0px;
 }
 
+.advance__text {
+  width: 85px;
+}
+
 .advance__text:hover {
   color: var(--color-main);
 }
 
-.search__advance input {
+.search__main input {
   border: 0;
   background-color: transparent;
   outline: none;
   margin: 0 10px;
-  /* width: 400px; */
+  flex: 1;
 }
 
 .search__icon {
@@ -259,12 +261,14 @@ export default {
 }
 
 .search__sub {
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
-  background-color: var(--color-main);
+  align-items: center;
+  display: flex;
   color: #fff;
   cursor: pointer;
-  padding: 15.5px;
-  letter-spacing: 1px;
+}
+
+.search__sub img {
+  width: 15px;
+  height: 15px;
 }
 </style>
