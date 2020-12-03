@@ -12,7 +12,7 @@
               <div class="advance__text" v-else>普通检索</div>
             </div>
             <!-- 选择type -->
-            <m-dropdown
+            <m-click-dropdown
               @change-dropdown="change($event, index, 'type')"
               v-if="isAdvance && isShow"
               :cur="item.type"
@@ -31,14 +31,14 @@
           <div class="search__main--second">
             <!-- 选择逻辑连接词 -->
             <div class="advance--nop">
-              <m-dropdown
+              <m-click-dropdown
                 @change-dropdown="change($event, index, 'logical')"
                 :cur="item.logical"
                 type="click-logical"
               />
             </div>
             <!-- 选择搜索类型 -->
-            <m-dropdown
+            <m-click-dropdown
               @change-dropdown="change($event, index, 'type')"
               :cur="item.type"
               type="click-type"
@@ -68,7 +68,9 @@
 
 <script>
 import { advance } from "network/search.js";
-import searchDate from "./search-date";
+import SearchDate from "./search-date";
+import MClickDropdown from "components/content/m-click-dropdown/m-click-dropdpwn"
+
 export default {
   name: "Classify",
   props: {
@@ -178,7 +180,8 @@ export default {
     }
   },
   components: {
-    searchDate
+    SearchDate,
+    MClickDropdown
   }
 };
 </script>

@@ -18,12 +18,12 @@
         </li>
       </ul>
     </div>
-  </div>  
+  </div>
 </template>
 
 <script>
 export default {
-  name: "MNavDropDown",
+  name: "MClickDropDown",
   props: {
     color: {
       type: String,
@@ -98,17 +98,13 @@ export default {
       clickList: []
     };
   },
+  created() {
+    if (this.type == "click-type") this.clickList = this.typeList;
+    else if (this.type == "click-logical") this.clickList = this.logicalList;
+  },
   computed: {
-    isHover() {
-      return this.type == "hover";
-    },
-    isClick() {
-      if (this.type == "click-type") this.clickList = this.typeList;
-      else if (this.type == "click-logical") this.clickList = this.logicalList;
-      return this.type == "click-type" || this.type == "click-logical";
-    },
     curValue() {
-      console.log(this.cur)
+      console.log(this.cur);
       return this.clickList.filter(n => {
         return n.key == this.cur;
       })[0].value;
@@ -218,7 +214,10 @@ export default {
   width: 100%;
 }
 
-.m-click--hide li:hover,
+.m-click--hide li:hover {
+  color: #6698fd;
+}
+
 .m-click--hide .onShow {
   background-color: #6698fd;
   color: #fff;

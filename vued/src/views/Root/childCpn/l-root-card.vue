@@ -28,7 +28,7 @@
       <div class="l-root-card--content-info">
         <img
           class="l-root-card--reporter-pic"
-          :src="require('../pics/' + imgPath1 + '.jpg')"
+          :src="require('@/assets/icons/Root/' + imgPath1 + '.jpg')"
         />
         <slot name="reporterProfile"></slot>
         <div class="l-root-card--content-connect" v-if="type == 1">
