@@ -90,7 +90,7 @@
       </div>
     </div>
 
-    <!-- TODO 输入评论 -->
+    <!-- TODO: 输入评论 -->
     <div class="input-container">
       <div class="card">
         <div class="card-header"></div>
@@ -98,14 +98,28 @@
       </div>
     </div>
 
-    <!-- TODO 举报对话框  -->
+    <!-- TODO: 举报对话框  -->
     <v-dialog v-model="reportDialog" max-width="800">
       <v-card elevation="3">
         <v-card-title>举报动态</v-card-title>
-        <v-card-text>举报</v-card-text>
+        <v-card-text>
+          <el-form :model="reportForm" label-width="80px" :rules="reportRule" ref="reportForm">
+            <el-form-item label="举报理由" prop="reportContent">
+              <el-input
+                class="report-content"
+                type="textarea"
+                v-model="reportForm.reportContent"
+                placeholder="请输入举报理由"
+                :autosize="{ minRows: 5, maxRows: 12 }"
+                resize="none"
+                maxlength="801"
+              ></el-input>
+            </el-form-item>
+          </el-form>
+        </v-card-text>
         <v-card-actions>
           <div class="footer">
-            <v-btn color="var(--color-main)" @click="reportPost">
+            <v-btn color="var(--color-main)" @click="handleReportPost('reportForm')">
               <font color="white">举报</font>
             </v-btn>
             <v-btn @click="reportDialog = false">取消</v-btn>
@@ -114,14 +128,15 @@
       </v-card>
     </v-dialog>
 
-    <!-- TODO 删除对话框  -->
     <v-dialog v-model="deleteDialog" max-width="800">
       <v-card elevation="3">
         <v-card-title>删除动态</v-card-title>
-        <v-card-text>删除</v-card-text>
+        <v-card-text>
+          是否真的要删除这条动态？
+        </v-card-text>
         <v-card-actions>
           <div class="footer">
-            <v-btn color="#ff6060" @click="deletePost">
+            <v-btn color="#ff6060" @click="handleDeletePost">
               <font color="white">删除</font>
             </v-btn>
             <v-btn @click="deleteDialog = false">取消</v-btn>
@@ -133,7 +148,8 @@
 </template>
 
 <script>
-import { getPostInfo } from "network/forum.js";
+import { getPostInfo, reportPost, deletePost, commentPost } from "network/forum.js";
+
 export default {
   name: "post",
   data() {
@@ -143,6 +159,25 @@ export default {
       postId: "123",
       reportDialog: false, // 是否展示举报界面
       deleteDialog: false, // 是否展示删除界面
+      reportForm: {
+        reportContent: "",
+      },
+      commentContent: "",
+      reportRule: {
+        reportContent: [
+          {
+            required: true,
+            message: "请输入举报理由",
+            trigger: "blur",
+          },
+          {
+            min: 5,
+            max: 800,
+            message: "举报理由长度在 5-800 个字符之间",
+            trigger: "blur",
+          },
+        ],
+      },
       postInfo: {
         creatorId: "1",
         creatorName: "Codevka",
@@ -207,13 +242,71 @@ export default {
     },
 
     // 举报动态
-    reportPost() {
-      console.log("report post");
+    handleReportPost(formName) {
+      let pass = false;
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          pass = true;
+        }
+      });
+      if (!pass) return;
+
+      reportPost(this.userId, this.postId, this.reportContent)
+        .then((res) => {
+          console.log("report post");
+          console.log(res);
+          if (res.data.result == "true") {
+            this.reportDialog = false;
+          } else {
+            this.$message.error("举报失败，请稍后再试。");
+          }
+        })
+        .catch((err) => {
+          this.$message.error("举报失败，请稍后再试。");
+          console.log(err);
+        });
     },
 
     // 删除动态
-    deletePost(postId) {
-      console.log("delete post");
+    handleDeletePost() {
+      deletePost(this.userId, this.postId)
+        .then((res) => {
+          console.log("delete post");
+          console.log(res);
+          if (res.data.result == "true") {
+            this.deleteDialog = false;
+            // TODO 返回（到哪？）
+            // this.$router.push({
+            //   path: "/",
+            //   query: {},
+            // });
+          } else {
+            this.$message.error("删除失败，请稍后再试。");
+          }
+        })
+        .catch((err) => {
+          this.$message.error("删除失败，请稍后再试。");
+          console.log(err);
+        });
+    },
+
+    // TODO 评论动态
+    handleCommentPost() {
+      commentPost(this.userId, this.postId, this.commentContent)
+        .then((res) => {
+          console.log("comment post");
+          console.log(res);
+          if (res.data.result == "true") {
+            //
+          } else {
+            //
+            this.$message.error("评论失败，请稍后再试。");
+          }
+        })
+        .catch((err) => {
+          this.$message.error("评论失败，请稍后再试。");
+          console.log(err);
+        });
     },
   },
   components: {},
@@ -247,7 +340,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .post-container {
   width: 600px;
   height: 100%;
@@ -437,5 +530,21 @@ export default {
   margin: auto;
   padding-bottom: 10px;
   width: 30%;
+}
+
+.el-input__inner,
+.el-textarea__inner {
+  border-color: rgba(158, 158, 158);
+}
+
+.el-input__inner:hover,
+.el-textarea__inner:hover {
+  border-color: rgba(36, 36, 36);
+}
+
+.el-input__inner:focus,
+.el-textarea__inner:focus {
+  border-color: rgba(64, 158, 255);
+  border-width: 2px;
 }
 </style>

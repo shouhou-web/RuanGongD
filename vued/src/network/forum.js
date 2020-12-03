@@ -166,3 +166,53 @@ export function followSector(userId, sectorId) {
     method: "post",
   });
 }
+
+/**
+ * 举报动态
+ * @param {userId, postId, reportContent}
+ *  userId: 用户id
+ *  postId: 动态id
+ *  reportContent: 举报理由
+ * @return {result}
+ *  result: 成功返回 "true", 失败返回 "false"
+ */
+export function reportPost(userId, postId, reportContent) {
+  return request(baseURL, {
+    url: "/reportPost",
+    params: { userId, postId, reportContent },
+    method: "post",
+  });
+}
+
+/**
+ * 删除动态
+ * @param {userId, postId}
+ *  userId: 用户id
+ *  postId: 动态id
+ * @return {result}
+ *  result: 成功返回 "true", 失败返回 "false"
+ */
+export function deletePost(userId, postId) {
+  return request(baseURL, {
+    url: "/deletePost",
+    params: { userId, postId },
+    method: "post",
+  });
+}
+
+/**
+ * 评论动态
+ * @param {userId, postId, commentContent}
+ *  userId: 用户id
+ *  postId: 动态id
+ *  commentContent: 评论内容
+ * @return {result}
+ *  result: 成功返回 "true", 失败返回 "false"
+ */
+export function commentPost(userId, postId, commentContent) {
+  return request(baseURL, {
+    url: "/commentPost",
+    params: { userId, postId, commentContent },
+    method: "post",
+  });
+}
