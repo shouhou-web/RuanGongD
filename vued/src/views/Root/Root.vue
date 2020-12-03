@@ -14,11 +14,12 @@
       <div
         class="root-report-card"
         v-for="(items, index) in reportList"
-        :key="items.id"
+        :key="index"
       >
         <l-root-card
           class="delay"
           :style="{ 'animation-delay': index * 200 + 'ms' }"
+          :hasRead="items.hasRead"
           :imgPath1="items.reporterImgPath"
           :imgPath2="items.reportType == 3 ? items.reporteeImgPath : ''"
           :type="items.reportType"
@@ -66,6 +67,7 @@ export default {
     return {
       reportList: [
         {
+          hasRead: false,
           id: 1,
           articleID: "E387HB9CS1234",
           articleTitle: "Test this Card with Methods No.1",
@@ -82,6 +84,7 @@ export default {
           reportType: 1,
         },
         {
+          hasRead: false,
           id: 2,
           commentID: "E387HB9CS1234-245",
           commentContent: "Test this Card with Comment No.1",
@@ -93,6 +96,7 @@ export default {
           reportType: 2,
         },
         {
+          hasRead: false,
           id: 3,
           reporterImgPath: "lyc",
           reportContent:
@@ -104,17 +108,7 @@ export default {
           reportType: 3,
         },
         {
-          id: 2,
-          commentID: "E387HB9CS1234-245",
-          commentContent: "Test this Card with Comment No.1",
-          reporterImgPath: "lyc",
-          reportContent:
-            "Tonylyc is a very handsome boy!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
-          reporterJob: "本科生",
-          reporterID: "Tonylyc",
-          reportType: 2,
-        },
-        {
+          hasRead: true,
           id: 3,
           reporterImgPath: "lyc",
           reportContent:
@@ -124,29 +118,7 @@ export default {
           reporteeID: "Shouhou",
           reporteeJob: "本科生",
           reportType: 3,
-        },
-        {
-          id: 2,
-          commentID: "E387HB9CS1234-245",
-          commentContent: "Test this Card with Comment No.1",
-          reporterImgPath: "lyc",
-          reportContent:
-            "Tonylyc is a very handsome boy!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
-          reporterJob: "本科生",
-          reporterID: "Tonylyc",
-          reportType: 2,
-        },
-        {
-          id: 3,
-          reporterImgPath: "lyc",
-          reportContent:
-            "Tonylyc is a very handsome boy!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
-          reporterJob: "本科生",
-          reporterID: "Tonylyc",
-          reporteeID: "Shouhou",
-          reporteeJob: "本科生",
-          reportType: 3,
-        },
+        }
       ],
     };
   },
@@ -243,10 +215,8 @@ export default {
   transition: 0.3s;
 }
 .root-report--detail {
-  align-self: flex-start;
   color: #62592c;
   line-height: 1.5em;
-  margin: 25px;
   text-indent: 2em;
 }
 .delay {
