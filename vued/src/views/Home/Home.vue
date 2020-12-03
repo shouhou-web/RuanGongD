@@ -1,16 +1,12 @@
 <template>
   <!-- Home -->
   <div id="home">
-    <m-header bgColor="#ffffff">
-      <div slot="right">
-        导航栏右部
-      </div>
-    </m-header>
+    <m-app-header></m-app-header>
     <!-- 主页面 -->
     <div class="logo">
-      <img src="@/assets/image/logo.png" alt="" />
+      <img src="@/assets/image/home/logo.png" alt="" />
     </div>
-    <search-advance @change-list="changeList" @change-time="changeTime" />
+    <search-advance @change-list="changeList" @change-time="changeTime" :isShow="true"/>
     <div class="footer">
       <div class="item1"></div>
       <div class="item2"></div>

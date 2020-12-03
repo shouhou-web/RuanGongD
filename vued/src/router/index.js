@@ -60,6 +60,11 @@ const routes = [
     component: Literature
   },
   {
+    path: "/manage",
+    name: "Manage",
+    component: Manage
+  },
+  {
     path: "/root",
     name: "Root",
     component: Root
@@ -88,6 +93,11 @@ const routes = [
     path: "/intro",
     name: "Intro",
     component: Intro
+  },
+  {
+    path: "/test",
+    name: "Test",
+    component: Test
   }
 ];
 

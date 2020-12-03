@@ -37,11 +37,11 @@ export default {
   },
   methods: {
     show() {
-      // this.$refs.hover.showHover({
-      //   title: "hhh",
-      //   submitBtn: "芜湖",
-      //   cancelBtn: "起飞"
-      // });
+      this.$refs.hover.showHover({
+        title: "hhh",
+        submitBtn: "芜湖",
+        cancelBtn: "起飞"
+      });
     },
     submit(e) {
       console.log(e, "芜湖");

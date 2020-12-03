@@ -1,43 +1,44 @@
 <template>
   <!-- 分类查看 -->
-  <div id="search-advance">
+  <div id="search-advance" :style="{ height: height }">
     <ul>
       <li v-for="(item, index) in searchList" :key="index">
-        <div class="search" v-if="index == 0">
+        <div class="search__advance" v-if="index == 0">
           <!-- 普通检索框 -->
           <div class="search__main">
             <!-- 切换类型 -->
-            <div class="advance" @click="isAdvance = !isAdvance">
+            <div class="advance" @click="changeAdvance">
               <div class="advance__text" v-if="!isAdvance">高级检索</div>
               <div class="advance__text" v-else>普通检索</div>
             </div>
             <!-- 选择type -->
-            <m-dropdown
+            <m-click-dropdown
               @change-dropdown="change($event, index, 'type')"
-              v-if="isAdvance"
+              v-if="isAdvance && isShow"
               :cur="item.type"
               type="click-type"
             />
+
             <!-- 输入框 -->
             <input v-model="item.value" type="text" maxlength="120" />
+            <span class="search__sub" @click="search">
+              <img src="@/assets/icons/home/search.png" alt="" />
+            </span>
           </div>
-          <span class="search__sub" @click="search">
-            DDL一下
-          </span>
         </div>
         <!-- 高级检索框 -->
-        <div class="search" v-else-if="isAdvance">
+        <div class="search__advance" v-else-if="isAdvance && isShow">
           <div class="search__main--second">
             <!-- 选择逻辑连接词 -->
             <div class="advance--nop">
-              <m-dropdown
+              <m-click-dropdown
                 @change-dropdown="change($event, index, 'logical')"
                 :cur="item.logical"
                 type="click-logical"
               />
             </div>
             <!-- 选择搜索类型 -->
-            <m-dropdown
+            <m-click-dropdown
               @change-dropdown="change($event, index, 'type')"
               :cur="item.type"
               type="click-type"
@@ -49,6 +50,7 @@
           <div @click="deleteItem(index)" v-if="index > 1" class="search__icon">
             -
           </div>
+          <div v-else class="search__icon"></div>
           <!-- 在末尾添加一项，仅可在末尾使用 -->
           <div
             @click="addItem"
@@ -60,25 +62,30 @@
         </div>
       </li>
     </ul>
-    <search-date v-if="isAdvance" @changeTime="changeTime" />
+    <search-date v-if="isAdvance && isShow" @changeTime="changeTime" />
   </div>
 </template>
 
 <script>
 import { advance } from "network/search.js";
-import searchDate from "./search-date";
+import SearchDate from "./search-date";
+import MClickDropdown from "components/content/m-click-dropdown/m-click-dropdown";
 export default {
   name: "Classify",
   props: {
-    initSearch: Object
+    initSearch: Object,
+    isShow: {
+      type: Boolean,
+      dafault: true
+    }
   },
   created() {
     console.log(this.initSearch);
     if (this.initSearch) {
-      this.isAdvance = true;
       this.searchList = this.initSearch.searchList;
       this.start = this.initSearch.start;
       this.end = this.initSearch.end;
+      this.isAdvance = this.searchList.length > 1 ? true : false;
     }
   },
   data() {
@@ -89,11 +96,6 @@ export default {
           logical: "NULL",
           type: "SU",
           value: ""
-        },
-        {
-          logical: "AND",
-          type: "KY",
-          value: ""
         }
       ],
       start: "",
@@ -103,6 +105,20 @@ export default {
   watch: {
     searchList: function(val, oldVal) {
       this.$emit("change-list", val);
+    },
+    isAdvance: function(val, oldVal) {
+      this.$emit("change-advance", val);
+    }
+  },
+  computed: {
+    height() {
+      console.log(this.isShow);
+      if (this.isAdvance && this.isShow) {
+        let h = 51 * this.searchList.length;
+        h += (this.searchList.length - 1) * 10;
+        h += 28;
+        return h + "px";
+      } else return "50px";
     }
   },
   methods: {
@@ -110,6 +126,15 @@ export default {
       // console.log(e, index, type);
       if (type == "type") this.searchList[index].type = e;
       else if (type == "logical") this.searchList[index].logical = e;
+    },
+    changeAdvance() {
+      this.isAdvance = !this.isAdvance;
+      if (this.isAdvance && this.searchList.length == 1)
+        this.searchList.push({
+          logical: "AND",
+          type: "KY",
+          value: ""
+        });
     },
     changeTime(e) {
       this.start = e.start;
@@ -154,60 +179,67 @@ export default {
     }
   },
   components: {
-    searchDate
+    SearchDate,
+    MClickDropdown
   }
 };
 </script>
 
 <style scoped>
-.search {
+#search-advance {
+  transition: height 0.1s ease;
+}
+
+.search__advance {
   align-items: center;
   display: flex;
+  font-size: 14px;
   line-height: 20px;
   margin: 0 auto 10px;
-  height: auto;
   width: 710px;
 }
 
 .search__main,
 .search__main--second {
-  border: 1.5px solid var(--color-main);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.12);
   display: flex;
-  padding: 14px 0;
-  width: 610px;
+  padding: 14px 14px 14px 0;
 }
 
 .search__main {
   border-right: #fff;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
+  width: 710px;
 }
 
 .search__main--second {
-  border-radius: 5px;
+  width: 610px;
 }
 
 .advance,
 .advance--nop {
   border-right: 1px solid grey;
   cursor: pointer;
-  padding: 0 15px;
+  text-align: center;
 }
 
 .advance--nop {
   padding: 0px;
 }
 
+.advance__text {
+  width: 85px;
+}
+
 .advance__text:hover {
   color: var(--color-main);
 }
 
-.search input {
+.search__main input {
   border: 0;
   background-color: transparent;
   outline: none;
   margin: 0 10px;
-  /* width: 400px; */
+  flex: 1;
 }
 
 .search__icon {
@@ -229,12 +261,14 @@ export default {
 }
 
 .search__sub {
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
-  background-color: var(--color-main);
+  align-items: center;
+  display: flex;
   color: #fff;
   cursor: pointer;
-  padding: 15.5px;
-  letter-spacing: 1px;
+}
+
+.search__sub img {
+  width: 15px;
+  height: 15px;
 }
 </style>
