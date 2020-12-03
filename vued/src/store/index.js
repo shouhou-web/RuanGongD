@@ -32,7 +32,8 @@ const state = {
   nowTeamID: -1, //-1表示未选择团体
   hasTeam: false, //是否有团队
   allMsgNum: {}, // 消息数目
-  editState: false // 文档编辑锁，默认不持锁
+  editState: false, // 文档编辑锁，默认不持锁
+  pageSize: 25 //讨论区分区每页动态数
 };
 
 const store = new Vuex.Store({

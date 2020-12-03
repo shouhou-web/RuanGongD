@@ -7,22 +7,17 @@
     <div
       class="m-nav--hide"
       :style="{
-        'margin-left': mlAll,
+        'margin-left': mlAll
       }"
     >
       <div
         class="m-nav__triangle"
         :style="{
           'margin-left': mlTri,
-          'border-bottom-color': color,
+          'border-bottom-color': color
         }"
       ></div>
-      <div
-        class="m-nav__main"
-        :style="{
-          'background-color': color,
-        }"
-      >
+      <div class="m-nav__main">
         <slot name="hide"></slot>
       </div>
     </div>
@@ -35,28 +30,18 @@ export default {
   props: {
     color: {
       type: String,
-      default: "#fff",
+      default: "#fff"
     },
     position: {
       type: String,
-      default: "middle",
-    },
+      default: "middle"
+    }
   },
   data() {
     return {
       mlAll: 0,
-      mlTri: 0,
+      mlTri: 0
     };
-  },
-  computed: {
-    // hide() {
-    //   console.log("hide");
-    //   return document.getElementById("hide");
-    // },
-    // show() {
-    //   console.log("show");
-    //   return document.getElementById("show");
-    // }
   },
   methods: {
     show() {
@@ -83,8 +68,8 @@ export default {
         this.mlTri = -show / 2 + hide / 2 + "px";
       }
       console.log(this.mlTri, this.mlAll);
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -101,12 +86,6 @@ export default {
   flex-direction: column;
   position: absolute;
   z-index: 628;
-}
-
-.m-nav__main {
-  padding: 10px;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
 }
 
 .m-nav__triangle {

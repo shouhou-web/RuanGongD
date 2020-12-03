@@ -6,16 +6,20 @@ import store from "../store/index";
 const Test = () => import("views/Test.vue");
 
 // 论坛相关组件
-const Forum = () => import("views/Forum/Forum.vue");
+const ForumHome = () => import("views/Forum/ForumHome.vue");
+const ForumSector = () => import("views/Forum/ForumSector.vue");
+const ForumPost = () => import("views/Forum/ForumPost.vue");
+const UserPosts = () => import("views/Forum/UserPosts.vue");
 
 // 首页相关组件
 const Home = () => import("views/Home/Home.vue");
+const Search = () => import("views/Home/Search.vue");
 
 // 文献相关组件
 const Literature = () => import("views/Literature/Literature.vue");
 const Manage = () => import("views/Literature/Manage.vue");
 const Classify = () => import("views/Literature/Classify.vue");
-const Search = () => import("views/Literature/Search.vue");
+// const Search = () => import("views/Literature/Search.vue");
 const Publication = () => import("views/Literature/Publication.vue");
 
 // 消息相关组件
@@ -36,14 +40,64 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Root
+    component: Home
     // redirect重定向
     // redirect: "/home/workSpace"
   },
   {
-    path: "/Root",
+    path: "/search",
+    name: "Search",
+    component: Search
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: Profile
+  },
+  {
+    path: "/literature",
+    name: "Literature",
+    component: Literature
+  },
+  {
+    path: "/manage",
+    name: "Manage",
+    component: Manage
+  },
+  {
+    path: "/root",
     name: "Root",
     component: Root
+  },
+  {
+    path: "/forumHome",
+    name: "ForumHome",
+    component: ForumHome
+  },
+  {
+    path: "/forumSector",
+    name: "ForumSector",
+    component: ForumSector
+  },
+  {
+    path: "/forumPost",
+    name: "ForumPost",
+    component: ForumSector
+  },
+  {
+    path: "/userPosts",
+    name: "UserPost",
+    component: UserPosts
+  },
+  {
+    path: "/intro",
+    name: "Intro",
+    component: Intro
+  },
+  {
+    path: "/test",
+    name: "Test",
+    component: Test
   }
 ];
 
@@ -61,17 +115,6 @@ router.beforeEach((to, from, next) => {
   // ${//to and from are Route Object,next() must be called to resolve the hook}
   // 这里是修改名字的全局守护路由，暂不应用
   // document.title = to.matched[0].meta.title;
-  if (to.path === "/home/workSpace/recent") {
-    store.commit("homeleftnav", 1);
-    store.commit("homemidnav", 1);
-  } else if (to.path === "/home/workSpace/iMade") {
-    store.commit("homeleftnav", 1);
-    store.commit("homemidnav", 2);
-  } else if (to.path === "/home/workSpace/myCollection") {
-    store.commit("homeleftnav", 1);
-    store.commit("homemidnav", 3);
-  } else if (to.path === "/home/trash") store.commit("homeleftnav", 2);
-  else if (to.path === "/home/teamSpace") store.commit("homeleftnav", 3);
   next();
 });
 
