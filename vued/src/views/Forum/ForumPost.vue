@@ -6,35 +6,35 @@
     <!-- 动态内容 -->
     <div class="post-container">
       <div class="card">
-        <div class="card-item">
-          <div class="post-header">
-            <div class="avatar">
-              <v-avatar size="48px">
-                <img :src="postInfo.creatorAvatar"
-              /></v-avatar>
-            </div>
-            <div class="poster-name">
-              {{ postInfo.creatorName }}
-            </div>
-            <div class="post-action">
-              <v-btn
-                icon
-                v-if="postInfo.creatorId == userId"
-                @click="showDelete(-1)"
-              >
-                <!-- 是作者：可以删除动态 -->
-                <v-icon>
-                  mdi-delete
-                </v-icon>
-              </v-btn>
-              <v-btn icon v-else @click="showReport(-1)">
-                <!-- 不是作者：可以举报动态 -->
-                <v-icon>
-                  mdi-alert-octagon
-                </v-icon>
-              </v-btn>
-            </div>
+        <div class="card-header">
+          <div class="avatar">
+            <v-avatar size="48px">
+              <img :src="postInfo.creatorAvatar"
+            /></v-avatar>
           </div>
+          <div class="poster-name">
+            {{ postInfo.creatorName }}
+          </div>
+          <div class="post-action">
+            <v-btn
+              icon
+              v-if="postInfo.creatorId == userId"
+              @click="showDelete(-1)"
+            >
+              <!-- 是作者：可以删除动态 -->
+              <v-icon>
+                mdi-delete
+              </v-icon>
+            </v-btn>
+            <v-btn icon v-else @click="showReport(-1)">
+              <!-- 不是作者：可以举报动态 -->
+              <v-icon>
+                mdi-alert-octagon
+              </v-icon>
+            </v-btn>
+          </div>
+        </div>
+        <div class="card-item">
           <div class="post-body">
             <div class="post-name">{{ postInfo.postName }}</div>
             <div class="post-attr">
@@ -126,12 +126,40 @@
     <!-- TODO: 输入评论 -->
     <div class="input-container">
       <div class="card">
-        <div class="card-header"></div>
-        <div class="card-item"></div>
+        <div class="card-header">
+          <div class="avatar">
+            <v-avatar size="48px">
+              <img :src="userAvatar" />
+            </v-avatar>
+          </div>
+          <div class="poster-name">
+            {{ userName }}
+          </div>
+        </div>
+        <div class="card-item">
+          <v-form v-model="commentFormValid" class="comment-form" lazy-validation>
+            <!-- TODO: 表单验证 -->
+            <v-textarea
+              v-model="commentContent"
+              outlined
+              counter
+              rows="4"
+              auto-grow
+              required
+              color="var(--color-main)"
+              :rules="commentRule"
+            ></v-textarea>
+            <div class="post-reply-button" @click="handleComment">
+              <v-btn color="var(--color-main)" :disabled="!commentFormValid">
+                <font color="white">回复</font>
+              </v-btn>
+            </div>
+          </v-form>
+        </div>
       </div>
     </div>
 
-    <!-- TODO: 举报对话框  -->
+    <!-- 举报对话框  -->
     <v-dialog v-model="reportDialog" max-width="800">
       <v-card elevation="3">
         <v-card-title v-if="reportPost == true">举报动态</v-card-title>
@@ -213,19 +241,26 @@ export default {
     return {
       isAuthor: false,
       userId: "1",
+      userName: "Codevka",
+      userAvatar: "https://i.loli.net/2020/11/26/soiOjIlZFpELuTW.png",
       postId: "123",
       reportDialog: false, // 是否展示举报界面
       deleteDialog: false, // 是否展示删除界面
       reportPost: false,
       deletePost: false,
       deleteCommentId: "",
+      commentContent: "",
+      commentFormValid: false,
       reportForm: {
         reportContent: "",
         reportCommentId: "",
       },
-      commentForm: {
-        commentContent: "",
-      },
+      commentRule: [
+        (v) => !!v,
+        (v) =>
+          (v.length <= 800 && v.length >= 5) ||
+          "回复内容长度在 5-800 个字符之间",
+      ],
       reportRule: {
         reportContent: [
           {
@@ -238,21 +273,6 @@ export default {
             max: 800,
             message: "举报理由长度在 5-800 个字符之间",
             trigger: "blur",
-          },
-        ],
-      },
-      commentRule: {
-        commentContent: [
-          {
-            required: true,
-            message: "请输入评论内容",
-            trigger: "change",
-          },
-          {
-            min: 5,
-            max: 800,
-            message: "评论内容长度在 5-800 个字符之间",
-            trigger: "change",
           },
         ],
       },
@@ -322,6 +342,10 @@ export default {
     // 聚焦到回复输入框
     jumpToReply() {
       console.log("jump!");
+    },
+
+    reply() {
+      console.log("reply");
     },
 
     showReport(commentId) {
@@ -432,8 +456,7 @@ export default {
       }
     },
 
-    // TODO 评论动态
-    handleCommentPost() {
+    handleComment() {
       commentPost(this.userId, this.postId, this.commentContent)
         .then((res) => {
           console.log("comment post");
@@ -455,6 +478,7 @@ export default {
   created() {
     // this.postId = this.$route.query.postId;
     // this.userId = this.$route.state.userID; // TODO 等待统一
+    // TODO 获取 userName, userAvatar
     // console.log("postId: " + this.postId + "\nuserId: " + this.userId);
 
     // getPostInfo(this.userId, this.postId)
@@ -543,7 +567,6 @@ export default {
 .poster-name {
   display: flex;
   align-items: center;
-  width: 500px;
   font-size: 18px;
   font-weight: bold;
   margin-left: 10px;
@@ -551,7 +574,7 @@ export default {
 
 .post-action {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   margin-left: auto;
 }
 
@@ -668,6 +691,10 @@ export default {
   margin-left: auto;
   font-size: 0.8rem;
   color: #555;
+}
+
+.comment-form {
+  margin-top: 20px;
 }
 
 .footer {
