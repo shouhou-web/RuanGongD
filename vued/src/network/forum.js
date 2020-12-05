@@ -74,7 +74,7 @@ export function createPost(createPostForm) {
  * @param {userId}
  *  userId: 用户id
  *  postId: 要获取的动态id
- * @returns {postName, postContent, replyNum, viewNum, creatorId, creatorAvatar, creatorName, createTime, tags[], comments[{commenterId, commenterName, commenterAvatar, floor, commentContent, commentTime}]}
+ * @returns {postName, postContent, replyNum, viewNum, creatorId, creatorAvatar, creatorName, createTime, tags[], comments[{commentId, commenterId, commenterName, commenterAvatar, floor, commentContent, commentTime}]}
  *  postName: 动态标题
  *  postContent: 动态内容
  *  replyNum: 动态的评论数
@@ -85,6 +85,7 @@ export function createPost(createPostForm) {
  *  createTime: 创建时间
  *  tags[]: 标签数组，里面元素是string
  *  comments[]: 评论数组，里面元素是对象
+ *    commentId: 评论id
  *    commenterId: 评论者id
  *    commenterName: 评论者名称
  *    commenterAvatar: 评论者头像链接
@@ -213,6 +214,39 @@ export function commentPost(userId, postId, commentContent) {
   return request(baseURL, {
     url: "/commentPost",
     params: { userId, postId, commentContent },
+    method: "post",
+  });
+}
+
+/**
+ * 举报评论
+ * @param {userId, reportCommentId, reportContent}
+ *  userId: 用户id
+ *  reportCommentId: 举报评论id
+ *  reportContent: 举报理由
+ * @return {result}
+ *  result: 成功返回 "true", 失败返回 "false"
+ */
+export function reportComment(userId, reportCommentId, reportContent) {
+  return request(baseURL, {
+    url: "/reportComment",
+    params: { userId, reportCommentId, reportContent },
+    method: "post",
+  });
+}
+
+/**
+ * 删除评论
+ * @param {userId, deleteCommentId}
+ *  userId: 用户id
+ *  deleteCommentId: 删除评论id
+ * @return {result}
+ *  result: 成功返回 "true", 失败返回 "false"
+ */
+export function deleteComment(userId, deleteCommentId) {
+  return request(baseURL, {
+    url: "/deleteComment",
+    params: { userId, deleteCommentId },
     method: "post",
   });
 }

@@ -9,19 +9,25 @@
         <div class="card-item">
           <div class="post-header">
             <div class="avatar">
-              <v-avatar size="48px"> <img :src="postInfo.creatorAvatar"/></v-avatar>
+              <v-avatar size="48px">
+                <img :src="postInfo.creatorAvatar"
+              /></v-avatar>
             </div>
             <div class="poster-name">
               {{ postInfo.creatorName }}
             </div>
-            <div class="action">
-              <v-btn icon v-if="postInfo.creatorId == userId" @click="deleteDialog = true">
+            <div class="post-action">
+              <v-btn
+                icon
+                v-if="postInfo.creatorId == userId"
+                @click="showDelete(-1)"
+              >
                 <!-- 是作者：可以删除动态 -->
                 <v-icon>
                   mdi-delete
                 </v-icon>
               </v-btn>
-              <v-btn icon v-else @click="reportDialog = true">
+              <v-btn icon v-else @click="showReport(-1)">
                 <!-- 不是作者：可以举报动态 -->
                 <v-icon>
                   mdi-alert-octagon
@@ -65,20 +71,47 @@
     <!-- 评论区 -->
     <div class="comment-container">
       <div class="card">
-        <div class="child-card" v-for="comment in comments" :key="comment.floor">
+        <div
+          class="child-card"
+          v-for="comment in comments"
+          :key="comment.floor"
+        >
           <div class="card-divider" v-if="comment.floor != 1"></div>
           <div class="card-header">
             <div class="avatar">
-              <v-avatar size="32px"> <img :src="comment.commenterAvatar"/></v-avatar>
+              <v-avatar size="32px">
+                <img :src="comment.commenterAvatar"
+              /></v-avatar>
             </div>
             <div class="commenter-name">
               {{ comment.commenterName }}
             </div>
-            <div class="poster-tag" v-if="comment.commenterId == postInfo.creatorId">
+            <div
+              class="poster-tag"
+              v-if="comment.commenterId == postInfo.creatorId"
+            >
               楼主
             </div>
             <div class="comment-time">
               {{ comment.commentTime }}
+            </div>
+            <div class="comment-action">
+              <v-btn
+                icon
+                v-if="comment.commenterId == userId"
+                @click="showDelete(comment.commentId)"
+              >
+                <!-- 是作者：可以删除评论 -->
+                <v-icon>
+                  mdi-delete
+                </v-icon>
+              </v-btn>
+              <v-btn icon v-else @click="showReport(comment.commentId)">
+                <!-- 不是作者：可以举报评论 -->
+                <v-icon>
+                  mdi-alert-octagon
+                </v-icon>
+              </v-btn>
             </div>
           </div>
           <div class="card-item">
@@ -101,9 +134,15 @@
     <!-- TODO: 举报对话框  -->
     <v-dialog v-model="reportDialog" max-width="800">
       <v-card elevation="3">
-        <v-card-title>举报动态</v-card-title>
+        <v-card-title v-if="reportPost == true">举报动态</v-card-title>
+        <v-card-title v-else>举报评论</v-card-title>
         <v-card-text>
-          <el-form :model="reportForm" label-width="80px" :rules="reportRule" ref="reportForm">
+          <el-form
+            :model="reportForm"
+            label-width="80px"
+            :rules="reportRule"
+            ref="reportForm"
+          >
             <el-form-item label="举报理由" prop="reportContent">
               <el-input
                 class="report-content"
@@ -119,7 +158,10 @@
         </v-card-text>
         <v-card-actions>
           <div class="footer">
-            <v-btn color="var(--color-main)" @click="handleReportPost('reportForm')">
+            <v-btn
+              color="var(--color-main)"
+              @click="handleReport('reportForm')"
+            >
               <font color="white">举报</font>
             </v-btn>
             <v-btn @click="reportDialog = false">取消</v-btn>
@@ -130,13 +172,21 @@
 
     <v-dialog v-model="deleteDialog" max-width="800">
       <v-card elevation="3">
-        <v-card-title>删除动态</v-card-title>
-        <v-card-text>
-          是否真的要删除这条动态？
-        </v-card-text>
+        <div v-if="deletePost == true">
+          <v-card-title>删除动态</v-card-title>
+          <v-card-text>
+            是否真的要删除这条动态？
+          </v-card-text>
+        </div>
+        <div v-else>
+          <v-card-title>删除评论</v-card-title>
+          <v-card-text>
+            是否真的要删除这条评论？
+          </v-card-text>
+        </div>
         <v-card-actions>
           <div class="footer">
-            <v-btn color="#ff6060" @click="handleDeletePost">
+            <v-btn color="#ff6060" @click="handleDelete">
               <font color="white">删除</font>
             </v-btn>
             <v-btn @click="deleteDialog = false">取消</v-btn>
@@ -148,21 +198,34 @@
 </template>
 
 <script>
-import { getPostInfo, reportPost, deletePost, commentPost } from "network/forum.js";
+import {
+  getPostInfo,
+  reportPost,
+  deletePost,
+  reportComment,
+  deleteComment,
+  commentPost,
+} from "network/forum.js";
 
 export default {
   name: "FormPost",
   data() {
     return {
       isAuthor: false,
-      userId: "2",
+      userId: "1",
       postId: "123",
       reportDialog: false, // 是否展示举报界面
       deleteDialog: false, // 是否展示删除界面
+      reportPost: false,
+      deletePost: false,
+      deleteCommentId: "",
       reportForm: {
         reportContent: "",
+        reportCommentId: "",
       },
-      commentContent: "",
+      commentForm: {
+        commentContent: "",
+      },
       reportRule: {
         reportContent: [
           {
@@ -175,6 +238,21 @@ export default {
             max: 800,
             message: "举报理由长度在 5-800 个字符之间",
             trigger: "blur",
+          },
+        ],
+      },
+      commentRule: {
+        commentContent: [
+          {
+            required: true,
+            message: "请输入评论内容",
+            trigger: "change",
+          },
+          {
+            min: 5,
+            max: 800,
+            message: "评论内容长度在 5-800 个字符之间",
+            trigger: "change",
           },
         ],
       },
@@ -192,6 +270,7 @@ export default {
       },
       comments: [
         {
+          commentId: "1",
           commenterId: "123",
           commenterName: "BI",
           commenterAvatar: "https://i.loli.net/2020/11/27/9fbGvYknV8KejFS.png",
@@ -200,6 +279,7 @@ export default {
           commentTime: "今天 11:45",
         },
         {
+          commentId: "2",
           commenterId: "2333",
           commenterName: "AI",
           commenterAvatar: "https://i.loli.net/2020/11/27/3tz2XEraSwl8skK.png",
@@ -208,6 +288,7 @@ export default {
           commentTime: "1926-08-17",
         },
         {
+          commentId: "4",
           commenterId: "1234",
           commenterName: "CI",
           commenterAvatar: "https://i.loli.net/2020/11/27/3tz2XEraSwl8skK.png",
@@ -216,6 +297,7 @@ export default {
           commentTime: "8 分钟前",
         },
         {
+          commentId: "3",
           commenterId: "21",
           commenterName: "Spam  Bot",
           commenterAvatar: "https://i.loli.net/2020/11/30/jm2i7g9qL61SkE8.png",
@@ -225,6 +307,7 @@ export default {
           commentTime: "刚刚",
         },
         {
+          commentId: "1233",
           commenterId: "1",
           commenterName: "Codevka",
           commenterAvatar: "https://i.loli.net/2020/11/26/soiOjIlZFpELuTW.png",
@@ -241,8 +324,19 @@ export default {
       console.log("jump!");
     },
 
-    // 举报动态
-    handleReportPost(formName) {
+    showReport(commentId) {
+      this.reportDialog = true;
+      this.reportForm.reportContent = "";
+      if (commentId == -1) {
+        this.reportPost = true;
+      } else {
+        this.reportPost = false;
+        this.reportForm.reportCommentId = commentId;
+      }
+    },
+
+    // 举报
+    handleReport(formName) {
       let pass = false;
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -251,43 +345,91 @@ export default {
       });
       if (!pass) return;
 
-      reportPost(this.userId, this.postId, this.reportContent)
-        .then((res) => {
-          console.log("report post");
-          console.log(res);
-          if (res.data.result == "true") {
-            this.reportDialog = false;
-          } else {
+      if (this.reportPost == true) {
+        reportPost(this.userId, this.postId, this.reportForm.reportContent)
+          .then((res) => {
+            console.log("report post");
+            console.log(res);
+            if (res.data.result == "true") {
+              this.reportDialog = false;
+            } else {
+              this.$message.error("举报失败，请稍后再试。");
+            }
+          })
+          .catch((err) => {
             this.$message.error("举报失败，请稍后再试。");
-          }
-        })
-        .catch((err) => {
-          this.$message.error("举报失败，请稍后再试。");
-          console.log(err);
-        });
+            console.log(err);
+          });
+      } else {
+        reportComment(
+          this.userId,
+          this.reportForm.reportCommentId,
+          this.reportForm.reportContent
+        )
+          .then((res) => {
+            console.log("report comment");
+            console.log(res);
+            if (res.data.result == "true") {
+              this.reportDialog = false;
+            } else {
+              this.$message.error("举报失败，请稍后再试。");
+            }
+          })
+          .catch((err) => {
+            this.$message.error("举报失败，请稍后再试。");
+            console.log(err);
+          });
+      }
+    },
+
+    showDelete(commentId) {
+      this.deleteDialog = true;
+      if (commentId == -1) {
+        this.deletePost = true;
+      } else {
+        this.deletePost = false;
+        this.deleteCommentId = commentId;
+      }
     },
 
     // 删除动态
-    handleDeletePost() {
-      deletePost(this.userId, this.postId)
-        .then((res) => {
-          console.log("delete post");
-          console.log(res);
-          if (res.data.result == "true") {
-            this.deleteDialog = false;
-            // TODO 返回（到哪？）
-            // this.$router.push({
-            //   path: "/",
-            //   query: {},
-            // });
-          } else {
+    handleDelete() {
+      if (this.deletePost == true) {
+        deletePost(this.userId, this.postId)
+          .then((res) => {
+            console.log("delete post");
+            console.log(res);
+            if (res.data.result == "true") {
+              this.deleteDialog = false;
+              // TODO 返回（到哪？）
+              // this.$router.push({
+              //   path: "/",
+              //   query: {},
+              // });
+            } else {
+              this.$message.error("删除失败，请稍后再试。");
+            }
+          })
+          .catch((err) => {
             this.$message.error("删除失败，请稍后再试。");
-          }
-        })
-        .catch((err) => {
-          this.$message.error("删除失败，请稍后再试。");
-          console.log(err);
-        });
+            console.log(err);
+          });
+      } else {
+        deleteComment(this.userId, this.deleteCommentId)
+          .then((res) => {
+            console.log("delete comment");
+            console.log(res);
+            if (res.data.result == "true") {
+              this.deleteDialog = false;
+            } else {
+              this.$message.error("删除失败，请稍后再试。");
+            }
+          })
+          .catch((err) => {
+            this.$message.error("删除失败，请稍后再试。");
+            console.log(err);
+          });
+      }
     },
 
     // TODO 评论动态
@@ -311,9 +453,9 @@ export default {
   },
   components: {},
   created() {
-    this.postId = this.$route.query.postId;
+    // this.postId = this.$route.query.postId;
     // this.userId = this.$route.state.userID; // TODO 等待统一
-    console.log("postId: " + this.postId + "\nuserId: " + this.userId);
+    // console.log("postId: " + this.postId + "\nuserId: " + this.userId);
 
     // getPostInfo(this.userId, this.postId)
     //   .then((res) => {
@@ -407,7 +549,7 @@ export default {
   margin-left: 10px;
 }
 
-.action {
+.post-action {
   display: flex;
   align-items: flex-end;
   margin-left: auto;
@@ -514,13 +656,17 @@ export default {
   height: fit-content;
 }
 
+.comment-action {
+  display: flex;
+  align-items: center;
+}
+
 .comment-time {
   display: flex;
-  align-items: flex-end;
-  line-height: 1.3;
+  align-items: center;
+  margin-right: 10px;
   margin-left: auto;
-  margin-bottom: 5px;
-  font-size: 13px;
+  font-size: 0.8rem;
   color: #555;
 }
 
