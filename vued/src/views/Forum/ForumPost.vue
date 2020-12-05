@@ -58,9 +58,9 @@
                 <div class="tag-content">{{ tag }}</div>
               </div>
             </div>
-            <div class="post-reply-button" @click="jumpToReply">
+            <div class="post-reply-button" @click="jumpToComment">
               <v-btn color="var(--color-main)">
-                <font color="white">回复动态</font>
+                <font color="white">评论动态</font>
               </v-btn>
             </div>
           </div>
@@ -140,6 +140,7 @@
           <v-form v-model="commentFormValid" class="comment-form" lazy-validation>
             <!-- TODO: 表单验证 -->
             <v-textarea
+              ref="commentarea"
               v-model="commentContent"
               outlined
               counter
@@ -151,7 +152,7 @@
             ></v-textarea>
             <div class="post-reply-button" @click="handleComment">
               <v-btn color="var(--color-main)" :disabled="!commentFormValid">
-                <font color="white">回复</font>
+                <font color="white">发表</font>
               </v-btn>
             </div>
           </v-form>
@@ -259,7 +260,7 @@ export default {
         (v) => !!v,
         (v) =>
           (v.length <= 800 && v.length >= 5) ||
-          "回复内容长度在 5-800 个字符之间",
+          "评论内容长度在 5-800 个字符之间",
       ],
       reportRule: {
         reportContent: [
@@ -339,8 +340,10 @@ export default {
     };
   },
   methods: {
-    // 聚焦到回复输入框
-    jumpToReply() {
+    // 聚焦到评论输入框
+    jumpToComment() {
+      this.$refs.commentarea.focus();
+      window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
       console.log("jump!");
     },
 
@@ -462,9 +465,12 @@ export default {
           console.log("comment post");
           console.log(res);
           if (res.data.result == "true") {
-            //
+            this.commentContent = ""
+            this.$message({
+              type: "success",
+              message: "评论发表成功！"
+            });
           } else {
-            //
             this.$message.error("评论失败，请稍后再试。");
           }
         })
