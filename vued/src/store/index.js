@@ -25,7 +25,7 @@ const state = {
   collaboratorNum: 0,
   docNum: 0,
   fullscreenLoading: false,
-  appHeaderCur: "Home",
+  appHeaderCurName: "",
   pageSize: 25 //讨论区分区每页动态数
 };
 

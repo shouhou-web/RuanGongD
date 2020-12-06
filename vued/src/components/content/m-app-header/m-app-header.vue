@@ -5,17 +5,37 @@
       <div slot="left">
         <ul class="header__switch">
           <li
-            :class="{ 'is-active': item.check }"
+            :class="{ 'is-active': item.name == $store.state.appHeaderCurName }"
             v-for="(item, index) in switchList"
             :key="index"
-            @click="jump(item.name)"
+            @click="jump(item)"
           >
             {{ item.name }}
           </li>
         </ul>
       </div>
       <div slot="right">
-        导航栏右部
+        <div class="header__right">
+          <div
+            class="header__icon"
+            @mouseenter="color"
+            @mouseout="color"
+            @click="toMessage"
+          >
+            <img
+              v-if="isColor"
+              src="@/assets/icons/header/msg-hover.png"
+              alt=""
+            />
+            <img v-else src="@/assets/icons/header/msg.png" alt="" />
+          </div>
+          <div class="header__avator" @click="toProfile">
+            <img
+              src="https://img-static.mihoyo.com/communityweb/upload/820f461e107e17f11d8fa8c5e45d5289.png"
+              alt=""
+            />
+          </div>
+        </div>
       </div>
     </m-header>
   </div>
@@ -30,34 +50,38 @@ export default {
         {
           name: "主页",
           path: "/",
-          check: true
+          check: true,
         },
         {
           name: "论坛",
           path: "/forumHome",
-          check: false
-        }
-      ]
+          check: false,
+        },
+      ],
+      isColor: false,
     };
   },
   methods: {
     jump(e) {
       this.$store.commit("changeAppHeader", e);
-      let url = "";
-      this.switchList.forEach(n => {
-        console.log(n);
-        if (n.name != e) n.check = false;
-        else {
-          url = n.path;
-          n.check = true;
-        }
-      });
+      console.log(e);
       this.$router.push({
-        path: url
+        path: e.path,
       });
-    }
+    },
+    color() {
+      this.isColor = !this.isColor;
+    },
+    toMessage() {
+      this.$store.commit("changeAppHeader", {});
+      this.$router.push({ path: "/message" });
+    },
+    toProfile() {
+      this.$store.commit("changeAppHeader", {});
+      this.$router.push({ path: "/profile" });
+    },
   },
-  components: {}
+  components: {},
 };
 </script>
 
@@ -94,7 +118,39 @@ export default {
 
 .header__switch .is-active::before,
 .header__switch li:hover::before {
-  background-color: #0080ff;
+  background-color: var(--color-tint);
   height: 3px;
+}
+
+.header__right {
+  display: flex;
+}
+
+.header__icon,
+.header__avator {
+  align-items: center;
+  border: 1px solid #888;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  height: 42px;
+  margin-right: 20px;
+  width: 42px;
+}
+
+.header__icon:hover {
+  background-color: #888;
+}
+
+.header__icon img {
+  height: 20px;
+  transform: rotate(30deg);
+  width: 20px;
+}
+
+.header__avator img {
+  height: 90%;
+  width: 90%;
 }
 </style>

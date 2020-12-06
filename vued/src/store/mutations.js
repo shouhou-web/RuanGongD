@@ -8,7 +8,7 @@ const mutations = {
   },
   // 全局导航栏跳转
   changeAppHeader(state, cur) {
-    state.appHeaderCur = cur;
+    state.appHeaderCurName = cur.name;
   },
   // 登录
   login(state, info) {
