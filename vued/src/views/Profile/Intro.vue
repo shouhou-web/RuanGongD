@@ -14,9 +14,9 @@
               {{ introPos }}
             </div>
           </div>
-          <div class="publish">
-            <div class="publish-button">邀请同事加入门户</div>
-          </div>
+<!--          <div class="publish">-->
+<!--            <div class="publish-button">邀请同事加入门户</div>-->
+<!--          </div>-->
         </div>
         <div class="profile-op">
           <div class="op-all">about</div>
@@ -39,7 +39,7 @@
             <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
             <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
             <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-<!--            <img src="../../assets/icons/profile/more.svg" class="more-icon">-->
+            <img src="../../assets/icons/profile/more.svg" class="more-icon" v-if="">
           </div>
         </div>
         <div class="literatures">
