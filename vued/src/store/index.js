@@ -25,14 +25,7 @@ const state = {
   collaboratorNum: 0,
   docNum: 0,
   fullscreenLoading: false,
-  homeMidNav: 0,
-  homeLeftNav: 1,
-  nowDocID: -1, // 当前文档ID
-  nowDocCol: [], // 当前文档协作者
-  nowTeamID: -1, //-1表示未选择团体
-  hasTeam: false, //是否有团队
-  allMsgNum: {}, // 消息数目
-  editState: false, // 文档编辑锁，默认不持锁
+  appHeaderCur: "Home",
   pageSize: 25 //讨论区分区每页动态数
 };
 

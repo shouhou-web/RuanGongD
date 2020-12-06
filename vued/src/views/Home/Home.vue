@@ -50,7 +50,7 @@ export default {
 .logo {
   display: flex;
   justify-content: center;
-  margin-bottom: 30px;
+  margin: 30px 0;
 }
 
 .logo img {

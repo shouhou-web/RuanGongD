@@ -37,7 +37,6 @@ export default {
   justify-content: space-between;
   line-height: 30px;
   margin: 0 auto;
-  padding: 10px 0;
   width: 100%;
 }
 
@@ -45,7 +44,7 @@ export default {
 .nav-right {
   align-items: center;
   display: flex;
-  height: 36px;
+  height: 56px;
 }
 
 .nav-left {

@@ -1,6 +1,7 @@
 <template>
   <!-- 讨论区主界面 -->
   <div id="forumHome">
+    <m-app-header></m-app-header>
     <ul>
       <li v-for="(item, index) in sectors" :key="index">
         <v-card class="sectorCard" elevation="1" tile>
