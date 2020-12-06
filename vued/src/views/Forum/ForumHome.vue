@@ -1,11 +1,19 @@
 <template>
   <!-- 讨论区主界面 -->
   <div id="forumHome">
+<<<<<<< HEAD
     <m-app-header></m-app-header>
+=======
+    <div class="pageHeader">
+      <div class="pageName">讨论区</div>
+      <!-- 创建动态 -->
+      <div class="pageTool"><create-post></create-post></div>
+    </div>
+>>>>>>> forum
     <ul>
       <li v-for="(item, index) in sectors" :key="index">
         <v-card class="sectorCard" elevation="1" tile>
-          <!--预留首部
+          <!--
           <v-footer padless v-if="index == 0">
             <div></div>
           </v-footer>
@@ -69,6 +77,8 @@
 
 <script>
 import { getAllSectors } from "network/forum.js";
+import MHeader from "../../components/common/m-header/m-header.vue";
+import CreatePost from "./childCpn/create-post.vue";
 export default {
   name: "ForumHome",
   data() {
@@ -131,23 +141,23 @@ export default {
         path: "/forumSector",
         query: {
           sectorId: id,
-          page: "0",
-          sort: "0"
+          page: "1",
+          sort: "0",
+          keyword: ""
         }
       });
     },
     goToPost(id) {
-      //todo: 跳转到动态
-      /*
+      //跳转到动态
       this.$router.push({
-        path: "/",
-        query: {}
+        path: "/post",
+        query: { postId: id }
       });
-      */
     }
   },
-  components: {},
+  components: { MHeader, CreatePost },
   created() {
+    CreatePost;
     //todo: 获取分区信息
     getAllSectors()
       .then(res => {
@@ -164,9 +174,34 @@ export default {
 
 <style scoped>
 #forumHome {
-  margin: 20px auto;
-  width: 100vw;
+  margin: 0px auto;
+  width: var(--width-main);
   /*background-image: url();*/
+}
+.m-header {
+  width: 100vw;
+  margin-bottom: 20px;
+}
+.pageHeader {
+  margin: 1px auto;
+  border-radius: 0px;
+  width: 900px;
+  background-color: white;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+.pageName {
+  margin: 20px 20px;
+  font-size: 30px;
+  font-style: bold;
+  height: 20px;
+}
+.pageTool {
+  height: 30px;
+  margin-top: 5px;
+  margin-left: 770px;
+  margin-bottom: 20px;
 }
 .sectorCard {
   margin: 1px auto;

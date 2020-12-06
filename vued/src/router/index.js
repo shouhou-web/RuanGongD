@@ -86,7 +86,7 @@ const routes = [
   {
     path: "/forumPost",
     name: "ForumPost",
-    component: ForumSector
+    component: ForumPost
   },
   {
     path: "/userPosts",
