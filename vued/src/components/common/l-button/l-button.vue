@@ -119,7 +119,6 @@ export default {
   border-radius: 7px;
   color: #60a5dd;
   cursor: pointer;
-  display: inline-flex;
   font-weight: 500;
   font-size: 15px;
   line-height: 1;

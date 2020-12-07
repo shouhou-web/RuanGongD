@@ -278,7 +278,7 @@ export default {
 }
 
 .search {
-  border: 1px solid #e4e4e4;
+  border-bottom: 1px solid #e4e4e4;
   background-color: #fff;
   border-radius: 5px;
   padding: 20px;

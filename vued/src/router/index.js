@@ -24,6 +24,10 @@ const Publication = () => import("views/Literature/Publication.vue");
 
 // 消息相关组件
 const Message = () => import("views/Message/Message.vue");
+const Invitation = () => import("views/Message/Invitation.vue");
+const Application = () => import("views/Message/Application.vue");
+const System = () => import("views/Message/System.vue");
+const Comment = () => import("views/Message/Comment.vue");
 
 // 个人相关组件
 const Profile = () => import("views/Profile/Profile.vue");
@@ -82,7 +86,7 @@ const routes = [
   {
     path: "/forumPost",
     name: "ForumPost",
-    component: ForumSector
+    component: ForumPost
   },
   {
     path: "/userPosts",
@@ -93,6 +97,38 @@ const routes = [
     path: "/intro",
     name: "Intro",
     component: Intro
+  },
+  {
+    path: "/message",
+    name: "Message",
+    component: Message,
+    children: [
+      {
+        path: "/",
+        // redirect重定向
+        redirect: "/message/application"
+      },
+      {
+        path: "/message/application",
+        name: "Application",
+        component: Application
+      },
+      {
+        path: "/message/invitation",
+        name: "Invitation",
+        component: Invitation
+      },
+      {
+        path: "/message/system",
+        name: "System",
+        component: System
+      },
+      {
+        path: "/message/comment",
+        name: "System",
+        component: Comment
+      }
+    ]
   },
   {
     path: "/test",
