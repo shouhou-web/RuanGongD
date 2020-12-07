@@ -1,14 +1,7 @@
 <template>
   <!-- 管理员界面 -->
   <div id="report">
-    <m-header bgColor="#e83015">
-      <template v-slot:left>
-        <div class="m-header--slot">导航栏左部</div>
-      </template>
-      <template v-slot:right>
-        <div class="m-header--slot">导航栏左部</div>
-      </template>
-    </m-header>
+    <m-app-header></m-app-header>
     <!-- <div class="root-report-nav"></div> -->
     <div class="root-report-cards">
       <div

@@ -1,6 +1,7 @@
 <template>
   <!-- 讨论区分区页面 -->
   <div id="forumSector" data-app>
+    <!-- <m-header></m-header> -->
     <div class="pageHeader">
       <div class="sectorName">{{ sectorName }}</div>
       <v-divider></v-divider>
@@ -15,7 +16,18 @@
             >
             </el-pagination>
           </el-col>
-          <el-col :offset="7" :span="3">
+          <el-col :offset="3" :span="4">
+            <v-text-field
+              v-model="keyword"
+              class="searchInput"
+              label="搜索动态"
+              hide-details
+              append-icon="search"
+              @click:append="changeKeyword"
+            >
+            </v-text-field>
+          </el-col>
+          <el-col :span="3">
             <v-menu offset-y>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn class="toolButton" small dark v-bind="attrs" v-on="on">
@@ -146,7 +158,8 @@
 </template>
 
 <script>
-import { getPosts } from "network/forum.js";
+import { getPosts, isFollowed, followSector } from "network/forum.js";
+import MHeader from "../../components/common/m-header/m-header.vue";
 export default {
   name: "ForumSector",
   data() {
@@ -154,6 +167,8 @@ export default {
       sectorId: "01",
       page: "1",
       sort: "0",
+      keyword: "",
+      followed: "0",
       sectorName: "测试分区",
       createStr0: "由 ",
       createStr1: " 创建于 ",
@@ -164,7 +179,7 @@ export default {
         { name: "最近更新", type: "0" },
         { name: "开始日期", type: "1" },
         { name: "标题", type: "2" },
-        { name: "最多恢复", type: "3" }
+        { name: "最多回复", type: "3" }
       ],
       //posts: [],
       posts: [
@@ -207,16 +222,43 @@ export default {
       */
     },
     goToPost(id) {
-      //todo: 跳转到动态
-      /*
+      //跳转到动态
+
       this.$router.push({
-        path: "/",
-        query: {}
+        path: "/post",
+        query: { postId: id }
       });
-      */
     },
     followSector() {
       //todo: (或解除)关注分区
+      let textString = this.followed == "0" ? "关注分区" : "取消关注分区";
+      followSector(this.currentUser, this.sectorId)
+        .then(res => {
+          console.log("followSector");
+          console.log(res);
+          if (res.data.result == "true") {
+            // alartSuccess
+            this.$notify({
+              title: "操作成功",
+              message: "成功" + textString,
+              type: "success"
+            });
+            this.followed = this.followed == "0" ? "1" : "0";
+          } else {
+            // alartFail
+            this.$notify.error({
+              title: "操作失败",
+              message: "无法" + textString
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          this.$notify.error({
+            title: textString + "失败",
+            message: "请稍后再试"
+          });
+        });
     },
     changePage(val) {
       this.$router.push({
@@ -224,7 +266,8 @@ export default {
         query: {
           sectorId: this.sectorId,
           page: val.toString(),
-          sort: this.sort
+          sort: this.sort,
+          keyword: this.keyword
         }
       });
       this.$router.go(0);
@@ -235,7 +278,20 @@ export default {
         query: {
           sectorId: this.sectorId,
           page: this.page,
-          sort: val
+          sort: val,
+          keyword: this.keyword
+        }
+      });
+      this.$router.go(0);
+    },
+    changeKeyword() {
+      this.$router.push({
+        path: "/forumSector",
+        query: {
+          sectorId: this.sectorId,
+          page: this.page,
+          sort: this.sort,
+          keyword: this.keyword
         }
       });
       this.$router.go(0);
@@ -247,21 +303,52 @@ export default {
     },
     currentPage() {
       return parseInt(this.page);
+    },
+    followedText() {
+      return this.followed == "0" ? "关注" : "已关注";
+    },
+    currentUser() {
+      //todo: userId
     }
   },
-  components: {},
+  components: { MHeader },
   created() {
     this.sectorId = this.$route.query.sectorId;
-    this.page = this.$route.query.page;
-    this.sort = this.$route.query.sort;
+    this.page = this.$route.query.page || "1";
+    this.sort = this.$route.query.sort || "0";
+    this.keyword = this.$route.query.keyword || "";
     let pageSize = this.$store.state.pageSize;
     //return;
+    console.log(
+      "forumSector:\n" +
+        "sectorId: " +
+        this.sectorId +
+        "\npage: " +
+        this.page +
+        "\nsort: " +
+        this.sort +
+        '\nkeyword: "' +
+        this.keyword +
+        '"'
+    );
     let start = ((parseInt(this.page) - 1) * this.pageSize).toString();
-    getPosts(this.sectorId, start, pageSize, this.sort)
+    //getPosts
+    getPosts(this.sectorId, start, pageSize, this.sort, this.keyword)
       .then(res => {
         console.log("getPosts");
         console.log(res);
         this.posts = res.data.posts;
+        this.followed = res.data.followed;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    //isFollowed
+    isFollowed(this.currentUser, this.sectorId)
+      .then(res => {
+        console.log("getPosts");
+        console.log(res);
+        this.isFollowed = res.data.followedl;
       })
       .catch(err => {
         console.log(err);
@@ -306,15 +393,19 @@ export default {
 .menu {
   font-size: 10px;
 }
+.searchInput {
+  width: 120px;
+  margin-top: -10px;
+  margin-right: 10px;
+}
 /*.postInfo {
 }*/
 .postName {
   cursor: pointer;
   font-size: 25px;
 }
-.creator {
-  cursor: pointer;
-}
+/*.creator {
+}*/
 .creatorName {
   cursor: pointer;
 }

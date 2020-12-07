@@ -20,6 +20,8 @@
           </div>
           <div class="publish">
             <div class="publish-button">发表文献</div>
+            <div class="publish-button">私 信</div>
+            <div class="publish-button">管理我的文献</div>
           </div>
         </div>
         <div class="profile-op">
@@ -133,6 +135,9 @@ export default {
   name: "Profile",
   data() {
     return {
+      // user
+      user: '',
+
       // 用户信息
       userName: 'Yu Haomiao',
       userNickName: 'Yu Haomiao',
@@ -233,6 +238,14 @@ export default {
     };
   },
   created() {
+    let userID = this.$route.query.userID;
+
+    if (userID == this.$store.state.user.userID) {
+      // 当前用户进入自己的主页
+      this.user = this.$store.state.user;
+    } else {
+
+    }
     this.newNickName = this.userNickName
     this.newDegree = this.userDegree
   },
@@ -379,13 +392,13 @@ export default {
 .publish {
   width: calc(100% - 130px - 665px);
   height: 100%;
-  /*border: 1px solid red;*/
   display: flex;
+  flex-direction: column;
   align-items: center;
 }
 
 .publish-button {
-  margin: 0 auto;
+  margin-top: 8%;
   padding: 10px;
   width: 70%;
   /*border: 1px solid black;*/

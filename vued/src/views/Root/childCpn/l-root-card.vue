@@ -4,9 +4,8 @@
     <div class="l-root-card--header">
       <img
         class="l-root-card--showmore"
-        :style="{ transform: ' rotate(' + rotationAngle + 'deg)' }"
-        src="@/assets/icons/Root/showmore.svg"
-        @click="showMore"
+        :style="{ transform: 'rotate(rotationAngle' + deg + ')' }"
+        src="@/assets/icons/root/showmore.svg"
       />
       <m-dropdown
         class="l-root-card--options-anime"
@@ -16,7 +15,7 @@
         <template v-slot:show>
           <img
             class="l-root-card--options"
-            src="@/assets/icons/Root/options.svg"
+            src="@/assets/icons/root/options.svg"
           />
         </template>
         <template v-slot:hide>
@@ -61,7 +60,7 @@
         <div class="l-root-card-divider-circle">
           <img
             class="l-root-card--select"
-            src="@/assets/icons/Root/select.svg"
+            src="@/assets/icons/root/select.svg"
           />
         </div>
       </div>
@@ -81,7 +80,7 @@ export default {
   props: {
     hasRead: {
       type: Boolean,
-      default: false
+      default: false,
     },
     imgPath1: "",
     imgPath2: "",
