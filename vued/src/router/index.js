@@ -65,6 +65,11 @@ const routes = [
     component: Manage
   },
   {
+    path: "/publication",
+    name: "Publication",
+    component: Publication
+  },
+  {
     path: "/root",
     name: "Root",
     component: Root
