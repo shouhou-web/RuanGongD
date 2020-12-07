@@ -4,8 +4,9 @@
     <div class="l-root-card--header">
       <img
         class="l-root-card--showmore"
-        :style="{ 'transform' : 'rotate(rotationAngle + 'deg')' }"
+        :style="{ transform: ' rotate(' + rotationAngle + 'deg)' }"
         src="@/assets/icons/Root/showmore.svg"
+        @click="showMore"
       />
       <m-dropdown
         class="l-root-card--options-anime"
@@ -84,20 +85,16 @@ export default {
     },
     imgPath1: "",
     imgPath2: "",
-    type: "",
-    rotationAngle: {
-      type: Number,
-      default: 0
-    }
+    type: ""
   },
   data() {
     return {
-      toRotate: 0
+      rotationAngle: 0
     };
   },
   methods: {
     showMore() {
-      this.rotationAngle += 180
+      this.rotationAngle += 180;
     }
   }
 };
@@ -137,10 +134,6 @@ export default {
   margin-left: 12px;
   transition: 0.3s;
   width: 20px;
-}
-
-.l-root-card--showmore:hover {
-  transform: scale(1.2, 1.2);
 }
 
 @keyframes rotation {
