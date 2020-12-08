@@ -122,7 +122,7 @@ export default {
 
 <style scoped>
 .root-report-cards {
-  height: calc(100vh - 56px);
+  height: calc(100vh - 57px);
   overflow: auto;
 }
 .root-report-cards::-webkit-scrollbar {
@@ -151,7 +151,7 @@ export default {
   left: 30%;
   padding-top: 20px;
   padding-right: 10%;
-  margin-bottom: 20px;
+  padding-bottom: 20px;
   position: relative;
   width: 70%;
 }
