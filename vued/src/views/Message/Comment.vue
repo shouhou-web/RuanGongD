@@ -65,7 +65,6 @@ export default {
 .message-list {
   background-color: #fff;
   border-radius: 4px;
-  box-shadow: 0 2px 4px 0 rgba(121, 146, 185, 0.54);
   margin-bottom: 10px;
   overflow: auto;
   padding: 0 16px;
