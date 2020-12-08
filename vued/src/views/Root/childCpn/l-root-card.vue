@@ -4,8 +4,9 @@
     <div class="l-root-card--header">
       <img
         class="l-root-card--showmore"
-        :style="{ transform: 'rotate(rotationAngle' + deg + ')' }"
+        :style="{ transform: 'rotate(' + rotationAngle + 'deg)' }"
         src="@/assets/icons/root/showmore.svg"
+        @click="showMore"
       />
       <m-dropdown
         class="l-root-card--options-anime"

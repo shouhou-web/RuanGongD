@@ -125,19 +125,32 @@ export default {
   height: calc(100vh - 57px);
   overflow: auto;
 }
+
 .root-report-cards::-webkit-scrollbar {
   width: 5px;
 }
 .root-report-cards::-webkit-scrollbar-track {
   background-color: transparent;
 }
+
 .root-report-cards::-webkit-scrollbar-thumb {
   background-color: #e83015;
   border-radius: 10px;
 }
+
+.root-report-cards::-webkit-scrollbar:hover {
+  width: 10px;
+}
+
+.root-report-cards::-webkit-scrollbar-thumb:hover {
+  border-radius: 20px;
+  transition: 0.5s;
+}
+
 .m-header--slot {
   color: #ffffff;
 }
+
 .root-report-nav {
   border: 2px solid #e3b4b8;
   height: 30%;
@@ -146,6 +159,7 @@ export default {
   margin-left: 70px;
   width: 30%;
 }
+
 .root-report-cards {
   /* border: 2px solid #e3b4b8; */
   left: 30%;
@@ -155,6 +169,7 @@ export default {
   position: relative;
   width: 70%;
 }
+
 .root-report-card {
   padding-bottom: 30px;
   padding-top: 10px;
@@ -162,12 +177,14 @@ export default {
   padding-left: 20px;
   width: 80%;
 }
+
 .root-report--profile {
   align-content: center;
   display: flex;
   flex-direction: column;
   margin-left: 2px;
 }
+
 .root-report--id {
   color: #62592c;
   cursor: pointer;
@@ -175,14 +192,17 @@ export default {
   margin-bottom: 4px;
   transition: 0.3s;
 }
+
 .root-report--id:hover {
   color: #f19483;
   transition: 0.3s;
 }
+
 .root-report--job {
   color: #62592c;
   font-size: 8px;
 }
+
 .root-reportee-title {
   cursor: pointer;
   color: #62592c;
@@ -190,11 +210,13 @@ export default {
   font-style: italic;
   transition: 0.3s;
 }
+
 .root-reportee-title:hover {
   color: #f19483;
   text-decoration: underline;
   transition: 0.3s;
 }
+
 .root-reportee-comment {
   cursor: pointer;
   color: #62592c;
@@ -202,21 +224,25 @@ export default {
   font-style: italic;
   transition: 0.3s;
 }
+
 .root-reportee-comment:hover {
   color: #f19483;
   text-decoration: underline;
   transition: 0.3s;
 }
+
 .root-report--detail {
   color: #62592c;
   line-height: 1.5em;
   text-indent: 2em;
 }
+
 .delay {
   opacity: 0;
   animation: outin 1s 1;
   animation-fill-mode: forwards;
 }
+
 @keyframes outin {
   from {
     opacity: 0;
@@ -225,4 +251,5 @@ export default {
     opacity: 1;
   }
 }
+
 </style>
