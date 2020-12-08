@@ -1,15 +1,7 @@
 <template>
   <!-- 讨论区主界面 -->
   <div id="forumHome">
-<<<<<<< HEAD
     <m-app-header></m-app-header>
-=======
-    <div class="pageHeader">
-      <div class="pageName">讨论区</div>
-      <!-- 创建动态 -->
-      <div class="pageTool"><create-post></create-post></div>
-    </div>
->>>>>>> forum
     <ul>
       <li v-for="(item, index) in sectors" :key="index">
         <v-card class="sectorCard" elevation="1" tile>
