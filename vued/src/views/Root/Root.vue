@@ -13,36 +13,26 @@
           class="delay"
           :style="{ 'animation-delay': index * 200 + 'ms' }"
           :hasRead="items.hasRead"
-          :imgPath1="items.reporterImgPath"
-          :imgPath2="items.reportType == 3 ? items.reporteeImgPath : ''"
-          :type="items.reportType"
+          :imgPath="items.reporterInfo.imgPath"
+          @toShowMore="show($event, index)"
         >
           <template v-slot:reporterProfile>
             <div class="root-report--profile">
-              <span class="root-report--id">{{ items.reporterID }}</span>
-              <span class="root-report--job">{{ items.reporterJob }}</span>
+              <span class="root-report--id">{{ items.reporterInfo.userID }}</span>
+              <span class="root-report--job">{{ items.reporterInfo.userJob }}</span>
             </div>
           </template>
           <template v-slot:reportee>
-            <span class="root-reportee-title" v-if="items.reportType == 1"
+            <span class="root-reportee-title"
               >&quot;{{ items.articleTitle }}&quot;</span
             >
-            <span class="root-reportee-comment" v-if="items.reportType == 2"
-              >&quot;{{ items.commentContent }}&quot;</span
-            >
-          </template>
-          <template v-slot:reporteeProfile>
-            <div class="root-report--profile">
-              <span class="root-report--id">{{ items.reporteeID }}</span>
-              <span class="root-report--job">{{ items.reporteeJob }}</span>
-            </div>
           </template>
           <template v-slot:detail>
-            <span class="root-report--detail" v-if="items.isBreviated">
-              {{ items.reportContentTrim }}
+            <span class="root-report--detail" v-if="!items.isTrimmed">
+              {{ items.reportContent }}
             </span>
             <span class="root-report--detail" v-else>
-              {{ items.reportContent }}
+              {{ items.trimmedContent }}
             </span>
           </template>
         </l-root-card>
@@ -60,63 +50,82 @@ export default {
     return {
       reportList: [
         {
-          hasRead: false,
-          id: 1,
           articleID: "E387HB9CS1234",
           articleTitle: "Test this Card with Methods No.1",
-          reporterImgPath: "lyc",
-          isAuthorized: false,
-          isBreviated: true,
-          reporterJob: "本科生",
-          realName: "",
-          reportContentTrim:
-            "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a very....",
+          hasRead: false,
+          reporterInfo: {
+            userID: "Tonylyc",
+            isAuthorized: false,
+            imgPath: "lyc",
+            realName: "",
+            userJob: "本科生"
+          },
+          isTrimmed: true,
+          trimmedContent:
+            "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
           reportContent:
+            "Tonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boy",
+        },
+        {
+          articleID: "E387HB9CS1234",
+          articleTitle: "Test this Card with Methods No.1",
+          hasRead: false,
+          reporterInfo: {
+            userID: "Tonylyc",
+            isAuthorized: false,
+            imgPath: "lyc",
+            realName: "",
+            userJob: "本科生"
+          },
+          isTrimmed: true,
+          trimmedContent:
             "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          reporterID: "Tonylyc",
-          reportType: 1,
+          reportContent:
+            "Tonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boy",
         },
         {
+          articleID: "E387HB9CS1234",
+          articleTitle: "Test this Card with Methods No.1",
           hasRead: false,
-          id: 2,
-          commentID: "E387HB9CS1234-245",
-          commentContent: "Test this Card with Comment No.1",
-          reporterImgPath: "lyc",
+          reporterInfo: {
+            userID: "Tonylyc",
+            isAuthorized: false,
+            imgPath: "lyc",
+            realName: "",
+            userJob: "本科生"
+          },
+          isTrimmed: true,
+          trimmedContent:
+            "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
           reportContent:
-            "Tonylyc is a very handsome boy!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
-          reporterJob: "本科生",
-          reporterID: "Tonylyc",
-          reportType: 2,
+            "Tonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boy",
         },
         {
+          articleID: "E387HB9CS1234",
+          articleTitle: "Test this Card with Methods No.1",
           hasRead: false,
-          id: 3,
-          reporterImgPath: "lyc",
+          reporterInfo: {
+            userID: "Tonylyc",
+            isAuthorized: false,
+            imgPath: "lyc",
+            realName: "",
+            userJob: "本科生"
+          },
+          isTrimmed: true,
+          trimmedContent:
+            "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
           reportContent:
-            "Tonylyc is a very handsome boy!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
-          reporterJob: "本科生",
-          reporterID: "Tonylyc",
-          reporteeID: "Shouhou",
-          reporteeJob: "本科生",
-          reportType: 3,
-        },
-        {
-          hasRead: true,
-          id: 3,
-          reporterImgPath: "lyc",
-          reportContent:
-            "Tonylyc is a very handsome boy!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
-          reporterJob: "本科生",
-          reporterID: "Tonylyc",
-          reporteeID: "Shouhou",
-          reporteeJob: "本科生",
-          reportType: 3,
+            "Tonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boy",
         }
-      ],
+      ]
     };
   },
-  methods: {},
-  components: { LRootCard },
+  methods: {
+    show(e, index) {
+      this.reportList[index].isTrimmed = !this.reportList[index].isTrimmed;
+    }
+  },
+  components: { LRootCard }
 };
 </script>
 
@@ -127,15 +136,16 @@ export default {
 }
 
 .root-report-cards::-webkit-scrollbar {
-  width: 5px;
+  width: 6px;
 }
+
 .root-report-cards::-webkit-scrollbar-track {
   background-color: transparent;
 }
 
 .root-report-cards::-webkit-scrollbar-thumb {
   background-color: #e83015;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
 .root-report-cards::-webkit-scrollbar:hover {
@@ -217,20 +227,6 @@ export default {
   transition: 0.3s;
 }
 
-.root-reportee-comment {
-  cursor: pointer;
-  color: #62592c;
-  font-size: 20px;
-  font-style: italic;
-  transition: 0.3s;
-}
-
-.root-reportee-comment:hover {
-  color: #f19483;
-  text-decoration: underline;
-  transition: 0.3s;
-}
-
 .root-report--detail {
   color: #62592c;
   line-height: 1.5em;
@@ -251,5 +247,4 @@ export default {
     opacity: 1;
   }
 }
-
 </style>
