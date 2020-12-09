@@ -47,12 +47,6 @@
       </div>
       <div class="l-root-card--divider">
         <div class="l-root-card--divider-self"></div>
-        <div class="l-root-card-divider-circle">
-          <img
-            class="l-root-card--select"
-            src="@/assets/icons/root/select.svg"
-          />
-        </div>
       </div>
       <div class="l-root-card--content-lower" ref="lower">
         <div class="l-root-card--detail" ref="detail">
@@ -259,20 +253,6 @@ export default {
   width: 100%;
 }
 
-.l-root-card-divider-circle {
-  background: #e83015;
-  border-radius: 10px;
-  height: 20px;
-  position: absolute;
-  right: -10px;
-  width: 20px;
-}
-
-.l-root-card--select {
-  cursor: pointer;
-  width: 100%;
-}
-
 .l-root-card--content-lower {
   align-self: flex-start;
   transition: 1s;
@@ -281,7 +261,10 @@ export default {
 .l-root-card--detail {
   height: 70px;
   line-height: 1.5em;
-  padding: 16px;
+  padding-top: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 10px;
   text-indent: 2em;
 }
 </style>
