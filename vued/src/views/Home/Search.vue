@@ -25,15 +25,33 @@
         <div class="header__query">检索式：{{ answer.query }}</div>
         <div class="header__sort">
           <div class="">Sorted by</div>
-          <m-click-dropdown @change-dropdown="changeOrder" :cur="order" type="click-search" />
+          <m-click-dropdown
+            @change-dropdown="changeOrder"
+            :cur="order"
+            type="click-search"
+          />
         </div>
       </div>
       <div class="answer__main">
         <div class="main__aside">
-          <!-- <l-button>搜索</l-button> -->
-          <search-dropdown type="作者" :typeList="authorList" />
-          <search-dropdown type="文献来源" :typeList="venueList" />
-          <search-dropdown type="文献年份" :typeList="affList" />
+          <search-dropdown
+            @change-filter="changeFilter"
+            type="作者"
+            :typeList="authorList"
+          />
+          <search-dropdown
+            @change-filter="changeFilter"
+            type="文献来源"
+            :typeList="venueList"
+          />
+          <search-dropdown
+            @change-filter="changeFilter"
+            type="文献年份"
+            :typeList="yearList"
+          />
+          <div class="main__aside__btn" v-if="canFilter" type="info" @click="assureFilter">
+            筛选
+          </div>
         </div>
         <div class="main__content">
           <div class="content__fstline">
@@ -45,13 +63,15 @@
             <div class="line__action">操作</div>
           </div>
           <ul>
-            <li v-for="(item, index) in searchList" :key="index">
+            <li v-for="(item, index) in targetList" :key="index">
               <div class="content__secline--dark" v-if="index % 2 == 0">
                 <div class="line__title">
                   {{ item.title }}
                 </div>
                 <div class="line__author">
-                  {{ item.author }}
+                  <span v-for="(itemA, indexA) in item.author" :key="indexA">
+                    {{ itemA }};
+                  </span>
                 </div>
                 <div class="line__venue">
                   {{ item.venue }}
@@ -62,14 +82,24 @@
                 <div class="line__ciation">
                   {{ item.ciation }}
                 </div>
-                <div class="line__action">操作</div>
+                <div class="line__action">
+                  <div class="line__action__collect">
+                    <img src="@/assets/icons/search/uncollect.png" alt="" />
+                    <img src="@/assets/icons/search/collect.png" alt="" />
+                  </div>
+                  <div class="line__action__ref">
+                    <img src="@/assets/icons/search/ref.png" alt="" />
+                  </div>
+                </div>
               </div>
               <div class="content__secline" v-else>
                 <div class="line__title">
                   {{ item.title }}
                 </div>
                 <div class="line__author">
-                  {{ item.author }}
+                  <span v-for="(itemA, indexA) in item.author" :key="indexA">
+                    {{ itemA }};
+                  </span>
                 </div>
                 <div class="line__venue">
                   {{ item.venue }}
@@ -80,10 +110,49 @@
                 <div class="line__ciation">
                   {{ item.ciation }}
                 </div>
-                <div class="line__action">操作</div>
+                <div class="line__action">
+                  {{ item.collect }}
+
+                  <div
+                    class="line__action__collect"
+                    :class="{
+                      collect: item.collect
+                    }"
+                  >
+                    <img
+                      class="collect"
+                      @click="collect(index)"
+                      src="@/assets/icons/search/uncollect.png"
+                      alt=""
+                    />
+                    <img
+                      class="uncollect"
+                      @click="uncollect(index)"
+                      src="@/assets/icons/search/collect.png"
+                      alt=""
+                    />
+                  </div>
+                  <div class="line__action__ref">
+                    <img src="@/assets/icons/search/ref.png" alt="" />
+                  </div>
+                </div>
               </div>
             </li>
           </ul>
+          <div class="content__page">
+            <span class="total"> 共{{ totalPage }}页面 </span>
+            <ul class="page">
+              <a href="javascript:void(0);">首页</a>
+              <a href="javascript:void(0);">上一页</a>
+              <li v-for="(item, index) in curPageList" :key="index">
+                <a v-if="item != curPage" href="javascript:void(0);">
+                  {{ item }}
+                </a>
+                <span v-else class="cur">{{ item }}</span>
+              </li>
+              <a href="javascript:void(0);">下一页</a>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -100,23 +169,29 @@ export default {
     return {
       isShow: false,
       isAdvance: false,
-      order: "time",
+      order: "ciation",
+      totalPage: 300,
+      curPageList: [1, 2, 3, 4, 5],
+      curPage: 1,
       answer: {
         num: "3,567",
         query: "1884-2021: ((covid) WN ALL)"
       },
-      type: "Access type",
       authorList: [
         {
-          key: "Open Access",
+          key: "朱毅",
           value: 1769
+        },
+        {
+          key: "赵红华",
+          value: 2
         },
         {
           key: "Other",
           value: 1798
         }
       ],
-      affList: [
+      yearList: [
         {
           key: "Open Access",
           value: 1769
@@ -136,20 +211,57 @@ export default {
           value: 1798
         }
       ],
-      searchList: [
+      targetList: [],
+      sourceList: [
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: "	朱毅; 赵红华; 程伟",
+          author: ["朱毅", "赵红华", "程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["赵红华", "程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
           ciation: 1024
         }
-      ]
+      ],
+      authorFilter: [],
+      venueFilter: [],
+      yearFilter: []
     };
   },
   created() {
     console.log(this.$route.query);
-    this.isAdvance = this.$route.query.searchList.length > 1 ? true : false;
+    let query = this.$route.query;
+    this.isAdvance = query.searchList.length > 1 ? true : false;
+    // 按被引数排序的lit
+    this.litList1 = query.litList1;
+    // 按发表时间排序的lit
+    this.litList2 = query.litList2;
+    tihs.authorList = query.authorList;
+    this.venueList = query.venueList;
+    this.yearList = query.yearList;
+    this.sourceList = this,litList1;
+    this.targetList = this.sourceList;
+  },
+  computed: {
+    canFilter() {
+      return (
+        this.authorFilter.length != 0 ||
+        this.venueFilter.length != 0 ||
+        this.yearFilter != 0
+      );
+    }
   },
   methods: {
     changeShow() {
@@ -161,8 +273,111 @@ export default {
       else this.isShow = true;
     },
     changeOrder(e) {
-      console.log(e)
+      console.log(e);
       this.order = e;
+      if (e == 'ciation')
+        this.sourceList = this.litList1;
+      else
+        this.sourceList = this.litList2;
+      this.assureFilter();
+    },
+    collect(e) {
+      this.targetList[e].collect = true;
+    },
+    uncollect(e) {
+      this.targetList[e].collect = false;
+    },
+    changeFilter(e) {
+      // 监听子传父事件，将需要filter的字段传给父组件
+      console.log(e);
+      let list = e.list;
+      let type;
+      switch (e.type) {
+        case "作者":
+          type = "author";
+          this.authorFilter = list;
+          break;
+        case "文献来源":
+          type = "venue";
+          this.venueFilter = list;
+          break;
+        case "文献年份":
+          type = "year";
+          this.yearFilter = list;
+          break;
+      }
+    },
+    assureFilter() {
+      this.targetList = this.sourceList.filter(n => {
+        if (
+          this._inAuthor(n.author) &&
+          this._inVenue(n.venue) &&
+          this._inYear(n.year)
+        )
+          return n;
+      });
+    },
+    _inAuthor(author) {
+      // 筛选作者
+      if (this._otherAuthor(author)) return true;
+      let check = false;
+      author.forEach(element => {
+        if (this._inList(element, this.authorFilter)) check = true;
+      });
+      if (check) return true;
+      return false;
+    },
+    _otherAuthor(author) {
+      // 特判other
+      if (this._inList("Other", this.authorFilter)) {
+        let check = true;
+        this.authorList.forEach(n => {
+          if (author == n.key) check = false;
+        });
+        if (check) return true;
+      }
+      return false;
+    },
+    _inVenue(venue) {
+      // 筛选来源
+      if (this._otherVenue(venue)) return true;
+      return this._inList(venue, this.venueFilter);
+    },
+    _otherVenue(venue) {
+      // 特判其他
+      if (this._inList("Other", this.venueFilter)) {
+        let check = true;
+        this.venueList.forEach(n => {
+          if (venue == n.key) check = false;
+        });
+        if (check) return true;
+      }
+      return false;
+    },
+    _inYear(year) {
+      // 筛选年份
+      if (this._otherYear(year)) return true;
+      return this._inList(year, this.yearFilter);
+    },
+    _otherYear(year) {
+      // 特判年份其他
+      if (this._inList("Other", this.yearFilter)) {
+        let check = true;
+        this.yearList.forEach(n => {
+          if (year == n.key) check = false;
+        });
+        if (check) return true;
+      }
+      return false;
+    },
+    _inList(item, list) {
+      let check = false;
+      if (list.length == 0) return true;
+      list.forEach(n => {
+        if (item == n) check = true;
+      });
+      if (check) return true;
+      return false;
     }
   },
   components: {
@@ -214,8 +429,26 @@ export default {
 
 .main__aside {
   /* border: 1px solid #f2f2f2; */
+  display: flex;
+  flex-direction: column;
   height: 100%;
   width: 15%;
+}
+
+.main__aside__btn {
+  border: 1px solid #d2d2d2;
+  border-radius: 2px;
+  cursor: pointer;
+  height: 30px;
+  padding: 0 15px;
+  line-height: 30px;
+  margin: 10px auto;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.main__aside__btn:hover {
+  background-color: var(--color-main);
+  color: #fff;
 }
 
 .main__content {
@@ -274,7 +507,34 @@ export default {
 }
 
 .line__action {
+  align-items: center;
+  display: flex;
   width: 10%;
+}
+
+.line__action img {
+  height: 16px;
+  width: 16px;
+}
+
+.line__action__collect {
+  display: flex;
+  justify-content: flex-start;
+  height: 16px;
+  width: 16px;
+  overflow: hidden;
+}
+
+.line__action__collect .collect {
+  transform: translateX(-16px);
+}
+
+.line__action__collect {
+  /* transform: translateX(-16px); */
+}
+
+.line__action__ref {
+  margin-left: 5px;
 }
 
 .search {
@@ -297,5 +557,39 @@ export default {
 .search__btn img {
   width: 100%;
   height: 100%;
+}
+
+.content__page {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding-top: 30px;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.content__page .total {
+  margin-right: 10px;
+  line-height: 20px;
+}
+
+.content__page .page {
+  align-items: center;
+  display: flex;
+}
+
+.content__page a,
+.content__page .cur {
+  font-size: 12px;
+  line-height: 12px;
+  overflow: hidden;
+  padding: 4px 8px;
+  margin-right: 10px;
+  border: 1px solid #e4e4e4;
+}
+
+.content__page .cur {
+  color: #fff;
+  background-color: var(--color-tint);
 }
 </style>

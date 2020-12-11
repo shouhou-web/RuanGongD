@@ -1,5 +1,6 @@
 import { request } from "@/network/request";
 let baseURL = "http://185.133.193.251:8081";
+
 // 高级检索
 export function advance(detail, start, end) {
   return request(baseURL, {
@@ -8,6 +9,17 @@ export function advance(detail, start, end) {
     params: {
       start,
       end
+    },
+    method: "post"
+  });
+}
+
+// 普通检索
+export function search(detail) {
+  return request(baseURL, {
+    url: "/search",
+    params: {
+      detail
     },
     method: "post"
   });

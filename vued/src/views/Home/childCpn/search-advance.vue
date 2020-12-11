@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { advance } from "network/search.js";
+import { advance, search } from "network/search.js";
 import SearchDate from "./search-date";
 import MClickDropdown from "components/content/m-click-dropdown/m-click-dropdown";
 export default {
@@ -153,29 +153,60 @@ export default {
     search() {
       // 搜索
       console.log(this.searchList, this.start, this.end);
-      this.$router.push({
-        path: "/search",
-        query: {
-          searchList: this.searchList,
-          start: this.start,
-          end: this.end
-        }
-      });
-      //   advance(this.searchList, "1900", "2020")
-      //     .then(res => {
-      //       this.$route.push({
-      //         path: "/search",
-      //         query: {
-      //           searchList: this.searchList,
-      //           start: this.start,
-      //           end: this.end,
-      //           litList: res
-      //         }
-      //       });
-      //     })
-      //     .catch(err => {
-      //       console.log(err);
-      //     });
+      // this.$router.push({
+      //   path: "/search",
+      //   query: {
+      //     searchList: this.searchList,
+      //     start: this.start,
+      //     end: this.end
+      //   }
+      // });
+      if (this.isAdvance)
+        advance(this.searchList, this.start, this.end)
+          .then(res => {
+            this.$router.push({
+              path: "/search",
+              query: {
+                searchList: this.searchList,
+                start: this.start,
+                end: this.end,
+                litList1: res.literatureList1,
+                litList2: res.literatureList2,
+                authorList: res.authorList,
+                venueList: res.venueList,
+                yearList: res.yearList
+              }
+            });
+          })
+          .catch(err => {
+            this.$notify.error({
+              title: "错误",
+              message: "网络异常，请稍后重试"
+            });
+          });
+      else
+        search(this.searchList[0])
+          .then(res => {
+            this.$router.push({
+              path: "/search",
+              query: {
+                searchList: this.searchList,
+                start: this.start,
+                end: this.end,
+                litList1: res.literatureList1,
+                litList2: res.literatureList2,
+                authorList: res.authorList,
+                venueList: res.venueList,
+                yearList: res.yearList
+              }
+            });
+          })
+          .catch(err => {
+            this.$notify.error({
+              title: "错误",
+              message: "网络异常，请稍后重试"
+            });
+          });
     }
   },
   components: {
