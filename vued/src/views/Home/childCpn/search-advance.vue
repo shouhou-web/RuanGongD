@@ -152,11 +152,6 @@ export default {
       this.end = e.end;
     },
     addItem() {
-      // this.searchList.push({
-      //   logical: "AND",
-      //   type: "SU",
-      //   value: "",
-      // });
       this.$store.commit("addSearchList");
     },
     deleteItem(index) {
@@ -166,59 +161,57 @@ export default {
     search() {
       // 搜索
       console.log(this.start, this.end);
-      this.$router.push({
-        path: "/search",
-        query: {
-          start: this.start,
-          end: this.end,
-        },
-      });
-      // if (this.isAdvance)
-      //   advance(this.searchList, this.start, this.end)
-      //     .then(res => {
-      //       this.$router.push({
-      //         path: "/search",
-      //         query: {
-      //           searchList: this.searchList,
-      //           start: this.start,
-      //           end: this.end,
-      //           litList1: res.literatureList1,
-      //           litList2: res.literatureList2,
-      //           authorList: res.authorList,
-      //           venueList: res.venueList,
-      //           yearList: res.yearList
-      //         }
-      //       });
-      //     })
-      //     .catch(err => {
-      //       this.$notify.error({
-      //         title: "错误",
-      //         message: "网络异常，请稍后重试"
-      //       });
-      //     });
-      // else
-      //   search(this.searchList[0])
-      //     .then(res => {
-      //       this.$router.push({
-      //         path: "/search",
-      //         query: {
-      //           searchList: this.searchList,
-      //           start: this.start,
-      //           end: this.end,
-      //           litList1: res.literatureList1,
-      //           litList2: res.literatureList2,
-      //           authorList: res.authorList,
-      //           venueList: res.venueList,
-      //           yearList: res.yearList
-      //         }
-      //       });
-      //     })
-      //     .catch(err => {
-      //       this.$notify.error({
-      //         title: "错误",
-      //         message: "网络异常，请稍后重试"
-      //       });
-      //     });
+      // this.$router.push({
+      //   path: "/search",
+      //   query: {
+      //     start: this.start,
+      //     end: this.end,
+      //   },
+      // });
+      if (this.$store.state.isAdvance)
+        advance(this.$store.state.searchList, this.start, this.end)
+          .then((res) => {
+            this.$router.push({
+              path: "/search",
+              query: {
+                start: this.start,
+                end: this.end,
+                litList1: res.literatureList1,
+                litList2: res.literatureList2,
+                authorList: res.authorList,
+                venueList: res.venueList,
+                yearList: res.yearList,
+              },
+            });
+          })
+          .catch((err) => {
+            this.$notify.error({
+              title: "错误",
+              message: "网络异常，请稍后重试",
+            });
+          });
+      else
+        search(this.$store.state.searchList[0])
+          .then((res) => {
+            this.$router.push({
+              path: "/search",
+              query: {
+                start: this.start,
+                end: this.end,
+                litList1: res.literatureList1,
+                litList2: res.literatureList2,
+                authorList: res.authorList,
+                venueList: res.venueList,
+                yearList: res.yearList,
+              },
+            });
+          })
+          .catch((err) => {
+            this.$notify.error({
+              title: "错误",
+              message: "网络异常，请稍后重试",
+            });
+          });
     },
   },
   components: {

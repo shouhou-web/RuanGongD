@@ -70,8 +70,8 @@
                   {{ item.title }}
                 </div>
                 <div class="line__author">
-                  <span v-for="(itemA, indexA) in item.author" :key="indexA">
-                    {{ itemA }};
+                  <span v-for="(itemA, indexA) in item.authors" :key="indexA">
+                    {{ itemA.realName }};
                   </span>
                 </div>
                 <div class="line__venue">
@@ -96,8 +96,8 @@
                   {{ item.title }}
                 </div>
                 <div class="line__author">
-                  <span v-for="(itemA, indexA) in item.author" :key="indexA">
-                    {{ itemA }};
+                  <span v-for="(itemA, indexA) in item.authors" :key="indexA">
+                    {{ itemA.realName }};
                   </span>
                 </div>
                 <div class="line__venue">
@@ -427,10 +427,10 @@ export default {
     this.litList1 = query.litList1;
     // 按发表时间排序的lit
     this.litList2 = query.litList2;
-    // this.authorList = query.authorList;
-    // this.venueList = query.venueList;
-    // this.yearList = query.yearList;
-    // this.sourceList = this.litList1;
+    this.authorList = query.authorList;
+    this.venueList = query.venueList;
+    this.yearList = query.yearList;
+    this.sourceList = this.litList1;
     this.targetList = this.sourceList;
   },
   computed: {
