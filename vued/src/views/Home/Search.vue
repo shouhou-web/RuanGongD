@@ -84,7 +84,11 @@
                   {{ item.ciation }}
                 </div>
                 <div class="line__action">
-                  <img src="@/assets/icons/search/ref.png" alt="" />
+                  <img
+                    @click="openRef"
+                    src="@/assets/icons/search/ref.png"
+                    alt=""
+                  />
                 </div>
               </div>
               <div class="content__secline" v-else>
@@ -106,7 +110,11 @@
                   {{ item.ciation }}
                 </div>
                 <div class="line__action">
-                  <img src="@/assets/icons/search/ref.png" alt="" />
+                  <img
+                    @click="openRef"
+                    src="@/assets/icons/search/ref.png"
+                    alt=""
+                  />
                 </div>
               </div>
             </li>
@@ -130,6 +138,17 @@
         </div>
       </div>
     </div>
+    <!-- 引文链接 -->
+    <m-hover ref="hover">
+      <input type="text" id="input" :value="order" readonly="" />
+      <span
+        v-clipboard:copy="order"
+        v-clipboard:success="onCopy"
+        v-clipboard:error="onCopyError"
+      >
+        复制
+      </span>
+    </m-hover>
   </div>
 </template>
 
@@ -436,6 +455,11 @@ export default {
     },
   },
   methods: {
+    openRef() {
+      this.$refs.hover.showHover({
+        title: "引用",
+      });
+    },
     changePage(item) {
       if (item == "down")
         this.curPage = this.curPage - 1 >= 1 ? this.curPage - 1 : 1;
@@ -665,6 +689,8 @@ export default {
 .line__year,
 .line__ciation {
   padding: 10px 5px;
+  min-height: 60px;
+  max-height: 60px;
 }
 
 .line__title {
