@@ -23,6 +23,39 @@ const mutations = {
     state.token = false;
     state.user = {};
     sessionStorage.clear();
+  },
+  changeAdvance(state) {
+    state.isAdvance = !state.isAdvance;
+  },
+  // init search list
+  initSearchList(state) {
+    state.searchList.push({
+      logical: "AND",
+      type: "KY",
+      value: ""
+    });
+  },
+  // add search list
+  addSearchList(state) {
+    state.searchList.push({
+      logical: "AND",
+      type: "SU",
+      value: ""
+    });
+  },
+  // delete search list
+  deleteSearchList(state, index) {
+    state.searchList.splice(index, 1);
+  },
+  // change type
+  changeSearchList(state, change) {
+    if (change.type == "type")
+      state.searchList[change.index].type = change.value;
+    else if (change.type == "logical")
+      state.searchList[change.index].logical = change.value;
+  },
+  inputSearchList(state, change) {
+    state.searchList[change.index].value = change.value;
   }
 };
 

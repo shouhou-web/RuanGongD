@@ -4,11 +4,7 @@
     <m-app-header></m-app-header>
     <!-- 检索框 -->
     <div class="search">
-      <search-advance
-        :initSearch="$route.query"
-        :isShow="isShow"
-        @change-advance="changeAdvance"
-      />
+      <search-advance :initSearch="$route.query" :isShow="isShow" />
       <div class="search__btn" @click="changeShow" v-if="isAdvance">
         <img v-if="isShow" src="@/assets/icons/home/fold-up.png" alt="" />
         <img
@@ -49,7 +45,12 @@
             type="文献年份"
             :typeList="yearList"
           />
-          <div class="main__aside__btn" v-if="canFilter" type="info" @click="assureFilter">
+          <div
+            class="main__aside__btn"
+            v-if="canFilter"
+            type="info"
+            @click="assureFilter"
+          >
             筛选
           </div>
         </div>
@@ -60,10 +61,10 @@
             <div class="line__venue">来源</div>
             <div class="line__year">发表时间</div>
             <div class="line__ciation">被引</div>
-            <div class="line__action">操作</div>
+            <div class="line__action">引用</div>
           </div>
-          <ul>
-            <li v-for="(item, index) in targetList" :key="index">
+          <ul class="content__list">
+            <li v-for="(item, index) in splitList" :key="index">
               <div class="content__secline--dark" v-if="index % 2 == 0">
                 <div class="line__title">
                   {{ item.title }}
@@ -83,13 +84,7 @@
                   {{ item.ciation }}
                 </div>
                 <div class="line__action">
-                  <div class="line__action__collect">
-                    <img src="@/assets/icons/search/uncollect.png" alt="" />
-                    <img src="@/assets/icons/search/collect.png" alt="" />
-                  </div>
-                  <div class="line__action__ref">
-                    <img src="@/assets/icons/search/ref.png" alt="" />
-                  </div>
+                  <img src="@/assets/icons/search/ref.png" alt="" />
                 </div>
               </div>
               <div class="content__secline" v-else>
@@ -111,46 +106,25 @@
                   {{ item.ciation }}
                 </div>
                 <div class="line__action">
-                  {{ item.collect }}
-
-                  <div
-                    class="line__action__collect"
-                    :class="{
-                      collect: item.collect
-                    }"
-                  >
-                    <img
-                      class="collect"
-                      @click="collect(index)"
-                      src="@/assets/icons/search/uncollect.png"
-                      alt=""
-                    />
-                    <img
-                      class="uncollect"
-                      @click="uncollect(index)"
-                      src="@/assets/icons/search/collect.png"
-                      alt=""
-                    />
-                  </div>
-                  <div class="line__action__ref">
-                    <img src="@/assets/icons/search/ref.png" alt="" />
-                  </div>
+                  <img src="@/assets/icons/search/ref.png" alt="" />
                 </div>
               </div>
             </li>
           </ul>
           <div class="content__page">
-            <span class="total"> 共{{ totalPage }}页面 </span>
+            <span class="total"> 共 {{ totalPage }} 页 </span>
             <ul class="page">
-              <a href="javascript:void(0);">首页</a>
-              <a href="javascript:void(0);">上一页</a>
-              <li v-for="(item, index) in curPageList" :key="index">
-                <a v-if="item != curPage" href="javascript:void(0);">
+              <a @click="changePage(1)" href="javascript:void(0);">首页</a>
+              <a @click="changePage('down')" href="javascript:void(0);"
+                >上一页</a
+              >
+              <li v-for="item in totalPage" :key="item">
+                <span v-if="item == curPage" class="cur">{{ item }}</span>
+                <a v-else @click="changePage(item)" href="javascript:void(0);">
                   {{ item }}
                 </a>
-                <span v-else class="cur">{{ item }}</span>
               </li>
-              <a href="javascript:void(0);">下一页</a>
+              <a @click="changePage('up')" href="javascript:void(0);">下一页</a>
             </ul>
           </div>
         </div>
@@ -168,48 +142,46 @@ export default {
   data() {
     return {
       isShow: false,
-      isAdvance: false,
       order: "ciation",
-      totalPage: 300,
       curPageList: [1, 2, 3, 4, 5],
       curPage: 1,
       answer: {
         num: "3,567",
-        query: "1884-2021: ((covid) WN ALL)"
+        query: "1884-2021: ((covid) WN ALL)",
       },
       authorList: [
         {
           key: "朱毅",
-          value: 1769
+          value: 1769,
         },
         {
           key: "赵红华",
-          value: 2
+          value: 2,
         },
         {
           key: "Other",
-          value: 1798
-        }
+          value: 1798,
+        },
       ],
       yearList: [
         {
           key: "Open Access",
-          value: 1769
+          value: 1769,
         },
         {
           key: "Other",
-          value: 1798
-        }
+          value: 1798,
+        },
       ],
       venueList: [
         {
           key: "Open Access",
-          value: 1769
+          value: 1769,
         },
         {
           key: "Other",
-          value: 1798
-        }
+          value: 1798,
+        },
       ],
       targetList: [],
       sourceList: [
@@ -218,67 +190,270 @@ export default {
           author: ["朱毅", "赵红华", "程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024
+          ciation: 1024,
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["赵红华", "程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024
+          ciation: 1024,
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024
-        }
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["朱毅", "赵红华", "程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["赵红华", "程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["朱毅", "赵红华", "程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["赵红华", "程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["朱毅", "赵红华", "程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["赵红华", "程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "第二页面",
+          author: ["朱毅", "赵红华", "程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["赵红华", "程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["朱毅", "赵红华", "程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["赵红华", "程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["朱毅", "赵红华", "程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["赵红华", "程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["朱毅", "赵红华", "程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["赵红华", "程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "第三页",
+          author: ["朱毅", "赵红华", "程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["赵红华", "程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["朱毅", "赵红华", "程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["赵红华", "程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
+        {
+          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
+          author: ["程伟"],
+          venue: "航空维修与工程",
+          year: "2020-10-23",
+          ciation: 1024,
+        },
       ],
       authorFilter: [],
       venueFilter: [],
-      yearFilter: []
+      yearFilter: [],
     };
   },
   created() {
     console.log(this.$route.query);
     let query = this.$route.query;
-    this.isAdvance = query.searchList.length > 1 ? true : false;
     // 按被引数排序的lit
     this.litList1 = query.litList1;
     // 按发表时间排序的lit
     this.litList2 = query.litList2;
-    tihs.authorList = query.authorList;
-    this.venueList = query.venueList;
-    this.yearList = query.yearList;
-    this.sourceList = this,litList1;
+    // this.authorList = query.authorList;
+    // this.venueList = query.venueList;
+    // this.yearList = query.yearList;
+    // this.sourceList = this.litList1;
     this.targetList = this.sourceList;
   },
   computed: {
+    // 是否展示筛选框
     canFilter() {
-      return (
-        this.authorFilter.length != 0 ||
-        this.venueFilter.length != 0 ||
-        this.yearFilter != 0
-      );
-    }
+      // return (
+      //   this.authorFilter.length != 0 ||
+      //   this.venueFilter.length != 0 ||
+      //   this.yearFilter.length != 0
+      // );
+      return true;
+    },
+    isAdvance() {
+      return this.$store.state.isAdvance;
+    },
+    // 分页
+    totalPage() {
+      return parseInt(this.targetList.length / 12) + 1;
+    },
+    splitList() {
+      return this.targetList.slice((this.curPage - 1) * 12, this.curPage * 12);
+    },
   },
   methods: {
+    changePage(item) {
+      if (item == "down")
+        this.curPage = this.curPage - 1 >= 1 ? this.curPage - 1 : 1;
+      else if (item == "up")
+        this.curPage =
+          this.curPage + 1 <= this.totalPage
+            ? this.curPage + 1
+            : this.totalPage;
+      else this.curPage = item;
+    },
     changeShow() {
       this.isShow = !this.isShow;
-    },
-    changeAdvance(e) {
-      this.isAdvance = e;
-      if (!e) this.isShow = false;
-      else this.isShow = true;
     },
     changeOrder(e) {
       console.log(e);
       this.order = e;
-      if (e == 'ciation')
-        this.sourceList = this.litList1;
-      else
-        this.sourceList = this.litList2;
+      if (e == "ciation") this.sourceList = this.litList1;
+      else this.sourceList = this.litList2;
       this.assureFilter();
     },
     collect(e) {
@@ -308,7 +483,8 @@ export default {
       }
     },
     assureFilter() {
-      this.targetList = this.sourceList.filter(n => {
+      this.curPage = 1;
+      this.targetList = this.sourceList.filter((n) => {
         if (
           this._inAuthor(n.author) &&
           this._inVenue(n.venue) &&
@@ -321,7 +497,7 @@ export default {
       // 筛选作者
       if (this._otherAuthor(author)) return true;
       let check = false;
-      author.forEach(element => {
+      author.forEach((element) => {
         if (this._inList(element, this.authorFilter)) check = true;
       });
       if (check) return true;
@@ -331,7 +507,7 @@ export default {
       // 特判other
       if (this._inList("Other", this.authorFilter)) {
         let check = true;
-        this.authorList.forEach(n => {
+        this.authorList.forEach((n) => {
           if (author == n.key) check = false;
         });
         if (check) return true;
@@ -347,7 +523,7 @@ export default {
       // 特判其他
       if (this._inList("Other", this.venueFilter)) {
         let check = true;
-        this.venueList.forEach(n => {
+        this.venueList.forEach((n) => {
           if (venue == n.key) check = false;
         });
         if (check) return true;
@@ -363,7 +539,7 @@ export default {
       // 特判年份其他
       if (this._inList("Other", this.yearFilter)) {
         let check = true;
-        this.yearList.forEach(n => {
+        this.yearList.forEach((n) => {
           if (year == n.key) check = false;
         });
         if (check) return true;
@@ -373,18 +549,18 @@ export default {
     _inList(item, list) {
       let check = false;
       if (list.length == 0) return true;
-      list.forEach(n => {
+      list.forEach((n) => {
         if (item == n) check = true;
       });
       if (check) return true;
       return false;
-    }
+    },
   },
   components: {
     searchAdvance,
     searchDropdown,
-    MClickDropdown
-  }
+    MClickDropdown,
+  },
 };
 </script>
 
@@ -428,11 +604,11 @@ export default {
 }
 
 .main__aside {
-  /* border: 1px solid #f2f2f2; */
+  border-right: 1px solid #f2f2f2;
   display: flex;
   flex-direction: column;
   height: 100%;
-  width: 15%;
+  width: 16%;
 }
 
 .main__aside__btn {
@@ -454,6 +630,11 @@ export default {
 .main__content {
   width: 85%;
   font-size: 14px;
+}
+
+.content__list {
+  max-height: 750px;
+  overflow: hidden;
 }
 
 .content__fstline,
@@ -499,7 +680,7 @@ export default {
 }
 
 .line__year {
-  width: 75px;
+  width: 10%;
 }
 
 .line__ciation {
@@ -509,7 +690,7 @@ export default {
 .line__action {
   align-items: center;
   display: flex;
-  width: 10%;
+  width: 7%;
 }
 
 .line__action img {
