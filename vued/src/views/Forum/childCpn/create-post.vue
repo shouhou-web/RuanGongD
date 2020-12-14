@@ -250,7 +250,7 @@ export default {
         console.log("getAllTags");
         console.log(res);
         this.sectorList = res.data.sectorList;
-        this.userId = this.$route.state.userID; // TODO 等待统一
+        this.userId = this.$store.state.userID; // TODO 等待统一
         this.createPostForm.userId = this.userId;
       })
       .catch(err => {
