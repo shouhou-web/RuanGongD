@@ -1,69 +1,76 @@
 <template>
   <!-- 讨论区主界面 -->
-  <div id="forumHome">
+  <div>
     <m-app-header></m-app-header>
-    <ul>
-      <li v-for="(item, index) in sectors" :key="index">
-        <v-card class="sectorCard" elevation="1" tile>
-          <!--
+    <div id="forumHome">
+      <div class="pageHeader">
+        <div class="pageName">讨论区</div>
+        <!-- 创建动态 -->
+        <div class="pageTool"><create-post></create-post></div>
+      </div>
+      <ul>
+        <li v-for="(item, index) in sectors" :key="index">
+          <v-card class="sectorCard" elevation="1" tile >
+            <!--
           <v-footer padless v-if="index == 0">
             <div></div>
           </v-footer>
           -->
-          <el-row>
-            <el-col :span="12">
-              <v-card-title>
-                <div class="sectorName" @click="goToSector(item.sectorId)">
-                  {{ item.sectorName }}
-                </div>
-              </v-card-title>
-            </el-col>
-            <el-col :span="2">
-              <v-card-subtitle>
-                <div class="postNum">
-                  <div class="sectorPostNum">
-                    {{ handleNum(item.postNum) }}
+            <el-row>
+              <el-col :span="12">
+                <v-card-title>
+                  <div class="sectorName" @click="goToSector(item.sectorId)">
+                    {{ item.sectorName }}
                   </div>
-                  <div class="sectorPostNumStr">
-                    条 动态
+                </v-card-title>
+              </el-col>
+              <el-col :span="2">
+                <v-card-subtitle>
+                  <div class="postNum">
+                    <div class="sectorPostNum">
+                      {{ handleNum(item.postNum) }}
+                    </div>
+                    <div class="sectorPostNumStr">
+                      条 动态
+                    </div>
                   </div>
-                </div>
-              </v-card-subtitle>
-            </el-col>
-            <el-col :span="2">
-              <v-card-text>
-                <v-avatar>
-                  <img
-                    class="avatar"
-                    alt="Avatar"
-                    :src="item.userAvatar"
-                    @click="goToUser(item.userId)"
-                  />
-                </v-avatar>
-              </v-card-text>
-            </el-col>
-            <el-col :span="8">
-              <v-card-text>
-                <div class="post">
-                  <div class="title" @click="goToPost(item.postId)">
-                    {{ handleTitle(item.postName) }}
+                </v-card-subtitle>
+              </el-col>
+              <el-col :span="2">
+                <v-card-text>
+                  <v-avatar>
+                    <img
+                      class="avatar"
+                      alt="Avatar"
+                      :src="item.userAvatar"
+                      @click="goToUser(item.userId)"
+                    />
+                  </v-avatar>
+                </v-card-text>
+              </el-col>
+              <el-col :span="8">
+                <v-card-text>
+                  <div class="post">
+                    <div class="title" @click="goToPost(item.postId)">
+                      {{ handleTitle(item.postName) }}
+                    </div>
+                    <div class="info">
+                      <span>
+                        {{ editStr }}
+                      </span>
+                      <span class="userName" @click="goToUser(item.userId)">
+                        {{ item.userName }}</span
+                      >
+                      <span> {{ handleInfo(item.editTime) }}</span>
+                    </div>
                   </div>
-                  <div class="info">
-                    <span>
-                      {{ editStr }}
-                    </span>
-                    <span class="userName" @click="goToUser(item.userId)">
-                      {{ item.userName }}</span
-                    >
-                    <span> {{ handleInfo(item.editTime) }}</span>
-                  </div>
-                </div>
-              </v-card-text>
-            </el-col>
-          </el-row>
-        </v-card>
-      </li>
-    </ul>
+                </v-card-text>
+              </el-col>
+            </el-row>
+          </v-card>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -122,8 +129,8 @@ export default {
       //todo: 跳转到用户
       /*
       this.$router.push({
-        path: "/",
-        query: {}
+        path: "/profile",
+        query: {userID:}
       });
       */
     },
@@ -149,7 +156,7 @@ export default {
   },
   components: { MHeader, CreatePost },
   created() {
-    CreatePost;
+    //CreatePost;
     //todo: 获取分区信息
     getAllSectors()
       .then(res => {
@@ -166,7 +173,7 @@ export default {
 
 <style scoped>
 #forumHome {
-  margin: 0px auto;
+  margin: 20px auto;
   width: var(--width-main);
   /*background-image: url();*/
 }
@@ -176,6 +183,7 @@ export default {
 }
 .pageHeader {
   margin: 1px auto;
+  margin-bottom: 1px;
   border-radius: 0px;
   width: 900px;
   background-color: white;
