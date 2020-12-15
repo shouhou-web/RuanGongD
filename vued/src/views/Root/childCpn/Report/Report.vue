@@ -1,21 +1,23 @@
 <template>
-  <div class="report-all">
-    <div class="report-nav">
-      <ul class="nav-all">
-        <li
-          @click="toChild(index)"
-          v-for="(item, index) in navList"
-          :key="index"
-        >
-          <div
-            :class="[
-              currentIndex == index ? 'nav-item--active' : 'nav-item--inside'
-            ]"
+  <div>
+    <div class="report-all">
+      <div class="report-nav">
+        <ul class="nav-all">
+          <li
+            @click="toChild(index)"
+            v-for="(item, index) in navList"
+            :key="index"
           >
-            {{ item.name }}
-          </div>
-        </li>
-      </ul>
+            <div
+              :class="[
+                currentIndex == index ? 'nav-item--active' : 'nav-item--inside'
+              ]"
+            >
+              {{ item.name }}
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
     <router-view></router-view>
   </div>
@@ -74,6 +76,7 @@ export default {
   background-color: #ffffff;
   border: #e3e2e6 solid 0.5px;
   border-radius: 4px;
+  height: 60px;
   width: 900px;
 }
 

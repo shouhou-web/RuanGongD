@@ -1,36 +1,5 @@
 <template>
   <div class="l-root-card">
-    <span class="l-root-card--notice" v-if="!hasRead">!</span>
-    <div class="l-root-card--header">
-      <img
-        class="l-root-card--showmore"
-        :style="{ transform: 'rotate(' + rotationAngle + 'deg)' }"
-        :class="canShowMore ? '' : 'l-root-card--invisible'"
-        src="@/assets/icons/root/showmore.svg"
-        @click="showMore"
-      />
-      <m-dropdown
-        class="l-root-card--options-anime"
-        position="middle"
-        color="#e83015"
-      >
-        <template v-slot:show>
-          <img
-            class="l-root-card--options"
-            src="@/assets/icons/root/options.svg"
-          />
-        </template>
-        <template v-slot:hide>
-          <div class="l-root-card--nav">
-            <l-button type="text" class="l-root-card--nav-btn">驳回</l-button>
-            <l-button type="text" class="l-root-card--nav-btn">接受</l-button>
-            <l-button type="text" class="l-root-card--nav-btn"
-              >置为未读</l-button
-            >
-          </div>
-        </template>
-      </m-dropdown>
-    </div>
     <div class="l-root-card--content">
       <div class="l-root-card--content-upper">
         <div class="l-root-card--content-info">
@@ -43,10 +12,39 @@
             举报了文献
           </div>
           <slot name="reportee"></slot>
+          <span class="l-root-card--notice" v-if="!hasRead">!</span>
         </div>
+        <m-dropdown
+          class="l-root-card--options-anime"
+          position="middle"
+          color="#0080ff"
+        >
+          <template v-slot:show>
+            <img
+              class="l-root-card--options"
+              src="@/assets/icons/root/options.svg"
+            />
+          </template>
+          <template v-slot:hide>
+            <div class="l-root-card--nav">
+              <l-button type="text" class="l-root-card--nav-btn">驳回</l-button>
+              <l-button type="text" class="l-root-card--nav-btn">接受</l-button>
+              <l-button type="text" class="l-root-card--nav-btn"
+                >置为未读</l-button
+              >
+            </div>
+          </template>
+        </m-dropdown>
       </div>
       <div class="l-root-card--divider">
         <div class="l-root-card--divider-self"></div>
+        <img
+          class="l-root-card--showmore"
+          :style="{ transform: 'rotate(' + rotationAngle + 'deg)' }"
+          :class="canShowMore ? '' : 'l-root-card--invisible'"
+          src="@/assets/icons/root/showmore.svg"
+          @click="showMore"
+        />
       </div>
       <div class="l-root-card--content-lower" ref="lower">
         <div class="l-root-card--detail" ref="detail">
@@ -80,13 +78,12 @@ export default {
   },
   methods: {
     showMore() {
-      if(!this.canShowMore)
-        return;
+      if (!this.canShowMore) return;
       this.rotationAngle += 180;
       if ((this.rotationAngle / 180) % 2)
         this.$refs.detail.style.height = "auto";
       else this.$refs.detail.style.height = "70px";
-      this.$emit('toShowMore')
+      this.$emit("toShowMore");
     }
   }
 };
@@ -102,30 +99,22 @@ export default {
   border-radius: 10px;
   color: #ffffff;
   display: block;
-  height: 20px;
-  position: absolute;
-  right: -10px;
+  height: 15px;
+  margin-left: 10px;
   text-align: center;
-  top: -10px;
-  width: 20px;
-}
-
-.l-root-card--header {
-  align-content: center;
-  background-color: #e83015;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  width: 15px;
 }
 
 .l-root-card--showmore {
+  background-color: #ffffff;
+  border-radius: 16px;
   cursor: pointer;
-  height: 20px;
-  margin-top: 8px;
-  margin-bottom: 6px;
-  margin-left: 12px;
+  height: 32px;
+  left: 416px;
+  position: absolute;
+  padding: 5px;
   transition: 0.3s;
-  width: 20px;
+  width: 32px;
 }
 
 .l-root-card--invisible {
@@ -161,14 +150,14 @@ export default {
   background-color: #ffffff;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  border: 3px solid #e83015;
+  border: 3px solid #0080ff;
   display: flex;
   flex-direction: column;
   padding: 10px;
 }
 
 .l-root-card--nav-btn {
-  color: #e83015;
+  color: #6b757b;
   margin-top: 3px;
   margin-bottom: 3px;
   padding: 10px 35px;
@@ -181,7 +170,12 @@ export default {
 
 .l-root-card--content {
   align-items: center;
-  border: 2px solid #e83015;
+  background-color: #ffffff;
+  border-left: 0.5px solid #e3e2e6;
+  border-right: 0.5px solid #e3e2e6;
+  border-bottom: 0.5px solid #e3e2e6;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -189,6 +183,11 @@ export default {
 
 .l-root-card--content-upper {
   align-self: flex-start;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-left: 20px;
+  width: 100%;
 }
 
 .l-root-card--content-info {
@@ -199,7 +198,7 @@ export default {
 
 .l-root-card--reporter-pic {
   border-radius: 25px;
-  border: 1px solid #e83015;
+  border: 1px solid #6b757b;
   cursor: pointer;
   height: 50px;
   margin-bottom: 20px;
@@ -217,7 +216,7 @@ export default {
 
 .l-root-card--reportee-pic {
   border-radius: 25px;
-  border: 1px solid #e83015;
+  border: 1px solid #6b757b;
   cursor: pointer;
   height: 50px;
   margin-bottom: 20px;
@@ -233,7 +232,7 @@ export default {
 }
 
 .l-root-card--content-connect {
-  color: #62592c;
+  color: #6b757b;
   font-weight: 800;
   margin-left: 20px;
   margin-right: 20px;
@@ -244,11 +243,12 @@ export default {
   display: flex;
   flex-direction: row;
   height: 5px;
+  position: relative;
   width: 96%;
 }
 
 .l-root-card--divider-self {
-  background-color: #e83015;
+  background-color: #e3e2e6;
   height: 2px;
   width: 100%;
 }

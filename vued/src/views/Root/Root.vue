@@ -2,22 +2,24 @@
   <!-- 管理员界面 -->
   <div id="report">
     <m-app-header></m-app-header>
-    <div class="root-all">
-      <div class="root-nav">
-        <ul>
-          <li
-            class="root-nav-item"
-            @click="toChild(index)"
-            :class="[currentIndex == index ? 'root-nav-item--active' : '']"
-            v-for="(item, index) in navList"
-            :key="index"
-          >
-            <div class="root-nav-item--pointer"></div>
-            <div class="root-nav-item--inside">
-              {{ item.name }}
-            </div>
-          </li>
-        </ul>
+    <div class="root-main">
+      <div>
+        <div class="root-nav">
+          <ul>
+            <li
+              class="root-nav-item"
+              @click="toChild(index)"
+              :class="[currentIndex == index ? 'root-nav-item--active' : '']"
+              v-for="(item, index) in navList"
+              :key="index"
+            >
+              <div class="root-nav-item--pointer"></div>
+              <div class="root-nav-item--inside">
+                {{ item.name }}
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
       <router-view></router-view>
     </div>
@@ -81,9 +83,8 @@ export default {
 </script>
 
 <style scoped>
-.root-all {
+.root-main {
   display: flex;
-  height: calc(100vh - 106px);
   margin: 25px auto 0;
   width: var(--width-main);
 }
@@ -92,6 +93,7 @@ export default {
   background-color: #fff;
   border: #e3e2e6 solid 0.5px;
   border-radius: 4px;
+  height: calc(100vh - 106px);
   margin-right: 40px;
   padding-top: 10px;
   width: 160px;
@@ -120,19 +122,6 @@ export default {
   cursor: pointer;
   font-style: 14px;
   line-height: 40px;
-}
-
-.root-report-cards::-webkit-scrollbar {
-  width: 6px;
-}
-
-.root-report-cards::-webkit-scrollbar-track {
-  background-color: transparent;
-}
-
-.root-report-cards::-webkit-scrollbar-thumb {
-  background-color: #e83015;
-  border-radius: 12px;
 }
 
 .m-header--slot {
