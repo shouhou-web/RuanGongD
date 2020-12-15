@@ -29,7 +29,6 @@ export default {
   name: "Root",
   data() {
     return {
-      tabIndex: "0",
       navList: [
         {
           name: "处理举报",
@@ -60,6 +59,14 @@ export default {
     currentIndex() {
       switch (this.$route.path) {
         case "/root/report":
+          return 0;
+        case "/root/report/doc":
+          return 0;
+        case "/root/report/gate":
+          return 0;
+        case "/root/report/comment":
+          return 0;
+        case "/root/report/post":
           return 0;
         case "/root/apply":
           return 1;
