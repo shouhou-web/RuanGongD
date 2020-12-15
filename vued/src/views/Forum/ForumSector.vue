@@ -74,7 +74,7 @@
                 elevation="1"
                 color="#4F6EF2"
                 @click="followSector()"
-                ><div>关注</div></v-btn
+                ><div>{{followedText}}</div></v-btn
               >
             </el-col>
           </el-row>
@@ -378,7 +378,7 @@ export default {
       .then(res => {
         console.log("getPosts");
         console.log(res);
-        this.isFollowed = res.data.followedl;
+        this.isFollowed = res.data.followed;
       })
       .catch(err => {
         console.log(err);
