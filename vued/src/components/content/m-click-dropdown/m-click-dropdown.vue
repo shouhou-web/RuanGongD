@@ -97,12 +97,12 @@ export default {
       ],
       searchList: [
         {
-          key: "time",
-          value: "发表时间"
+          key: "ciation",
+          value: "被引数"
         },
         {
-          key: "ciation",
-          value: "被引"
+          key: "time",
+          value: "发表时间"
         }
       ],
       clickList: []

@@ -23,8 +23,6 @@ const Publication = () => import("views/Literature/Publication.vue");
 
 // 消息相关组件
 const Message = () => import("views/Message/Message.vue");
-const Invitation = () => import("views/Message/Invitation.vue");
-const Application = () => import("views/Message/Application.vue");
 const System = () => import("views/Message/System.vue");
 const Comment = () => import("views/Message/Comment.vue");
 
@@ -34,6 +32,14 @@ const Intro = () => import("views/Profile/Intro.vue");
 
 // 管理员相关组件
 const Root = () => import("views/Root/Root.vue");
+const Report = () => import("views/Root/childCpn/Report/Report.vue");
+const Apply = () => import("views/Root/childCpn/Apply.vue");
+const Sysmsg = () => import("views/Root/childCpn/Sysmsg.vue");
+const Mgauthor = () => import("views/Root/childCpn/Mgauthor.vue");
+const Doc = () => import("views/Root/childCpn/Report/childCpn/Doc.vue");
+const Gate = () => import("views/Root/childCpn/Report/childCpn/Gate.vue");
+const Creport = () => import("views/Root/childCpn/Report/childCpn/Comment.vue");
+const Post = () => import("views/Root/childCpn/Report/childCpn/Post.vue");
 
 //1.安装插件
 Vue.use(VueRouter);
@@ -68,9 +74,67 @@ const routes = [
     component: Manage
   },
   {
+    path: "/publication",
+    name: "Publication",
+    component: Publication
+  },
+  {
     path: "/root",
     name: "Root",
-    component: Root
+    component: Root,
+    children: [
+      {
+        path: "/",
+        // redirect重定向
+        redirect: "/root/report"
+      },
+      {
+        path: "/root/report",
+        name: "Report",
+        component: Report,
+        children: [
+          {
+            path: "/",
+            redirect: "/root/report/doc"
+          },
+          {
+            path: "/root/report/doc",
+            name: "Doc",
+            component: Doc
+          },
+          {
+            path: "/root/report/gate",
+            name: "Gate",
+            component: Gate
+          },
+          {
+            path: "/root/report/comment",
+            name: "Comment",
+            component: Creport
+          },
+          {
+            path: "/root/report/post",
+            name: "Post",
+            component: Post
+          }
+        ]
+      },
+      {
+        path: "/root/apply",
+        name: "Apply",
+        component: Apply
+      },
+      {
+        path: "/root/sysmsg",
+        name: "Sysmsg",
+        component: Sysmsg
+      },
+      {
+        path: "/root/mgauthor",
+        name: "Mgauthor",
+        component: Mgauthor
+      }
+    ]
   },
   {
     path: "/forumHome",
@@ -100,17 +164,7 @@ const routes = [
       {
         path: "/",
         // redirect重定向
-        redirect: "/message/application"
-      },
-      {
-        path: "/message/application",
-        name: "Application",
-        component: Application
-      },
-      {
-        path: "/message/invitation",
-        name: "Invitation",
-        component: Invitation
+        redirect: "/message/comment"
       },
       {
         path: "/message/system",

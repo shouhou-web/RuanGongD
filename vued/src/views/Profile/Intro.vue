@@ -1,7 +1,7 @@
 <template>
   <!-- 门户界面 -->
   <div id="intro" class="intro">
-    <m-header></m-header>
+    <m-app-header></m-app-header>
     <div class="intro-header">
       <div class="intro-profile">
         <div class="intro-profile-info">

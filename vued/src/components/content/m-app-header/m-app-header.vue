@@ -18,7 +18,7 @@
         <div class="header__right">
           <div
             class="header__icon"
-            @mouseenter="color"
+            @mouseover="color"
             @mouseout="color"
             @click="toMessage"
           >
@@ -50,15 +50,15 @@ export default {
         {
           name: "主页",
           path: "/",
-          check: true,
+          check: true
         },
         {
           name: "论坛",
           path: "/forumHome",
-          check: false,
-        },
+          check: false
+        }
       ],
-      isColor: false,
+      isColor: false
     };
   },
   methods: {
@@ -66,7 +66,7 @@ export default {
       this.$store.commit("changeAppHeader", e);
       console.log(e);
       this.$router.push({
-        path: e.path,
+        path: e.path
       });
     },
     color() {
@@ -79,9 +79,9 @@ export default {
     toProfile() {
       this.$store.commit("changeAppHeader", {});
       this.$router.push({ path: "/profile" });
-    },
+    }
   },
-  components: {},
+  components: {}
 };
 </script>
 

@@ -59,8 +59,8 @@ export default {
       isMaskCancel = true,
       isTitle = true,
       title = "标题",
-      submitBtn = "确定",
-      cancelBtn = "取消",
+      submitBtn = "",
+      cancelBtn = "",
     } = {}) {
       this.onShow = onShow;
       this.isMaskCancel = isMaskCancel;

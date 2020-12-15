@@ -46,14 +46,6 @@ export default {
     return {
       navList: [
         {
-          name: "加入申请",
-          router: "application",
-        },
-        {
-          name: "团队邀请",
-          router: "invitation",
-        },
-        {
           name: "回复我的",
           router: "comment",
         },
@@ -73,14 +65,10 @@ export default {
   computed: {
     currentIndex() {
       switch (this.$route.path) {
-        case "/message/application":
-          return 0;
-        case "/message/invitation":
-          return 1;
         case "/message/comment":
-          return 2;
+          return 0;
         case "/message/system":
-          return 3;
+          return 1;
       }
     },
   },
@@ -174,7 +162,6 @@ export default {
 .content-title {
   align-items: center;
   background-color: #fff;
-  box-shadow: 0 2px 4px 0 rgba(121, 146, 185, 0.54);
   border-radius: 4px;
   color: #666;
   display: flex;
