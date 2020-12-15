@@ -111,35 +111,35 @@ export default {
           {
             required: true,
             message: "请输入动态标题",
-            trigger: "blur"
+            trigger: "blur",
           },
           {
             min: 2,
             max: 40,
             message: "动态标题长度在 2-40 个字符之间",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         postContent: [
           {
             required: true,
             message: "请输入动态内容",
-            trigger: "blur"
+            trigger: "blur",
           },
           {
             min: 5,
             max: 1500,
             message: "动态内容长度在 5-1500 个字符之间",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         sectorId: [
           {
             required: true,
             message: "请选择动态分区",
-            trigger: "change"
-          }
-        ]
+            trigger: "change",
+          },
+        ],
       }, // el-form 的验证规则
       createPostForm: {
         userId: "1",
@@ -147,32 +147,32 @@ export default {
         postContent: "", // 动态内容
         sectorId: "", // 动态所在分区 ID
         postTags: [], // 动态标签数组
-        citeId: "-1" // 引用的文献 ID
+        citeId: "-1", // 引用的文献 ID
       },
       sectorList: [
         {
           sectorId: 1,
           sectorName: "软妹工程",
-          sectorTags: ["软妹工程基础", "原力系统", "软妹分析与设计"]
+          sectorTags: ["软妹工程基础", "原力系统", "软妹分析与设计"],
         },
         {
           sectorId: 2,
           sectorName: "计蒜姬科学与技术",
-          sectorTags: ["计蒜姬组成原理", "计蒜姬科学方法论"]
+          sectorTags: ["计蒜姬组成原理", "计蒜姬科学方法论"],
         },
         {
           sectorId: 123,
           sectorName: "人工智障",
-          sectorTags: ["浅度学习", "学不动了", "炼丹术"]
-        }
-      ] // 可选分区列表
+          sectorTags: ["浅度学习", "学不动了", "炼丹术"],
+        },
+      ], // 可选分区列表
     };
   },
   methods: {
     submit(formName) {
       // 表单验证
       let pass = false;
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           pass = true;
         }
@@ -187,33 +187,26 @@ export default {
       // for test
 
       createPost(this.createPostForm)
-        .then(res => {
+        .then((res) => {
           console.log("createPost");
           console.log(res);
           if (res.data.result == "true") {
             this.dialog = false;
             // TODO 跳转到动态页面
-            this.$message({
-              type: "success",
-              message: "动态发表成功！"
-            });
+            this.$notify.success("动态发表成功！");
           } else {
-            this.$message.error({
-              message: "动态发表失败，请稍后再试"
-            });
+            this.$notify.error("动态发表失败，请稍后再试");
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
-          this.$message.error({
-            message: "动态发表失败，请稍后再试"
-          });
+          this.$notify.error("动态发表失败，请稍后再试");
         });
     },
     citeLiterature() {
       // TODO 引用文献
       console.log("cite literature");
-    }
+    },
   },
   components: {},
   computed: {
@@ -225,7 +218,7 @@ export default {
           return this.sectorList[i].sectorTags;
       }
       return [];
-    }
+    },
   },
   watch: {
     "createPostForm.postTags"(val) {
@@ -241,22 +234,22 @@ export default {
           0,
           this.createPostForm.postTags.length
         );
-    }
+    },
   },
   created() {
     // 获取所有分区，以及每个分区下的 tag
     getAllTags()
-      .then(res => {
+      .then((res) => {
         console.log("getAllTags");
         console.log(res);
         this.sectorList = res.data.sectorList;
-        this.userId = this.$route.state.userID; // TODO 等待统一
+        this.userId = this.$store.state.userID; // TODO 等待统一
         this.createPostForm.userId = this.userId;
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
-  }
+  },
 };
 </script>
 

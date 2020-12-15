@@ -1,158 +1,161 @@
 <template>
   <!-- 讨论区分区页面 -->
-  <div id="forumSector" data-app>
-    <!-- <m-header></m-header> -->
-    <div class="pageHeader">
-      <div class="sectorName">{{ sectorName }}</div>
-      <v-divider></v-divider>
-      <div class="sectorTool">
-        <el-row>
-          <el-col :span="12">
-            <el-pagination
-              layout="prev, pager, next"
-              :total="total"
-              :current-page="currentPage"
-              @current-change="changePage"
-            >
-            </el-pagination>
-          </el-col>
-          <el-col :offset="3" :span="4">
-            <v-text-field
-              v-model="keyword"
-              class="searchInput"
-              label="搜索动态"
-              hide-details
-              append-icon="search"
-              @click:append="changeKeyword"
-            >
-            </v-text-field>
-          </el-col>
-          <el-col :span="3">
-            <v-menu offset-y>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn class="toolButton" small dark v-bind="attrs" v-on="on">
-                  排序方式
-                  <i class="el-icon-caret-bottom"></i>
-                </v-btn>
-              </template>
-              <v-list>
-                <v-list-item
-                  v-for="(item, index) in sortType"
-                  :key="index"
-                  link
-                  @click="changeSort(item.type)"
-                >
-                  <v-list-item-title>
-                    <i
-                      class="el-icon-check"
-                      style="color:rgba(255,255,255,0)"
-                      v-if="item.type != sort"
-                    ></i>
-                    <i class="el-icon-check" v-if="item.type == sort"></i>
-                    <span class="menu">
-                      {{ item.name }}
-                    </span>
-                  </v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </el-col>
-          <el-col :span="2">
-            <v-btn
-              class="toolButton"
-              dark
-              small
-              elevation="1"
-              @click="followSector()"
-              ><div>关注</div></v-btn
-            >
-          </el-col>
-        </el-row>
+  <div>
+    <m-app-header></m-app-header>
+    <div id="forumSector" data-app>
+      <!-- <m-header></m-header> -->
+      <div class="pageHeader">
+        <div class="sectorName">{{ sectorName }}</div>
+        <v-divider></v-divider>
+        <div class="sectorTool">
+          <el-row>
+            <el-col :span="12">
+              <el-pagination
+                layout="prev, pager, next"
+                :total="total"
+                :current-page="currentPage"
+                @current-change="changePage"
+              >
+              </el-pagination>
+            </el-col>
+            <el-col :offset="3" :span="4">
+              <v-text-field
+                v-model="keyword"
+                class="searchInput"
+                label="搜索动态"
+                hide-details
+                append-icon="search"
+                @click:append="changeKeyword"
+              >
+              </v-text-field>
+            </el-col>
+            <el-col :span="3">
+              <v-menu offset-y>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn class="toolButton" small dark v-bind="attrs" v-on="on">
+                    排序方式
+                    <i class="el-icon-caret-bottom"></i>
+                  </v-btn>
+                </template>
+                <v-list>
+                  <v-list-item
+                    v-for="(item, index) in sortType"
+                    :key="index"
+                    link
+                    @click="changeSort(item.type)"
+                  >
+                    <v-list-item-title>
+                      <i
+                        class="el-icon-check"
+                        style="color:rgba(255,255,255,0)"
+                        v-if="item.type != sort"
+                      ></i>
+                      <i class="el-icon-check" v-if="item.type == sort"></i>
+                      <span class="menu">
+                        {{ item.name }}
+                      </span>
+                    </v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </el-col>
+            <el-col :span="2">
+              <v-btn
+                class="toolButton"
+                dark
+                small
+                elevation="1"
+                @click="followSector()"
+                ><div>关注</div></v-btn
+              >
+            </el-col>
+          </el-row>
+        </div>
       </div>
-    </div>
-    <div>
-      <ul>
-        <li v-for="(item, index) in posts" :key="index">
-          <v-card class="postCard" elevation="1" tile>
-            <el-row>
-              <el-col :span="12">
-                <div class="postInfo">
-                  <v-card-title>
-                    <div class="postName" @click="goToPost(item.postId)">
-                      {{ item.postName }}
-                    </div>
-                  </v-card-title>
+      <div>
+        <ul>
+          <li v-for="(item, index) in posts" :key="index">
+            <v-card class="postCard" elevation="1" tile>
+              <el-row>
+                <el-col :span="12">
+                  <div class="postInfo">
+                    <v-card-title>
+                      <div class="postName" @click="goToPost(item.postId)">
+                        {{ item.postName }}
+                      </div>
+                    </v-card-title>
+                    <v-card-subtitle>
+                      <div class="creator">
+                        <span>{{ createStr0 }}</span>
+                        <span
+                          class="creatorName"
+                          @click="goToUser(item.creatorId)"
+                          >{{ item.creatorName }}</span
+                        >
+                        <span>{{ createStr1 + item.createTime }}</span>
+                      </div>
+                      <div class="tags">
+                        <v-chip
+                          label
+                          class="tag"
+                          small
+                          v-for="(tag, index) in item.tags"
+                          :key="index"
+                        >
+                          {{ tag }}
+                        </v-chip>
+                      </div>
+                    </v-card-subtitle>
+                  </div>
+                </el-col>
+                <el-col :span="3">
                   <v-card-subtitle>
-                    <div class="creator">
-                      <span>{{ createStr0 }}</span>
-                      <span
-                        class="creatorName"
-                        @click="goToUser(item.creatorId)"
-                        >{{ item.creatorName }}</span
-                      >
-                      <span>{{ createStr1 + item.createTime }}</span>
-                    </div>
-                    <div class="tags">
-                      <v-chip
-                        label
-                        class="tag"
-                        small
-                        v-for="(tag, index) in item.tags"
-                        :key="index"
-                      >
-                        {{ tag }}
-                      </v-chip>
+                    <div class="displayNum">
+                      <div class="replyNum">
+                        <span>{{ handleNum(item.replyNum) }}</span>
+                        <span>篇 回复</span>
+                      </div>
+                      <div class="viewNum">
+                        <span>{{ handleNum(item.viewNum) }}</span>
+                        <span>次 查看</span>
+                      </div>
                     </div>
                   </v-card-subtitle>
-                </div>
-              </el-col>
-              <el-col :span="3">
-                <v-card-subtitle>
-                  <div class="displayNum">
-                    <div class="replyNum">
-                      <span>{{ handleNum(item.replyNum) }}</span>
-                      <span>篇 回复</span>
+                </el-col>
+                <el-col :span="2">
+                  <v-card-text>
+                    <v-avatar class="avatar">
+                      <img
+                        alt="Avatar"
+                        :src="item.editorAvatar"
+                        @click="goToUser(item.userId)"
+                      />
+                    </v-avatar>
+                  </v-card-text>
+                </el-col>
+                <el-col :span="6">
+                  <v-card-text>
+                    <div class="editInfo">
+                      <div class="editorName" @click="goToUser(item.userId)">
+                        <span>{{ editStr0 }}</span>
+                        <span>
+                          {{ item.editorName }}
+                        </span>
+                      </div>
+                      <div class="editTime">
+                        <span>
+                          {{ editStr1 }}
+                        </span>
+                        <span> {{ item.editTime }}</span>
+                      </div>
                     </div>
-                    <div class="viewNum">
-                      <span>{{ handleNum(item.viewNum) }}</span>
-                      <span>次 查看</span>
-                    </div>
-                  </div>
-                </v-card-subtitle>
-              </el-col>
-              <el-col :span="2">
-                <v-card-text>
-                  <v-avatar class="avatar">
-                    <img
-                      alt="Avatar"
-                      :src="item.editorAvatar"
-                      @click="goToUser(item.userId)"
-                    />
-                  </v-avatar>
-                </v-card-text>
-              </el-col>
-              <el-col :span="6">
-                <v-card-text>
-                  <div class="editInfo">
-                    <div class="editorName" @click="goToUser(item.userId)">
-                      <span>{{ editStr0 }}</span>
-                      <span>
-                        {{ item.editorName }}
-                      </span>
-                    </div>
-                    <div class="editTime">
-                      <span>
-                        {{ editStr1 }}
-                      </span>
-                      <span> {{ item.editTime }}</span>
-                    </div>
-                  </div>
-                </v-card-text>
-              </el-col>
-            </el-row>
-          </v-card>
-        </li>
-      </ul>
+                  </v-card-text>
+                </el-col>
+              </el-row>
+            </v-card>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -225,7 +228,7 @@ export default {
       //跳转到动态
 
       this.$router.push({
-        path: "/post",
+        path: "/forumPost",
         query: { postId: id }
       });
     },
@@ -366,6 +369,7 @@ export default {
 .pageHeader {
   margin: 1px auto;
   border-radius: 0px;
+  margin-bottom: 1px;
   width: 900px;
   background-color: white;
   height: auto;
