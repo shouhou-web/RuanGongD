@@ -1,7 +1,7 @@
 <template>
   <!-- 个人信息界面 -->
   <div id="profile" class="profile">
-    <m-header></m-header>
+    <m-app-header></m-app-header>
     <div class="profile-header">
       <div class="user-profile">
         <div class="profile-info">
