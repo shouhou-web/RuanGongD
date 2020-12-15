@@ -4,8 +4,10 @@
     <div class="l-root-card--header">
       <img
         class="l-root-card--showmore"
-        :style="{ transform: 'rotate(rotationAngle' + deg + ')' }"
+        :style="{ transform: 'rotate(' + rotationAngle + 'deg)' }"
+        :class="canShowMore ? '' : 'l-root-card--invisible'"
         src="@/assets/icons/root/showmore.svg"
+        @click="showMore"
       />
       <m-dropdown
         class="l-root-card--options-anime"
@@ -34,38 +36,20 @@
         <div class="l-root-card--content-info">
           <img
             class="l-root-card--reporter-pic"
-            :src="require('@/assets/image/root/' + imgPath1 + '.jpg')"
+            :src="require('@/assets/image/root/' + imgPath + '.jpg')"
           />
           <slot name="reporterProfile"></slot>
-          <div class="l-root-card--content-connect" v-if="type == 1">
+          <div class="l-root-card--content-connect">
             举报了文献
           </div>
-          <div class="l-root-card--content-connect" v-if="type == 2">
-            举报了评论
-          </div>
-          <div class="l-root-card--content-connect" v-if="type == 3">
-            举报了用户
-          </div>
-          <slot name="reportee" v-if="type != 3"></slot>
-          <img
-            class="l-root-card--reportee-pic"
-            :src="require('assets/image/root/' + imgPath1 + '.jpg')"
-            v-if="type == 3"
-          />
-          <slot name="reporteeProfile"></slot>
+          <slot name="reportee"></slot>
         </div>
       </div>
       <div class="l-root-card--divider">
         <div class="l-root-card--divider-self"></div>
-        <div class="l-root-card-divider-circle">
-          <img
-            class="l-root-card--select"
-            src="@/assets/icons/root/select.svg"
-          />
-        </div>
       </div>
-      <div class="l-root-card--content-lower">
-        <div class="l-root-card--detail">
+      <div class="l-root-card--content-lower" ref="lower">
+        <div class="l-root-card--detail" ref="detail">
           <slot name="detail"></slot>
         </div>
       </div>
@@ -80,20 +64,29 @@ export default {
   props: {
     hasRead: {
       type: Boolean,
-      default: false,
+      default: false
     },
-    imgPath1: "",
-    imgPath2: "",
-    type: ""
+    imgPath: "",
+    canShowMore: {
+      type: Boolean,
+      default: true
+    }
   },
   data() {
     return {
-      rotationAngle: 0
+      rotationAngle: 0,
+      showing: false
     };
   },
   methods: {
     showMore() {
+      if(!this.canShowMore)
+        return;
       this.rotationAngle += 180;
+      if ((this.rotationAngle / 180) % 2)
+        this.$refs.detail.style.height = "auto";
+      else this.$refs.detail.style.height = "70px";
+      this.$emit('toShowMore')
     }
   }
 };
@@ -133,6 +126,11 @@ export default {
   margin-left: 12px;
   transition: 0.3s;
   width: 20px;
+}
+
+.l-root-card--invisible {
+  cursor: auto;
+  opacity: 0;
 }
 
 @keyframes rotation {
@@ -255,28 +253,18 @@ export default {
   width: 100%;
 }
 
-.l-root-card-divider-circle {
-  background: #e83015;
-  border-radius: 10px;
-  height: 20px;
-  position: absolute;
-  right: -10px;
-  width: 20px;
-}
-
-.l-root-card--select {
-  cursor: pointer;
-  width: 100%;
-}
-
 .l-root-card--content-lower {
   align-self: flex-start;
+  transition: 1s;
 }
 
 .l-root-card--detail {
-  height: 100px;
+  height: 70px;
   line-height: 1.5em;
-  padding: 20px;
+  padding-top: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 10px;
   text-indent: 2em;
 }
 </style>
