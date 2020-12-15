@@ -19,9 +19,15 @@
       ></div>
     </div>
     <div v-if="show">
-      <ul class="sd__main" v-for="(item, index) in typeList" :key="index">
-        <li class="main__line">
-          <input type="checkbox" name="item.key" id="" />
+      <ul class="sd__main">
+        <li class="main__line" v-for="(item, index) in infList" :key="index">
+          <input
+            type="checkbox"
+            name="item.key"
+            id="item.key"
+            v-model="item.checked"
+            @change="changeItem(index, $event)"
+          />
           <div class="main__name">
             {{ item.key }}
           </div>
@@ -57,10 +63,29 @@ export default {
       tri: 0
     };
   },
+  created() {
+    this.infList = this.typeList.map(n => {
+      n.checked = false;
+      return n;
+    });
+  },
+  computed: {},
   methods: {
     changeShow() {
       this.show = !this.show;
       this.tri += 180;
+    },
+    changeItem(index, e) {
+      let emitList = this.infList.reduce((pre, n) => {
+        if (n.checked) {
+          pre.push(n.key);
+        }
+        return pre;
+      }, []);
+      this.$emit("change-filter", {
+        type: this.type,
+        list: emitList
+      });
     }
   },
   components: {}
@@ -129,7 +154,7 @@ export default {
 .main__name {
   margin-left: 10px;
   line-height: 1em;
-  width: 75%;
+  flex: 1;
 }
 
 .main__value {

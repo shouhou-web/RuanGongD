@@ -26,7 +26,18 @@ const state = {
   docNum: 0,
   fullscreenLoading: false,
   appHeaderCurName: "",
-  pageSize: 25 //讨论区分区每页动态数
+  pageSize: 25, //讨论区分区每页动态数
+  searchList: [
+    // 检索信息
+    {
+      logical: "NULL",
+      type: "SU",
+      value: ""
+    }
+  ],
+  isAdvance: false, // 是否为高级检索状态
+  start: "", // 开始时间
+  end: "" // 结束时间
 };
 
 const store = new Vuex.Store({
