@@ -49,8 +49,8 @@ export default {
   props: {
     display: { type: Boolean, default: false },
     senderId: String,
-    receiverId: String,
-    messageId: { type: String, default: "" }
+    receiverId: String
+    //messageId: { type: String, default: "" }
   },
   data() {
     return {
@@ -84,15 +84,16 @@ export default {
     receiverId(newVal) {
       console.log("receiverId: " + newVal);
       this.receiverId = newVal;
-    },
-    messageId(newVal) {
+    }
+    /*messageId(newVal) {
       console.log("messageId: " + newVal);
       this.messageId = newVal;
-    }
+    }*/
   },
   computed: {
     consultationTitleText() {
-      return this.messageId == "" ? "发送咨询消息" : "回复咨询消息";
+      return "发送咨询消息";
+      //return this.messageId == "" ? "发送咨询消息" : "回复咨询消息";
     }
   },
   methods: {
@@ -108,13 +109,13 @@ export default {
       }
       console.log("发送人: " + this.senderId);
       console.log("接收人: " + this.receiverId);
-      console.log("回复的消息: " + this.messageId);
+      //console.log("回复的消息: " + this.messageId);
       console.log("消息内容: " + this.createConsultationForm.text);
       createConsultation(
         this.senderId,
         this.receiverId,
-        this.createConsultationForm.text,
-        this.messageId
+        this.createConsultationForm.text
+        //this.messageId
       )
         .then(res => {
           console.log("createConsultation");

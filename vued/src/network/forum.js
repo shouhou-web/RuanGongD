@@ -253,19 +253,18 @@ export function deleteComment(userId, deleteCommentId) {
 }
 
 /**
- * 发送(回复)咨询消息
- * @param {senderId, receiverId, text, messageId}
+ * 发送咨询消息
+ * @param {senderId, receiverId, text}
  *  senderId: 发送者Id
  *  receiverId: 接受者Id
  *  text: 消息内容
- *  messageId: 如果不为空，则表示该消息回复了id为messageId的消息
  * @return {result}
  *  result: 成功返回 "true", 失败返回 "false"
  */
-export function createConsultation(senderId, receiverId, text, messageId) {
+export function createConsultation(senderId, receiverId, text) {
   return request(baseURL, {
     url: "/createConsultation",
-    params: { senderId, receiverId, text, messageId },
+    params: { senderId, receiverId, text },
     method: "post"
   });
 }
