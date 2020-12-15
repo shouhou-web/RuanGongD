@@ -137,7 +137,7 @@
                       <img
                         alt="Avatar"
                         :src="item.editorAvatar"
-                        @click="goToUser(item.userId)"
+                        @click="goToUser(item.editorId)"
                       />
                     </v-avatar>
                   </v-card-text>
@@ -146,7 +146,7 @@
                   <v-card-text>
                     <div class="editInfo">
                       <span>{{ editStr0 }}</span>
-                      <span class="editorName" @click="goToUser(item.userId)">
+                      <span class="editorName" @click="goToUser(item.editorId)">
                         <span>
                           {{ item.editorName }}
                         </span>
@@ -226,12 +226,11 @@ export default {
     },
     goToUser(id) {
       //todo: 跳转到用户
-      /*
+
       this.$router.push({
-        path: "/",
-        query: {}
+        path: "/profile",
+        query: { userID: id }
       });
-      */
     },
     goToPost(id) {
       //跳转到动态
@@ -321,6 +320,7 @@ export default {
     },
     currentUser() {
       //todo: userId
+      return this.$store.state.user.userID;
     }
   },
   components: { MHeader },

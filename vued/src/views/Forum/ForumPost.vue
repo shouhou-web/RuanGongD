@@ -1,7 +1,7 @@
 <template>
   <!-- 动态页面 -->
   <div id="formPost" data-app="true">
-    <m-header></m-header>
+    <m-app-header></m-app-header>
 
     <!-- 动态内容 -->
     <div class="post-container">
