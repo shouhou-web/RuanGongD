@@ -49,7 +49,7 @@ export default {
   width: 40px;
 		height: 600px;
 		transition: width 0.3s;
-		background: #dfe6e9;
+		background:#ecf0f1;
 }
 #leftmenu:hover{
   width: 120px;
