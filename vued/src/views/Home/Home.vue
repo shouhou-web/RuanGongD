@@ -21,7 +21,12 @@
           <ul>
             <li v-for="(item, index) in ciationList" :key="index">
               <div class="ciation__content__id">
-                <i class="icon--one">{{ index + 1 }}</i>
+                <i v-if="index == 0" class="icon--one">{{ index + 1 }}</i>
+                <i v-else-if="index == 1" class="icon--two">{{ index + 1 }}</i>
+                <i v-else-if="index == 2" class="icon--three">
+                  {{ index + 1 }}
+                </i>
+                <i v-else class="icon--other">{{ index + 1 }}</i>
               </div>
               <div class="ciation__content__main">
                 <div class="ciation__content__main__title">
@@ -39,7 +44,32 @@
         </div>
       </div>
       <!-- 收藏论文 -->
-      <div class="likes"></div>
+      <div class="likes">
+        <div class="likes__header">
+          <span class="likes__header__title">热门论文</span>
+          <span class="likes__header__aside">热度</span>
+        </div>
+        <div class="likes__main">
+          <ul>
+            <li v-for="(item, index) in ciationList" :key="index">
+              <div class="likes__item__id">
+                <i v-if="index == 0" class="icon--one">{{ index + 1 }}</i>
+                <i v-else-if="index == 1" class="icon--two">{{ index + 1 }}</i>
+                <i v-else-if="index == 2" class="icon--three">
+                  {{ index + 1 }}
+                </i>
+                <i v-else class="icon--other">{{ index + 1 }}</i>
+              </div>
+              <div class="likes__item__title">
+                {{ item.title }}
+              </div>
+              <div class="likes__item__num">
+                {{ item.ciation }}
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -56,7 +86,80 @@ export default {
           title: "论中国民族民间舞的风格与规格",
           author: "国华",
           venue: "人民音乐",
-          year: "1984"
+          year: "1984",
+          ciation: 158
+        },
+        {
+          id: "123",
+          title: "论中国民族民间舞的风格与规格",
+          author: "国华",
+          venue: "人民音乐",
+          year: "1984",
+          ciation: 158
+        },
+        {
+          id: "123",
+          title: "论中国民族民间舞的风格与规格",
+          author: "国华",
+          venue: "人民音乐",
+          year: "1984",
+          ciation: 158
+        },
+        {
+          id: "123",
+          title: "论中国民族民间舞的风格与规格",
+          author: "国华",
+          venue: "人民音乐",
+          year: "1984",
+          ciation: 158
+        },
+        {
+          id: "123",
+          title: "论中国民族民间舞的风格与规格",
+          author: "国华",
+          venue: "人民音乐",
+          year: "1984",
+          ciation: 158
+        },
+        {
+          id: "123",
+          title: "论中国民族民间舞的风格与规格",
+          author: "国华",
+          venue: "人民音乐",
+          year: "1984",
+          ciation: 158
+        },
+        {
+          id: "123",
+          title: "论中国民族民间舞的风格与规格",
+          author: "国华",
+          venue: "人民音乐",
+          year: "1984",
+          ciation: 158
+        },
+        {
+          id: "123",
+          title: "论中国民族民间舞的风格与规格",
+          author: "国华",
+          venue: "人民音乐",
+          year: "1984",
+          ciation: 158
+        },
+        {
+          id: "123",
+          title: "论中国民族民间舞的风格与规格",
+          author: "国华",
+          venue: "人民音乐",
+          year: "1984",
+          ciation: 158
+        },
+        {
+          id: "123",
+          title: "论中国民族民间舞的风格与规格",
+          author: "国华",
+          venue: "人民音乐",
+          year: "1984",
+          ciation: 158
         }
       ],
       start: "",
@@ -97,7 +200,8 @@ export default {
 .footer {
   display: flex;
   justify-content: space-between;
-  width: var(--width-main);
+  /* width: var(--width-main); */
+  width: 1280px;
   margin: 40px auto;
 }
 
@@ -105,7 +209,8 @@ export default {
   width: 850px;
 }
 
-.ciation__title {
+.ciation__title,
+.likes__header__title {
   font-size: 22px;
   line-height: 24px;
 }
@@ -115,10 +220,106 @@ export default {
   margin-top: 30px;
 }
 
+.ciation__content ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.ciation__content li {
+  display: flex;
+  justify-content: space-between;
+  width: 403px;
+  margin-bottom: 15px;
+}
+
 .ciation__content__id {
   height: 25px;
   line-height: 25px;
   width: 25px;
+}
+
+.ciation__content__id i {
+  transform: scale(0.5);
+}
+
+.ciation__content__main {
+  flex: 1;
+  margin-left: 20px;
+}
+
+.ciation__content__main__title {
+  width: 310px;
+  font-size: 16px;
+  height: 25px;
+  line-height: 25px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ciation__content__main__detail {
+  font-size: 12px;
+  height: 12px;
+  line-height: 12px;
+  margin-top: 5px;
+  color: #999;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ciation__content__num {
+  height: 25px;
+  line-height: 25px;
+  width: auto;
+  text-align: right;
+  color: #3951b3;
+}
+
+.likes {
+  width: 350px;
+}
+
+.likes__header {
+  align-items: flex-end;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.likes__header__aside {
+  color: #666;
+  font-size: 14px;
+}
+
+.likes__main li {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  height: 21px;
+  line-height: 21px;
+  margin-bottom: 13px;
+}
+
+.likes__item__id {
+  width: 21px;
+  height: 21px;
+}
+
+.likes__item__id i {
+  transform: scale(0.42);
+}
+
+.likes__item__title {
+  margin-left: 15px;
+  flex: 1;
+  font-size: 14px;
+  height: 21px;
+  color: #000;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 i {
@@ -130,7 +331,6 @@ i {
   line-height: 50px;
   font-size: 32px;
   font-style: normal;
-  transform: scale(0.5);
   transform-origin: left top;
 }
 
