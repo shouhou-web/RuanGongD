@@ -74,7 +74,7 @@ export function createPost(createPostForm) {
  * @param {userId}
  *  userId: 用户id
  *  postId: 要获取的动态id
- * @returns {postName, postContent, replyNum, viewNum, creatorId, creatorAvatar, creatorName, createTime, tags[], comments[{commentId, commenterId, commenterName, commenterAvatar, floor, commentContent, commentTime}]}
+ * @returns {postName, postContent, replyNum, viewNum, creatorId, creatorAvatar, creatorName, createTime, tags[], citeId, comments[{commentId, commenterId, commenterName, commenterAvatar, floor, commentContent, commentTime}]}
  *  postName: 动态标题
  *  postContent: 动态内容
  *  replyNum: 动态的评论数
@@ -84,6 +84,7 @@ export function createPost(createPostForm) {
  *  creatorName: 创建者名称
  *  createTime: 创建时间
  *  tags[]: 标签数组，里面元素是string
+ *  citeId: 引用的文献id，没有则设为 -1
  *  comments[]: 评论数组，里面元素是对象
  *    commentId: 评论id
  *    commenterId: 评论者id

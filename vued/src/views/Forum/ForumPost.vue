@@ -240,6 +240,7 @@ import {
   deleteComment,
   commentPost,
 } from "network/forum.js";
+import MHeader from "../../components/common/m-header/m-header.vue";
 
 export default {
   name: "FormPost",
@@ -293,6 +294,7 @@ export default {
         postTags: ["Lorem", "ipsum", "dolor"],
         viewNum: "1926",
         replyNum: "817",
+        citeId: "-1",
       },
       comments: [
         //   {
@@ -506,6 +508,7 @@ export default {
     //     this.postInfo.creatorAvatar = res.data.creatorAvatar;
     //     this.postInfo.createTime = res.data.createTime;
     //     this.postInfo.postTags = res.data.tags;
+    //     this.postInfo.citeId = res.data.citeId;
     //     this.comments = res.data.comments;
     //   })
     //   .catch((err) => {
