@@ -9,9 +9,11 @@
         <div class="card-header">
           <!-- TODO: 头像姓名可点击 -->
           <div class="avatar">
-            <v-avatar size="48px">
-              <img :src="postInfo.creatorAvatar"
-            /></v-avatar>
+            <v-btn fab icon @click="jumpToProfile(postInfo.creatorId)">
+              <v-avatar size="48px">
+                <img :src="postInfo.creatorAvatar" />
+              </v-avatar>
+            </v-btn>
           </div>
           <div class="poster-name">
             {{ postInfo.creatorName }}
@@ -80,9 +82,11 @@
           <div class="card-divider" v-if="comment.floor != 1"></div>
           <div class="card-header">
             <div class="avatar">
-              <v-avatar size="32px">
-                <img :src="comment.commenterAvatar"
-              /></v-avatar>
+              <v-btn fab icon x-small @click="jumpToProfile(comment.commenterId)">
+                <v-avatar size="32px">
+                  <img :src="comment.commenterAvatar" />
+                </v-avatar>
+              </v-btn>
             </div>
             <div class="commenter-name">
               {{ comment.commenterName }}
@@ -124,7 +128,6 @@
       </div>
     </div>
 
-    <!-- TODO: 输入评论 -->
     <div class="input-container">
       <div class="card">
         <div class="card-header">
@@ -138,12 +141,7 @@
           </div>
         </div>
         <div class="card-item">
-          <v-form
-            v-model="commentFormValid"
-            class="comment-form"
-            lazy-validation
-          >
-            <!-- TODO: 表单验证 -->
+          <v-form v-model="commentFormValid" class="comment-form">
             <v-textarea
               ref="commentarea"
               v-model="commentContent"
@@ -155,8 +153,12 @@
               color="var(--color-main)"
               :rules="commentRule"
             ></v-textarea>
-            <div class="post-reply-button" @click="handleComment">
-              <v-btn color="var(--color-main)" :disabled="!commentFormValid">
+            <div class="post-reply-button">
+              <v-btn
+                color="var(--color-main)"
+                :disabled="!commentFormValid"
+                @click="handleComment"
+              >
                 <font color="white">发表</font>
               </v-btn>
             </div>
@@ -297,24 +299,24 @@ export default {
         citeId: "-1",
       },
       comments: [
-        //   {
-        //     commentId: "1",
-        //     commenterId: "123",
-        //     commenterName: "BI",
-        //     commenterAvatar: "https://i.loli.net/2020/11/27/9fbGvYknV8KejFS.png",
-        //     floor: 2,
-        //     commentContent: "AI nb!",
-        //     commentTime: "今天 11:45",
-        //   },
-        //   {
-        //     commentId: "2",
-        //     commenterId: "2333",
-        //     commenterName: "AI",
-        //     commenterAvatar: "https://i.loli.net/2020/11/27/3tz2XEraSwl8skK.png",
-        //     floor: 1,
-        //     commentContent: "BI nb!",
-        //     commentTime: "1926-08-17",
-        //   },
+        {
+          commentId: "1",
+          commenterId: "123",
+          commenterName: "BI",
+          commenterAvatar: "https://i.loli.net/2020/11/27/9fbGvYknV8KejFS.png",
+          floor: 2,
+          commentContent: "AI nb!",
+          commentTime: "今天 11:45",
+        },
+        {
+          commentId: "2",
+          commenterId: "2333",
+          commenterName: "AI",
+          commenterAvatar: "https://i.loli.net/2020/11/27/3tz2XEraSwl8skK.png",
+          floor: 1,
+          commentContent: "BI nb!",
+          commentTime: "1926-08-17",
+        },
         //   {
         //     commentId: "4",
         //     commenterId: "1234",
@@ -355,6 +357,16 @@ export default {
         document.body.scrollHeight || document.documentElement.scrollHeight
       );
       console.log("jump!");
+    },
+
+    jumpToProfile(userId) {
+      console.log("jump to " + userId);
+      this.$router.push({
+        path: "/profile",
+        query: {
+          userID: userId,
+        },
+      });
     },
 
     reply() {
@@ -492,7 +504,7 @@ export default {
   components: {},
   created() {
     this.postId = this.$route.query.postId;
-    this.userId = this.$store.state.userID; // TODO 等待统一
+    // this.userId = this.$store.state.userID; // TODO 等待统一
     // TODO 获取 userName, userAvatar
     console.log("postId: " + this.postId + "\nuserId: " + this.userId);
 
