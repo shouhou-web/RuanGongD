@@ -33,7 +33,7 @@ export default {
       navList: [
         {
           name: "处理举报",
-          route: ""
+          route: "report"
         },
         {
           name: "处理申请",
@@ -59,7 +59,7 @@ export default {
   computed: {
     currentIndex() {
       switch (this.$route.path) {
-        case "/root":
+        case "/root/report":
           return 0;
         case "/root/apply":
           return 1;

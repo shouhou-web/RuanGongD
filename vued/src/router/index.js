@@ -33,6 +33,10 @@ const Intro = () => import("views/Profile/Intro.vue");
 
 // 管理员相关组件
 const Root = () => import("views/Root/Root.vue");
+const Report = () => import("views/Root/childCpn/Report/Report.vue");
+const Apply = () => import("views/Root/childCpn/Apply.vue");
+const Sysmsg = () => import("views/Root/childCpn/Sysmsg.vue");
+const Mgauthor = () => import("views/Root/childCpn/Mgauthor.vue");
 
 //1.安装插件
 Vue.use(VueRouter);
@@ -69,7 +73,34 @@ const routes = [
   {
     path: "/root",
     name: "Root",
-    component: Root
+    component: Root,
+    children: [
+      {
+        path: "/",
+        // redirect重定向
+        redirect: "/root/report"
+      },
+      {
+        path: "/root/report",
+        name: "Report",
+        component: Report
+      },
+      {
+        path: "/root/apply",
+        name: "Apply",
+        component: Apply
+      },
+      {
+        path: "/root/sysmsg",
+        name: "Sysmsg",
+        component: Sysmsg
+      },
+      {
+        path: "/root/mgauthor",
+        name: "Mgauthor",
+        component: Mgauthor
+      }
+    ]
   },
   {
     path: "/forumHome",
