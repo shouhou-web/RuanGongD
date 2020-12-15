@@ -2,137 +2,117 @@
   <!-- 管理员界面 -->
   <div id="report">
     <m-app-header></m-app-header>
-    <!-- <div class="root-report-nav"></div> -->
-    <div class="root-report-cards">
-      <div
-        class="root-report-card"
-        v-for="(items, index) in reportList"
-        :key="index"
-      >
-        <l-root-card
-          class="delay"
-          :style="{ 'animation-delay': index * 200 + 'ms' }"
-          :hasRead="items.hasRead"
-          :imgPath="items.reporterInfo.imgPath"
-          @toShowMore="show($event, index)"
-        >
-          <template v-slot:reporterProfile>
-            <div class="root-report--profile">
-              <span class="root-report--id">{{ items.reporterInfo.userID }}</span>
-              <span class="root-report--job">{{ items.reporterInfo.userJob }}</span>
+    <div class="root-all">
+      <div class="root-nav">
+        <ul>
+          <li
+            class="root-nav-item"
+            @click="toChild(index)"
+            :class="[currentIndex == index ? 'root-nav-item--active' : '']"
+            v-for="(item, index) in navList"
+            :key="index"
+          >
+            <div class="root-nav-item--pointer"></div>
+            <div class="root-nav-item--inside">
+              {{ item.name }}
             </div>
-          </template>
-          <template v-slot:reportee>
-            <span class="root-reportee-title"
-              >&quot;{{ items.articleTitle }}&quot;</span
-            >
-          </template>
-          <template v-slot:detail>
-            <span class="root-report--detail" v-if="!items.isTrimmed">
-              {{ items.reportContent }}
-            </span>
-            <span class="root-report--detail" v-else>
-              {{ items.trimmedContent }}
-            </span>
-          </template>
-        </l-root-card>
+          </li>
+        </ul>
       </div>
+      <router-view></router-view>
     </div>
   </div>
 </template>
 
 <script>
-import LRootCard from "./childCpn/l-root-card.vue";
-
 export default {
   name: "Root",
   data() {
     return {
-      reportList: [
+      tabIndex: "0",
+      navList: [
         {
-          articleID: "E387HB9CS1234",
-          articleTitle: "Test this Card with Methods No.1",
-          hasRead: false,
-          reporterInfo: {
-            userID: "Tonylyc",
-            isAuthorized: false,
-            imgPath: "lyc",
-            realName: "",
-            userJob: "本科生"
-          },
-          isTrimmed: true,
-          trimmedContent:
-            "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          reportContent:
-            "Tonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boy",
+          name: "处理举报",
+          route: ""
         },
         {
-          articleID: "E387HB9CS1234",
-          articleTitle: "Test this Card with Methods No.1",
-          hasRead: false,
-          reporterInfo: {
-            userID: "Tonylyc",
-            isAuthorized: false,
-            imgPath: "lyc",
-            realName: "",
-            userJob: "本科生"
-          },
-          isTrimmed: true,
-          trimmedContent:
-            "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          reportContent:
-            "Tonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boy",
+          name: "处理申请",
+          route: "apply"
         },
         {
-          articleID: "E387HB9CS1234",
-          articleTitle: "Test this Card with Methods No.1",
-          hasRead: false,
-          reporterInfo: {
-            userID: "Tonylyc",
-            isAuthorized: false,
-            imgPath: "lyc",
-            realName: "",
-            userJob: "本科生"
-          },
-          isTrimmed: true,
-          trimmedContent:
-            "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          reportContent:
-            "Tonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boy",
+          name: "发送系统消息",
+          route: "sysmsg"
         },
         {
-          articleID: "E387HB9CS1234",
-          articleTitle: "Test this Card with Methods No.1",
-          hasRead: false,
-          reporterInfo: {
-            userID: "Tonylyc",
-            isAuthorized: false,
-            imgPath: "lyc",
-            realName: "",
-            userJob: "本科生"
-          },
-          isTrimmed: true,
-          trimmedContent:
-            "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          reportContent:
-            "Tonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boyTonylyc is a very handsome boy",
+          name: "管理用户权限",
+          route: "mgauthor"
         }
       ]
     };
   },
   methods: {
-    show(e, index) {
-      this.reportList[index].isTrimmed = !this.reportList[index].isTrimmed;
+    toChild(index) {
+      let target = this.navList[index].route;
+      this.$router.push("/root/" + target);
     }
   },
-  components: { LRootCard }
+  computed: {
+    currentIndex() {
+      switch (this.$route.path) {
+        case "/root":
+          return 0;
+        case "/root/apply":
+          return 1;
+        case "/root/sysmsg":
+          return 2;
+        case "/root/mgauthor":
+          return 3;
+      }
+    }
+  }
 };
 </script>
 
 <style scoped>
-.root-report-cards {
-  height: calc(100vh - 57px);
-  overflow: auto;
+.root-all {
+  display: flex;
+  height: calc(100vh - 106px);
+  margin: 25px auto 0;
+  width: var(--width-main);
+}
+
+.root-nav {
+  background-color: #fff;
+  border: #e3e2e6 solid 0.5px;
+  border-radius: 4px;
+  margin-right: 40px;
+  padding-top: 10px;
+  width: 160px;
+}
+
+.root-nav-item {
+  align-items: center;
+  color: #6b757b;
+  display: flex;
+  padding-left: 20px;
+  padding-top: 5px;
+}
+
+.root-nav-item--active,
+.root-nav-item:hover {
+  color: var(--color-tint);
+}
+
+.root-nav-item--pointer {
+  border: 4px solid currentColor;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.root-nav-item--inside {
+  cursor: pointer;
+  font-style: 14px;
+  line-height: 40px;
 }
 
 .root-report-cards::-webkit-scrollbar {
@@ -146,15 +126,6 @@ export default {
 .root-report-cards::-webkit-scrollbar-thumb {
   background-color: #e83015;
   border-radius: 12px;
-}
-
-.root-report-cards::-webkit-scrollbar:hover {
-  width: 10px;
-}
-
-.root-report-cards::-webkit-scrollbar-thumb:hover {
-  border-radius: 20px;
-  transition: 0.5s;
 }
 
 .m-header--slot {
@@ -171,13 +142,11 @@ export default {
 }
 
 .root-report-cards {
-  /* border: 2px solid #e3b4b8; */
-  left: 30%;
+  height: calc(100vh - 57px);
+  overflow: auto;
   padding-top: 20px;
-  padding-right: 10%;
   padding-bottom: 20px;
   position: relative;
-  width: 70%;
 }
 
 .root-report-card {
