@@ -1,13 +1,12 @@
 <template>
   <!-- 动态页面 -->
   <div id="formPost" data-app="true">
-    <m-header></m-header>
+    <m-app-header></m-app-header>
 
     <!-- 动态内容 -->
     <div class="post-container">
       <div class="card">
         <div class="card-header">
-          <!-- TODO: 头像姓名可点击 -->
           <div class="avatar">
             <v-btn fab icon @click="jumpToProfile(postInfo.creatorId)">
               <v-avatar size="48px">
