@@ -268,3 +268,18 @@ export function createConsultation(senderId, receiverId, text) {
     method: "post"
   });
 }
+
+/**
+ * 分区动态总数
+ * @param {sectorId}
+ *  sectorId: 讨论区分区Id
+ * @return {total}
+ *  total: 该分区下动态总数
+ */
+export function getPostNum(sectorId) {
+  return request(baseURL, {
+    url: "/getPostNum",
+    params: { sectorId },
+    method: "post"
+  });
+}

@@ -12,6 +12,7 @@
               <el-pagination
                 layout="prev, pager, next"
                 :total="total"
+                :page-size="pageSize"
                 :current-page="currentPage"
                 @current-change="changePage"
               >
@@ -170,7 +171,12 @@
 </template>
 
 <script>
-import { getPosts, isFollowed, followSector } from "network/forum.js";
+import {
+  getPosts,
+  isFollowed,
+  followSector,
+  getPostNum
+} from "network/forum.js";
 import MHeader from "../../components/common/m-header/m-header.vue";
 export default {
   name: "ForumSector",
@@ -186,7 +192,8 @@ export default {
       createStr1: " 创建于 ",
       editStr0: "由 ",
       editStr1: "最后编辑于 ",
-      totalPosts: "123",
+      pageSize: 0,
+      totalPosts: "50",
       sortType: [
         { name: "最近更新", type: "0" },
         { name: "开始日期", type: "1" },
@@ -310,6 +317,17 @@ export default {
   },
   computed: {
     total() {
+      //return parseInt(this.totalPosts);
+      getPostNum(this.sectorId)
+        .then(res => {
+          console.log(res);
+          if (res.data.total) {
+            this.totalPosts = res.data.total;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
       return parseInt(this.totalPosts);
     },
     currentPage() {
@@ -329,7 +347,7 @@ export default {
     this.page = this.$route.query.page || "1";
     this.sort = this.$route.query.sort || "0";
     this.keyword = this.$route.query.keyword || "";
-    let pageSize = this.$store.state.pageSize;
+    this.pageSize = this.$store.state.pageSize;
     //return;
     console.log(
       "forumSector:\n" +
