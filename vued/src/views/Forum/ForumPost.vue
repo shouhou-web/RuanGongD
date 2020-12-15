@@ -43,7 +43,7 @@
             <div class="post-attr">
               <div class="post-reply-number">
                 <v-icon size="0.875rem">
-                  mdi-reply
+                  comment
                 </v-icon>
                 {{ postInfo.replyNum }}
               </div>
@@ -168,7 +168,7 @@
     </div>
 
     <!-- 举报对话框  -->
-    <v-dialog v-model="reportDialog" max-width="800">
+    <v-dialog v-model="reportDialog" max-width="600">
       <v-card elevation="3">
         <v-card-title v-if="reportPost == true">举报动态</v-card-title>
         <v-card-title v-else>举报评论</v-card-title>
@@ -206,7 +206,7 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="deleteDialog" max-width="800">
+    <v-dialog v-model="deleteDialog" max-width="400">
       <v-card elevation="3">
         <div v-if="deletePost == true">
           <v-card-title>删除动态</v-card-title>
@@ -735,7 +735,7 @@ html {
   justify-content: space-between;
   margin: auto;
   padding-bottom: 10px;
-  width: 30%;
+  width: 40%;
 }
 
 .el-input__inner,

@@ -1,6 +1,6 @@
 <template>
   <div data-app>
-    <v-dialog v-model="display" persistent max-width="800">
+    <v-dialog v-model="display" persistent max-width="600">
       <v-card elevation="3">
         <v-card-title class="card-title">{{
           consultationTitleText
@@ -19,7 +19,7 @@
                 type="textarea"
                 v-model="createConsultationForm.text"
                 clearable
-                placeholder="请输入动态内容"
+                placeholder="请输入消息内容"
                 :autosize="{ minRows: 5, maxRows: 10 }"
                 resize="none"
                 maxlength="501"
@@ -141,7 +141,7 @@ export default {
         });
     },
     close() {
-      console.log("tryClosing");
+      //console.log("tryClosing");
       this.$emit("closeDialog");
     }
   },
@@ -149,4 +149,37 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.footer {
+  display: flex;
+  justify-content: space-between;
+  margin: auto;
+  padding-bottom: 10px;
+  width: 30%;
+}
+
+.hintText {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.post-name {
+  font-weight: bold;
+}
+
+.el-input__inner,
+.el-textarea__inner {
+  border-color: rgba(158, 158, 158);
+}
+
+.el-input__inner:hover,
+.el-textarea__inner:hover {
+  border-color: rgba(36, 36, 36);
+}
+
+.el-input__inner:focus,
+.el-textarea__inner:focus {
+  border-color: rgba(64, 158, 255);
+  border-width: 2px;
+}
+</style>
