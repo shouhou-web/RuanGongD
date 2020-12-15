@@ -119,7 +119,7 @@ export default {
       )
         .then(res => {
           console.log("createConsultation");
-          if (res.data.result) {
+          if (res.data.result == "true") {
             this.$notify({
               title: "操作成功",
               message: "咨询消息发送成功",
