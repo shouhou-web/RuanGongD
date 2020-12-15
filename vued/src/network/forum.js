@@ -26,7 +26,7 @@ export function getAllSectors() {
   return request(baseURL, {
     url: "/getAllSectors",
     params: {},
-    method: "post",
+    method: "post"
   });
 }
 
@@ -41,7 +41,7 @@ export function getAllTags() {
   return request(baseURL, {
     url: "/getAllTags",
     params: {},
-    method: "post",
+    method: "post"
   });
 }
 
@@ -63,9 +63,9 @@ export function createPost(createPostForm) {
   return request(baseURL, {
     url: "/createPost",
     params: {
-      createPostForm,
+      createPostForm
     },
-    method: "post",
+    method: "post"
   });
 }
 
@@ -98,9 +98,9 @@ export function getPostInfo(userId, postId) {
     url: "/getPostInfo",
     params: {
       userId,
-      postId,
+      postId
     },
-    method: "post",
+    method: "post"
   });
 }
 
@@ -131,7 +131,7 @@ export function getPosts(sectorId, start, num, sort, keyword) {
   return request(baseURL, {
     url: "/getPosts",
     params: { sectorId, start, num, sort, keyword },
-    method: "post",
+    method: "post"
   });
 }
 
@@ -147,7 +147,7 @@ export function isFollowed(userId, sectorId) {
   return request(baseURL, {
     url: "/isFollowed",
     params: { userId, sectorId },
-    method: "post",
+    method: "post"
   });
 }
 
@@ -164,7 +164,7 @@ export function followSector(userId, sectorId) {
   return request(baseURL, {
     url: "/followSector",
     params: { userId, sectorId },
-    method: "post",
+    method: "post"
   });
 }
 
@@ -181,7 +181,7 @@ export function reportPost(userId, postId, reportContent) {
   return request(baseURL, {
     url: "/reportPost",
     params: { userId, postId, reportContent },
-    method: "post",
+    method: "post"
   });
 }
 
@@ -197,7 +197,7 @@ export function deletePost(userId, postId) {
   return request(baseURL, {
     url: "/deletePost",
     params: { userId, postId },
-    method: "post",
+    method: "post"
   });
 }
 
@@ -214,7 +214,7 @@ export function commentPost(userId, postId, commentContent) {
   return request(baseURL, {
     url: "/commentPost",
     params: { userId, postId, commentContent },
-    method: "post",
+    method: "post"
   });
 }
 
@@ -231,7 +231,7 @@ export function reportComment(userId, reportCommentId, reportContent) {
   return request(baseURL, {
     url: "/reportComment",
     params: { userId, reportCommentId, reportContent },
-    method: "post",
+    method: "post"
   });
 }
 
@@ -247,6 +247,24 @@ export function deleteComment(userId, deleteCommentId) {
   return request(baseURL, {
     url: "/deleteComment",
     params: { userId, deleteCommentId },
-    method: "post",
+    method: "post"
+  });
+}
+
+/**
+ * 发送(回复)咨询消息
+ * @param {senderId, receiverId, text, messageId}
+ *  senderId: 发送者Id
+ *  receiverId: 接受者Id
+ *  text: 消息内容
+ *  messageId: 如果不为空，则表示该消息回复了id为messageId的消息
+ * @return {result}
+ *  result: 成功返回 "true", 失败返回 "false"
+ */
+export function createConsultation(senderId, receiverId, text, messageId) {
+  return request(baseURL, {
+    url: "/createConsultation",
+    params: { senderId, receiverId, text, messageId },
+    method: "post"
   });
 }

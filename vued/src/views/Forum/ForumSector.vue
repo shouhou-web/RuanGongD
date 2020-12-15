@@ -2,8 +2,7 @@
   <!-- 讨论区分区页面 -->
   <div>
     <m-app-header></m-app-header>
-    <div id="forumSector" data-app>
-      <!-- <m-header></m-header> -->
+    <div class="pageHeaderBg">
       <div class="pageHeader">
         <div class="sectorName">{{ sectorName }}</div>
         <v-divider></v-divider>
@@ -32,7 +31,14 @@
             <el-col :span="3">
               <v-menu offset-y>
                 <template v-slot:activator="{ on, attrs }">
-                  <v-btn class="toolButton" small dark v-bind="attrs" v-on="on">
+                  <v-btn
+                    class="toolButton"
+                    small
+                    dark
+                    v-bind="attrs"
+                    v-on="on"
+                    color="#4F6EF2"
+                  >
                     排序方式
                     <i class="el-icon-caret-bottom"></i>
                   </v-btn>
@@ -65,6 +71,7 @@
                 dark
                 small
                 elevation="1"
+                color="#4F6EF2"
                 @click="followSector()"
                 ><div>关注</div></v-btn
               >
@@ -72,6 +79,8 @@
           </el-row>
         </div>
       </div>
+    </div>
+    <div id="forumSector" data-app>
       <div>
         <ul>
           <li v-for="(item, index) in posts" :key="index">
@@ -136,12 +145,12 @@
                 <el-col :span="6">
                   <v-card-text>
                     <div class="editInfo">
-                      <div class="editorName" @click="goToUser(item.userId)">
-                        <span>{{ editStr0 }}</span>
+                      <span>{{ editStr0 }}</span>
+                      <span class="editorName" @click="goToUser(item.userId)">
                         <span>
                           {{ item.editorName }}
                         </span>
-                      </div>
+                      </span>
                       <div class="editTime">
                         <span>
                           {{ editStr1 }}
@@ -366,25 +375,30 @@ export default {
   width: 100vw;
   /*background-image: url();*/
 }
+.pageHeaderBg {
+  width: 100vw;
+  background-color: white;
+  box-shadow: 0px 1px 0px 0px rgba(225, 225, 225, 1);
+}
 .pageHeader {
   margin: 1px auto;
   border-radius: 0px;
   margin-bottom: 1px;
   width: 900px;
   background-color: white;
-  height: auto;
+  height: 190px;
   display: flex;
   flex-direction: column;
 }
 .sectorName {
-  margin: 20px 20px;
-  font-size: 30px;
+  margin: 40px 20px;
+  font-size: 35px;
   font-style: bold;
   height: 50px;
 }
 .sectorTool {
-  height: 40px;
-  margin-top: 5px;
+  height: 50px;
+  margin-top: 15px;
 }
 .postCard {
   margin: 1px auto;
@@ -412,6 +426,7 @@ export default {
 }*/
 .creatorName {
   cursor: pointer;
+  /*color: var(--color-tint);*/
 }
 .tags {
   margin-top: 10px;
@@ -447,6 +462,7 @@ export default {
 .editorName {
   cursor: pointer;
   font-size: 15px;
+  /*color: var(--color-tint);*/
 }
 .editTime {
   font-size: 12px;
