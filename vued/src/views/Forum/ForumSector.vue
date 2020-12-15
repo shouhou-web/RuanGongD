@@ -237,7 +237,7 @@ export default {
       //跳转到动态
 
       this.$router.push({
-        path: "/post",
+        path: "/forumPost",
         query: { postId: id }
       });
     },
