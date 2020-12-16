@@ -2,15 +2,25 @@
   <!-- 讨论区主界面 -->
   <div>
     <m-app-header></m-app-header>
-    <div id="forumHome">
+    <!--<v-btn @click="display = true">发送消息</v-btn>
+    <create-consultation
+      :senderId="'0001'"
+      :receiverId="'0002'"
+      :display="display"
+      @closeDialog="closeDg()"
+    >
+    </create-consultation>-->
+    <div class="pageHeaderBg">
       <div class="pageHeader">
         <div class="pageName">讨论区</div>
         <!-- 创建动态 -->
         <div class="pageTool"><create-post></create-post></div>
       </div>
+    </div>
+    <div id="forumHome">
       <ul>
         <li v-for="(item, index) in sectors" :key="index">
-          <v-card class="sectorCard" elevation="1" tile >
+          <v-card class="sectorCard" elevation="1" tile>
             <!--
           <v-footer padless v-if="index == 0">
             <div></div>
@@ -78,10 +88,13 @@
 import { getAllSectors } from "network/forum.js";
 import MHeader from "../../components/common/m-header/m-header.vue";
 import CreatePost from "./childCpn/create-post.vue";
+import CreateConsultation from "./childCpn/create-consultation.vue";
+
 export default {
   name: "ForumHome",
   data() {
     return {
+      display: false,
       editStr: "由 ",
       //sectors: []
       sectors: [
@@ -111,6 +124,10 @@ export default {
     };
   },
   methods: {
+    closeDg() {
+      this.display = false;
+      console.log("dialogClosed");
+    },
     handleNum(str) {
       let num = parseInt(str);
       if (num >= 1000000) return (num / 1000000).toFixed(1) + "m";
@@ -127,12 +144,11 @@ export default {
     },
     goToUser(id) {
       //todo: 跳转到用户
-      /*
+
       this.$router.push({
         path: "/profile",
-        query: {userID:}
+        query: { userID: id }
       });
-      */
     },
     goToSector(id) {
       //todo: 跳转到分区
@@ -154,7 +170,12 @@ export default {
       });
     }
   },
-  components: { MHeader, CreatePost },
+  computed: {
+    currentUser() {
+      return this.$store.state.user.userID;
+    }
+  },
+  components: { MHeader, CreatePost, CreateConsultation },
   created() {
     //CreatePost;
     //todo: 获取分区信息
@@ -181,24 +202,29 @@ export default {
   width: 100vw;
   margin-bottom: 20px;
 }
+.pageHeaderBg {
+  width: 100vw;
+  background-color: white;
+  box-shadow: 0px 1px 0px 0px rgba(225, 225, 225, 1);
+}
 .pageHeader {
   margin: 1px auto;
   margin-bottom: 1px;
   border-radius: 0px;
   width: 900px;
-  background-color: white;
-  height: auto;
+  /*background-color: white;*/
+  height: 190px;
   display: flex;
   flex-direction: column;
 }
 .pageName {
-  margin: 20px 20px;
-  font-size: 30px;
+  margin: 40px 20px;
+  font-size: 35px;
   font-style: bold;
-  height: 20px;
+  height: 50px;
 }
 .pageTool {
-  height: 30px;
+  height: 50px;
   margin-top: 5px;
   margin-left: 770px;
   margin-bottom: 20px;

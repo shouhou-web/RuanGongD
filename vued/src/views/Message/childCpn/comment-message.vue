@@ -1,16 +1,17 @@
 <template>
   <div>
     <div class="message">
+      <!-- 评论人头像 -->
       <div class="message-header">
-        <img :src="message.imagePath" alt="" />
+        <img :src="message.image" alt="" />
       </div>
       <div class="message-main">
         <div class="message__line1">
           <span class="message__name">
-            {{ message.userName }}
+            {{ message.senderUserName }}
           </span>
           <span class="message__type">
-            {{ msgType }}
+            回复了你的动态
           </span>
           <span class="message__replyname">
             {{ message.originalContent }}
@@ -21,7 +22,7 @@
         </div>
         <div class="message__line3">
           <div class="message__time">
-            {{ message.createTime }}
+            {{ message.sendTime }}
           </div>
         </div>
       </div>
@@ -58,19 +59,19 @@ export default {
     message: {
       // message消息内容
       type: Object,
-      default: {},
-    },
+      default: {}
+    }
   },
   data() {
     return {
-      openAssure: false, // 是否打开确认框
+      openAssure: false // 是否打开确认框
     };
   },
   computed: {
-    msgType() {
-      if (this.message.msgType == 9) return "评论了你的文档";
-      else return "回复了你的评论";
-    },
+    // msgType() {
+    //   if (this.message.type == 1) return "评论了你的文献";
+    //   else return "回复了你的动态";
+    // }
   },
   methods: {
     open() {
@@ -85,25 +86,25 @@ export default {
       // 删除消息
       console.log(this.message.msgID);
       deleteMsg(this.message.msgID)
-        .then((res) => {
+        .then(res => {
           if (res == 0) {
             this.$notify({
               title: "成功",
               message: "删除消息成功",
-              type: "success",
+              type: "success"
             });
-            this.cancel()
+            this.cancel();
             this.$emit("delete");
           }
         })
-        .catch((err) => {
+        .catch(err => {
           this.$notify.error({
             title: "网络错误",
-            message: "请稍后重试~",
+            message: "请稍后重试~"
           });
         });
-    },
-  },
+    }
+  }
 };
 </script>
 
