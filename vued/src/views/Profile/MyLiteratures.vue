@@ -1,25 +1,25 @@
 <template>
   <div>
-    <y-literature v-for="(onefollowingLiterature, i) in favorLiteratures"
-                  :id="onefollowingLiterature.literatureID"
-                  :title="onefollowingLiterature.title"
-                  :authors="onefollowingLiterature.authors"
-                  :tags="onefollowingLiterature.tags"
-                  :read_time="onefollowingLiterature.read_time"></y-literature>
+    <y-literature v-for="(personalLiterature, i) in myLiteratures"
+                  :id="personalLiterature.literatureID"
+                  :title="personalLiterature.title"
+                  :authors="personalLiterature.authors"
+                  :tags="personalLiterature.tags"
+                  :read_time="personalLiterature.read_time"></y-literature>
   </div>
 </template>
 
 <script>
 import YLiterature from "@/components/common/y-literature/y-literature";
-import { getUserFavorLiteratures } from "@/network/profile"
+
 export default {
-  name: "Favor",
+  name: "MyLiteratures",
   props: { userID : '' },
   components: { YLiterature },
   data () {
     return {
       // user收藏文献集合
-      favorLiteratures: [
+      myLiteratures: [
         {
           literatureID: 0,
           title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
@@ -63,10 +63,6 @@ export default {
     }
   },
   created() {
-    // getUserFavorLiteratures(this.userID)
-    //   .then(console.log("get favors"), favor => { this.favorLiteratures = favor })
-    //   .cache(error => { this.$notify.error("获取收藏文献出现时错误") })
-    console.log("aaa")
   }
 }
 </script>
