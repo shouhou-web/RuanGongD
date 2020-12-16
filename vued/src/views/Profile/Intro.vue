@@ -30,6 +30,7 @@
     <div class="intro-content">
       <div class="content-left">
         <my-literatures :userID="userID" v-if="opID == 0"></my-literatures>
+        <user-posts :userId="userID" v-if="opID == 1"></user-posts>
       </div>
       <div class="content-right">
         <div class="chart-part">
@@ -69,6 +70,7 @@
 <script>
 import ECharts from 'vue-echarts'
 import MyLiteratures from "@/views/Profile/MyLiteratures";
+import UserPosts from "@/views/Forum/childCpn/user-posts";
 
 require('echarts/lib/chart/bar')
 require('echarts/lib/chart/line')
@@ -225,15 +227,16 @@ export default {
     this.barChart.series[0].data = this.introWorkInfo.publishCount;
   },
   components: {
+    UserPosts,
     'v-chart': ECharts,
-    'myLiteratures': MyLiteratures
+    'myLiteratures': MyLiteratures,
+    'user-posts': UserPosts
   },
 };
 </script>
 
 <style scoped>
 .intro {
-  font-family: Consolas;
 }
 
 .intro-header {
