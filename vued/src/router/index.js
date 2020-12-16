@@ -21,6 +21,7 @@ const Manage = () => import("views/Literature/Manage.vue");
 const Classify = () => import("views/Literature/Classify.vue");
 // const Search = () => import("views/Literature/Search.vue");
 const Publication = () => import("views/Literature/Publication.vue");
+const Reference = () => import("views/Literature/Reference.vue");
 
 // 消息相关组件
 const Message = () => import("views/Message/Message.vue");
@@ -61,7 +62,34 @@ const routes = [
   {
     path: "/literature",
     name: "Literature",
-    component: Literature
+    component: Literature,
+    children: [
+      {
+        path: "/",
+        // redirect重定向
+        redirect: "/literature/reference"
+      },
+      {
+        path: "/literature/reference",
+        name: "Reference",
+        component: Reference
+      },
+      {
+        path: "/literature/related",
+        name: "Related",
+        component: System
+      },
+      {
+        path: "/literature/stats",
+        name: "Stats",
+        component: Comment
+      },
+      {
+        path: "/literature/comment",
+        name: "Comment",
+        component: Comment
+      }
+    ]
   },
   {
     path: "/manage",
