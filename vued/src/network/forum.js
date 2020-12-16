@@ -26,7 +26,7 @@ export function getAllSectors() {
   return request(baseURL, {
     url: "/getAllSectors",
     params: {},
-    method: "post",
+    method: "post"
   });
 }
 
@@ -41,7 +41,7 @@ export function getAllTags() {
   return request(baseURL, {
     url: "/getAllTags",
     params: {},
-    method: "post",
+    method: "post"
   });
 }
 
@@ -63,9 +63,9 @@ export function createPost(createPostForm) {
   return request(baseURL, {
     url: "/createPost",
     params: {
-      createPostForm,
+      createPostForm
     },
-    method: "post",
+    method: "post"
   });
 }
 
@@ -74,7 +74,7 @@ export function createPost(createPostForm) {
  * @param {userId}
  *  userId: 用户id
  *  postId: 要获取的动态id
- * @returns {postName, postContent, replyNum, viewNum, creatorId, creatorAvatar, creatorName, createTime, tags[], comments[{commentId, commenterId, commenterName, commenterAvatar, floor, commentContent, commentTime}]}
+ * @returns {postName, postContent, replyNum, viewNum, creatorId, creatorAvatar, creatorName, createTime, tags[], citeId, comments[{commentId, commenterId, commenterName, commenterAvatar, floor, commentContent, commentTime}]}
  *  postName: 动态标题
  *  postContent: 动态内容
  *  replyNum: 动态的评论数
@@ -84,6 +84,7 @@ export function createPost(createPostForm) {
  *  creatorName: 创建者名称
  *  createTime: 创建时间
  *  tags[]: 标签数组，里面元素是string
+ *  citeId: 引用的文献id，没有则设为 -1
  *  comments[]: 评论数组，里面元素是对象
  *    commentId: 评论id
  *    commenterId: 评论者id
@@ -98,9 +99,9 @@ export function getPostInfo(userId, postId) {
     url: "/getPostInfo",
     params: {
       userId,
-      postId,
+      postId
     },
-    method: "post",
+    method: "post"
   });
 }
 
@@ -131,7 +132,7 @@ export function getPosts(sectorId, start, num, sort, keyword) {
   return request(baseURL, {
     url: "/getPosts",
     params: { sectorId, start, num, sort, keyword },
-    method: "post",
+    method: "post"
   });
 }
 
@@ -147,7 +148,7 @@ export function isFollowed(userId, sectorId) {
   return request(baseURL, {
     url: "/isFollowed",
     params: { userId, sectorId },
-    method: "post",
+    method: "post"
   });
 }
 
@@ -164,7 +165,7 @@ export function followSector(userId, sectorId) {
   return request(baseURL, {
     url: "/followSector",
     params: { userId, sectorId },
-    method: "post",
+    method: "post"
   });
 }
 
@@ -181,7 +182,7 @@ export function reportPost(userId, postId, reportContent) {
   return request(baseURL, {
     url: "/reportPost",
     params: { userId, postId, reportContent },
-    method: "post",
+    method: "post"
   });
 }
 
@@ -197,7 +198,7 @@ export function deletePost(userId, postId) {
   return request(baseURL, {
     url: "/deletePost",
     params: { userId, postId },
-    method: "post",
+    method: "post"
   });
 }
 
@@ -214,7 +215,7 @@ export function commentPost(userId, postId, commentContent) {
   return request(baseURL, {
     url: "/commentPost",
     params: { userId, postId, commentContent },
-    method: "post",
+    method: "post"
   });
 }
 
@@ -231,7 +232,7 @@ export function reportComment(userId, reportCommentId, reportContent) {
   return request(baseURL, {
     url: "/reportComment",
     params: { userId, reportCommentId, reportContent },
-    method: "post",
+    method: "post"
   });
 }
 
@@ -247,6 +248,23 @@ export function deleteComment(userId, deleteCommentId) {
   return request(baseURL, {
     url: "/deleteComment",
     params: { userId, deleteCommentId },
-    method: "post",
+    method: "post"
+  });
+}
+
+/**
+ * 发送咨询消息
+ * @param {senderId, receiverId, text}
+ *  senderId: 发送者Id
+ *  receiverId: 接受者Id
+ *  text: 消息内容
+ * @return {result}
+ *  result: 成功返回 "true", 失败返回 "false"
+ */
+export function createConsultation(senderId, receiverId, text) {
+  return request(baseURL, {
+    url: "/createConsultation",
+    params: { senderId, receiverId, text },
+    method: "post"
   });
 }

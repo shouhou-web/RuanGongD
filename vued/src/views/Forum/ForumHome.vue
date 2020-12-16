@@ -1,69 +1,86 @@
 <template>
   <!-- 讨论区主界面 -->
-  <div id="forumHome">
+  <div>
     <m-app-header></m-app-header>
-    <ul>
-      <li v-for="(item, index) in sectors" :key="index">
-        <v-card class="sectorCard" elevation="1" tile>
-          <!--
+    <!--<v-btn @click="display = true">发送消息</v-btn>
+    <create-consultation
+      :senderId="'0001'"
+      :receiverId="'0002'"
+      :display="display"
+      @closeDialog="closeDg()"
+    >
+    </create-consultation>-->
+    <div class="pageHeaderBg">
+      <div class="pageHeader">
+        <div class="pageName">讨论区</div>
+        <!-- 创建动态 -->
+        <div class="pageTool"><create-post></create-post></div>
+      </div>
+    </div>
+    <div id="forumHome">
+      <ul>
+        <li v-for="(item, index) in sectors" :key="index">
+          <v-card class="sectorCard" elevation="1" tile>
+            <!--
           <v-footer padless v-if="index == 0">
             <div></div>
           </v-footer>
           -->
-          <el-row>
-            <el-col :span="12">
-              <v-card-title>
-                <div class="sectorName" @click="goToSector(item.sectorId)">
-                  {{ item.sectorName }}
-                </div>
-              </v-card-title>
-            </el-col>
-            <el-col :span="2">
-              <v-card-subtitle>
-                <div class="postNum">
-                  <div class="sectorPostNum">
-                    {{ handleNum(item.postNum) }}
+            <el-row>
+              <el-col :span="12">
+                <v-card-title>
+                  <div class="sectorName" @click="goToSector(item.sectorId)">
+                    {{ item.sectorName }}
                   </div>
-                  <div class="sectorPostNumStr">
-                    条 动态
+                </v-card-title>
+              </el-col>
+              <el-col :span="2">
+                <v-card-subtitle>
+                  <div class="postNum">
+                    <div class="sectorPostNum">
+                      {{ handleNum(item.postNum) }}
+                    </div>
+                    <div class="sectorPostNumStr">
+                      条 动态
+                    </div>
                   </div>
-                </div>
-              </v-card-subtitle>
-            </el-col>
-            <el-col :span="2">
-              <v-card-text>
-                <v-avatar>
-                  <img
-                    class="avatar"
-                    alt="Avatar"
-                    :src="item.userAvatar"
-                    @click="goToUser(item.userId)"
-                  />
-                </v-avatar>
-              </v-card-text>
-            </el-col>
-            <el-col :span="8">
-              <v-card-text>
-                <div class="post">
-                  <div class="title" @click="goToPost(item.postId)">
-                    {{ handleTitle(item.postName) }}
+                </v-card-subtitle>
+              </el-col>
+              <el-col :span="2">
+                <v-card-text>
+                  <v-avatar>
+                    <img
+                      class="avatar"
+                      alt="Avatar"
+                      :src="item.userAvatar"
+                      @click="goToUser(item.userId)"
+                    />
+                  </v-avatar>
+                </v-card-text>
+              </el-col>
+              <el-col :span="8">
+                <v-card-text>
+                  <div class="post">
+                    <div class="title" @click="goToPost(item.postId)">
+                      {{ handleTitle(item.postName) }}
+                    </div>
+                    <div class="info">
+                      <span>
+                        {{ editStr }}
+                      </span>
+                      <span class="userName" @click="goToUser(item.userId)">
+                        {{ item.userName }}</span
+                      >
+                      <span> {{ handleInfo(item.editTime) }}</span>
+                    </div>
                   </div>
-                  <div class="info">
-                    <span>
-                      {{ editStr }}
-                    </span>
-                    <span class="userName" @click="goToUser(item.userId)">
-                      {{ item.userName }}</span
-                    >
-                    <span> {{ handleInfo(item.editTime) }}</span>
-                  </div>
-                </div>
-              </v-card-text>
-            </el-col>
-          </el-row>
-        </v-card>
-      </li>
-    </ul>
+                </v-card-text>
+              </el-col>
+            </el-row>
+          </v-card>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -71,10 +88,13 @@
 import { getAllSectors } from "network/forum.js";
 import MHeader from "../../components/common/m-header/m-header.vue";
 import CreatePost from "./childCpn/create-post.vue";
+import CreateConsultation from "./childCpn/create-consultation.vue";
+
 export default {
   name: "ForumHome",
   data() {
     return {
+      display: false,
       editStr: "由 ",
       //sectors: []
       sectors: [
@@ -104,6 +124,10 @@ export default {
     };
   },
   methods: {
+    closeDg() {
+      this.display = false;
+      console.log("dialogClosed");
+    },
     handleNum(str) {
       let num = parseInt(str);
       if (num >= 1000000) return (num / 1000000).toFixed(1) + "m";
@@ -122,8 +146,8 @@ export default {
       //todo: 跳转到用户
       /*
       this.$router.push({
-        path: "/",
-        query: {}
+        path: "/profile",
+        query: {userID:}
       });
       */
     },
@@ -142,14 +166,14 @@ export default {
     goToPost(id) {
       //跳转到动态
       this.$router.push({
-        path: "/post",
+        path: "/forumPost",
         query: { postId: id }
       });
     }
   },
-  components: { MHeader, CreatePost },
+  components: { MHeader, CreatePost, CreateConsultation },
   created() {
-    CreatePost;
+    //CreatePost;
     //todo: 获取分区信息
     getAllSectors()
       .then(res => {
@@ -166,7 +190,7 @@ export default {
 
 <style scoped>
 #forumHome {
-  margin: 0px auto;
+  margin: 20px auto;
   width: var(--width-main);
   /*background-image: url();*/
 }
@@ -174,23 +198,29 @@ export default {
   width: 100vw;
   margin-bottom: 20px;
 }
+.pageHeaderBg {
+  width: 100vw;
+  background-color: white;
+  box-shadow: 0px 1px 0px 0px rgba(225, 225, 225, 1);
+}
 .pageHeader {
   margin: 1px auto;
+  margin-bottom: 1px;
   border-radius: 0px;
   width: 900px;
-  background-color: white;
-  height: auto;
+  /*background-color: white;*/
+  height: 190px;
   display: flex;
   flex-direction: column;
 }
 .pageName {
-  margin: 20px 20px;
-  font-size: 30px;
+  margin: 40px 20px;
+  font-size: 35px;
   font-style: bold;
-  height: 20px;
+  height: 50px;
 }
 .pageTool {
-  height: 30px;
+  height: 50px;
   margin-top: 5px;
   margin-left: 770px;
   margin-bottom: 20px;

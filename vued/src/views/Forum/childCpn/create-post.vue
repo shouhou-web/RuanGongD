@@ -77,7 +77,7 @@
 
         <v-card-actions>
           <div class="footer">
-            <v-btn @click="submit('createPostForm')" dark>
+            <v-btn @click="submit('createPostForm')" dark color="#4F6EF2">
               <!--<font color="white">发表</font>-->
               <div>发表</div>
             </v-btn>
@@ -87,7 +87,13 @@
         <v-divider></v-divider>
       </v-card>
     </v-dialog>
-    <v-btn class="toolButton" dark elevation="1" @click="dialog = true">
+    <v-btn
+      class="toolButton"
+      elevation="1"
+      dark
+      @click="dialog = true"
+      color="#4F6EF2"
+    >
       <div>发表动态</div></v-btn
     >
     <!--
@@ -193,19 +199,32 @@ export default {
           if (res.data.result == "true") {
             this.dialog = false;
             // TODO 跳转到动态页面
-            this.$message({
+            /*this.$message({
               type: "success",
               message: "动态发表成功！"
+            });*/
+            this.$notify({
+              title: "操作成功",
+              message: "动态发表成功",
+              type: "success"
             });
           } else {
-            this.$message.error({
+            /*this.$message.error({
+              message: "动态发表失败，请稍后再试"
+            });*/
+            this.$notify.error({
+              title: "操作失败",
               message: "动态发表失败，请稍后再试"
             });
           }
         })
         .catch(err => {
           console.log(err);
-          this.$message.error({
+          /*this.$message.error({
+            message: "动态发表失败，请稍后再试"
+          });*/
+          this.$notify.error({
+            title: "操作失败",
             message: "动态发表失败，请稍后再试"
           });
         });
@@ -250,7 +269,7 @@ export default {
         console.log("getAllTags");
         console.log(res);
         this.sectorList = res.data.sectorList;
-        this.userId = this.$route.state.userID; // TODO 等待统一
+        this.userId = this.$store.state.userID; // TODO 等待统一
         this.createPostForm.userId = this.userId;
       })
       .catch(err => {

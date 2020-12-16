@@ -7,10 +7,13 @@
     <div class="post-container">
       <div class="card">
         <div class="card-header">
+          <!-- TODO: 头像姓名可点击 -->
           <div class="avatar">
-            <v-avatar size="48px">
-              <img :src="postInfo.creatorAvatar"
-            /></v-avatar>
+            <v-btn fab icon @click="jumpToProfile(postInfo.creatorId)">
+              <v-avatar size="48px">
+                <img :src="postInfo.creatorAvatar" />
+              </v-avatar>
+            </v-btn>
           </div>
           <div class="poster-name">
             {{ postInfo.creatorName }}
@@ -69,7 +72,7 @@
     </div>
 
     <!-- 评论区 -->
-    <div class="comment-container">
+    <div class="comment-container" v-if="comments.length >= 1">
       <div class="card">
         <div
           class="child-card"
@@ -79,9 +82,11 @@
           <div class="card-divider" v-if="comment.floor != 1"></div>
           <div class="card-header">
             <div class="avatar">
-              <v-avatar size="32px">
-                <img :src="comment.commenterAvatar"
-              /></v-avatar>
+              <v-btn fab icon x-small @click="jumpToProfile(comment.commenterId)">
+                <v-avatar size="32px">
+                  <img :src="comment.commenterAvatar" />
+                </v-avatar>
+              </v-btn>
             </div>
             <div class="commenter-name">
               {{ comment.commenterName }}
@@ -123,7 +128,6 @@
       </div>
     </div>
 
-    <!-- TODO: 输入评论 -->
     <div class="input-container">
       <div class="card">
         <div class="card-header">
@@ -137,8 +141,7 @@
           </div>
         </div>
         <div class="card-item">
-          <v-form v-model="commentFormValid" class="comment-form" lazy-validation>
-            <!-- TODO: 表单验证 -->
+          <v-form v-model="commentFormValid" class="comment-form">
             <v-textarea
               ref="commentarea"
               v-model="commentContent"
@@ -150,8 +153,12 @@
               color="var(--color-main)"
               :rules="commentRule"
             ></v-textarea>
-            <div class="post-reply-button" @click="handleComment">
-              <v-btn color="var(--color-main)" :disabled="!commentFormValid">
+            <div class="post-reply-button">
+              <v-btn
+                color="var(--color-main)"
+                :disabled="!commentFormValid"
+                @click="handleComment"
+              >
                 <font color="white">发表</font>
               </v-btn>
             </div>
@@ -235,6 +242,7 @@ import {
   deleteComment,
   commentPost,
 } from "network/forum.js";
+import MHeader from "../../components/common/m-header/m-header.vue";
 
 export default {
   name: "FormPost",
@@ -288,6 +296,7 @@ export default {
         postTags: ["Lorem", "ipsum", "dolor"],
         viewNum: "1926",
         replyNum: "817",
+        citeId: "-1",
       },
       comments: [
         {
@@ -308,34 +317,34 @@ export default {
           commentContent: "BI nb!",
           commentTime: "1926-08-17",
         },
-        {
-          commentId: "4",
-          commenterId: "1234",
-          commenterName: "CI",
-          commenterAvatar: "https://i.loli.net/2020/11/27/3tz2XEraSwl8skK.png",
-          floor: 3,
-          commentContent: "DI nb!",
-          commentTime: "8 分钟前",
-        },
-        {
-          commentId: "3",
-          commenterId: "21",
-          commenterName: "Spam  Bot",
-          commenterAvatar: "https://i.loli.net/2020/11/30/jm2i7g9qL61SkE8.png",
-          floor: 4,
-          commentContent:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-          commentTime: "刚刚",
-        },
-        {
-          commentId: "1233",
-          commenterId: "1",
-          commenterName: "Codevka",
-          commenterAvatar: "https://i.loli.net/2020/11/26/soiOjIlZFpELuTW.png",
-          floor: 5,
-          commentContent: "No spam.",
-          commentTime: "刚刚",
-        },
+        //   {
+        //     commentId: "4",
+        //     commenterId: "1234",
+        //     commenterName: "CI",
+        //     commenterAvatar: "https://i.loli.net/2020/11/27/3tz2XEraSwl8skK.png",
+        //     floor: 3,
+        //     commentContent: "DI nb!",
+        //     commentTime: "8 分钟前",
+        //   },
+        //   {
+        //     commentId: "3",
+        //     commenterId: "21",
+        //     commenterName: "Spam  Bot",
+        //     commenterAvatar: "https://i.loli.net/2020/11/30/jm2i7g9qL61SkE8.png",
+        //     floor: 4,
+        //     commentContent:
+        //       "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        //     commentTime: "刚刚",
+        //   },
+        //   {
+        //     commentId: "1233",
+        //     commenterId: "1",
+        //     commenterName: "Codevka",
+        //     commenterAvatar: "https://i.loli.net/2020/11/26/soiOjIlZFpELuTW.png",
+        //     floor: 5,
+        //     commentContent: "No spam.",
+        //     commentTime: "刚刚",
+        //   },
       ],
     };
   },
@@ -343,8 +352,21 @@ export default {
     // 聚焦到评论输入框
     jumpToComment() {
       this.$refs.commentarea.focus();
-      window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
+      window.scrollTo(
+        0,
+        document.body.scrollHeight || document.documentElement.scrollHeight
+      );
       console.log("jump!");
+    },
+
+    jumpToProfile(userId) {
+      console.log("jump to " + userId);
+      this.$router.push({
+        path: "/profile",
+        query: {
+          userID: userId,
+        },
+      });
     },
 
     reply() {
@@ -380,11 +402,11 @@ export default {
             if (res.data.result == "true") {
               this.reportDialog = false;
             } else {
-              this.$message.error("举报失败，请稍后再试。");
+              this.$notify.error("举报失败，请稍后再试。");
             }
           })
           .catch((err) => {
-            this.$message.error("举报失败，请稍后再试。");
+            this.$notify.error("举报失败，请稍后再试。");
             console.log(err);
           });
       } else {
@@ -399,11 +421,11 @@ export default {
             if (res.data.result == "true") {
               this.reportDialog = false;
             } else {
-              this.$message.error("举报失败，请稍后再试。");
+              this.$notify.error("举报失败，请稍后再试。");
             }
           })
           .catch((err) => {
-            this.$message.error("举报失败，请稍后再试。");
+            this.$notify.error("举报失败，请稍后再试。");
             console.log(err);
           });
       }
@@ -428,17 +450,18 @@ export default {
             console.log(res);
             if (res.data.result == "true") {
               this.deleteDialog = false;
+              this.$notify.success("删除成功！");
               // TODO 返回（到哪？）
               // this.$router.push({
               //   path: "/",
               //   query: {},
               // });
             } else {
-              this.$message.error("删除失败，请稍后再试。");
+              this.$notify.error("删除失败，请稍后再试。");
             }
           })
           .catch((err) => {
-            this.$message.error("删除失败，请稍后再试。");
+            this.$notify.error("删除失败，请稍后再试。");
             console.log(err);
           });
       } else {
@@ -448,12 +471,13 @@ export default {
             console.log(res);
             if (res.data.result == "true") {
               this.deleteDialog = false;
+              this.$notify.success("删除成功！");
             } else {
-              this.$message.error("删除失败，请稍后再试。");
+              this.$notify.error("删除失败，请稍后再试。");
             }
           })
           .catch((err) => {
-            this.$message.error("删除失败，请稍后再试。");
+            this.$notify.error("删除失败，请稍后再试。");
             console.log(err);
           });
       }
@@ -465,27 +489,24 @@ export default {
           console.log("comment post");
           console.log(res);
           if (res.data.result == "true") {
-            this.commentContent = ""
-            this.$message({
-              type: "success",
-              message: "评论发表成功！"
-            });
+            this.commentContent = "";
+            this.$notify.success("评论发表成功！");
           } else {
-            this.$message.error("评论失败，请稍后再试。");
+            this.$notify.error("评论失败，请稍后再试。");
           }
         })
         .catch((err) => {
-          this.$message.error("评论失败，请稍后再试。");
+          this.$notify.error("评论失败，请稍后再试。");
           console.log(err);
         });
     },
   },
   components: {},
   created() {
-    // this.postId = this.$route.query.postId;
-    // this.userId = this.$route.state.userID; // TODO 等待统一
+    this.postId = this.$route.query.postId;
+    // this.userId = this.$store.state.userID; // TODO 等待统一
     // TODO 获取 userName, userAvatar
-    // console.log("postId: " + this.postId + "\nuserId: " + this.userId);
+    console.log("postId: " + this.postId + "\nuserId: " + this.userId);
 
     // getPostInfo(this.userId, this.postId)
     //   .then((res) => {
@@ -499,6 +520,7 @@ export default {
     //     this.postInfo.creatorAvatar = res.data.creatorAvatar;
     //     this.postInfo.createTime = res.data.createTime;
     //     this.postInfo.postTags = res.data.tags;
+    //     this.postInfo.citeId = res.data.citeId;
     //     this.comments = res.data.comments;
     //   })
     //   .catch((err) => {
@@ -513,20 +535,29 @@ export default {
 </script>
 
 <style>
+body,
+html {
+  scroll-behavior: smooth;
+}
+
 .post-container {
-  width: 600px;
+  /* width: 900px; */
+  width: 61%;
+  min-width: 400px;
   height: 100%;
   margin: 0 auto;
   margin-top: 50px;
 }
 
 .comment-container {
-  width: 600px;
+  width: 61%;
+  min-width: 400px;
   margin: 0 auto;
 }
 
 .input-container {
-  width: 600px;
+  width: 61%;
+  min-width: 400px;
   margin: 0 auto;
 }
 
@@ -607,11 +638,7 @@ export default {
 }
 
 .post-reply-number {
-  width: 45px;
-}
-
-.post-view-number {
-  width: 380px;
+  margin-right: 10px;
 }
 
 .post-time {
