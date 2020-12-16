@@ -52,7 +52,7 @@
                 </v-icon>
                 {{ postInfo.viewNum }}
               </div>
-              <div class="post-time">发布于 {{ postInfo.createTime }}</div>
+              <div class="post-time">创建于 {{ postInfo.createTime }}</div>
             </div>
             <div class="post-content">{{ postInfo.postContent }}</div>
             <div class="post-tags">
@@ -244,7 +244,7 @@ import {
   deletePost,
   reportComment,
   deleteComment,
-  commentPost,
+  commentPost
 } from "network/forum.js";
 import MHeader from "../../components/common/m-header/m-header.vue";
 
@@ -266,28 +266,28 @@ export default {
       commentFormValid: false,
       reportForm: {
         reportContent: "",
-        reportCommentId: "",
+        reportCommentId: ""
       },
       commentRule: [
-        (v) => !!v,
-        (v) =>
+        v => !!v,
+        v =>
           (v.length <= 800 && v.length >= 5) ||
-          "评论内容长度在 5-800 个字符之间",
+          "评论内容长度在 5-800 个字符之间"
       ],
       reportRule: {
         reportContent: [
           {
             required: true,
             message: "请输入举报理由",
-            trigger: "blur",
+            trigger: "blur"
           },
           {
             min: 5,
             max: 800,
             message: "举报理由长度在 5-800 个字符之间",
-            trigger: "blur",
-          },
-        ],
+            trigger: "blur"
+          }
+        ]
       },
       postInfo: {
         creatorId: "1",
@@ -300,7 +300,7 @@ export default {
         postTags: ["Lorem", "ipsum", "dolor"],
         viewNum: "1926",
         replyNum: "817",
-        citeId: "-1",
+        citeId: "-1"
       },
       comments: [
         {
@@ -310,7 +310,7 @@ export default {
           commenterAvatar: "https://i.loli.net/2020/11/27/9fbGvYknV8KejFS.png",
           floor: 2,
           commentContent: "AI nb!",
-          commentTime: "今天 11:45",
+          commentTime: "今天 11:45"
         },
         {
           commentId: "2",
@@ -319,7 +319,7 @@ export default {
           commenterAvatar: "https://i.loli.net/2020/11/27/3tz2XEraSwl8skK.png",
           floor: 1,
           commentContent: "BI nb!",
-          commentTime: "1926-08-17",
+          commentTime: "1926-08-17"
         },
         //   {
         //     commentId: "4",
@@ -338,8 +338,8 @@ export default {
           floor: 4,
           commentContent:
             "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-          commentTime: "刚刚",
-        },
+          commentTime: "刚刚"
+        }
         //   {
         //     commentId: "1233",
         //     commenterId: "1",
@@ -349,7 +349,7 @@ export default {
         //     commentContent: "No spam.",
         //     commentTime: "刚刚",
         //   },
-      ],
+      ]
     };
   },
   methods: {
@@ -368,8 +368,8 @@ export default {
       this.$router.push({
         path: "/profile",
         query: {
-          userID: userId,
-        },
+          userID: userId
+        }
       });
     },
 
@@ -391,7 +391,7 @@ export default {
     // 举报
     handleReport(formName) {
       let pass = false;
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
           pass = true;
         }
@@ -400,7 +400,7 @@ export default {
 
       if (this.reportPost == true) {
         reportPost(this.userId, this.postId, this.reportForm.reportContent)
-          .then((res) => {
+          .then(res => {
             console.log("report post");
             console.log(res);
             if (res.data.result == "true") {
@@ -409,7 +409,7 @@ export default {
               this.$notify.error("举报失败，请稍后再试。");
             }
           })
-          .catch((err) => {
+          .catch(err => {
             this.$notify.error("举报失败，请稍后再试。");
             console.log(err);
           });
@@ -419,7 +419,7 @@ export default {
           this.reportForm.reportCommentId,
           this.reportForm.reportContent
         )
-          .then((res) => {
+          .then(res => {
             console.log("report comment");
             console.log(res);
             if (res.data.result == "true") {
@@ -428,7 +428,7 @@ export default {
               this.$notify.error("举报失败，请稍后再试。");
             }
           })
-          .catch((err) => {
+          .catch(err => {
             this.$notify.error("举报失败，请稍后再试。");
             console.log(err);
           });
@@ -449,7 +449,7 @@ export default {
     handleDelete() {
       if (this.deletePost == true) {
         deletePost(this.userId, this.postId)
-          .then((res) => {
+          .then(res => {
             console.log("delete post");
             console.log(res);
             if (res.data.result == "true") {
@@ -464,13 +464,13 @@ export default {
               this.$notify.error("删除失败，请稍后再试。");
             }
           })
-          .catch((err) => {
+          .catch(err => {
             this.$notify.error("删除失败，请稍后再试。");
             console.log(err);
           });
       } else {
         deleteComment(this.userId, this.deleteCommentId)
-          .then((res) => {
+          .then(res => {
             console.log("delete comment");
             console.log(res);
             if (res.data.result == "true") {
@@ -480,7 +480,7 @@ export default {
               this.$notify.error("删除失败，请稍后再试。");
             }
           })
-          .catch((err) => {
+          .catch(err => {
             this.$notify.error("删除失败，请稍后再试。");
             console.log(err);
           });
@@ -489,7 +489,7 @@ export default {
 
     handleComment() {
       commentPost(this.userId, this.postId, this.commentContent)
-        .then((res) => {
+        .then(res => {
           console.log("comment post");
           console.log(res);
           if (res.data.result == "true") {
@@ -499,11 +499,11 @@ export default {
             this.$notify.error("评论失败，请稍后再试。");
           }
         })
-        .catch((err) => {
+        .catch(err => {
           this.$notify.error("评论失败，请稍后再试。");
           console.log(err);
         });
-    },
+    }
   },
   components: {},
   created() {
@@ -534,7 +534,7 @@ export default {
     this.comments.sort(function(a, b) {
       return a.floor - b.floor;
     }); // 对 comments 按楼层升序排序
-  },
+  }
 };
 </script>
 
