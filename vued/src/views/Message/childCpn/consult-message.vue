@@ -23,6 +23,9 @@
           <div class="message__time">
             {{ message.sendTime }}
           </div>
+          <l-button @click="reply" class="my-button" type="text" size="small">
+            回复
+          </l-button>
         </div>
       </div>
       <div @click="open('delete')" class="message-aside">
@@ -34,8 +37,25 @@
         <div class="message-aside__text">删除该消息</div>
       </div>
     </div>
+    <div class="message__open">
+      <div class="message__open__left">
+        <img :src="$store.state.user.image" alt="" />
+      </div>
+      <div class="message__open__middle">
+        <textarea
+          placeholder="请自觉遵守互联网相关的政策法规，严禁发布色情、暴力、反动的言论。"
+        ></textarea>
+      </div>
+      <div class="message__open__right">
+        <button>
+          发表
+          <br />
+          评论
+        </button>
+      </div>
+    </div>
     <div class="message__div"></div>
-    <m-hover ref="hover" @submit="submit" @cancel="cancel"> </m-hover>
+    <m-hover ref="hover" @submit="assureReply"> </m-hover>
   </div>
 </template>
 
@@ -66,13 +86,15 @@ export default {
     };
   },
   methods: {
-    open(type) {
-      console.log(type);
-      // 打开悬浮窗
-      this.openType = type;
-      this.openAssure = true;
+    reply() {
+      console.log(123);
+      this.$refs.hover.showHover({
+        title: "回复消息",
+        submitBtn: "回复",
+        cancelBtn: "取消"
+      });
     },
-    submit() {}
+    assureReply() {}
   }
 };
 </script>
@@ -178,5 +200,21 @@ export default {
   margin-bottom: 5px;
   padding: 7px;
   width: 500px;
+}
+
+.message__open {
+  align-items: center;
+  display: flex;
+}
+
+.message__open__left {
+  width: 60px;
+}
+
+.message__open__left img {
+  display: block;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
 }
 </style>

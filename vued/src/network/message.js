@@ -33,3 +33,26 @@ export function getConsultMsg(userID) {
     method: "post"
   });
 }
+
+// 删除消息
+export function deleteMsg(messageID) {
+  return request(baseURL, {
+    url: "/deleteMsg",
+    params: {
+      messageID
+    },
+    method: "post"
+  });
+}
+
+// 回复消息
+export function replyMessage(messageID, content) {
+  return request(baseURL, {
+    url: "/replyMessage",
+    params: {
+      messageID,
+      content
+    },
+    method: "post"
+  });
+}
