@@ -14,27 +14,44 @@
           <slot name="reportee"></slot>
           <span class="l-root-card--notice" v-if="!hasRead">!</span>
         </div>
-        <m-dropdown
-          class="l-root-card--options-anime"
-          position="middle"
-          color="#0080ff"
-        >
-          <template v-slot:show>
+        <ul class="l-root-card--options">
+          <li class="l-root-card--accept" @mouseover="accept" @mouseout="accept">
             <img
-              class="l-root-card--options"
-              src="@/assets/icons/root/options.svg"
+              src="@/assets/icons/root/accept.svg"
+              class="l-root-card--options-accept"
+              v-if="!onAccept"
             />
-          </template>
-          <template v-slot:hide>
-            <div class="l-root-card--nav">
-              <l-button type="text" class="l-root-card--nav-btn">驳回</l-button>
-              <l-button type="text" class="l-root-card--nav-btn">接受</l-button>
-              <l-button type="text" class="l-root-card--nav-btn"
-                >置为未读</l-button
-              >
-            </div>
-          </template>
-        </m-dropdown>
+            <img
+              src="@/assets/icons/root/accept-select.svg"
+              class="l-root-card--options-accept"
+              v-else
+            />
+          </li>
+          <li class="l-root-card--reject" @mouseover="reject" @mouseout="reject">
+            <img
+              src="@/assets/icons/root/reject.svg"
+              class="l-root-card--options-reject"
+              v-if="!onReject"
+            />
+            <img
+              src="@/assets/icons/root/reject-select.svg"
+              class="l-root-card--options-reject"
+              v-else
+            />
+          </li>
+          <li class="l-root-card--delete" @mouseover="del" @mouseout="del">
+            <img
+              src="@/assets/icons/root/delete.svg"
+              class="l-root-card--options-delete"
+              v-if="!onDelete"
+            />
+            <img
+              src="@/assets/icons/root/delete-select.svg"
+              class="l-root-card--options-delete"
+              v-else
+            />
+          </li>
+        </ul>
       </div>
       <div class="l-root-card--divider">
         <div class="l-root-card--divider-self"></div>
@@ -73,7 +90,10 @@ export default {
   data() {
     return {
       rotationAngle: 0,
-      showing: false
+      showing: false,
+      onAccept: false,
+      onReject: false,
+      onDelete: false,
     };
   },
   methods: {
@@ -84,6 +104,15 @@ export default {
         this.$refs.detail.style.height = "auto";
       else this.$refs.detail.style.height = "70px";
       this.$emit("toShowMore");
+    },
+    accept() {
+      this.onAccept = !this.onAccept;
+    },
+    del() {
+      this.onDelete = !this.onDelete;
+    },
+    reject() {
+      this.onReject = !this.onReject;
     }
   }
 };
@@ -92,6 +121,54 @@ export default {
 <style scoped>
 .l-root-card {
   position: relative;
+}
+
+.l-root-card--content {
+  align-items: center;
+  background-color: #ffffff;
+  border: 0.5px solid #e3e2e6;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.l-root-card--content-upper {
+  align-self: flex-start;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-left: 20px;
+  width: 100%;
+}
+
+.l-root-card--content-info {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  margin-right: 40px;
+}
+
+.l-root-card--reporter-pic {
+  border-radius: 25px;
+  border: 1px solid #6b757b;
+  cursor: pointer;
+  height: 43px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+  margin-right: 5px;
+  margin-top: 20px;
+  transition: 0.2s;
+  width: 43px;
+}
+
+.l-root-card--content-connect {
+  color: #6b757b;
+  font-weight: 800;
+  font-size: 15px;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 .l-root-card--notice {
@@ -103,6 +180,79 @@ export default {
   margin-left: 10px;
   text-align: center;
   width: 15px;
+}
+
+.l-root-card--options {
+  border-radius: 50%;
+  height: 70px;
+  position: relative;
+  width: 70px;
+}
+
+.l-root-card--options-accept {
+  height: 20px;
+  left: 9.5px;
+  position: absolute;
+  top: 25px;
+  width: 20px;
+}
+
+.l-root-card--options-reject {
+  height: 20px;
+  left: 4px;
+  position: absolute;
+  top: 8px;
+  width: 20px;
+}
+
+.l-root-card--options-delete {
+  height: 20px;
+  left: 4.5px;
+  position: absolute;
+  top: 4.5px;
+  width: 20px;
+}
+
+.l-root-card--accept {
+  clip-path: circle(35px at 100% 50%);
+  height: 70px;
+  left: 0%;
+  position: absolute;
+  top: 0%;
+  width: 35px;
+}
+
+.l-root-card--reject {
+  clip-path: circle(35px at 0% 100%);
+  height: 35px;
+  left: 50%;
+  position: absolute;
+  top: 0%;
+  width: 35px;
+}
+
+.l-root-card--delete {
+  clip-path: circle(35px at 0% 0%);
+  height: 35px;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  width: 35px;
+}
+
+.l-root-card--divider {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  height: 5px;
+  position: relative;
+  width: 96%;
+}
+
+.l-root-card--divider-self {
+  background-color: #e3e2e6;
+  height: 2px;
+  width: 100%;
 }
 
 .l-root-card--showmore {
@@ -122,95 +272,23 @@ export default {
   opacity: 0;
 }
 
-@keyframes rotation {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(180deg);
-  }
-}
-
-.l-root-card--options-anime:hover .l-root-card--options {
-  transform: rotate(180deg);
-}
-
-.l-root-card--options {
-  cursor: pointer;
-  height: 26px;
-  margin-left: 7px;
-  margin-right: 7px;
-  margin-top: 5.5px;
-  transition: 0.3s;
-  width: 26px;
-}
-
-.l-root-card--nav {
-  align-items: center;
-  background-color: #ffffff;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  border: 3px solid #0080ff;
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-}
-
-.l-root-card--nav-btn {
-  color: #6b757b;
-  margin-top: 3px;
-  margin-bottom: 3px;
-  padding: 10px 35px;
-  width: 130px;
-}
-
-.l-root-card--nav-btn:hover {
-  box-shadow: 0px 0px 1px 2px rgba(224, 37, 62, 0.219);
-}
-
-.l-root-card--content {
-  align-items: center;
-  background-color: #ffffff;
-  border-left: 0.5px solid #e3e2e6;
-  border-right: 0.5px solid #e3e2e6;
-  border-bottom: 0.5px solid #e3e2e6;
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.l-root-card--content-upper {
+.l-root-card--content-lower {
   align-self: flex-start;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  transition: 1s;
+}
+
+.l-root-card--detail {
+  height: 70px;
+  line-height: 1.5em;
+  padding-top: 10px;
   padding-left: 20px;
-  width: 100%;
-}
-
-.l-root-card--content-info {
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-}
-
-.l-root-card--reporter-pic {
-  border-radius: 25px;
-  border: 1px solid #6b757b;
-  cursor: pointer;
-  height: 50px;
-  margin-bottom: 20px;
-  margin-left: 20px;
-  margin-right: 5px;
-  margin-top: 20px;
-  transition: 0.2s;
-  width: 50px;
+  padding-right: 20px;
+  padding-bottom: 10px;
+  text-indent: 2em;
 }
 
 .l-root-card--reporter-pic:hover {
-  box-shadow: 0px 0px 1px 2px rgba(224, 37, 62, 0.219);
+  box-shadow: 0px 0px 1px 2px rgba(66, 150, 230, 0.473);
   transition: 0.2s;
 }
 
@@ -231,40 +309,12 @@ export default {
   transition: 0.2s;
 }
 
-.l-root-card--content-connect {
-  color: #6b757b;
-  font-weight: 800;
-  margin-left: 20px;
-  margin-right: 20px;
-}
-
-.l-root-card--divider {
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  height: 5px;
-  position: relative;
-  width: 96%;
-}
-
-.l-root-card--divider-self {
-  background-color: #e3e2e6;
-  height: 2px;
-  width: 100%;
-}
-
-.l-root-card--content-lower {
-  align-self: flex-start;
-  transition: 1s;
-}
-
-.l-root-card--detail {
-  height: 70px;
-  line-height: 1.5em;
-  padding-top: 10px;
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-bottom: 10px;
-  text-indent: 2em;
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(180deg);
+  }
 }
 </style>

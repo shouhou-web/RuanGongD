@@ -19,7 +19,9 @@
         </ul>
       </div>
     </div>
-    <router-view></router-view>
+    <transition name="fade" mode="out-in">
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
@@ -77,6 +79,7 @@ export default {
   border: #e3e2e6 solid 0.5px;
   border-radius: 4px;
   height: 60px;
+  margin-bottom: 20px;
   width: 900px;
 }
 
@@ -149,5 +152,13 @@ export default {
   position: absolute;
   transition: all 0.3s;
   width: 100%;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.25s;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>
