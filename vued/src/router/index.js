@@ -24,8 +24,6 @@ const Publication = () => import("views/Literature/Publication.vue");
 
 // 消息相关组件
 const Message = () => import("views/Message/Message.vue");
-const Invitation = () => import("views/Message/Invitation.vue");
-const Application = () => import("views/Message/Application.vue");
 const System = () => import("views/Message/System.vue");
 const Comment = () => import("views/Message/Comment.vue");
 
@@ -106,17 +104,7 @@ const routes = [
       {
         path: "/",
         // redirect重定向
-        redirect: "/message/application"
-      },
-      {
-        path: "/message/application",
-        name: "Application",
-        component: Application
-      },
-      {
-        path: "/message/invitation",
-        name: "Invitation",
-        component: Invitation
+        redirect: "/message/comment"
       },
       {
         path: "/message/system",

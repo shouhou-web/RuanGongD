@@ -84,22 +84,18 @@ export default {
     },
     imgPath1: "",
     imgPath2: "",
-    type: "",
-    rotationAngle: {
-      type: Number,
-      default: 0,
-    },
+    type: ""
   },
   data() {
     return {
-      toRotate: 0,
+      rotationAngle: 0
     };
   },
   methods: {
     showMore() {
       this.rotationAngle += 180;
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -137,10 +133,6 @@ export default {
   margin-left: 12px;
   transition: 0.3s;
   width: 20px;
-}
-
-.l-root-card--showmore:hover {
-  transform: scale(1.2, 1.2);
 }
 
 @keyframes rotation {
