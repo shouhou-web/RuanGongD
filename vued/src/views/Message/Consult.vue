@@ -13,12 +13,28 @@
 </template>
 
 <script>
-// import { getCommonMsg, getAllMsgNum } from "network/message";
+import { getConsultMsg } from "network/message";
 import consultMessage from "./childCpn/consult-message";
 export default {
   name: "Consult",
   created() {
-    // console.log(this.$store.state.user.userID);
+    getConsultMsg(this.$store.state.user.userID)
+      .then(res => {
+        console.log("consult", res);
+        this.messageList = res;
+      })
+      .then(getConsultMsg(this.$store.state.user.userID))
+      // .then(
+      //   getAllMsgNum(this.$store.state.user.userID).then((res) => {
+      //     this.$store.commit("setAllMsgNum", res);
+      //   })
+      // )
+      .catch(err => {
+        this.$notify.error({
+          title: "网络错误",
+          message: "请稍后重试~"
+        });
+      });
   },
   methods: {
     deleteItem(index) {
