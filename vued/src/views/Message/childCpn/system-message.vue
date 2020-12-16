@@ -8,13 +8,13 @@
             {{ messageType }}
           </span>
           <span class="message__time">
-            {{ message.createTime }}
+            {{ message.sendTime }}
           </span>
         </div>
         <!-- 第二行 -->
         <div class="message-line2">
           <span class="message__content">
-            {{ messageContent }}
+            {{ content }}
           </span>
         </div>
       </div>
@@ -44,7 +44,7 @@
 <script>
 // import { deleteMsg } from "network/message";
 export default {
-  name: "SystemMessage",
+  content: "SystemMessage",
   props: {
     message: {
       // message消息内容
@@ -59,7 +59,7 @@ export default {
   },
   computed: {
     messageType() {
-      switch (this.message.msgType) {
+      switch (this.message.type) {
         case 3:
           return "申请通过";
         case 4:
@@ -76,22 +76,22 @@ export default {
           return "文档删除";
       }
     },
-    messageContent() {
-      switch (this.message.msgType) {
+    content() {
+      switch (this.message.type) {
         case 3:
-          return "恭喜！您已成功加入团队" + this.message.name + "！";
+          return "恭喜！您已成功加入团队" + this.message.content + "！";
         case 4:
-          return "很遗憾，" + this.message.name + "团队拒绝了你的申请";
+          return "很遗憾，" + this.message.content + "团队拒绝了你的申请";
         case 5:
-          return this.message.name + "同意了你的邀请，已经加入团队了~";
+          return this.message.content + "同意了你的邀请，已经加入团队了~";
         case 6:
-          return this.message.name + "拒绝了你的团队邀请";
+          return this.message.content + "拒绝了你的团队邀请";
         case 7:
-          return this.message.name + "退出了你的团队";
+          return this.message.content + "退出了你的团队";
         case 8:
-          return "管理员已将你踢出团队" + this.message.name;
+          return "管理员已将你踢出团队" + this.message.content;
         case 11:
-          return "管理员删除了你的文档" + this.message.name;
+          return "管理员删除了你的文档" + this.message.content;
       }
     },
   },
@@ -167,7 +167,6 @@ export default {
   color: #666;
   font-size: 14px;
   line-height: 24px;
-  padding-left: 8px;
 }
 
 .message:hover .message-aside {
