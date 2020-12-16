@@ -43,7 +43,7 @@
           <div class="user-intro-content" v-if="userInfoStatue">
             <div class="intro-content">
               <div class="intro-content-details">
-                <div class="intro-font-1">{{ introName }}</div>
+                <div class="intro-font-1" @click="gotoIntro(authorID)">{{ introName }}</div>
                 <div class="intro-font-2">
                   {{introLocation}}
                 </div>
@@ -258,6 +258,13 @@ export default {
     },
     opSwitch(opID) {
       this.op = opID
+    },
+    gotoIntro(authorID) {
+      this.$router.push(
+        {
+          path: '/intro'
+        }
+      )
     }
   },
   components: {
@@ -302,6 +309,7 @@ export default {
   /*border: 1px solid red;*/
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 .headshot-img {
@@ -320,8 +328,8 @@ export default {
   justify-content: center;
   opacity: 0;
   position: absolute;
-  left: 20%;
-  top: 78px;
+  left: 13px;
+  top: 20px;
   right: 0;
   bottom: 0;
   transition: ease-in-out 0.3s;

@@ -58,7 +58,6 @@
                 <div class="name-style">{{ onefollowingUser.name }}</div>
                 <div class="intro-style">{{ onefollowingUser.intro }}</div>
               </div>
-              <div class="following-op" @click="cancleFollow(onefollowingUser.followingID)">unfollow</div>
             </div>
           </div>
         </div>
@@ -453,10 +452,12 @@ export default {
   /*border: 1px solid red;*/
   font-size: 0.7rem;
   padding: 5%;
-  color: #000000;
+  color: #777777;
 }
 
 .following-content {
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
 }
 
 .following-info {
@@ -528,7 +529,7 @@ export default {
   font-size: 0.7rem;
   font-weight: 700;
   color: white;
-  margin-left: 40%;
+  margin-left: 50%;
 }
 
 .profile-icon {
