@@ -74,7 +74,7 @@ export function createPost(createPostForm) {
  * @param {userId}
  *  userId: 用户id
  *  postId: 要获取的动态id
- * @returns {postName, postContent, replyNum, viewNum, creatorId, creatorAvatar, creatorName, createTime, tags[], comments[{commentId, commenterId, commenterName, commenterAvatar, floor, commentContent, commentTime}]}
+ * @returns {postName, postContent, replyNum, viewNum, creatorId, creatorAvatar, creatorName, createTime, tags[], citeId, comments[{commentId, commenterId, commenterName, commenterAvatar, floor, commentContent, commentTime}]}
  *  postName: 动态标题
  *  postContent: 动态内容
  *  replyNum: 动态的评论数
@@ -84,6 +84,7 @@ export function createPost(createPostForm) {
  *  creatorName: 创建者名称
  *  createTime: 创建时间
  *  tags[]: 标签数组，里面元素是string
+ *  citeId: 引用的文献id，没有则设为 -1
  *  comments[]: 评论数组，里面元素是对象
  *    commentId: 评论id
  *    commenterId: 评论者id
@@ -247,6 +248,60 @@ export function deleteComment(userId, deleteCommentId) {
   return request(baseURL, {
     url: "/deleteComment",
     params: { userId, deleteCommentId },
+    method: "post",
+  });
+}
+
+/**
+ * 发送咨询消息
+ * @param {senderId, receiverId, text}
+ *  senderId: 发送者Id
+ *  receiverId: 接受者Id
+ *  text: 消息内容
+ * @return {result}
+ *  result: 成功返回 "true", 失败返回 "false"
+ */
+export function createConsultation(senderId, receiverId, text) {
+  return request(baseURL, {
+    url: "/createConsultation",
+    params: { senderId, receiverId, text },
+    method: "post",
+  });
+}
+
+/**
+ * 分区动态总数
+ * @param {sectorId}
+ *  sectorId: 讨论区分区Id
+ * @return {total}
+ *  total: 该分区下动态总数
+ */
+export function getPostNum(sectorId) {
+  return request(baseURL, {
+    url: "/getPostNum",
+    params: { sectorId },
+    method: "post",
+  });
+}
+
+/**
+ * 获取一个用户的全部动态
+ * @param {userId}
+ *  userId: 用户Id
+ * @return {posts[{postId, postName, replyNum, viewNum, sectorName, createTime, tags[]}]}
+ *  posts[]是数组,里面的元素是对象:
+ *    postId: 动态id
+ *    postName: 动态名称(标题)
+ *    replyNum: 动态的评论数
+ *    viewNum: 动态的被查看次数
+ *    sectorName: 动态所在分区名称
+ *    createTime: 动态的创建时间
+ *    tags[]: 数组, 动态的所有标签,
+ */
+export function getUserPosts(userId) {
+  return request(baseURL, {
+    url: "/getUserPosts",
+    params: { userId },
     method: "post",
   });
 }

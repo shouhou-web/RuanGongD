@@ -9,7 +9,6 @@ const Test = () => import("views/Test.vue");
 const ForumHome = () => import("views/Forum/ForumHome.vue");
 const ForumSector = () => import("views/Forum/ForumSector.vue");
 const ForumPost = () => import("views/Forum/ForumPost.vue");
-const UserPosts = () => import("views/Forum/UserPosts.vue");
 
 // 首页相关组件
 const Home = () => import("views/Home/Home.vue");
@@ -26,6 +25,7 @@ const Publication = () => import("views/Literature/Publication.vue");
 const Message = () => import("views/Message/Message.vue");
 const System = () => import("views/Message/System.vue");
 const Comment = () => import("views/Message/Comment.vue");
+const Consult = () => import("views/Message/Consult.vue");
 
 // 个人相关组件
 const Profile = () => import("views/Profile/Profile.vue");
@@ -73,6 +73,11 @@ const routes = [
     path: "/manage",
     name: "Manage",
     component: Manage
+  },
+  {
+    path: "/publication",
+    name: "Publication",
+    component: Publication
   },
   {
     path: "/root",
@@ -148,11 +153,6 @@ const routes = [
     component: ForumPost
   },
   {
-    path: "/userPosts",
-    name: "UserPost",
-    component: UserPosts
-  },
-  {
     path: "/intro",
     name: "Intro",
     component: Intro
@@ -176,6 +176,11 @@ const routes = [
         path: "/message/comment",
         name: "System",
         component: Comment
+      },
+      {
+        path: "/message/consult",
+        name: "Consult",
+        component: Consult
       }
     ]
   },

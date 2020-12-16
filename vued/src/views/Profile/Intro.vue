@@ -1,7 +1,7 @@
 <template>
   <!-- 门户界面 -->
   <div id="intro" class="intro">
-    <m-header></m-header>
+    <m-app-header></m-app-header>
     <div class="intro-header">
       <div class="intro-profile">
         <div class="intro-profile-info">
@@ -14,86 +14,29 @@
               {{ introPos }}
             </div>
           </div>
-<!--          <div class="publish">-->
-<!--            <div class="publish-button">邀请同事加入门户</div>-->
-<!--          </div>-->
+          <div class="publish">
+            <div class="publish-button">发表文献</div>
+          </div>
         </div>
         <div class="profile-op">
-          <div class="op-all">about</div>
-          <div class="bar"></div>
+          <div class="op-switch">
+            <div class="op-all" @click="opSwitch(0)">个人文献</div>
+            <div class="op-all" @click="opSwitch(1)">个人动态</div>
+          </div>
+          <div :class="{ 'bar': opID == 0, 'bar-change': opID == 1 }"></div>
         </div>
       </div>
     </div>
     <div class="intro-content">
       <div class="content-left">
-        <div class="members">
-          <div class="member-header">
-            <div>all members (100)</div>
-            <div class="look-all" @click="openAllMemberList">
-              <div>look all</div>
-              <img src="../../assets/icons/profile/look.svg" class="profile-icon">
-            </div>
-          </div>
-          <div class="imgs">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg" class="member-img">
-            <img src="../../assets/icons/profile/more.svg" class="more-icon" v-if="">
-          </div>
-        </div>
-        <div class="literatures">
-          <div class="one-follow-literature">
-            <div class="title">{{ onefollowingLiterature.title }}</div>
-            <div class="tags">
-              <div class="tag" v-for="(a_tag, i) in onefollowingLiterature.tags">
-                <div :class="{'first-tag': i==0, 'leftpart-tags': i != 0}">{{a_tag}}</div>
-              </div>
-            </div>
-            <div class="authors">
-              <div v-for="(name, i) in onefollowingLiterature.authors" class="author-list">
-                <img :src="userImgSrc" class="authorImg">
-                <div class="authorname">{{name}}</div>
-              </div>
-            </div>
-            <div class="read-time">
-              <div class="read-time-content">
-                {{onefollowingLiterature.read_time}} Reads
-              </div>
-            </div>
-            <div class="literature-ops">
-              <div class="one-op"></div>
-            </div>
-          </div>
-          <div class="one-follow-literature">
-            <div class="title">{{ onefollowingLiterature.title }}</div>
-            <div class="tags">
-              <div class="tag" v-for="(a_tag, i) in onefollowingLiterature.tags">
-                <div :class="{'first-tag': i==0, 'leftpart-tags': i != 0}">{{a_tag}}</div>
-              </div>
-            </div>
-            <div class="authors">
-              <div v-for="(name, i) in onefollowingLiterature.authors" class="author-list">
-                <img :src="userImgSrc" class="authorImg">
-                <div class="authorname">{{name}}</div>
-              </div>
-            </div>
-            <div class="read-time">
-              <div class="read-time-content">
-                {{onefollowingLiterature.read_time}} Reads
-              </div>
-            </div>
-            <div class="literature-ops">
-              <div class="one-op"></div>
-            </div>
-          </div>
-        </div>
+        <my-literatures :userID="userID" v-if="opID == 0"></my-literatures>
+        <user-posts :userId="userID" v-if="opID == 1"></user-posts>
       </div>
       <div class="content-right">
         <div class="chart-part">
           <div class="chart-header">
             <div class="chart-type">line chart</div>
-            <div class="chart-name">门户文献发布量统计</div>
+            <div class="chart-name">文献发布量统计</div>
           </div>
           <div class="oneChart-style" v-if="introLiteraturesPublishedData != null"><v-chart :options="lineChart"></v-chart></div>
           <div class="oneChart-style" v-if="introLiteraturesPublishedData == null"><img src="../../assets/image/no-data.png"></div>
@@ -101,162 +44,33 @@
         <div class="chart-part">
           <div class="chart-header">
             <div class="chart-type">pie chart</div>
-            <div class="chart-name">门户文献tag统计</div>
+            <div class="chart-name">文献tag统计</div>
           </div>
           <div class="oneChart-style" v-if="introLiteraturesTopTags != null"><v-chart :options="pieChart"></v-chart></div>
           <div class="oneChart-style" v-if="introLiteraturesTopTags == null"><img src="../../assets/image/no-data.png"></div>
         </div>
-        <div class="chart-part">
-          <div class="chart-header">
-            <div class="chart-type">bar chart</div>
-            <div class="chart-name">门户活跃用户统计</div>
-          </div>
-          <div class="oneChart-style" v-if="introWorkInfo != null"><v-chart :options="barChart"></v-chart></div>
-          <div class="oneChart-style" v-if="introWorkInfo == null">
-            <img src="../../assets/image/no-data.png">
+        <div class="followed">
+          <div class="follow-part-head">follower (2)</div>
+          <div class="following-content">
+            <div class="one-following" v-for="(onefollowingUser, i) in followers">
+              <img :src="onefollowingUser.imgSrc" class="intro-img img-plus">
+              <div class="following-info">
+                <div class="name-style">{{ onefollowingUser.name }}</div>
+                <div class="intro-style">{{ onefollowingUser.intro }}</div>
+              </div>
+              <div class="following-op" @click="cancleFollow(onefollowingUser.followingID)">unfollow</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <m-hover ref="allMember">
-      <div class="all-members-list-outter">
-        <div class="one-member">
-          <div class="one-member-headshot">
-            <img :src="userImgSrc" class="member-headshot-style">
-          </div>
-          <div class="one-member-info">
-            <div class="member-name">{{userName}}</div>
-            <div class="member-degree">{{retUserDegree(userDegree)}}</div>
-          </div>
-          <div class="one-member-follow-statue">
-            <div v-if="followStatue" class="red-font" @click="cancleFollow">followed</div>
-            <div v-if="!followStatue" class="black-font" @click="doFollow">unfollow</div>
-          </div>
-        </div>
-        <div class="one-member">
-          <div class="one-member-headshot">
-            <img :src="userImgSrc" class="member-headshot-style">
-          </div>
-          <div class="one-member-info">
-            <div class="member-name">{{userName}}</div>
-            <div class="member-degree">{{retUserDegree(userDegree)}}</div>
-          </div>
-          <div class="one-member-follow-statue">
-            <div v-if="followStatue" class="red-font" @click="cancleFollow">followed</div>
-            <div v-if="!followStatue" class="black-font" @click="doFollow">unfollow</div>
-          </div>
-        </div>
-        <div class="one-member">
-          <div class="one-member-headshot">
-            <img :src="userImgSrc" class="member-headshot-style">
-          </div>
-          <div class="one-member-info">
-            <div class="member-name">{{userName}}</div>
-            <div class="member-degree">{{retUserDegree(userDegree)}}</div>
-          </div>
-          <div class="one-member-follow-statue">
-            <div v-if="followStatue" class="red-font" @click="cancleFollow">followed</div>
-            <div v-if="!followStatue" class="black-font" @click="doFollow">unfollow</div>
-          </div>
-        </div>
-        <div class="one-member">
-          <div class="one-member-headshot">
-            <img :src="userImgSrc" class="member-headshot-style">
-          </div>
-          <div class="one-member-info">
-            <div class="member-name">{{userName}}</div>
-            <div class="member-degree">{{retUserDegree(userDegree)}}</div>
-          </div>
-          <div class="one-member-follow-statue">
-            <div v-if="followStatue" class="red-font" @click="cancleFollow">followed</div>
-            <div v-if="!followStatue" class="black-font" @click="doFollow">unfollow</div>
-          </div>
-        </div>
-        <div class="one-member">
-          <div class="one-member-headshot">
-            <img :src="userImgSrc" class="member-headshot-style">
-          </div>
-          <div class="one-member-info">
-            <div class="member-name">{{userName}}</div>
-            <div class="member-degree">{{retUserDegree(userDegree)}}</div>
-          </div>
-          <div class="one-member-follow-statue">
-            <div v-if="followStatue" class="red-font" @click="cancleFollow">followed</div>
-            <div v-if="!followStatue" class="black-font" @click="doFollow">unfollow</div>
-          </div>
-        </div>
-        <div class="one-member">
-          <div class="one-member-headshot">
-            <img :src="userImgSrc" class="member-headshot-style">
-          </div>
-          <div class="one-member-info">
-            <div class="member-name">{{userName}}</div>
-            <div class="member-degree">{{retUserDegree(userDegree)}}</div>
-          </div>
-          <div class="one-member-follow-statue">
-            <div v-if="followStatue" class="red-font" @click="cancleFollow">followed</div>
-            <div v-if="!followStatue" class="black-font" @click="doFollow">unfollow</div>
-          </div>
-        </div>
-        <div class="one-member">
-          <div class="one-member-headshot">
-            <img :src="userImgSrc" class="member-headshot-style">
-          </div>
-          <div class="one-member-info">
-            <div class="member-name">{{userName}}</div>
-            <div class="member-degree">{{retUserDegree(userDegree)}}</div>
-          </div>
-          <div class="one-member-follow-statue">
-            <div v-if="followStatue" class="red-font" @click="cancleFollow">followed</div>
-            <div v-if="!followStatue" class="black-font" @click="doFollow">unfollow</div>
-          </div>
-        </div>
-        <div class="one-member">
-          <div class="one-member-headshot">
-            <img :src="userImgSrc" class="member-headshot-style">
-          </div>
-          <div class="one-member-info">
-            <div class="member-name">{{userName}}</div>
-            <div class="member-degree">{{retUserDegree(userDegree)}}</div>
-          </div>
-          <div class="one-member-follow-statue">
-            <div v-if="followStatue" class="red-font" @click="cancleFollow">followed</div>
-            <div v-if="!followStatue" class="black-font" @click="doFollow">unfollow</div>
-          </div>
-        </div>
-        <div class="one-member">
-          <div class="one-member-headshot">
-            <img :src="userImgSrc" class="member-headshot-style">
-          </div>
-          <div class="one-member-info">
-            <div class="member-name">{{userName}}</div>
-            <div class="member-degree">{{retUserDegree(userDegree)}}</div>
-          </div>
-          <div class="one-member-follow-statue">
-            <div v-if="followStatue" class="red-font" @click="cancleFollow">followed</div>
-            <div v-if="!followStatue" class="black-font" @click="doFollow">unfollow</div>
-          </div>
-        </div>
-        <div class="one-member">
-          <div class="one-member-headshot">
-            <img :src="userImgSrc" class="member-headshot-style">
-          </div>
-          <div class="one-member-info">
-            <div class="member-name">{{userName}}</div>
-            <div class="member-degree">{{retUserDegree(userDegree)}}</div>
-          </div>
-          <div class="one-member-follow-statue">
-            <div v-if="followStatue" class="red-font" @click="cancleFollow">followed</div>
-            <div v-if="!followStatue" class="black-font" @click="doFollow">unfollow</div>
-          </div>
-        </div>
-      </div>
-    </m-hover>
   </div>
 </template>
 
 <script>
 import ECharts from 'vue-echarts'
+import MyLiteratures from "@/views/Profile/MyLiteratures";
+import UserPosts from "@/views/Forum/childCpn/user-posts";
 
 require('echarts/lib/chart/bar')
 require('echarts/lib/chart/line')
@@ -272,14 +86,35 @@ export default {
       introName: "猫猫头科研院",
       introPublish: 100,
       introMemberNum: 20,
-      introImgSrc: "https://i1.rgstatic.net/ii/institution.image/AS%3A267456919080961%401440778106588_l",
+      introImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
       introPos: "Bei jing China",
 
       userName: 'Ma Zhengchang',
       userDegree: 1,
+      userID: '0',
       userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
 
       followStatue: false,
+
+      opID: 0,
+
+      // 关注我的用户集合
+      followers: [
+        {
+          followerID: 1,
+          imgSrc: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3824999008,143707972&fm=26&gp=0.jpg",
+          name: "Ma Hanyuan",
+          intro: "Beihang University (BUAA)",
+          isfollowed: true
+        },
+        {
+          followerID: 2,
+          imgSrc: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3824999008,143707972&fm=26&gp=0.jpg",
+          name: "Ma Hanyuan",
+          intro: "Beihang University (BUAA)",
+          isfollowed: false
+        },
+      ],
 
       introLiteraturesPublishedData: [100, 200, 500, 100],
       introLiteraturesTopTags: [
@@ -350,27 +185,6 @@ export default {
           }
         ]
       },
-      barChart: {
-        tooltip: {
-          trigger: 'item',
-          formatter: '{b}: {c}篇',
-        },
-        xAxis: {
-          type: 'category',
-          data: []
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [
-          {
-            data: [],
-            type: 'bar',
-            showBackground: false,
-            backgroundStyle: {color: 'rgba(220, 220, 220, 0.8)'}
-          }
-        ]
-      },
 
       onefollowingLiterature: {
         title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
@@ -401,6 +215,9 @@ export default {
     },
     doFollow() {
       this.$notify.success("关注成功")
+    },
+    opSwitch(opID) {
+      this.opID = opID
     }
   },
   created() {
@@ -410,14 +227,16 @@ export default {
     this.barChart.series[0].data = this.introWorkInfo.publishCount;
   },
   components: {
-    'v-chart': ECharts
+    UserPosts,
+    'v-chart': ECharts,
+    'myLiteratures': MyLiteratures,
+    'user-posts': UserPosts
   },
 };
 </script>
 
 <style scoped>
 .intro {
-  font-family: Consolas;
 }
 
 .intro-header {
@@ -505,10 +324,20 @@ export default {
   letter-spacing: 2px;
 }
 
+.op-switch {
+  display: flex;
+  flex-direction: row;
+}
+
 .op-all {
   margin-top: 20px;
   font-size: 0.8rem;
-  margin-left: 30px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.op-all:hover {
+  cursor: pointer;
 }
 
 .bar {
@@ -518,6 +347,17 @@ export default {
   width: 50px;
   margin-top: 10px;
   margin-left: 20px;
+  transition: ease-in-out 0.3s;
+}
+
+.bar-change {
+  background-color: #4F6EF2;
+  border-radius: 2px;
+  height: 2px;
+  width: 50px;
+  margin-top: 10px;
+  margin-left: 110px;
+  transition: ease-in-out 0.3s;
 }
 
 .oneChart-style {
@@ -596,6 +436,64 @@ export default {
   margin-bottom: 20px;
 }
 
+.followed {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  border: 1px solid #ddd;
+  background-color: white;
+  margin-bottom: 20px;
+}
+
+
+.follow-part-head {
+  width: 100%;
+  height: 54px;
+  /*border: 1px solid red;*/
+  font-size: 0.7rem;
+  padding: 5%;
+  color: #000000;
+}
+
+.following-content {
+}
+
+.following-info {
+  display: flex;
+  flex-direction: column;
+  margin-left: 2%;
+  margin-top: 5%;
+}
+
+.one-following {
+  width: 100%;
+  height: 75px;
+  display: flex;
+  flex-direction: row;
+}
+
+.name-style {
+  font-size: 1rem;
+  color: #555555;
+}
+
+.intro-style {
+  font-size: 0.8rem;
+  color: #999999;
+}
+
+.intro-img {
+  border: 1px solid #e3e3e3;
+  width: 70px;
+  height: 70px;
+}
+
+.img-plus {
+  margin-left: 5%;
+  border-radius: 50%;
+}
+
 .content-right {
   display: flex;
   flex-direction: column;
@@ -655,7 +553,7 @@ export default {
   border: 1px solid #dddddd;
   background-color: white;
   padding: 30px 25px 27px 25px;
-  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .title {
