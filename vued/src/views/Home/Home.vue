@@ -185,6 +185,8 @@ export default {
 #home {
   background-color: #fff;
   min-height: 100vh;
+  max-height: 100vh;
+  overflow: auto;
 }
 
 .logo {

@@ -25,6 +25,7 @@ const Publication = () => import("views/Literature/Publication.vue");
 const Message = () => import("views/Message/Message.vue");
 const System = () => import("views/Message/System.vue");
 const Comment = () => import("views/Message/Comment.vue");
+const Consult = () => import("views/Message/Consult.vue");
 
 // 个人相关组件
 const Profile = () => import("views/Profile/Profile.vue");
@@ -175,6 +176,11 @@ const routes = [
         path: "/message/comment",
         name: "System",
         component: Comment
+      },
+      {
+        path: "/message/consult",
+        name: "Consult",
+        component: Consult
       }
     ]
   },

@@ -47,20 +47,24 @@ export default {
       navList: [
         {
           name: "回复我的",
-          router: "comment",
+          router: "comment"
         },
         {
           name: "系统通知",
-          router: "system",
+          router: "system"
         },
-      ],
+        {
+          name: "咨询消息",
+          router: "consult"
+        }
+      ]
     };
   },
   methods: {
     toChild(index) {
       let target = this.navList[index].router;
       this.$router.push("/message/" + target);
-    },
+    }
   },
   computed: {
     currentIndex() {
@@ -69,9 +73,11 @@ export default {
           return 0;
         case "/message/system":
           return 1;
+        case "/message/consult":
+          return 2;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -155,6 +161,7 @@ export default {
 }
 
 .content-header {
+  border: 1px solid #ebebeb;
   padding: 10px 10px 0;
   width: 100%;
 }
