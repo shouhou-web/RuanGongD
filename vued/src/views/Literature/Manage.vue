@@ -1,90 +1,96 @@
 <template>
   <!-- 管理文献 -->
-  <div id="manage">
-
-    <div class="main">
-
-      <div class="pageHeader">
-        <div class="top" style="margin-top: 40px">
-          <b>我的文献</b>
+  <div>
+    <div v-for="(oneLiterature, i) in myLiteratureList">
+      <div class="one-follow-literature">
+        <div class="title" @click="gotoLiterature()">{{ oneLiterature.title }}</div>
+        <div class="tags">
+          <div v-for="(a_tag, i) in oneLiterature.tags">
+            <div :class="{'first-tag': i==0, 'leftpart-tags': i != 0}">{{a_tag}}</div>
+          </div>
         </div>
-        <v-divider></v-divider>
-        <el-pagination
-          layout="prev, pager, next"
-          :total="total"
-          :current-page="currentPage"
-          @current-change="changePage"
-        >
-        </el-pagination>
-      </div>
-
-      <div class="literatureList" >
-        <div
-          v-for="doc in myLiteratureList"
-          class="myLiteratureListItem"
-          @click=""
-        >
-          <el-card shadow="hover">
-            <div class="list_title">
-              <span>{{doc.literatureTitle}}</span>
-              <l-button @click="openDeleteWarn(doc)" style="float: right" type="info" size="small">删除</l-button>
-              <l-button @click="openEditWarn(doc)" style="float: right;margin-right: 20px"  size="small">修改</l-button>
-            </div>
-            <div class="list_author">{{doc.literatureAuthor}}</div>
-            <div class="list_detail">{{doc.literatureDetail}}</div>
-          </el-card>
+        <div class="authors">
+          <div v-for="(one_author, i) in oneLiterature.authors" class="author-list">
+            <img :src="one_author.userImgSrc" class="authorImg">
+            <div class="authorname">{{one_author.userName}}</div>
+          </div>
         </div>
-      </div>
+        <div class="read-time">
+          <div class="read-time-content">
+            {{oneLiterature.read_time}} Reads
+          </div>
+          <div class="edit-button" >
+            <l-button class="edit-button-1" @click="openEditWarn(oneLiterature)" size="small">修改</l-button>
+          </div>
+        </div>
 
+      </div>
     </div>
+
   </div>
 </template>
 
 <script>
+  import YLiterature from "@/components/common/y-literature/y-literature";
+  import { getMyLiterature } from "@/network/literature";
 export default {
   name: "Manage",
+  props: { userID : '' },
+  components: { YLiterature },
   data() {
     return {
-      page: '1',
-      totalPosts: "100",
       myLiteratureList: [
         {
+          literatureID: 0,
+          title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
+          authors: [
+            {
+              userID: 0,
+              userName: 'Yu Haomiao',
+              userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
+            }
+          ],
+          tags: ["tag 1", "tag 2"],
+          read_time: 10,
+        },
+        {
           literatureID: 1,
-          literatureTitle: "文章1",
-          literatureDetail: "摘要摘要摘要摘要摘要摘要摘要摘要",
-          literatureAuthor: "郭德纲",
+          title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
+          authors: [
+            {
+              userID: 0,
+              userName: 'Yu Haomiao',
+              userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
+            }
+          ],
+          tags: ["tag 1", "tag 2"],
+          read_time: 10,
         },
         {
           literatureID: 2,
-          literatureTitle: "文章2",
-          literatureDetail: "摘要摘要摘要摘要摘要摘要摘要摘要",
-          literatureAuthor: "郭德纲",
+          title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
+          authors: [
+            {
+              userID: 0,
+              userName: 'Yu Haomiao',
+              userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
+            }
+          ],
+          tags: ["tag 1", "tag 2"],
+          read_time: 1000,
         },
       ],
 
     };
   },
-  computed: {
-    total() {
-      return parseInt(this.totalPosts);
-    },
-    currentPage() {
-      return parseInt(this.page);
-    }
-  },
+  computed: {},
   methods: {
-    changePage(val) {
-      this.$router.push({
-        path: "/manage",
-        query: {
-          page: val.toString(),
-        }
-      });
-      this.$router.go(0);
+    gotoLiterature() {
+      this.$notify.success("跳转ing")
     },
     openEditWarn(doc){
       //修改文章确认提醒
-      this.$prompt('<span>输入修改后的链接</span></br>'+doc.literatureTitle, '修改操作', {
+      this.$prompt('<span>输入修改后的链接</span></br>'+doc.title, '修改操作', {
         dangerouslyUseHTMLString: true,
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -113,38 +119,9 @@ export default {
       //修改文章申请，将跳转到发布页面
     },
 
-    openDeleteWarn(doc) {
-      //删除文章确认提醒
-      this.$confirm('<span>将删除以下文章，需得到管理员申请，确认该操作吗？</span></br>'+doc.literatureTitle, '删除操作', {
-        dangerouslyUseHTMLString: true,
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除申请发送成功!'
-        });
-        this.sendDelete(doc);
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        });
-      });
-    },
-
-    sendDelete(doc){
-      //删除文章申请
-
-    },
   },
-  components: {},
   created() {
-    this.page = this.$route.query.page;
-    //return;
-    let start = ((parseInt(this.page) - 1) * 15).toString();
-    getMyList(this.sectorId, start, 15)
+    getMyLiterature(this.userID)
       .then(res => {
         console.log("getMyList");
         console.log(res);
@@ -158,38 +135,121 @@ export default {
 </script>
 
 <style scoped>
-  h1 {font-size:40px;}
-
-  .main{
-    margin: 20px auto;
-    width:60%;
-  }
-  .pageHeader {
-    margin: 1px auto;
+  .one-follow-literature {
+    width: 715px;
+    height: 170px;
+    border: 1px solid #dddddd;
     background-color: white;
-    height: auto;
+    padding: 30px 25px 27px 25px;
+    margin-bottom: 20px;
+  }
+
+  .title {
+    font-size: 0.9rem;
+    color: black;
+    font-weight: 700;
+    width: fit-content;
+    height: 25px;
+    line-height: 20px;
+    padding-left: 5px;
+    margin-bottom: 5px;
+  }
+
+  .title:hover {
+    cursor: pointer;
+    border-bottom: 1px solid black;
+  }
+
+  .tags {
+    width: 100%;
+    height: 32px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    margin-bottom: 5px;
   }
-  .top{
-    margin: 20px 20px;
-    font-size: 30px;
-    font-style: bold;
-    height: 50px;
+
+  .first-tag {
+    border-radius: 3px;
+    width: fit-content;
+    padding: 3px;
+    margin: 5px;
+    font-size: 0.8rem;
+    color: white;
+    background-color: #4F6EF2;
   }
-  .literatureList{
+
+  .first-tag:hover {
+    cursor: pointer;
+  }
+
+  .leftpart-tags {
+    border-radius: 3px;
+    width: fit-content;
+    padding: 3px;
+    margin: 5px;
+    font-size: 0.8rem;
+    border: 1px solid #4F6EF2;
+    background-color: white;
+    color: #4F6EF2;
+  }
+
+  .leftpart-tags:hover {
+    cursor: pointer;
+  }
+
+  .authors {
+    width: 100%;
+    height: 25px;
+    margin-bottom: 5px;
+  }
+
+  .author-list {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    margin: 0 auto;
+    align-items: center;
   }
-  .list_title{
-    font-size:20px;
+
+  .authorImg {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-top: 1.5px;
+    margin-left: 5px;
   }
-  .list_author{
-    margin-top: 5px;
-    font-size:15px;
+
+  .authorname {
+    font-size: 0.8rem;
+    color: #000000;
+    margin-left: 2px;
   }
-  .list_detail{
-    margin-top: 5px;
-    font-size:10px;
+
+  .authorname:hover {
+    cursor: pointer;
+    border-bottom: 1px solid #000000;
+  }
+
+  .read-time {
+    width: 100%;
+    height: 25px;
+    font-size: 0.8rem;
+    color: #999999;
+    padding-left: 5px;
+  }
+
+  .read-time-content {
+    width: 90%;
+    height: 100%;
+    margin-top: 10px;
+    float: left;
+  }
+
+  .edit-button {
+    width: 10%;
+    margin-right:0;
+    float: left;
+  }
+  .edit-button-1 {
+    margin-right:0;
   }
 </style>
