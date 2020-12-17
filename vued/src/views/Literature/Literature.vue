@@ -11,16 +11,16 @@
           <div class="authorname content">
             <span class="lable">作者：</span>
             <ul class="author-ul">
-          <li
-          class="author"
-            @click="toAuthor(index)"
-            v-for="(item, index) in literature.authorList"
-            :key="index"
-          >
-            <l-author :author="item"></l-author>
-          </li>
-        </ul>
-            
+              <li
+                class="author"
+                @click="toAuthor(item.authorID)"
+                v-for="(item, index) in literature.authorList"
+                :key="index"
+              >
+                <l-author :author="item"></l-author>
+              </li>
+            </ul>
+
             <!-- <el-link href="?" target="_blank">{{
               literature.authorName
             }}</el-link> -->
@@ -34,24 +34,9 @@
           </div>
           <div class="keyword content">
             <span class="lable">关键词：</span>
-            
-            <el-link
-              v-for="(item, index) in literature.keyWord"
-              :key="index"
-              href="???"
-            >
-              {{ item.str }}
-            </el-link>
-          </div>
-          <!-- <div class="doi content">
-            <span class="lable">DOI：</span>
-            <span>{{ literature.DOI }}</span>
-          </div> -->
-          <div class="classification content">
-            <span class="lable">分类：</span>
 
             <el-link
-              v-for="(item, index) in literature.classification"
+              v-for="(item, index) in literature.keyWord"
               :key="index"
               href="???"
             >
@@ -114,7 +99,9 @@
           <li
             class="op-item"
             @click="toChild(index)"
-            :class="[currentIndex == index ? 'op-item--active' : 'op-item--inside']"
+            :class="[
+              currentIndex == index ? 'op-item--active' : 'op-item--inside',
+            ]"
             v-for="(item, index) in navList"
             :key="index"
           >
@@ -133,76 +120,63 @@
 <script>
 import LFollowlicard from "./childCpn/followlicard.vue";
 import LAuthor from "./childCpn/author.vue";
+import { getLiterature } from "network/literature";
 
 export default {
   name: "Literature",
   components: {
     LFollowlicard,
-    LAuthor
+    LAuthor,
   },
   data() {
     return {
       literature: {
         literatureID: "123",
         title: "Saber我的",
-        authorList:[
+        authorList: [
           {
-          autherID:"",
-        realName: "阿尔托莉雅",
-        organization: "不列颠",
-        image: "test",
-        introduction:
-          "身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世.身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世",
-        },
-          {
-            authorID:"",
-      realName:"lw",
-      image:"test",
-      organization:"",
-      introduction:"",
+            autherID: "123",
+            realName: "阿尔托莉雅",
+            organization: "不列颠",
+            work: "",
+            image: "test",
+            introduction:
+              "身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世.身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世",
           },
           {
-            authorID:"",
-      realName:"lw",
-      image:"test",
-      organization:"",
-      introduction:"",
+            authorID: "",
+            realName: "lw",
+            work: "",
+            image: "test",
+            organization: "",
+            introduction: "",
+          },
+          {
+            authorID: "",
+            realName: "lw",
+            work: "",
+            image: "test",
+            organization: "",
+            introduction: "",
           },
         ],
-        
+
         abstract:
           "Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的",
         keyWord: [
           {
-            id: 1,
             str: "Saber我的",
           },
           {
-            id: 2,
             str: "Saber我的",
           },
           {
-            id: 3,
             str: "Saber我的",
           },
         ],
-        classification: [
-          {
-            id: 1,
-            str: "fate",
-          },
-          {
-            id: 2,
-            str: "stay",
-          },
-          {
-            id: 3,
-            str: "night",
-          },
-        ],
-        download:"",
+        download: "",
       }, //文献
-      
+
       staroff: true,
       staron: false,
       navList: [
@@ -222,7 +196,6 @@ export default {
           name: "文献评论",
           router: "review",
         },
-        
       ],
     };
   },
@@ -234,6 +207,20 @@ export default {
       let target = this.navList[index].router;
       this.$router.push("/literature/" + target);
     },
+    toAuthor(authorID) {
+      this.$router.push({
+        path: "/profile",
+        query: {
+          userID: authorID,
+        },
+      });
+    },
+  },
+  create(){
+    getLiterature(this.$route.query.literatureID)
+    .then(res => {
+      this.literature = res; 
+    })
   },
   computed: {
     currentIndex() {
@@ -285,20 +272,20 @@ export default {
   /* background: #dfe6e9; */
   width: 750px;
 }
-.top-left .author{
-  margin-right: 10px;  
+.top-left .author {
+  margin-right: 10px;
 }
-.top-left .author-ul{
+.top-left .author-ul {
   display: flex;
 }
 .top-right {
   width: 250px;
-  margin-top: 50px;
+  margin-top: 30px;
 }
 .top-right > .a1 {
   font-size: 16px;
   font-weight: 600;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 .top-right > .a2 {
   display: flex;
@@ -328,8 +315,6 @@ export default {
   font-size: 14px;
   padding-bottom: 5px;
 }
-
-
 
 .op-item--inside {
   color: #6b757b;
