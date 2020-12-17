@@ -294,7 +294,7 @@ export default {
 }
 
 .post-name {
-  font-weight: bold;
+  /*font-weight: bold;*/
 }
 
 .el-input__inner,
