@@ -23,7 +23,13 @@
           <div class="message__time">
             {{ message.sendTime }}
           </div>
-          <l-button @click="reply" class="my-button" type="text" size="small">
+          <l-button
+            class="message__btn"
+            :active="isOpen"
+            @click="reply"
+            type="text"
+            size="small"
+          >
             回复
           </l-button>
         </div>
@@ -37,7 +43,7 @@
         <div class="message-aside__text">删除该消息</div>
       </div>
     </div>
-    <div class="message__open">
+    <div v-if="isOpen" class="message__open">
       <div class="message__open__left">
         <img :src="$store.state.user.image" alt="" />
       </div>
@@ -79,20 +85,13 @@ export default {
   computed: {},
   data() {
     return {
-      openAssure: false, // 是否打开确认框
-      openType: "", // 确认框类型
-      assureTitle: "", // 确认框标题
-      assureContent: "" // 确认框内容
+      isOpen: false
     };
   },
   methods: {
     reply() {
       console.log(123);
-      this.$refs.hover.showHover({
-        title: "回复消息",
-        submitBtn: "回复",
-        cancelBtn: "取消"
-      });
+      this.isOpen = !this.isOpen;
     },
     assureReply() {}
   }
@@ -157,6 +156,10 @@ export default {
   min-width: 50px;
 }
 
+.message__btn {
+  margin-left: 15px;
+}
+
 .my-button {
   margin-left: 5px;
   padding: 5px;
@@ -205,9 +208,11 @@ export default {
 .message__open {
   align-items: center;
   display: flex;
+  margin-bottom: 24px;
 }
 
 .message__open__left {
+  height: 60px;
   width: 60px;
 }
 
@@ -216,5 +221,48 @@ export default {
   width: 46px;
   height: 46px;
   border-radius: 50%;
+}
+
+.message__open__middle {
+  align-items: center;
+  display: flex;
+  flex: 1;
+}
+
+.message__open__middle textarea {
+  width: 100%;
+  height: 65px;
+  resize: none;
+  background-color: #f4f5f7;
+  border-radius: 4px;
+  border: 1px solid #e9eaec;
+  color: #555;
+  font-size: 13px;
+  overflow: auto;
+  padding: 5px 10px;
+}
+
+.message__open__middle textarea {
+  outline: 0;
+  margin: 0;
+}
+
+.message__open__right {
+  width: 80px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.message__open__right button {
+  align-items: center;
+  border-radius: 4px;
+  background-color: var(--color-main);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  height: 64px;
+  outline: none;
+  width: 70px;
 }
 </style>
