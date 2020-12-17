@@ -1,13 +1,12 @@
 <template>
   <!-- 动态页面 -->
   <div id="formPost" data-app="true">
-    <m-header></m-header>
+    <m-app-header></m-app-header>
 
     <!-- 动态内容 -->
     <div class="post-container">
       <div class="card">
         <div class="card-header">
-          <!-- TODO: 头像姓名可点击 -->
           <div class="avatar">
             <v-btn fab icon @click="jumpToProfile(postInfo.creatorId)">
               <v-avatar size="48px">
@@ -43,7 +42,7 @@
             <div class="post-attr">
               <div class="post-reply-number">
                 <v-icon size="0.875rem">
-                  mdi-reply
+                  comment
                 </v-icon>
                 {{ postInfo.replyNum }}
               </div>
@@ -82,7 +81,12 @@
           <div class="card-divider" v-if="comment.floor != 1"></div>
           <div class="card-header">
             <div class="avatar">
-              <v-btn fab icon x-small @click="jumpToProfile(comment.commenterId)">
+              <v-btn
+                fab
+                icon
+                x-small
+                @click="jumpToProfile(comment.commenterId)"
+              >
                 <v-avatar size="32px">
                   <img :src="comment.commenterAvatar" />
                 </v-avatar>
@@ -120,7 +124,7 @@
             </div>
           </div>
           <div class="card-item">
-            <div class="post-content">
+            <div class="comment-content">
               {{ comment.commentContent }}
             </div>
           </div>
@@ -168,7 +172,7 @@
     </div>
 
     <!-- 举报对话框  -->
-    <v-dialog v-model="reportDialog" max-width="800">
+    <v-dialog v-model="reportDialog" max-width="600">
       <v-card elevation="3">
         <v-card-title v-if="reportPost == true">举报动态</v-card-title>
         <v-card-title v-else>举报评论</v-card-title>
@@ -206,7 +210,7 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="deleteDialog" max-width="800">
+    <v-dialog v-model="deleteDialog" max-width="400">
       <v-card elevation="3">
         <div v-if="deletePost == true">
           <v-card-title>删除动态</v-card-title>
@@ -326,16 +330,16 @@ export default {
         //     commentContent: "DI nb!",
         //     commentTime: "8 分钟前",
         //   },
-        //   {
-        //     commentId: "3",
-        //     commenterId: "21",
-        //     commenterName: "Spam  Bot",
-        //     commenterAvatar: "https://i.loli.net/2020/11/30/jm2i7g9qL61SkE8.png",
-        //     floor: 4,
-        //     commentContent:
-        //       "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        //     commentTime: "刚刚",
-        //   },
+        {
+          commentId: "3",
+          commenterId: "21",
+          commenterName: "Spam  Bot",
+          commenterAvatar: "https://i.loli.net/2020/11/30/jm2i7g9qL61SkE8.png",
+          floor: 4,
+          commentContent:
+            "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+          commentTime: "刚刚",
+        },
         //   {
         //     commentId: "1233",
         //     commenterId: "1",
@@ -604,7 +608,7 @@ html {
 .poster-name {
   display: flex;
   align-items: center;
-  font-size: 18px;
+  font-size: 1.15rem;
   font-weight: bold;
   margin-left: 10px;
 }
@@ -623,7 +627,7 @@ html {
   font-weight: bold;
   margin-bottom: 10px;
   line-height: 1.2;
-  font-size: 1.375rem;
+  font-size: 1.5rem;
   height: fit-content;
 }
 
@@ -650,7 +654,7 @@ html {
 .post-content {
   height: fit-content;
   line-height: 1.35;
-  font-size: 14px;
+  font-size: 1rem;
   margin-top: 10px;
   margin-bottom: 15px;
 }
@@ -671,7 +675,7 @@ html {
 }
 
 .tag-content {
-  font-size: 0.67rem;
+  font-size: 0.8rem;
   display: inline-block;
   line-height: 1.3;
   color: #555;
@@ -694,7 +698,7 @@ html {
 .commenter-name {
   display: flex;
   align-items: center;
-  font-size: 14px;
+  font-size: 0.95rem;
   font-weight: bold;
   margin-left: 10px;
 }
@@ -730,12 +734,20 @@ html {
   margin-top: 20px;
 }
 
+.comment-content {
+  height: fit-content;
+  line-height: 1.2;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
 .footer {
   display: flex;
   justify-content: space-between;
   margin: auto;
   padding-bottom: 10px;
-  width: 30%;
+  width: 40%;
 }
 
 .el-input__inner,

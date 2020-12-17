@@ -18,30 +18,20 @@
               <img src="../../assets/icons/profile/edit.svg" class="profile-icon">
             </div>
           </div>
-          <div class="publish">
-            <div class="publish-button">发表文献</div>
-            <div class="publish-button">私 信</div>
-            <div class="publish-button">管理我的文献</div>
-          </div>
         </div>
         <div class="profile-op">
-          <div class="op-favor">Favor</div>
+          <div class="op-favor">收藏文献</div>
           <div class="bar"></div>
         </div>
       </div>
     </div>
     <div class="profile-content">
       <div class="content-left">
-        <y-literature v-for="(onefollowingLiterature, i) in favorLiteratures"
-                      :id="onefollowingLiterature.literatureID"
-                      :title="onefollowingLiterature.title"
-                      :authors="onefollowingLiterature.authors"
-                      :tags="onefollowingLiterature.tags"
-                      :read_time="onefollowingLiterature.read_time"></y-literature>
+        <favor :userID="userID"></favor>
       </div>
       <div class="content-right">
         <div class="user-intro">
-          <div class="user-intro-header">
+          <div class="user-intro-header" v-if="userInfoStatue">
             <div class="user-intro-header-content">
               Current affiliation
             </div>
@@ -50,10 +40,10 @@
               <img src="../../assets/icons/profile/edit.svg" class="profile-icon">
             </div>
           </div>
-          <div class="user-intro-content">
+          <div class="user-intro-content" v-if="userInfoStatue">
             <div class="intro-content">
               <div class="intro-content-details">
-                <div class="intro-font-1">{{ introName }}</div>
+                <div class="intro-font-1" @click="gotoIntro(authorID)">{{ introName }}</div>
                 <div class="intro-font-2">
                   {{introLocation}}
                 </div>
@@ -65,6 +55,9 @@
             <div class="intro-img">
               <img :src="introImg" class="intro-img-details">
             </div>
+          </div>
+          <div class="user-application" v-if="!userInfoStatue">
+            <div class="application" @click="applyForIntro()">申请加入门户</div>
           </div>
         </div>
         <div class="user-follow">
@@ -81,24 +74,6 @@
                   <div class="intro-style">{{ onefollowingUser.intro }}</div>
                 </div>
                 <div class="following-op" @click="cancleFollow(onefollowingUser.followingID)">unfollow</div>
-              </div>
-            </div>
-          </div>
-          <div class="befollowed">
-            <div class="follow-part-head">be followed (2)</div>
-            <div class="befollowed-content">
-              <div class="one-following" v-for="(befollowed, i) in followers">
-                <img :src="befollowed.imgSrc" class="intro-img img-plus">
-                <div class="following-info">
-                  <div class="name-style">{{ befollowed.name }}</div>
-                  <div class="intro-style">{{ befollowed.intro }}</div>
-                </div>
-                <div class="befollowed-op-followed" v-if="befollowed.isfollowed">
-                  followed
-                </div>
-                <div class="befollowed-op-to-follow" v-if="!befollowed.isfollowed" @click="doFollow(befollowed.followerID)">
-                  follow
-                </div>
               </div>
             </div>
           </div>
@@ -131,12 +106,14 @@
 
 <script>
 import yLiterature from '@/components/common/y-literature/y-literature'
+import Favor from "@/views/Profile/Favor";
 export default {
   name: "Profile",
   data() {
     return {
       // user
       user: '',
+      userID: '0',
 
       // 用户信息
       userName: 'Yu Haomiao',
@@ -145,6 +122,7 @@ export default {
       userIntroState: true,
       userIntro: "北航软件学院",
       userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
+      userInfoStatue: false,
 
       // user收藏文献集合
       favorLiteratures: [
@@ -277,10 +255,20 @@ export default {
     },
     doFollow(selectUserID) {
       this.$notify.success("关注成功")
+    },
+    opSwitch(opID) {
+      this.op = opID
+    },
+    gotoIntro(authorID) {
+      this.$router.push({path: '/intro'})
+    },
+    applyForIntro() {
+      this.$router.push({path: '/applyIntro'})
     }
   },
   components: {
-    'y-literature': yLiterature
+    'y-literature': yLiterature,
+    'favor': Favor
   },
 };
 </script>
@@ -321,6 +309,7 @@ export default {
   /*border: 1px solid red;*/
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 .headshot-img {
@@ -339,8 +328,8 @@ export default {
   justify-content: center;
   opacity: 0;
   position: absolute;
-  left: 185px;
-  top: 78px;
+  left: 13px;
+  top: 20px;
   right: 0;
   bottom: 0;
   transition: ease-in-out 0.3s;
@@ -392,16 +381,13 @@ export default {
 .publish {
   width: calc(100% - 130px - 665px);
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .publish-button {
-  margin-top: 8%;
+  margin: 0 auto;
+  margin-top: 15%;
   padding: 10px;
   width: 70%;
-  /*border: 1px solid black;*/
   border-radius: 2px;
   text-align: center;
   background-color: #4F6EF2;
@@ -418,10 +404,17 @@ export default {
   flex-direction: column;
 }
 
+
 .op-favor {
   margin-top: 20px;
   font-size: 0.8rem;
-  margin-left: 30px;
+  margin-left: 20px;
+  margin-right: 30px;
+  max-width: fit-content;
+}
+
+.op-favor:hover {
+  cursor: pointer;
 }
 
 .bar {
@@ -595,6 +588,28 @@ export default {
   margin-left: 5%;
   font-size: 0.8rem;
   color: #777;
+}
+
+.user-application {
+  width: 100%;
+  height: 100px;
+}
+
+.application {
+  margin: 0 auto;
+  margin-top: 55px;
+  max-width: 50%;
+  padding: 10px;
+  color: white;
+  background-color: #4F6EF2;
+  border-radius: 2px;
+  text-align: center;
+  font-size: 0.800rem;
+  letter-spacing: 2px;
+}
+
+.application:hover {
+  cursor: pointer;
 }
 
 .user-intro-change {

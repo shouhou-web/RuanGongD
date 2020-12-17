@@ -12,6 +12,7 @@
               <el-pagination
                 layout="prev, pager, next"
                 :total="total"
+                :page-size="pageSize"
                 :current-page="currentPage"
                 @current-change="changePage"
               >
@@ -73,7 +74,7 @@
                 elevation="1"
                 color="#4F6EF2"
                 @click="followSector()"
-                ><div>关注</div></v-btn
+                ><div>{{followedText}}</div></v-btn
               >
             </el-col>
           </el-row>
@@ -137,7 +138,7 @@
                       <img
                         alt="Avatar"
                         :src="item.editorAvatar"
-                        @click="goToUser(item.userId)"
+                        @click="goToUser(item.editorId)"
                       />
                     </v-avatar>
                   </v-card-text>
@@ -146,7 +147,7 @@
                   <v-card-text>
                     <div class="editInfo">
                       <span>{{ editStr0 }}</span>
-                      <span class="editorName" @click="goToUser(item.userId)">
+                      <span class="editorName" @click="goToUser(item.editorId)">
                         <span>
                           {{ item.editorName }}
                         </span>
@@ -170,7 +171,12 @@
 </template>
 
 <script>
-import { getPosts, isFollowed, followSector } from "network/forum.js";
+import {
+  getPosts,
+  isFollowed,
+  followSector,
+  getPostNum
+} from "network/forum.js";
 import MHeader from "../../components/common/m-header/m-header.vue";
 export default {
   name: "ForumSector",
@@ -186,7 +192,8 @@ export default {
       createStr1: " 创建于 ",
       editStr0: "由 ",
       editStr1: "最后编辑于 ",
-      totalPosts: "123",
+      pageSize: 0,
+      totalPosts: "50",
       sortType: [
         { name: "最近更新", type: "0" },
         { name: "开始日期", type: "1" },
@@ -226,12 +233,11 @@ export default {
     },
     goToUser(id) {
       //todo: 跳转到用户
-      /*
+
       this.$router.push({
-        path: "/",
-        query: {}
+        path: "/profile",
+        query: { userID: id }
       });
-      */
     },
     goToPost(id) {
       //跳转到动态
@@ -311,6 +317,17 @@ export default {
   },
   computed: {
     total() {
+      //return parseInt(this.totalPosts);
+      getPostNum(this.sectorId)
+        .then(res => {
+          console.log(res);
+          if (res.data.total) {
+            this.totalPosts = res.data.total;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
       return parseInt(this.totalPosts);
     },
     currentPage() {
@@ -321,6 +338,7 @@ export default {
     },
     currentUser() {
       //todo: userId
+      return this.$store.state.user.userID;
     }
   },
   components: { MHeader },
@@ -329,7 +347,7 @@ export default {
     this.page = this.$route.query.page || "1";
     this.sort = this.$route.query.sort || "0";
     this.keyword = this.$route.query.keyword || "";
-    let pageSize = this.$store.state.pageSize;
+    this.pageSize = this.$store.state.pageSize;
     //return;
     console.log(
       "forumSector:\n" +
@@ -360,7 +378,7 @@ export default {
       .then(res => {
         console.log("getPosts");
         console.log(res);
-        this.isFollowed = res.data.followedl;
+        this.isFollowed = res.data.followed;
       })
       .catch(err => {
         console.log(err);

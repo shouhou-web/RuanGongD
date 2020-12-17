@@ -30,10 +30,12 @@ const Review = () => import("views/Literature/Review.vue");
 const Message = () => import("views/Message/Message.vue");
 const System = () => import("views/Message/System.vue");
 const Comment = () => import("views/Message/Comment.vue");
+const Consult = () => import("views/Message/Consult.vue");
 
 // 个人相关组件
 const Profile = () => import("views/Profile/Profile.vue");
 const Intro = () => import("views/Profile/Intro.vue");
+const ApplyIntro = () => import("views/Profile/ApplyIntro.vue");
 
 // 管理员相关组件
 const Root = () => import("views/Root/Root.vue");
@@ -45,6 +47,12 @@ const Doc = () => import("views/Root/childCpn/Report/childCpn/Doc.vue");
 const Gate = () => import("views/Root/childCpn/Report/childCpn/Gate.vue");
 const Creport = () => import("views/Root/childCpn/Report/childCpn/Comment.vue");
 const Post = () => import("views/Root/childCpn/Report/childCpn/Post.vue");
+
+//登录相关组件
+const Login = () => import("views/Login/Login.vue");
+
+//注册相关组件
+const Register = () => import("views/Register/Register.vue");
 
 //1.安装插件
 Vue.use(VueRouter);
@@ -59,6 +67,16 @@ const routes = [
     // redirect: "/home/workSpace"
   },
   {
+    path: "/login",
+    name: "Login",
+    component: Login
+  },
+  {
+    path: "/register",
+    name: "Register",
+    component: Register
+  },
+  {
     path: "/search",
     name: "Search",
     component: Search
@@ -67,6 +85,11 @@ const routes = [
     path: "/profile",
     name: "Profile",
     component: Profile
+  },
+  {
+    path: "/applyIntro",
+    name: "ApplyIntro",
+    component: ApplyIntro
   },
   {
     path: "/literature",
@@ -207,6 +230,11 @@ const routes = [
         path: "/message/comment",
         name: "System",
         component: Comment
+      },
+      {
+        path: "/message/consult",
+        name: "Consult",
+        component: Consult
       }
     ]
   },

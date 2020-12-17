@@ -1,23 +1,27 @@
 <template>
-  <div class="report-all">
-    <div class="report-nav">
-      <ul class="nav-all">
-        <li
-          @click="toChild(index)"
-          v-for="(item, index) in navList"
-          :key="index"
-        >
-          <div
-            :class="[
-              currentIndex == index ? 'nav-item--active' : 'nav-item--inside'
-            ]"
+  <div>
+    <div class="report-all">
+      <div class="report-nav">
+        <ul class="nav-all">
+          <li
+            @click="toChild(index)"
+            v-for="(item, index) in navList"
+            :key="index"
           >
-            {{ item.name }}
-          </div>
-        </li>
-      </ul>
+            <div
+              :class="[
+                currentIndex == index ? 'nav-item--active' : 'nav-item--inside'
+              ]"
+            >
+              {{ item.name }}
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
-    <router-view></router-view>
+    <transition name="fade" mode="out-in">
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
@@ -74,6 +78,8 @@ export default {
   background-color: #ffffff;
   border: #e3e2e6 solid 0.5px;
   border-radius: 4px;
+  height: 60px;
+  margin-bottom: 20px;
   width: 900px;
 }
 
@@ -146,5 +152,13 @@ export default {
   position: absolute;
   transition: all 0.3s;
   width: 100%;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.25s;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>

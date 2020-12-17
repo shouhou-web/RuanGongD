@@ -144,12 +144,11 @@ export default {
     },
     goToUser(id) {
       //todo: 跳转到用户
-      /*
+
       this.$router.push({
         path: "/profile",
-        query: {userID:}
+        query: { userID: id }
       });
-      */
     },
     goToSector(id) {
       //todo: 跳转到分区
@@ -169,6 +168,11 @@ export default {
         path: "/forumPost",
         query: { postId: id }
       });
+    }
+  },
+  computed: {
+    currentUser() {
+      return this.$store.state.user.userID;
     }
   },
   components: { MHeader, CreatePost, CreateConsultation },
