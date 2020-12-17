@@ -56,6 +56,20 @@
               <div class="post-time">创建于 {{ postInfo.createTime }}</div>
             </div>
             <div class="post-content">{{ postInfo.postContent }}</div>
+            <div
+              class="post-cite"
+              v-if="postInfo.citeId != '-1'"
+              @click="jumpToLiterature(citedLiterature.literatureID)"
+            >
+              <div class="post-cite-item">
+                <div class="post-cite-title">
+                  {{ citedLiterature.title }}
+                </div>
+                <div class="post-cite-abstract">
+                  {{ citedLiterature.abstract }}
+                </div>
+              </div>
+            </div>
             <div class="post-tags">
               <div class="tag-item" v-for="tag in postInfo.postTags" :key="tag">
                 <div class="tag-content">{{ tag }}</div>
@@ -192,6 +206,7 @@
                 rows="5"
                 auto-grow
                 required
+                dense
                 color="var(--color-main)"
                 :rules="reportRule"
               ></v-textarea>
@@ -248,7 +263,8 @@ import {
   reportComment,
   deleteComment,
   commentPost
-} from "network/forum.js";
+} from "@/network/forum";
+import getLiterature from "@/network/literature";
 import MHeader from "../../components/common/m-header/m-header.vue";
 
 export default {
@@ -278,21 +294,6 @@ export default {
           (v.length <= 800 && v.length >= 5) ||
           "评论内容长度在 5-800 个字符之间"
       ],
-      // reportRule: {
-      //   reportContent: [
-      //     {
-      //       required: true,
-      //       message: "请输入举报理由",
-      //       trigger: "blur"
-      //     },
-      //     {
-      //       min: 5,
-      //       max: 800,
-      //       message: "举报理由长度在 5-800 个字符之间",
-      //       trigger: "blur"
-      //     }
-      //   ]
-      // },
       reportRule: [
         v => !!v,
         v =>
@@ -310,12 +311,12 @@ export default {
         postTags: ["Lorem", "ipsum", "dolor"],
         viewNum: "1926",
         replyNum: "817",
-        citeId: "-1"
+        citeId: "123"
       },
       comments: [
         {
           commentId: "1",
-          commenterId: "1",
+          commenterId: "14",
           commenterName: "BI",
           commenterAvatar: "https://i.loli.net/2020/11/27/9fbGvYknV8KejFS.png",
           floor: 2,
@@ -324,7 +325,7 @@ export default {
         },
         {
           commentId: "2",
-          commenterId: "1",
+          commenterId: "13",
           commenterName: "AI",
           commenterAvatar: "https://i.loli.net/2020/11/27/3tz2XEraSwl8skK.png",
           floor: 3,
@@ -342,24 +343,31 @@ export default {
         //   },
         {
           commentId: "3",
-          commenterId: "1",
+          commenterId: "12",
           commenterName: "Spam  Bot",
           commenterAvatar: "https://i.loli.net/2020/11/30/jm2i7g9qL61SkE8.png",
           floor: 4,
           commentContent:
             "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
           commentTime: "刚刚"
+        },
+        {
+          commentId: "1233",
+          commenterId: "1",
+          commenterName: "Codevka",
+          commenterAvatar: "https://i.loli.net/2020/11/26/soiOjIlZFpELuTW.png",
+          floor: 5,
+          commentContent: "No spam.",
+          commentTime: "刚刚"
         }
-        //   {
-        //     commentId: "1233",
-        //     commenterId: "1",
-        //     commenterName: "Codevka",
-        //     commenterAvatar: "https://i.loli.net/2020/11/26/soiOjIlZFpELuTW.png",
-        //     floor: 5,
-        //     commentContent: "No spam.",
-        //     commentTime: "刚刚",
-        //   },
-      ]
+      ],
+      citedLiterature: {
+        literatureID: "123",
+        title: "Lorem ipsum dolor sit amet",
+        abstract:
+          "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, ..."
+        // 只显示摘要的前150行
+      }
     };
   },
   methods: {
@@ -379,6 +387,16 @@ export default {
         path: "/profile",
         query: {
           userID: userId
+        }
+      });
+    },
+
+    jumpToLiterature(literatureId) {
+      console.log("jump to " + literatureId);
+      this.$router.push({
+        path: "/literature",
+        query: {
+          // TODO
         }
       });
     },
@@ -406,6 +424,11 @@ export default {
             console.log(res);
             if (res.data.result == "true") {
               this.reportDialog = false;
+              this.$notify({
+                title: "操作成功",
+                message: "举报成功！请等候管理员处理",
+                type: "success"
+              });
             } else {
               this.$notify.error({
                 title: "操作失败",
@@ -431,6 +454,11 @@ export default {
             console.log(res);
             if (res.data.result == "true") {
               this.reportDialog = false;
+              this.$notify({
+                title: "操作成功",
+                message: "举报成功！请等候管理员处理",
+                type: "success"
+              });
             } else {
               this.$notify.error({
                 title: "操作失败",
@@ -550,14 +578,24 @@ export default {
               commentTime: "刚刚"
             });
             // FIXME: 跳到其他页面，再使用浏览器的返回时，无法持久存放修改后的数据
-            this.$notify.success("评论发表成功！");
+            this.$notify({
+              title: "操作成功",
+              message: "评论发表成功！",
+              type: "success"
+            });
             this.commentContent = "";
           } else {
-            this.$notify.error("评论失败，请稍后再试。");
+            this.$notify.error({
+              title: "操作失败",
+              message: "评论失败，请稍后再试。"
+            });
           }
         })
         .catch(err => {
-          this.$notify.error("评论失败，请稍后再试。");
+          this.$notify.error({
+            title: "操作失败",
+            message: "评论失败，请稍后再试。"
+          });
           console.log(err);
         });
     }
@@ -570,24 +608,37 @@ export default {
     // this.userAvatar = this.$store.state.user.imagePath;
     console.log("postId: " + this.postId + "\nuserId: " + this.userId);
 
-    // getPostInfo(this.userId, this.postId)
-    //   .then((res) => {
-    //     console.log("getPostInfo");
-    //     console.log(res);
-    //     this.postInfo.postName = res.data.postName;
-    //     this.postInfo.postContent = res.data.postContent;
-    //     this.postInfo.replyNum = res.data.replyNum;
-    //     this.postInfo.viewNum = res.data.viewNum;
-    //     this.postInfo.creatorId = res.data.creatorId;
-    //     this.postInfo.creatorAvatar = res.data.creatorAvatar;
-    //     this.postInfo.createTime = res.data.createTime;
-    //     this.postInfo.postTags = res.data.tags;
-    //     this.postInfo.citeId = res.data.citeId;
-    //     this.comments = res.data.comments;
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    getPostInfo(this.userId, this.postId)
+      .then(res => {
+        console.log("getPostInfo");
+        console.log(res);
+        this.postInfo.postName = res.data.postName;
+        this.postInfo.postContent = res.data.postContent;
+        this.postInfo.replyNum = res.data.replyNum;
+        this.postInfo.viewNum = res.data.viewNum;
+        this.postInfo.creatorId = res.data.creatorId;
+        this.postInfo.creatorAvatar = res.data.creatorAvatar;
+        this.postInfo.createTime = res.data.createTime;
+        this.postInfo.postTags = res.data.tags;
+        this.postInfo.citeId = res.data.citeId;
+        this.comments = res.data.comments;
+
+        getLiterature(this.postInfo.citeId)
+          .then(res => {
+            console.log(getLiterature);
+            console.log(res);
+            this.citedLiterature.literatureID = res.data.literatureID;
+            this.citedLiterature.title = res.data.title;
+            this.citedLiterature.abstract =
+              res.data.abstract.slice(0, 150) + "..."; // 摘要截断
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      })
+      .catch(err => {
+        console.log(err);
+      });
 
     this.comments.sort(function(a, b) {
       return a.floor - b.floor;
@@ -717,7 +768,37 @@ html {
   line-height: 1.35;
   font-size: 1rem;
   margin-top: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.post-cite {
+  border: 1px solid #efefef;
+  margin: 0 auto;
+  width: 50%;
+  margin-bottom: 20px;
+  background-color: #efefef;
+  border-radius: 16px;
+}
+
+.post-cite:hover {
+  cursor: pointer;
+}
+
+.post-cite-item {
+  margin: 15px 21px 15px 21px;
+}
+
+.post-cite-title {
+  font-weight: bold;
+  font-size: 1.1rem;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 8px;
+}
+
+.post-cite-abstract {
+  font-size: 0.8rem;
+  line-height: 1.25;
 }
 
 .post-reply-button {
@@ -741,7 +822,7 @@ html {
   line-height: 1.3;
   color: #555;
   padding: 5px;
-  background-color: #dfdfdf;
+  background-color: #efefef;
   padding-top: 0.16em;
   padding-bottom: 0.16em;
   margin-top: -0.16em;

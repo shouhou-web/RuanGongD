@@ -307,42 +307,42 @@ export default {
           this.createPostForm.postTags.length
         );
     }
+  },
+  created() {
+    this.userId = this.$store.state.user.userID; // TODO 等待统一
+    this.createPostForm.userId = this.userId;
+    this.createPostForm.citeId = "-1";
+    // 获取所有分区，以及每个分区下的 tag
+    getAllTags()
+      .then(res => {
+        console.log("getAllTags");
+        console.log(res);
+        this.sectorList = res.data.sectorList;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    getMyLiterature(this.userId)
+      .then(res => {
+        console.log("getMyLiterature");
+        console.log(res);
+        var tmpLiterature = Object;
+        for (var literature of res.data.myLiteratureList) {
+          // for (var literature of tmpList) {
+          tmpLiterature.literatureID = literature.literatureID;
+          tmpLiterature.title = literature.title;
+          tmpLiterature.authors = [];
+          for (var author of literature.authors) {
+            tmpLiterature.authors.push(author.userName);
+          }
+          this.myLiteratureList.push({ ...tmpLiterature });
+        }
+        console.log(this.myLiteratureList);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
-  // created() {
-  //   this.userId = this.$store.state.user.userID; // TODO 等待统一
-  //   this.createPostForm.userId = this.userId;
-  //   this.createPostForm.citeId = "-1";
-  //   // 获取所有分区，以及每个分区下的 tag
-  //   getAllTags()
-  //     .then(res => {
-  //       console.log("getAllTags");
-  //       console.log(res);
-  //       this.sectorList = res.data.sectorList;
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //     });
-  //   getMyLiterature(this.userId)
-  //     .then(res => {
-  //       console.log("getMyLiterature");
-  //       console.log(res);
-  //       var tmpLiterature = Object;
-  //       for (var literature of res.data.myLiteratureList) {
-  //         // for (var literature of tmpList) {
-  //         tmpLiterature.literatureID = literature.literatureID;
-  //         tmpLiterature.title = literature.title;
-  //         tmpLiterature.authors = [];
-  //         for (var author of literature.authors) {
-  //           tmpLiterature.authors.push(author.userName);
-  //         }
-  //         this.myLiteratureList.push({ ...tmpLiterature });
-  //       }
-  //       console.log(this.myLiteratureList);
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //     });
-  // }
 };
 </script>
 
