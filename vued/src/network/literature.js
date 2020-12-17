@@ -10,3 +10,14 @@ export function createLiterature(createLiForm) {
     method: "post"
   });
 }
+
+//获取文献详情
+export function getLiterature(literatureID) {
+  return request({
+    url: "/getLiterature",
+    params: {
+      literatureID
+    },
+    method: "post"
+  });
+}
