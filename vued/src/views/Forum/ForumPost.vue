@@ -1,6 +1,7 @@
+<!-- TODO 左上角，返回到来源 -->
 <template>
   <!-- 动态页面 -->
-  <div id="formPost" data-app="true">
+  <div id="forumPost" data-app="true">
     <m-app-header></m-app-header>
 
     <!-- 动态内容 -->
@@ -78,7 +79,7 @@
           v-for="comment in comments"
           :key="comment.floor"
         >
-          <div class="card-divider" v-if="comment.floor != 1"></div>
+          <div class="card-divider" v-if="comment.floor != 2"></div>
           <div class="card-header">
             <div class="avatar">
               <v-btn
@@ -172,41 +173,43 @@
     </div>
 
     <!-- 举报对话框  -->
-    <v-dialog v-model="reportDialog" max-width="600">
+    <v-dialog v-model="reportDialog" max-width="800" persistent>
       <v-card elevation="3">
-        <v-card-title v-if="reportPost == true">举报动态</v-card-title>
-        <v-card-title v-else>举报评论</v-card-title>
-        <v-card-text>
-          <el-form
-            :model="reportForm"
-            label-width="80px"
-            :rules="reportRule"
-            ref="reportForm"
-          >
-            <el-form-item label="举报理由" prop="reportContent">
-              <el-input
-                class="report-content"
-                type="textarea"
+        <v-form v-model="reportFormValid">
+          <v-card-title v-if="reportPost == true">举报动态</v-card-title>
+          <v-card-title v-else>举报评论</v-card-title>
+          <v-card-text>
+            <div class="form-item">
+              <div class="form-label">
+                <span class="required-star">*</span>举报理由
+              </div>
+              <v-textarea
+                class="report-textarea"
                 v-model="reportForm.reportContent"
-                placeholder="请输入举报理由"
-                :autosize="{ minRows: 5, maxRows: 12 }"
-                resize="none"
-                maxlength="801"
-              ></el-input>
-            </el-form-item>
-          </el-form>
-        </v-card-text>
-        <v-card-actions>
-          <div class="footer">
-            <v-btn
-              color="var(--color-main)"
-              @click="handleReport('reportForm')"
-            >
-              <font color="white">举报</font>
-            </v-btn>
-            <v-btn @click="reportDialog = false">取消</v-btn>
-          </div>
-        </v-card-actions>
+                placeholder="请输入举报内容"
+                outlined
+                counter
+                rows="5"
+                auto-grow
+                required
+                color="var(--color-main)"
+                :rules="reportRule"
+              ></v-textarea>
+            </div>
+          </v-card-text>
+          <v-card-actions>
+            <div class="footer">
+              <v-btn
+                color="var(--color-main)"
+                :disabled="!reportFormValid"
+                @click="handleReport()"
+              >
+                <font color="white">举报</font>
+              </v-btn>
+              <v-btn @click="reportDialog = false">取消</v-btn>
+            </div>
+          </v-card-actions>
+        </v-form>
       </v-card>
     </v-dialog>
 
@@ -268,27 +271,34 @@ export default {
         reportContent: "",
         reportCommentId: ""
       },
+      reportFormValid: false,
       commentRule: [
         v => !!v,
         v =>
           (v.length <= 800 && v.length >= 5) ||
           "评论内容长度在 5-800 个字符之间"
       ],
-      reportRule: {
-        reportContent: [
-          {
-            required: true,
-            message: "请输入举报理由",
-            trigger: "blur"
-          },
-          {
-            min: 5,
-            max: 800,
-            message: "举报理由长度在 5-800 个字符之间",
-            trigger: "blur"
-          }
-        ]
-      },
+      // reportRule: {
+      //   reportContent: [
+      //     {
+      //       required: true,
+      //       message: "请输入举报理由",
+      //       trigger: "blur"
+      //     },
+      //     {
+      //       min: 5,
+      //       max: 800,
+      //       message: "举报理由长度在 5-800 个字符之间",
+      //       trigger: "blur"
+      //     }
+      //   ]
+      // },
+      reportRule: [
+        v => !!v,
+        v =>
+          (v.length <= 600 && v.length >= 5) ||
+          "举报内容长度在 5-600 个字符之间"
+      ],
       postInfo: {
         creatorId: "1",
         creatorName: "Codevka",
@@ -305,7 +315,7 @@ export default {
       comments: [
         {
           commentId: "1",
-          commenterId: "123",
+          commenterId: "1",
           commenterName: "BI",
           commenterAvatar: "https://i.loli.net/2020/11/27/9fbGvYknV8KejFS.png",
           floor: 2,
@@ -314,10 +324,10 @@ export default {
         },
         {
           commentId: "2",
-          commenterId: "2333",
+          commenterId: "1",
           commenterName: "AI",
           commenterAvatar: "https://i.loli.net/2020/11/27/3tz2XEraSwl8skK.png",
-          floor: 1,
+          floor: 3,
           commentContent: "BI nb!",
           commentTime: "1926-08-17"
         },
@@ -326,13 +336,13 @@ export default {
         //     commenterId: "1234",
         //     commenterName: "CI",
         //     commenterAvatar: "https://i.loli.net/2020/11/27/3tz2XEraSwl8skK.png",
-        //     floor: 3,
+        //     floor: 5,
         //     commentContent: "DI nb!",
         //     commentTime: "8 分钟前",
         //   },
         {
           commentId: "3",
-          commenterId: "21",
+          commenterId: "1",
           commenterName: "Spam  Bot",
           commenterAvatar: "https://i.loli.net/2020/11/30/jm2i7g9qL61SkE8.png",
           floor: 4,
@@ -373,10 +383,6 @@ export default {
       });
     },
 
-    reply() {
-      console.log("reply");
-    },
-
     showReport(commentId) {
       this.reportDialog = true;
       this.reportForm.reportContent = "";
@@ -389,14 +395,9 @@ export default {
     },
 
     // 举报
-    handleReport(formName) {
-      let pass = false;
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          pass = true;
-        }
-      });
-      if (!pass) return;
+    handleReport() {
+      console.log("reportForm:");
+      console.log(this.reportForm);
 
       if (this.reportPost == true) {
         reportPost(this.userId, this.postId, this.reportForm.reportContent)
@@ -406,11 +407,17 @@ export default {
             if (res.data.result == "true") {
               this.reportDialog = false;
             } else {
-              this.$notify.error("举报失败，请稍后再试。");
+              this.$notify.error({
+                title: "操作失败",
+                message: "举报失败，请稍后再试。"
+              });
             }
           })
           .catch(err => {
-            this.$notify.error("举报失败，请稍后再试。");
+            this.$notify.error({
+              title: "操作失败",
+              message: "举报失败，请稍后再试。"
+            });
             console.log(err);
           });
       } else {
@@ -425,11 +432,17 @@ export default {
             if (res.data.result == "true") {
               this.reportDialog = false;
             } else {
-              this.$notify.error("举报失败，请稍后再试。");
+              this.$notify.error({
+                title: "操作失败",
+                message: "举报失败，请稍后再试。"
+              });
             }
           })
           .catch(err => {
-            this.$notify.error("举报失败，请稍后再试。");
+            this.$notify.error({
+              title: "操作失败",
+              message: "举报失败，请稍后再试。"
+            });
             console.log(err);
           });
       }
@@ -454,18 +467,28 @@ export default {
             console.log(res);
             if (res.data.result == "true") {
               this.deleteDialog = false;
-              this.$notify.success("删除成功！");
+              this.$notify({
+                title: "操作成功",
+                message: "删除成功！",
+                type: "success"
+              });
               // TODO 返回（到哪？）
               // this.$router.push({
               //   path: "/",
               //   query: {},
               // });
             } else {
-              this.$notify.error("删除失败，请稍后再试。");
+              this.$notify.error({
+                title: "操作失败",
+                message: "删除失败，请稍后再试。"
+              });
             }
           })
           .catch(err => {
-            this.$notify.error("删除失败，请稍后再试。");
+            this.$notify.error({
+              title: "操作失败",
+              message: "删除失败，请稍后再试。"
+            });
             console.log(err);
           });
       } else {
@@ -475,13 +498,36 @@ export default {
             console.log(res);
             if (res.data.result == "true") {
               this.deleteDialog = false;
-              this.$notify.success("删除成功！");
+
+              for (var i = 0; i < this.comments.length; i++) {
+                if (this.deleteCommentId == this.comments[i].commentId)
+                  this.comments.splice(i, 1);
+              }
+              if (this.comments[0] && this.comments[0].floor == 3)
+                this.comments[0].floor--;
+              for (var i = 1; i < this.comments.length; i++) {
+                if (this.comments[i].floor - this.comments[i - 1].floor == 2)
+                  this.comments[i].floor--;
+              }
+              // FIXME: 跳到其他页面，再使用浏览器的返回时，无法持久存放修改后的数据
+
+              this.$notify({
+                title: "操作成功",
+                message: "删除成功！",
+                type: "success"
+              });
             } else {
-              this.$notify.error("删除失败，请稍后再试。");
+              this.$notify.error({
+                title: "操作失败",
+                message: "删除失败，请稍后再试。"
+              });
             }
           })
           .catch(err => {
-            this.$notify.error("删除失败，请稍后再试。");
+            this.$notify.error({
+              title: "操作失败",
+              message: "删除失败，请稍后再试。"
+            });
             console.log(err);
           });
       }
@@ -493,8 +539,19 @@ export default {
           console.log("comment post");
           console.log(res);
           if (res.data.result == "true") {
-            this.commentContent = "";
+            var len = this.comments.length;
+            this.comments.push({
+              commentId: "1",
+              commenterId: this.userId,
+              commenterName: this.userName,
+              commenterAvatar: this.userAvatar,
+              floor: len + 2,
+              commentContent: this.commentContent,
+              commentTime: "刚刚"
+            });
+            // FIXME: 跳到其他页面，再使用浏览器的返回时，无法持久存放修改后的数据
             this.$notify.success("评论发表成功！");
+            this.commentContent = "";
           } else {
             this.$notify.error("评论失败，请稍后再试。");
           }
@@ -508,8 +565,9 @@ export default {
   components: {},
   created() {
     this.postId = this.$route.query.postId;
-    // this.userId = this.$store.state.userID; // TODO 等待统一
-    // TODO 获取 userName, userAvatar
+    // this.userId = this.$store.state.user.userID; // TODO 等待统一
+    // this.userName = this.$store.state.user.userName;
+    // this.userAvatar = this.$store.state.user.imagePath;
     console.log("postId: " + this.postId + "\nuserId: " + this.userId);
 
     // getPostInfo(this.userId, this.postId)
@@ -551,18 +609,21 @@ html {
   height: 100%;
   margin: 0 auto;
   margin-top: 50px;
+  background-color: #ffffff;
 }
 
 .comment-container {
   width: 61%;
   min-width: 400px;
   margin: 0 auto;
+  background-color: #ffffff;
 }
 
 .input-container {
   width: 61%;
   min-width: 400px;
   margin: 0 auto;
+  background-color: #ffffff;
 }
 
 .card {
@@ -680,7 +741,7 @@ html {
   line-height: 1.3;
   color: #555;
   padding: 5px;
-  background-color: #ddd;
+  background-color: #dfdfdf;
   padding-top: 0.16em;
   padding-bottom: 0.16em;
   margin-top: -0.16em;
@@ -750,19 +811,30 @@ html {
   width: 40%;
 }
 
-.el-input__inner,
-.el-textarea__inner {
-  border-color: rgba(158, 158, 158);
+.form-item {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 15px;
 }
 
-.el-input__inner:hover,
-.el-textarea__inner:hover {
-  border-color: rgba(36, 36, 36);
+.form-label {
+  display: flex;
+  height: 40px;
+  width: 80px;
+  align-items: center;
+  justify-content: end;
+  margin-left: auto;
+  padding-right: 12px;
+  color: rgb(96, 98, 102);
+  font-size: 0.9rem;
 }
 
-.el-input__inner:focus,
-.el-textarea__inner:focus {
-  border-color: rgba(64, 158, 255);
-  border-width: 2px;
+.report-textarea {
+  font-size: 0.9rem;
+}
+
+.required-star {
+  color: rgb(245, 108, 108);
+  padding-right: 3px;
 }
 </style>
