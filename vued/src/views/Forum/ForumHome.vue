@@ -18,68 +18,137 @@
       </div>
     </div>
     <div id="forumHome">
-      <ul>
-        <li v-for="(item, index) in sectors" :key="index">
-          <v-card class="sectorCard" elevation="1" tile>
-            <!--
-          <v-footer padless v-if="index == 0">
-            <div></div>
-          </v-footer>
-          -->
-            <el-row>
-              <el-col :span="12">
-                <v-card-title>
-                  <div class="sectorName" @click="goToSector(item.sectorId)">
-                    {{ item.sectorName }}
-                  </div>
-                </v-card-title>
-              </el-col>
-              <el-col :span="2">
-                <v-card-subtitle>
-                  <div class="postNum">
-                    <div class="sectorPostNum">
-                      {{ handleNum(item.postNum) }}
-                    </div>
-                    <div class="sectorPostNumStr">
-                      条 动态
-                    </div>
-                  </div>
-                </v-card-subtitle>
-              </el-col>
-              <el-col :span="2">
-                <v-card-text>
-                  <v-avatar>
-                    <img
-                      class="avatar"
-                      alt="Avatar"
-                      :src="item.userAvatar"
-                      @click="goToUser(item.userId)"
-                    />
-                  </v-avatar>
-                </v-card-text>
-              </el-col>
-              <el-col :span="8">
-                <v-card-text>
-                  <div class="post">
-                    <div class="title" @click="goToPost(item.postId)">
-                      {{ handleTitle(item.postName) }}
-                    </div>
-                    <div class="info">
-                      <span>
-                        {{ editStr }}
-                      </span>
-                      <span class="userName" @click="goToUser(item.userId)">
-                        {{ item.userName }}</span
+      <el-row>
+        <el-col :span="16">
+          <ul>
+            <li v-for="(item, index) in sectors" :key="index">
+              <v-card class="sectorCard" elevation="1" tile flat>
+                <el-row>
+                  <el-col :span="12">
+                    <v-card-title>
+                      <div
+                        class="sectorName"
+                        @click="goToSector(item.sectorId)"
                       >
-                      <span> {{ handleInfo(item.editTime) }}</span>
-                    </div>
-                  </div>
-                </v-card-text>
-              </el-col>
-            </el-row>
-          </v-card>
-        </li>
-      </ul>
+                        {{ handleTitle(item.sectorName, 42) }}
+                      </div>
+                    </v-card-title>
+                  </el-col>
+                  <el-col :span="2">
+                    <v-card-subtitle>
+                      <div class="postNum">
+                        <div class="sectorPostNum">
+                          {{ handleNum(item.postNum) }}
+                        </div>
+                        <div class="sectorPostNumStr">
+                          条 动态
+                        </div>
+                      </div>
+                    </v-card-subtitle>
+                  </el-col>
+                  <el-col :span="2">
+                    <v-card-text>
+                      <v-avatar>
+                        <img
+                          class="avatar"
+                          alt="Avatar"
+                          :src="item.userAvatar"
+                          @click="goToUser(item.userId)"
+                        />
+                      </v-avatar>
+                    </v-card-text>
+                  </el-col>
+                  <el-col :span="8">
+                    <v-card-text>
+                      <div class="post">
+                        <div class="title" @click="goToPost(item.postId)">
+                          {{ handleTitle(item.postName, 32) }}
+                        </div>
+                        <div class="info">
+                          <span>
+                            {{ editStr }}
+                          </span>
+                          <span class="userName" @click="goToUser(item.userId)">
+                            {{ item.userName }}</span
+                          >
+                          <span> {{ handleInfo(item.editTime) }}</span>
+                        </div>
+                      </div>
+                    </v-card-text>
+                  </el-col>
+                </el-row>
+              </v-card>
+            </li>
+          </ul>
+        </el-col>
+        <el-col :offset="1" :span="7">
+          <div class="fPosts">
+            <div class="fHeader">
+              <div class="fHeaderText">
+                我关注的人的动态
+              </div>
+            </div>
+            <div class="fContent">
+              <ul>
+                <li v-for="(item, index) in posts" :key="index">
+                  <v-card class="postCard" elevation="1" tile flat>
+                    <v-card-title>
+                      <v-avatar size="30">
+                        <img
+                          class="creatorAvatar"
+                          alt="Avatar"
+                          :src="item.creatorAvatar"
+                          @click="goToUser(item.creatorId)"
+                        />
+                      </v-avatar>
+                      <div
+                        class="creatorName"
+                        @click="goToUser(item.creatorId)"
+                      >
+                        {{ item.creatorName }}
+                      </div>
+                      <div class="fPostName" @click="goToPost(item.postId)">
+                        {{ handleTitle(item.postName, 34) }}
+                      </div>
+                    </v-card-title>
+                    <v-card-subtitle>
+                      <div class="fPostInfo">
+                        <div class="fPostReplyNum">
+                          <v-icon size="0.875rem">
+                            comment
+                          </v-icon>
+                          {{ handleNum(item.replyNum) }}
+                        </div>
+                        <div class="fPostViewNum">
+                          <v-icon size="0.875rem">
+                            mdi-eye
+                          </v-icon>
+                          {{ handleNum(item.viewNum) }}
+                        </div>
+                        <div class="fPostTime">
+                          <span> 创建于 </span>
+                          <span> {{ item.createTime }}</span>
+                        </div>
+                      </div>
+                      <div class="fPostTags">
+                        <v-chip
+                          label
+                          class="fPostTag"
+                          x-small
+                          v-for="(tag, index) in item.tags"
+                          :key="index"
+                        >
+                          {{ tag }}
+                        </v-chip>
+                      </div>
+                    </v-card-subtitle>
+                  </v-card>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
     </div>
   </div>
 </template>
@@ -106,12 +175,14 @@ export default {
           userAvatar: "https://i.loli.net/2020/08/11/8u6PdLt9vyCaUcX.png",
           userName: "测试用户",
           postId: "01",
-          postName: "测试动态一二三四五六七八九十十一十二",
+          postName:
+            "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十",
           editTime: "MM月dd日 HH:mm"
         },
         {
           sectorId: "02",
-          sectorName: "测试分区2",
+          sectorName:
+            "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十",
           postNum: "24",
           userId: "01",
           userAvatar: "https://i.loli.net/2020/08/11/Rqm3hEG6bnHLsd4.png",
@@ -119,6 +190,68 @@ export default {
           postId: "01",
           postName: "测试动态",
           editTime: "MM月dd日 HH:mm"
+        }
+      ],
+      posts: [
+        {
+          postId: "01",
+          postName:
+            "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十",
+          replyNum: "1023",
+          viewNum: "1002001",
+          creatorId: "01",
+          creatorName: "测试用户",
+          creatorAvatar: "https://i.loli.net/2020/08/11/Rqm3hEG6bnHLsd4.png",
+          createTime: "yyyy-MM-dd",
+          tags: ["测试标签1", "测试标签2", "测试标签3", "测试标签4"]
+        },
+        {
+          postId: "01",
+          postName:
+            "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十",
+          replyNum: "1023",
+          viewNum: "1002001",
+          creatorId: "01",
+          creatorName: "测试用户",
+          creatorAvatar: "https://i.loli.net/2020/08/11/Rqm3hEG6bnHLsd4.png",
+          createTime: "yyyy-MM-dd",
+          tags: ["测试标签1", "测试标签2", "测试标签3", "测试标签4"]
+        },
+        {
+          postId: "01",
+          postName:
+            "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十",
+          replyNum: "1023",
+          viewNum: "1002001",
+          creatorId: "01",
+          creatorName: "测试用户",
+          creatorAvatar: "https://i.loli.net/2020/08/11/Rqm3hEG6bnHLsd4.png",
+          createTime: "yyyy-MM-dd",
+          tags: ["测试标签1", "测试标签2", "测试标签3", "测试标签4"]
+        },
+        {
+          postId: "01",
+          postName:
+            "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十",
+          replyNum: "1023",
+          viewNum: "1002001",
+          creatorId: "01",
+          creatorName: "测试用户",
+          creatorAvatar: "https://i.loli.net/2020/08/11/Rqm3hEG6bnHLsd4.png",
+          createTime: "yyyy-MM-dd",
+          tags: ["测试标签1", "测试标签2", "测试标签3", "测试标签4"]
+        },
+        {
+          postId: "01",
+          postName:
+            "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十",
+          replyNum: "1023",
+          viewNum: "1002001",
+          creatorId: "01",
+          creatorName: "测试用户",
+          creatorAvatar: "https://i.loli.net/2020/08/11/Rqm3hEG6bnHLsd4.png",
+          createTime: "yyyy-MM-dd",
+          tags: ["测试标签1", "测试标签2", "测试标签3", "测试标签4"]
         }
       ]
     };
@@ -134,9 +267,9 @@ export default {
       if (num >= 1000) return (num / 1000).toFixed(1) + "k";
       return num.toString();
     },
-    handleTitle(str) {
-      let maxLength = 17;
-      if (str.length > maxLength) return str.substring(0, maxLength - 2) + "..";
+    handleTitle(str, len) {
+      let maxLength = len;
+      if (str.length > maxLength) return str.substring(0, maxLength - 1) + "..";
       return str;
     },
     handleInfo(time) {
@@ -211,7 +344,7 @@ export default {
   margin: 1px auto;
   margin-bottom: 1px;
   border-radius: 0px;
-  width: 900px;
+  width: 1120px;
   /*background-color: white;*/
   height: 190px;
   display: flex;
@@ -226,22 +359,26 @@ export default {
 .pageTool {
   height: 50px;
   margin-top: 5px;
-  margin-left: 770px;
+  /*margin-left: 85.5%;*/
+  margin-left: 2%;
   margin-bottom: 20px;
 }
 .sectorCard {
-  margin: 1px auto;
+  border: 1px solid #ddd;
+  margin: -1px auto;
   border-radius: 0px;
   width: 900px;
 }
 .sectorName {
+  max-width: 50%;
   cursor: pointer;
-  font-size: 25px;
+  font-size: 17px;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
 }
 .postNum {
+  margin-left: 10px;
   position: absolute;
   top: 50%;
   transform: translateY(-45%);
@@ -264,18 +401,90 @@ export default {
   cursor: pointer;
 }
 .post {
+  margin-left: -5px;
   position: absolute;
   top: 50%;
   transform: translateY(-45%);
 }
 .title {
   cursor: pointer;
-  font-size: 17px;
+  font-size: 14px;
 }
 .info {
   font-size: 10px;
 }
 .userName {
   cursor: pointer;
+}
+
+.fPosts {
+  /*overflow: auto;*/
+  border: 1px solid #ddd;
+  background-color: white;
+  /*max-height: 800px;*/
+}
+.fHeader {
+  border-bottom: 1px solid #ddd;
+  height: 30px;
+}
+.fHeaderText {
+  margin-left: 15px;
+  margin-top: 4%;
+  font-size: 17px;
+  font-style: bold;
+  color: gray;
+}
+.fContent {
+  overflow: auto;
+  max-height: 600px;
+}
+.fContent::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.fContent::-webkit-scrollbar-track {
+  border-radius: 0px;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.fContent::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.postCard {
+  border-bottom: 1px solid #ddd;
+}
+.creatorAvatar {
+  cursor: pointer;
+  /*border-bottom: 1px solid #ddd;*/
+}
+.creatorName {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+.fPostName {
+  font-size: 15px;
+  cursor: pointer;
+}
+.fPostInfo {
+  display: flex;
+}
+.fPostReplyNum {
+  margin-right: 15px;
+}
+.fPostViewNum {
+  margin-right: 50px;
+}
+.fPostTime {
+  font-size: 12px;
+}
+.fPostTags {
+  margin-top: 6px;
+  font-size: 10px;
+}
+.fPostTag {
+  margin-right: 3px;
 }
 </style>
