@@ -30,6 +30,7 @@ const Consult = () => import("views/Message/Consult.vue");
 // 个人相关组件
 const Profile = () => import("views/Profile/Profile.vue");
 const Intro = () => import("views/Profile/Intro.vue");
+const ApplyIntro = () => import("views/Profile/ApplyIntro.vue");
 
 // 管理员相关组件
 const Root = () => import("views/Root/Root.vue");
@@ -63,6 +64,11 @@ const routes = [
     path: "/profile",
     name: "Profile",
     component: Profile
+  },
+  {
+    path: "/applyIntro",
+    name: "ApplyIntro",
+    component: ApplyIntro
   },
   {
     path: "/literature",

@@ -2,7 +2,7 @@
   <!-- 门户界面 -->
   <div id="intro" class="intro">
     <m-app-header></m-app-header>
-    <div class="intro-header">
+    <div class="block-header">
       <div class="intro-profile">
         <div class="intro-profile-info">
           <div class="intro-headshot">
@@ -236,9 +236,10 @@ export default {
 
 <style scoped>
 .intro {
+  font-family: Consolas;
 }
 
-.intro-header {
+.block-header {
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
   height: 193px;
@@ -529,7 +530,7 @@ export default {
   font-size: 0.7rem;
   font-weight: 700;
   color: white;
-  margin-left: 50%;
+  margin-left: 45%;
 }
 
 .profile-icon {
