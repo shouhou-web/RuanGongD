@@ -78,7 +78,7 @@ export default {
     },
     toProfile() {
       this.$store.commit("changeAppHeader", {});
-      this.$router.push({ path: "/profile" });
+      this.$router.push({ path: "/profile", query: { userID: this.$store.state.user.userID } });
     }
   },
   components: {}
