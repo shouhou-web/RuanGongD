@@ -306,16 +306,21 @@ export default {
       this.$router.go(0);
     },
     changeSort(val) {
-      this.$router.push({
-        path: "/forumSector",
-        query: {
-          sectorId: this.sectorId,
-          page: this.page,
-          sort: val,
-          keyword: this.keyword
-        }
-      });
-      this.$router.go(0);
+      if (val == this.sort) {
+        //console.log(val + " " + this.sort);
+        return;
+      } else {
+        this.$router.push({
+          path: "/forumSector",
+          query: {
+            sectorId: this.sectorId,
+            page: this.page,
+            sort: val,
+            keyword: this.keyword
+          }
+        });
+        this.$router.go(0);
+      }
     },
     changeKeyword() {
       this.$router.push({
