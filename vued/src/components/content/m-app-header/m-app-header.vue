@@ -5,7 +5,7 @@
       <div slot="left">
         <ul class="header__switch">
           <li
-            :class="{ 'is-active': item.name == $store.state.appHeaderCurName }"
+            :class="{ 'is-active': index == $store.state.appHeaderCurIndex }"
             v-for="(item, index) in switchList"
             :key="index"
             @click="jump(item)"
@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     jump(e) {
-      this.$store.commit("changeAppHeader", e);
+      // this.$store.commit("changeAppHeader", e);
       console.log(e);
       this.$router.push({
         path: e.path

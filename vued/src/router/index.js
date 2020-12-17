@@ -220,13 +220,9 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  // getCollaboratorInfo(0).then(res => {
-  //   store.commit("setDocCol", res);
-  //   // store.commit("login", { userID: 1 });
-  // });
-  // ${//to and from are Route Object,next() must be called to resolve the hook}
-  // 这里是修改名字的全局守护路由，暂不应用
-  // document.title = to.matched[0].meta.title;
+  if (to.path.slice(0, 6) == "/forum") store.commit("changeAppHeader", 1);
+  else if (to.path == "/") store.commit("changeAppHeader", 0);
+  else store.commit("changeAppHeader", -1);
   next();
 });
 
