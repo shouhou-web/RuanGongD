@@ -15,7 +15,8 @@
             </div>
           </div>
           <div class="publish">
-            <div class="publish-button">发表文献</div>
+<!--            <div class="publish-button" @click="">发表文献</div>-->
+            <create_literature></create_literature>
           </div>
         </div>
         <div class="profile-op">
@@ -70,6 +71,8 @@
 import ECharts from 'vue-echarts'
 import MyLiteratures from "@/views/Profile/MyLiteratures";
 import UserPosts from "@/views/Forum/childCpn/user-posts";
+import create_literature from "@/views/Literature/childCpn/create_literature";
+import Create_literature from "@/views/Literature/childCpn/create_literature";
 
 require('echarts/lib/chart/bar')
 require('echarts/lib/chart/line')
@@ -227,9 +230,10 @@ export default {
 
     // 进入个人门户
     let userID = this.$route.query.userID
-    
+
   },
   components: {
+    Create_literature,
     UserPosts,
     'v-chart': ECharts,
     'myLiteratures': MyLiteratures,
@@ -326,6 +330,10 @@ export default {
   color: white;
   font-size: 0.800rem;
   letter-spacing: 2px;
+}
+
+.publish-button:hover {
+  cursor: pointer;
 }
 
 .op-switch {
