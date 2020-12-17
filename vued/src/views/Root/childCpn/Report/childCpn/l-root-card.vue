@@ -20,7 +20,7 @@
           <div v-else-if="type == 4" class="l-root-card--content-connect">
             举报了动态
           </div>
-          <span class="l-root-card--notice" v-if="!hasRead">!</span>
+          <a class="l-root-card--notice" title="待处理" v-if="!hasRead">!</a>
           <img
             class="l-root-card--reportee-pic"
             :src="require('@/assets/image/root/' + imgPath2 + '.jpg')"
@@ -201,6 +201,7 @@ export default {
   background-color: #ffb11b;
   border-radius: 10px;
   color: #ffffff;
+  cursor: pointer;
   display: block;
   height: 15px;
   margin-right: 25px;
