@@ -361,7 +361,7 @@ export default {
 }
 
 .post-name {
-  font-weight: bold;
+  /*font-weight: bold;*/
 }
 
 .form-item {

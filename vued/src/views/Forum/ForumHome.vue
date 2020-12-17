@@ -436,7 +436,19 @@ export default {
 }
 .fContent {
   overflow: auto;
-  max-height: 800px;
+  max-height: 600px;
+}
+.fContent::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.fContent::-webkit-scrollbar-track {
+  border-radius: 0px;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.fContent::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.1);
 }
 .postCard {
   border-bottom: 1px solid #ddd;
