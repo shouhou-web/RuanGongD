@@ -18,7 +18,7 @@
           </span>
         </div>
       </div>
-      <div @click="open('delete')" class="message-aside">
+      <div @click="open" class="message-aside">
         <img
           class="message-aside__img"
           src="@/assets/icons/message/delete.png"
@@ -28,33 +28,26 @@
       </div>
     </div>
     <div class="message__div"></div>
-    <m-hover
-      title="删除"
-      :onShow="openAssure"
-      assureBtn="确定"
-      cancelBtn="取消"
-      @submit="deleteMsg"
-      @cancel="cancel"
-    >
-      删除该条消息后将无法恢复，是否继续？
+    <m-hover ref="hover" @submit="assureDelete">
+      删除消息后不可恢复，是否确认删除？
     </m-hover>
   </div>
 </template>
 
 <script>
-// import { deleteMsg } from "network/message";
+import { deleteMsg } from "network/message";
 export default {
   content: "SystemMessage",
   props: {
     message: {
       // message消息内容
       type: Object,
-      default: {},
-    },
+      default: {}
+    }
   },
   data() {
     return {
-      openAssure: false, // 是否打开确认框
+      openAssure: false // 是否打开确认框
     };
   },
   computed: {
@@ -93,40 +86,38 @@ export default {
         case 11:
           return "管理员删除了你的文档" + this.message.content;
       }
-    },
+    }
   },
   methods: {
     open() {
-      // 打开悬浮窗
-      this.openAssure = true;
+      this.$refs.hover.showHover({
+        title: "删除消息",
+        submitBtn: "删除",
+        cancelBtn: "取消"
+      });
     },
-    cancel() {
-      // 关闭悬浮窗
-      this.openAssure = false;
-    },
-    deleteMsg() {
+    assureDelete() {
       // 删除消息
-      console.log(this.message.msgID);
-      deleteMsg(this.message.msgID)
-        .then((res) => {
+      console.log(this.message.messageID);
+      deleteMsg(this.message.messageID)
+        .then(res => {
           if (res == 0) {
             this.$notify({
               title: "成功",
               message: "删除消息成功",
-              type: "success",
+              type: "success"
             });
-            this.cancel();
             this.$emit("delete");
           }
         })
-        .catch((err) => {
+        .catch(err => {
           this.$notify.error({
             title: "网络错误",
-            message: "请稍后重试~",
+            message: "请稍后重试~"
           });
         });
-    },
-  },
+    }
+  }
 };
 </script>
 

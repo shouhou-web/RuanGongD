@@ -112,7 +112,6 @@ export default {
 
 <style scoped>
 .l-button {
-  align-items: center;
   background: #ffffff;
   border: 1px solid #d8e3ec;
   box-sizing: border-box;
@@ -126,7 +125,7 @@ export default {
   -moz-user-select: none;
   outline: 0;
   overflow: hidden;
-  padding: 12px 20px;
+  padding: 12px 0px;
   position: relative;
   text-align: center;
   transition: ease-in-out 0.5s;
@@ -140,10 +139,6 @@ export default {
   border-color: #c6e2ff;
   box-shadow: 2px 3px 5px 1px rgba(29, 120, 223, 0.2);
   transition: 0.5s;
-}
-
-.l-button::-moz-focus-inner {
-  border: 0;
 }
 
 .l-button.is-active {
@@ -617,8 +612,8 @@ export default {
   border-color: transparent;
   color: #409eff;
   background: 0 0;
-  padding-left: 0;
-  padding-right: 0;
+  /* padding-left: 0;
+  padding-right: 0; */
 }
 
 .l-button--text:hover {
