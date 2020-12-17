@@ -42,6 +42,9 @@ const Gate = () => import("views/Root/childCpn/Report/childCpn/Gate.vue");
 const Creport = () => import("views/Root/childCpn/Report/childCpn/Comment.vue");
 const Post = () => import("views/Root/childCpn/Report/childCpn/Post.vue");
 
+//登录相关组件
+const Login = () => import("views/Login/Login.vue");
+
 //1.安装插件
 Vue.use(VueRouter);
 
@@ -53,6 +56,11 @@ const routes = [
     component: Home
     // redirect重定向
     // redirect: "/home/workSpace"
+  },
+  {
+    path: "/login",
+    name: "Login",
+    component: Login
   },
   {
     path: "/search",
