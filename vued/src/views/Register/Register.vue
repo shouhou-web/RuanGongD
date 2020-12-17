@@ -31,7 +31,7 @@
 <script>
 import LRegisterInput from "./childCpn/l-Register-Input.vue";
 import LRegisterButton from "./childCpn/l-Register-Button.vue";
-import { register } from "network/user";
+import { register } from "network/login-register";
 
 export default {
   components: { LRegisterInput, LRegisterButton },
@@ -67,7 +67,7 @@ export default {
           } else if (res == 3) {
             this.$notify.error({
               title: "注册失败",
-              message: "密码不合法，"
+              message: "密码不合法. 合法密码需包含大小写字母、数字、符号中的至少两种，且长度为6至16个字符之间"
             });
             return;
           } else if (res == 1) {
