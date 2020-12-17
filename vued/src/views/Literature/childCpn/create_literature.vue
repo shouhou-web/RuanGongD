@@ -6,50 +6,72 @@
 
         <v-card-text>
           <el-form :model="createLiForm" ref="createLiForm" label-width="100px" :rules="liRule">
-            <el-form-item label="文献标题" prop="liName">
+            <el-form-item label="文献标题" prop="title">
               <el-input
-                class="form-title"
                 placeholder="请输入文献标题"
-                v-model="createLiForm.liName"
+                v-model="createLiForm.title"
                 clearable
                 maxlength="51"
               >
               </el-input>
             </el-form-item>
 
-            <!--
-            <el-form-item label="文献作者" prop="liAuthor">
+            <el-form-item label="文献年份" prop="year">
               <el-input
-                class="form-author"
-                placeholder="请输入文献作者"
-                v-model="createLiForm.liAuthor"
+                placeholder="请输入文献年份"
+                v-model="createLiForm.year"
                 clearable
                 maxlength="51"
               >
               </el-input>
             </el-form-item>
-            -->
 
-            <el-form-item label="文献作者" prop="liAuthor">
-              <v-combobox
-                :search-input.sync="search"
-                v-model="createLiForm.liAuthor"
-                persistent-hint
-                hint="请输入作者"
+            <el-form-item label="被引数" prop="citation">
+              <el-input
+                placeholder="请输入被引数"
+                v-model="createLiForm.citation"
                 clearable
-                multiple
-                small-chips
-                outlined
-                dense
-                color="rgb(64, 158, 255)"
-              ></v-combobox>
+                maxlength="51"
+              >
+              </el-input>
             </el-form-item>
 
-            <el-form-item label="文献摘要" prop="liContent">
+            <el-form-item label="文献链接" prop="url">
+              <el-input
+                placeholder="请输入文献链接"
+                v-model="createLiForm.url"
+                clearable
+                maxlength="51"
+              >
+              </el-input>
+            </el-form-item>
+
+            <el-form-item label="文献类型" prop="type">
+              <el-select v-model="createLiForm.type" placeholder="请选择文献类型">
+                <el-option
+                  v-for="type in typeList"
+                  :key="type.typeId"
+                  :label="type.typeName"
+                  :value="type.typeId"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="出版者" prop="publisher">
+              <el-input
+                placeholder="请输入文献出版者"
+                v-model="createLiForm.publisher"
+                clearable
+                maxlength="51"
+              >
+              </el-input>
+            </el-form-item>
+
+            <el-form-item label="文献摘要" prop="abstract">
               <el-input
                 class="form-content"
                 type="textarea"
-                v-model="createLiForm.liContent"
+                v-model="createLiForm.abstract"
                 placeholder="请输入文献摘要"
                 :autosize="{ minRows: 10, maxRows: 20 }"
                 resize="none"
@@ -57,21 +79,9 @@
               ></el-input>
             </el-form-item>
 
-            <!--
-            <el-form-item label="文献关键词" prop="liCritical">
-              <el-input
-                placeholder="请输入关键词"
-                v-model="createLiForm.liCritical"
-                clearable
-                maxlength="51"
-              >
-              </el-input>
-            </el-form-item>
-            -->
-
-            <el-form-item label="文献关键词" prop="liCritical">
+            <el-form-item label="文献关键词" prop="keywords">
               <v-combobox
-                v-model="createLiForm.liCritical"
+                v-model="createLiForm.keywords"
                 persistent-hint
                 hint="请输入关键词,最多5个"
                 clearable
@@ -83,38 +93,46 @@
               ></v-combobox>
             </el-form-item>
 
-            <el-form-item label="文献DOI" prop="liDOI">
+            <el-form-item label="领域" prop="area">
               <el-input
-                placeholder="请输入文献DOI"
-                v-model="createLiForm.liDOI"
+                placeholder="请输入文献领域"
+                v-model="createLiForm.area"
                 clearable
                 maxlength="51"
               >
               </el-input>
             </el-form-item>
 
-            <el-form-item label="文献分类" prop="liType">
-              <el-select v-model="createLiForm.liType" placeholder="请选择文献分类">
-                <el-option
-                  v-for="type in typeList"
-                  :key="type.typeId"
-                  :label="type.typeName"
-                  :value="type.typeId"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="文献链接" prop="liLink">
+            <el-form-item label="文献来源" prop="venue">
               <el-input
-                class="form-author"
-                placeholder="请输入文献链接"
-                v-model="createLiForm.liLink"
+                placeholder="请输入文献来源"
+                v-model="createLiForm.venue"
                 clearable
                 maxlength="51"
               >
               </el-input>
             </el-form-item>
 
+            <el-form-item label="文献作者" prop="author">
+              <v-combobox
+                v-model="createLiForm.authors"
+                persistent-hint
+                hint="请输入作者"
+                clearable
+                multiple
+                small-chips
+                outlined
+                dense
+                color="rgb(64, 158, 255)"
+              ></v-combobox>
+              <el-autocomplete
+                v-model="state"
+                :fetch-suggestions="querySearchAsync"
+                placeholder="请输入内容"
+                @keyup.enter.native="handleInputConfirm"
+                @select="handleSelect"
+              ></el-autocomplete>
+            </el-form-item>
           </el-form>
         </v-card-text>
 
@@ -139,9 +157,10 @@
     props: {},
     data() {
       return {
+        state: "",
         dialog: false, // 是否显示悬浮窗
         liRule: {
-          liName: [
+          title: [
             {
               required: true,
               message: "请输入动态标题",
@@ -154,14 +173,49 @@
               trigger: "blur",
             },
           ],
-          liAuthor: [
+          year: [
+            {
+              required: true,
+              message: "请输入文献年份",
+              trigger: "blur",
+            },
+          ],
+          citation: [
+            {
+              required: true,
+              message: "请输入被引数",
+              trigger: "blur",
+            },
+          ], //被引数
+          url: [
+            {
+              required: true,
+              message: "请输入文献链接",
+              trigger: "blur",
+            },
+          ], // 文献链接
+          type: [
+            {
+              required: true,
+              message: "请输入文献类别",
+              trigger: "blur",
+            },
+          ], // 文献类别
+          publisher: [
+            {
+              required: true,
+              message: "请输入出版者",
+              trigger: "blur",
+            },
+          ], //出版者
+          authors: [
             {
               required: true,
               message: "请输入文献作者",
               trigger: "blur",
             },
           ],
-          liContent: [
+          abstract: [
             {
               required: true,
               message: "请输入文献摘要",
@@ -174,45 +228,53 @@
               trigger: "change",
             },
           ],
-          liCritical: [
+          keywords: [
             {
               required: true,
-              message: "请输入文献关键词",
+              message: "请输入关键词",
               trigger: "blur",
             },
-          ],
-          liDOI: [
+          ],  // 文献关键词
+          area: [
             {
               required: true,
-              message: "请输入文献DOI",
+              message: "请输入文献领域",
               trigger: "blur",
             },
-          ],
-          liType: [
+          ],  // 文献领域
+          venue: [
             {
               required: true,
-              message: "请选择文献类型",
-              trigger: "change",
-            },
-          ],
-          liLink: [
-            {
-              required: true,
-              message: "请输入文献链接",
+              message: "请输入文献来源",
               trigger: "blur",
             },
-          ],
+          ], //文献来源
         }, // 表单验证规则
         createLiForm: {
-          userId: "1",
-          liName: "", // 文献标题
-          liAuthor: [], // 文献作者
-          liContent: "", // 文献内容
-          liCritical: [], // 文献关键词
-          liDOI: "", // 文献DOI
-          liLink: "", // 文献链接
-          liType: "", // 文献类别
+          title: "", // 文献标题
+          year: "",  //文献年份
+          citation: "", //被引数
+          url: "", // 文献链接
+          type: "", // 文献类别
+          publisher: "", //出版者
+          abstract: "", // 文献内容
+          keywords: [], // 文献关键词
+          area: "", // 文献领域
+          venue: "", //文献来源
+          authors: [], // 文献作者
+
         },
+        authorList: [
+          {
+            name: "lhx"
+          },
+          {
+            name: "lyc"
+          },
+          {
+            name: "mhy"
+          },
+        ],
         typeList: [
           {
             typeId: 1,
@@ -267,12 +329,51 @@
             });
           });
       },
+
+      querySearchAsync(queryString, callback) {
+        var list = [{}];
+        for(let i of this.authorList){
+          i.value = i.name;  //将想要展示的数据作为value
+        }
+        list = this.authorList;
+        list = queryString
+          ? list.filter(this.createFilter(queryString))
+          : list;
+        callback(list);
+        /* var list = [{}];
+        //调用的后台接口
+        let url = 后台接口地址 + queryString;
+        //从后台获取到对象数组
+        axios.get( url ).then((response)=>{
+          //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
+          for(let i of response.data){
+            i.value = i.想要展示的数据;  //将想要展示的数据作为value
+          }
+          list = response.data;
+          callback(list);
+        }).catch((error)=>{
+          console.log(this.authorList);
+        }); */
+      },
+      createFilter(queryString) {
+        return (item) => {
+          return item.value.toUpperCase().match(queryString.toUpperCase());
+        };
+      },
+
+      handleInputConfirm() {
+          this.createLiForm.authors.push(this.state) //将选中人的id存到数组中
+      },
+
+      handleSelect() {
+
+      }
     },
     components: {},
     computed: {
     },
     watch: {
-      "createLiForm.liCritical"(val) {
+      "createLiForm.keywords"(val) {
         if (val.length > 5) {
           // 限制最多5个关键词
           this.$nextTick(() => this.createLiForm.liCritical.pop());

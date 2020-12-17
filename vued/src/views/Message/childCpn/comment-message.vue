@@ -26,7 +26,7 @@
           </div>
         </div>
       </div>
-      <div @click="open('delete')" class="message-aside">
+      <div @click="open" class="message-aside">
         <img
           class="message-aside__img"
           src="@/assets/icons/message/delete.png"
@@ -36,14 +36,7 @@
       </div>
     </div>
     <div class="message__div"></div>
-    <m-hover
-      title="删除"
-      :onShow="openAssure"
-      assureBtn="确定"
-      cancelBtn="取消"
-      @submit="deleteMsg"
-      @cancel="cancel"
-    >
+    <m-hover ref="hover" @submit="assureDelete">
       <div class="hover-content">
         删除该条消息后将无法恢复，是否继续？
       </div>
@@ -52,7 +45,7 @@
 </template>
 
 <script>
-// import { deleteMsg } from "network/message";
+import { deleteMsg } from "network/message";
 export default {
   name: "CommentMessage",
   props: {
@@ -75,17 +68,15 @@ export default {
   },
   methods: {
     open() {
-      // 打开悬浮窗
-      this.openAssure = true;
+      this.$refs.hover.showHover({
+        title: "删除消息",
+        submitBtn: "删除",
+        cancelBtn: "取消"
+      });
     },
-    cancel() {
-      // 关闭悬浮窗
-      this.openAssure = false;
-    },
-    deleteMsg() {
-      // 删除消息
-      console.log(this.message.msgID);
-      deleteMsg(this.message.msgID)
+    assureDelete() {
+      console.log(this.message.messageID);
+      deleteMsg(this.message.messageID)
         .then(res => {
           if (res == 0) {
             this.$notify({
@@ -93,7 +84,6 @@ export default {
               message: "删除消息成功",
               type: "success"
             });
-            this.cancel();
             this.$emit("delete");
           }
         })

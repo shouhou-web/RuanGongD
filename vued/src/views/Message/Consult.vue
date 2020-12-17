@@ -22,7 +22,6 @@ export default {
       .then(res => {
         console.log("consult", res);
         this.messageList = res;
-        console.log(this.messageList)
       })
       .then(getConsultMsg(this.$store.state.user.userID))
       // .then(

@@ -8,7 +8,7 @@ Vue.use(Vuex);
 const state = {
   token: false,
   user: {
-    userID: '9474EA29',
+    userID: "761D3616",
     userName: "守候",
     userPassword: "123456",
     userSex: 0,
@@ -25,7 +25,7 @@ const state = {
   collaboratorNum: 0,
   docNum: 0,
   fullscreenLoading: false,
-  appHeaderCurName: "",
+  appHeaderCurIndex: -1,
   pageSize: 25, //讨论区分区每页动态数
   searchList: [
     // 检索信息

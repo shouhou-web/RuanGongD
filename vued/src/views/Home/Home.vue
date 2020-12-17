@@ -51,7 +51,11 @@
         </div>
         <div class="likes__main">
           <ul>
-            <li v-for="(item, index) in ciationList" :key="index">
+            <li
+              class="likes__item"
+              v-for="(item, index) in ciationList"
+              :key="index"
+            >
               <div class="likes__item__id">
                 <i v-if="index == 0" class="icon--one">{{ index + 1 }}</i>
                 <i v-else-if="index == 1" class="icon--two">{{ index + 1 }}</i>
@@ -304,6 +308,19 @@ export default {
   margin-bottom: 13px;
 }
 
+.likes__item {
+  cursor: pointer;
+}
+
+.likes__item:hover .likes__item__title {
+  color: #315ef8 !important;
+  font-weight: 600;
+}
+
+.likes__item:hover .likes__item__num {
+  color: #666;
+}
+
 .likes__item__id {
   width: 21px;
   height: 21px;
@@ -322,6 +339,15 @@ export default {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.likes__item__num {
+  width: 50px;
+  float: right;
+  font-size: 14px;
+  color: #afafaf;
+  height: 21px;
+  text-align: right;
 }
 
 i {

@@ -1,9 +1,11 @@
 <template>
-  <div id="authercard" class="authercard">
-    <div class="auth-top">
-      <div class="auth-title">相关研究者</div>
-    </div>
-    <div class="auth-bottom">
+  <div id="author">
+    <el-popover
+  placement="right"
+
+  trigger="hover">
+  <div class="authercard">
+      <div class="auth-bottom">
       <div class="auth-part1">
         <div class="auth-part1-left">
           <div class="auth-name">{{author.realName}}</div>
@@ -20,24 +22,27 @@
       </div>
       <div class="auth-part3">
         <l-button>关注</l-button>
-        <l-button>个人门户</l-button>
       </div>
     </div>
+  </div>
+  
+  <el-link href="?" target="_blank" slot="reference">{{author.realName}}</el-link>
+</el-popover>
+
   </div>
 </template>
 
 <script>
 export default {
-  name: "Authercard",
-  props:{
+  name: "Author",
+  props: {
     author: {
       authorID:"",
       realName:"",
-      work:"",
-      organization:"",
       image:"",
+      organization:"",
       introduction:"",
-    }
+    },
   },
   data() {
     return {};
@@ -48,30 +53,16 @@ export default {
 </script>
 
 <style scoped>
+#author{
+  display: inline;
+}
 .authercard {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 325px;
-  height: 350px;
   border: 1px solid #95a5a6;
-  margin-top: 20px;
-  margin-right: 20px;
   background: white;
-}
-.authercard .auth-top {
-  height: 65px;
-  width: 100%;
-  border-bottom-color: black;
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.authercard .auth-title {
-  font-size: 18px;
 }
 
 .auth-bottom {
@@ -118,22 +109,21 @@ export default {
 .authercard .auth-part2 {
   margin-top: 10px;
   font-size: 13px;
-  letter-spacing:0.5px;
-  line-height: 16px;
+  letter-spacing: 0.5px;
   margin-right: 25px;
   text-align: justify;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 8;
+  -webkit-line-clamp: 3;
   overflow: hidden;
 }
 
 .authercard .auth-part3 {
   margin-top: 15px;
-  margin-left: 30px;
+  margin-bottom: 15px;
   width: 100%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
 }
 
 .authercard .auth-part3 .l-button {

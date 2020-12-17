@@ -3,7 +3,7 @@
     <div class="title" @click="gotoLiterature()">{{ title }}</div>
     <div class="tags">
       <div v-for="(a_tag, i) in tags">
-        <div :class="{'first-tag': i==0, 'leftpart-tags': i != 0}">{{a_tag}}</div>
+        <div class="leftpart-tags">{{a_tag}}</div>
       </div>
     </div>
     <div class="authors">
@@ -24,11 +24,14 @@
 export default {
   name: "y-literature",
   props: {
-    title: '',
-    id: '',
-    authors: [],
-    tags: [],
-    read_time: 0
+    title: String,
+    id: String,
+    authors: Array,
+    tags: Array,
+    read_time: {
+      type: Number,
+      default: 0
+    }
   },
   methods: {
     gotoLiterature() {
@@ -61,7 +64,6 @@ export default {
 
 .title:hover {
   cursor: pointer;
-  border-bottom: 1px solid black;
 }
 
 .tags {
@@ -125,12 +127,12 @@ export default {
 .authorname {
   font-size: 0.8rem;
   color: #000000;
-  margin-left: 2px;
+  margin-left: 5px;
+  margin-top: 5px;
 }
 
 .authorname:hover {
   cursor: pointer;
-  border-bottom: 1px solid #000000;
 }
 
 .read-time {

@@ -20,6 +20,11 @@ const Manage = () => import("views/Literature/Manage.vue");
 const Classify = () => import("views/Literature/Classify.vue");
 // const Search = () => import("views/Literature/Search.vue");
 const Publication = () => import("views/Literature/Publication.vue");
+const Reference = () => import("views/Literature/Reference.vue");
+const Relation = () => import("views/Literature/Relation.vue");
+const Stats = () => import("views/Literature/Stats.vue");
+const Review = () => import("views/Literature/Review.vue");
+
 
 // 消息相关组件
 const Message = () => import("views/Message/Message.vue");
@@ -30,6 +35,7 @@ const Consult = () => import("views/Message/Consult.vue");
 // 个人相关组件
 const Profile = () => import("views/Profile/Profile.vue");
 const Intro = () => import("views/Profile/Intro.vue");
+const ApplyIntro = () => import("views/Profile/ApplyIntro.vue");
 
 // 管理员相关组件
 const Root = () => import("views/Root/Root.vue");
@@ -81,9 +87,41 @@ const routes = [
     component: Profile
   },
   {
+    path: "/applyIntro",
+    name: "ApplyIntro",
+    component: ApplyIntro
+  },
+  {
     path: "/literature",
     name: "Literature",
-    component: Literature
+    component: Literature,
+    children: [
+      {
+        path: "/",
+        // redirect重定向
+        redirect: "/literature/reference"
+      },
+      {
+        path: "/literature/reference",
+        name: "Reference",
+        component: Reference
+      },
+      {
+        path: "/literature/relation",
+        name: "Relation",
+        component: Relation
+      },
+      {
+        path: "/literature/stats",
+        name: "Stats",
+        component: Stats
+      },
+      {
+        path: "/literature/review",
+        name: "Review",
+        component: Review
+      }
+    ]
   },
   {
     path: "/manage",
@@ -214,13 +252,9 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  // getCollaboratorInfo(0).then(res => {
-  //   store.commit("setDocCol", res);
-  //   // store.commit("login", { userID: 1 });
-  // });
-  // ${//to and from are Route Object,next() must be called to resolve the hook}
-  // 这里是修改名字的全局守护路由，暂不应用
-  // document.title = to.matched[0].meta.title;
+  if (to.path.slice(0, 6) == "/forum") store.commit("changeAppHeader", 1);
+  else if (to.path == "/") store.commit("changeAppHeader", 0);
+  else store.commit("changeAppHeader", -1);
   next();
 });
 

@@ -46,9 +46,9 @@ export function deleteMsg(messageID) {
 }
 
 // 回复消息
-export function replyMessage(messageID, content) {
+export function replyMsg(messageID, content) {
   return request(baseURL, {
-    url: "/replyMessage",
+    url: "/replyMsg",
     params: {
       messageID,
       content
