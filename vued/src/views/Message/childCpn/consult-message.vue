@@ -26,7 +26,7 @@
           <l-button
             class="message__btn"
             :active="isOpen"
-            @click="reply"
+            @click="open('reply')"
             type="text"
             size="small"
           >
@@ -49,11 +49,12 @@
       </div>
       <div class="message__open__middle">
         <textarea
+          v-model="content"
           placeholder="请自觉遵守互联网相关的政策法规，严禁发布色情、暴力、反动的言论。"
         ></textarea>
       </div>
       <div class="message__open__right">
-        <button>
+        <button @click="reply">
           发表
           <br />
           评论
@@ -61,18 +62,16 @@
       </div>
     </div>
     <div class="message__div"></div>
-    <m-hover ref="hover" @submit="assureReply"> </m-hover>
+    <m-hover ref="hover" @submit="assureDelete">
+      <div class="hover-content">
+        删除该条消息后将无法恢复，是否继续？
+      </div>
+    </m-hover>
   </div>
 </template>
 
 <script>
-// import {
-//   deleteMsg,
-//   acceptMember,
-//   refuseMember,
-//   joinTeam,
-//   refuseTeam,
-// } from "network/message";
+import { deleteMsg, replyMsg } from "network/message";
 export default {
   name: "CommonMessage",
   props: {
@@ -85,15 +84,60 @@ export default {
   computed: {},
   data() {
     return {
-      isOpen: false
+      isOpen: false,
+      content: ""
     };
   },
   methods: {
-    reply() {
-      console.log(123);
-      this.isOpen = !this.isOpen;
+    open(type) {
+      if (type == "reply") this.isOpen = !this.isOpen;
+      else if (type == "delete") {
+        console.log(this.$refs);
+        this.$refs.hover.showHover({
+          title: "删除消息",
+          submitBtn: "删除",
+          cancelBtn: "取消"
+        });
+      }
     },
-    assureReply() {}
+    reply() {
+      replyMsg(this.message.messageID, this.content)
+        .then(res => {
+          if (res == 1)
+            this.$notify({
+              title: "成功",
+              message: "回复成功~",
+              type: "success"
+            });
+          else throw new console.error();
+        })
+        .catch(err => {
+          this.$notify.error({
+            title: "错误",
+            message: "网络错误，请稍后再试~"
+          });
+        });
+    },
+    assureDelete() {
+      console.log(this.message.messageID);
+      deleteMsg(this.message.messageID)
+        .then(res => {
+          if (res == 0) {
+            this.$notify({
+              title: "成功",
+              message: "删除消息成功",
+              type: "success"
+            });
+            this.$emit("delete");
+          }
+        })
+        .catch(err => {
+          this.$notify.error({
+            title: "网络错误",
+            message: "请稍后重试~"
+          });
+        });
+    }
   }
 };
 </script>
