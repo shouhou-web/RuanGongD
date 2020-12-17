@@ -391,12 +391,12 @@ export default {
       });
     },
 
-    jumpToLiterature(literatureId) {
-      console.log("jump to " + literatureId);
+    jumpToLiterature(literatureID) {
+      console.log("jump to " + literatureID);
       this.$router.push({
         path: "/literature",
         query: {
-          // TODO
+          literatureID: literatureID
         }
       });
     },
