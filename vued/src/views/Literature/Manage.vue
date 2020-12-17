@@ -3,7 +3,14 @@
   <div>
     <div v-for="(oneLiterature, i) in myLiteratureList">
       <div class="one-follow-literature">
-        <div class="title" @click="gotoLiterature()">{{ oneLiterature.title }}</div>
+        <div>
+          <div class="title-father">
+            <div class="title" @click="gotoLiterature()">{{ oneLiterature.title }}</div>
+          </div>
+          <div class="edit-button" >
+            <l-button class="edit-button-1" @click="openEditWarn(oneLiterature)" size="small">修改</l-button>
+          </div>
+        </div>
         <div class="tags">
           <div v-for="(a_tag, i) in oneLiterature.tags">
             <div :class="{'first-tag': i==0, 'leftpart-tags': i != 0}">{{a_tag}}</div>
@@ -18,9 +25,6 @@
         <div class="read-time">
           <div class="read-time-content">
             {{oneLiterature.read_time}} Reads
-          </div>
-          <div class="edit-button" >
-            <l-button class="edit-button-1" @click="openEditWarn(oneLiterature)" size="small">修改</l-button>
           </div>
         </div>
 
@@ -144,6 +148,11 @@ export default {
     margin-bottom: 20px;
   }
 
+  .title-father {
+    width: 90%;
+    float: left;
+  }
+
   .title {
     font-size: 0.9rem;
     color: black;
@@ -158,6 +167,15 @@ export default {
   .title:hover {
     cursor: pointer;
     border-bottom: 1px solid black;
+  }
+
+  .edit-button {
+    width: 10%;
+    margin-right:0;
+    float: left;
+  }
+  .edit-button-1 {
+    margin-right:0;
   }
 
   .tags {
@@ -238,18 +256,9 @@ export default {
   }
 
   .read-time-content {
-    width: 90%;
+    width: 100%;
     height: 100%;
     margin-top: 10px;
-    float: left;
   }
 
-  .edit-button {
-    width: 10%;
-    margin-right:0;
-    float: left;
-  }
-  .edit-button-1 {
-    margin-right:0;
-  }
 </style>

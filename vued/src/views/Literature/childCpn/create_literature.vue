@@ -158,8 +158,6 @@
     data() {
       return {
         state: "",
-
-
         dialog: false, // 是否显示悬浮窗
         liRule: {
           title: [
