@@ -45,6 +45,9 @@ const Post = () => import("views/Root/childCpn/Report/childCpn/Post.vue");
 //登录相关组件
 const Login = () => import("views/Login/Login.vue");
 
+//注册相关组件
+const Register = () => import("views/Register/Register.vue");
+
 //1.安装插件
 Vue.use(VueRouter);
 
@@ -61,6 +64,11 @@ const routes = [
     path: "/login",
     name: "Login",
     component: Login
+  },
+  {
+    path: "/register",
+    name: "Register",
+    component: Register
   },
   {
     path: "/search",

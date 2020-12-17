@@ -16,6 +16,7 @@
         <l-login-button
           :buttonType="'white'"
           :words="'Sign up to join us !'"
+          @click="toRegister"
         ></l-login-button>
       </div>
     </div>
@@ -64,6 +65,7 @@ export default {
               title: "登陆失败",
               message: "用户名不存在或密码错误"
             });
+            return;
           }
           this.userInfo = res;
           this.$notify.success("登陆成功");
@@ -80,6 +82,9 @@ export default {
         title: "别担心",
         message: "请尝试联系管理员"
       });
+    },
+    toRegister() {
+      this.$router.push("/register");
     }
   }
 };
