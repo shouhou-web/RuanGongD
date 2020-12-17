@@ -1,32 +1,32 @@
 <template>
   <div class="report-cards--indiser">
-    <div class="report-card" v-for="(items, index) in reportList" :key="index">
+    <div class="report-card" v-for="(item, index) in reportList" :key="index">
       <l-root-card
         class="delay"
         :style="{ 'animation-delay': index * 200 + 'ms' }"
-        :hasRead="items.hasRead"
-        :imgPath="items.reporterImgPath"
-        :type="items.reportType"
-        :canShowMore="items.reportContentTrim != null"
+        :hasRead="item.hasRead"
+        :imgPath1="item.reporterInfo.image"
+        :type="item.reportType"
+        :canShowMore="item.trimmedContent != null"
         @toShowMore="resetTrim($event, index)"
       >
         <template v-slot:reporterProfile>
           <div class="report-profile">
-            <span class="report-id">{{ items.reporterID }}</span>
-            <span class="report-job">{{ items.reporterJob }}</span>
+            <span class="report-name">{{ item.reporterInfo.userName }}</span>
+            <span class="report-job">{{ item.reporterInfo.userDegree }}</span>
           </div>
         </template>
         <template v-slot:reportee>
-          <span class="reportee-title" v-if="items.reportType == 1"
-            >&quot;{{ items.articleTitle }}&quot;</span
+          <span class="reportee-title"
+            >&quot;{{ item.articleTitle }}&quot;</span
           >
         </template>
         <template v-slot:detail>
-          <span class="report-detail" v-if="items.isBreviated">
-            {{ items.reportContentTrim }}
+          <span class="report-detail" v-if="item.isTrimmed">
+            {{ item.trimmedContent }}
           </span>
           <span class="report-detail" v-else>
-            {{ items.reportContent }}
+            {{ item.reportContent }}
           </span>
         </template>
       </l-root-card>
@@ -44,95 +44,110 @@ export default {
       reportList: [
         {
           hasRead: false,
-          id: 1,
           articleID: "E387HB9CS1234",
-          articleTitle: "Test this Card with Methods No.1",
-          reporterImgPath: "lyc",
-          isAuthorized: false,
-          isBreviated: true,
-          reporterJob: "本科生",
-          realName: "",
-          reportContentTrim:
+          articleTitle: "This is a card used to test article reports!!!",
+          isTrimmed: true,
+          trimmedContent:
             "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a very....",
           reportContent:
             "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          reporterID: "Tonylyc",
-          reportType: 1
+          reportType: 1,
+          reportID: "",
+          reporterInfo: {
+            userID: "",
+            userName: "Tonylyc",
+            userIdentity: 2,
+            image: "lyc",
+            realName: "",
+            userDegree: "本科生"
+          }
         },
         {
           hasRead: false,
-          id: 1,
           articleID: "E387HB9CS1234",
-          articleTitle: "Test this Card with Methods No.1",
-          reporterImgPath: "lyc",
-          isAuthorized: false,
-          isBreviated: true,
-          reporterJob: "本科生",
-          realName: "",
-          reportContentTrim:
+          articleTitle: "This is a card used to test article reports!!!",
+          isTrimmed: true,
+          trimmedContent:
             "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a very....",
           reportContent:
             "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          reporterID: "Tonylyc",
-          reportType: 1
+          reportType: 1,
+          reportID: "",
+          reporterInfo: {
+            userID: "",
+            userName: "Tonylyc",
+            userIdentity: 2,
+            image: "lyc",
+            realName: "",
+            userDegree: "本科生"
+          }
         },
         {
           hasRead: false,
-          id: 1,
           articleID: "E387HB9CS1234",
-          articleTitle: "Test this Card with Methods No.1",
-          reporterImgPath: "lyc",
-          isAuthorized: false,
-          isBreviated: true,
-          reporterJob: "本科生",
-          realName: "",
-          reportContentTrim:
+          articleTitle: "This is a card used to test article reports!!!",
+          isTrimmed: true,
+          trimmedContent:
             "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a very....",
           reportContent:
             "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          reporterID: "Tonylyc",
-          reportType: 1
+          reportType: 1,
+          reportID: "",
+          reporterInfo: {
+            userID: "",
+            userName: "Tonylyc",
+            userIdentity: 2,
+            image: "lyc",
+            realName: "",
+            userDegree: "本科生"
+          }
         },
         {
           hasRead: false,
-          id: 1,
           articleID: "E387HB9CS1234",
-          articleTitle: "Test this Card with Methods No.1",
-          reporterImgPath: "lyc",
-          isAuthorized: false,
-          isBreviated: true,
-          reporterJob: "本科生",
-          realName: "",
-          reportContentTrim:
+          articleTitle: "This is a card used to test article reports!!!",
+          isTrimmed: true,
+          trimmedContent:
             "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a very....",
           reportContent:
             "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          reporterID: "Tonylyc",
-          reportType: 1
+          reportType: 1,
+          reportID: "",
+          reporterInfo: {
+            userID: "",
+            userName: "Tonylyc",
+            userIdentity: 2,
+            image: "lyc",
+            realName: "",
+            userDegree: "本科生"
+          }
         },
         {
           hasRead: false,
-          id: 1,
           articleID: "E387HB9CS1234",
-          articleTitle: "Test this Card with Methods No.1",
-          reporterImgPath: "lyc",
-          isAuthorized: false,
-          isBreviated: true,
-          reporterJob: "本科生",
-          realName: "",
-          reportContentTrim:
+          articleTitle: "This is a card used to test article reports!!!",
+          isTrimmed: true,
+          trimmedContent:
             "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a very....",
           reportContent:
             "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          reporterID: "Tonylyc",
-          reportType: 1
+          reportType: 1,
+          reportID: "",
+          reporterInfo: {
+            userID: "",
+            userName: "Tonylyc",
+            userIdentity: 2,
+            image: "lyc",
+            realName: "",
+            userDegree: "本科生"
+          }
         }
       ]
     };
   },
   methods: {
     resetTrim(e, index) {
-      this.reportList[index].isBreviated = !this.reportList[index].isBreviated;
+      this.reportList[index].isTrimmed = !this.reportList[index].isTrimmed;
     }
   },
   components: { LRootCard }
@@ -174,14 +189,14 @@ export default {
   flex-direction: column;
 }
 
-.report-id {
+.report-name {
   color: #6b757b;
   cursor: pointer;
   font-size: 15px;
   margin-bottom: 5px;
 }
 
-.report-id:hover {
+.report-name:hover {
   color: var(--color-tint);
   transition: 0.3s;
 }
@@ -203,5 +218,20 @@ export default {
 .report-detail {
   color: #6b757b;
   transition: 0.5s;
+}
+
+.delay {
+  opacity: 0;
+  animation: outin 1s 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes outin {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 </style>

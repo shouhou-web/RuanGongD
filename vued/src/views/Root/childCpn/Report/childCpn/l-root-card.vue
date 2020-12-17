@@ -4,13 +4,27 @@
       <div class="l-root-card--content-upper">
         <div class="l-root-card--content-info">
           <img
-            class="l-root-card--reporter-pic"
-            :src="require('@/assets/image/root/' + imgPath + '.jpg')"
+            class="l-root-card--pic"
+            :src="require('@/assets/image/root/' + imgPath1 + '.jpg')"
           />
           <slot name="reporterProfile"></slot>
-          <div class="l-root-card--content-connect">
+          <div v-if="type == 1" class="l-root-card--content-connect">
             举报了文献
           </div>
+          <div v-else-if="type == 2" class="l-root-card--content-connect">
+            举报了门户
+          </div>
+          <div v-else-if="type == 3" class="l-root-card--content-connect">
+            举报了评论
+          </div>
+          <div v-else-if="type == 4" class="l-root-card--content-connect">
+            举报了动态
+          </div>
+          <img
+            class="l-root-card--pic"
+            :src="require('@/assets/image/root/' + imgPath2 + '.jpg')"
+            v-if="type == 2"
+          />
           <slot name="reportee"></slot>
           <span class="l-root-card--notice" v-if="!hasRead">!</span>
         </div>
@@ -81,10 +95,15 @@ export default {
       type: Boolean,
       default: false
     },
-    imgPath: "",
+    imgPath1: "",
+    imgPath2: "",
     canShowMore: {
       type: Boolean,
       default: true
+    },
+    type: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -139,7 +158,7 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding-left: 20px;
+  padding-left: 40px;
   width: 100%;
 }
 
@@ -150,13 +169,12 @@ export default {
   margin-right: 40px;
 }
 
-.l-root-card--reporter-pic {
+.l-root-card--pic {
   border-radius: 25px;
   border: 1px solid #6b757b;
   cursor: pointer;
   height: 43px;
   margin-bottom: 20px;
-  margin-left: 20px;
   margin-right: 5px;
   margin-top: 20px;
   transition: 0.2s;
@@ -279,12 +297,12 @@ export default {
 
 .l-root-card--detail {
   height: 70px;
-  line-height: 1.5em;
-  padding-top: 10px;
-  padding-left: 20px;
+  line-height: 27px;
+  padding-top: 20px;
+  padding-left: 30px;
   padding-right: 20px;
   padding-bottom: 10px;
-  text-indent: 2em;
+  text-indent: 1.5em;
 }
 
 .l-root-card--reporter-pic:hover {
