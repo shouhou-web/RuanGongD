@@ -1,8 +1,6 @@
 <template>
   <!-- 文献详情页面 -->
   <div id="literature">
-    <!-- <l-leftmenu class="leftmenu"></l-leftmenu> -->
-    <!-- <div class="main"> -->
     <m-app-header></m-app-header>
     <div class="info-top-all">
       <div class="info-top">
@@ -12,10 +10,20 @@
           </div>
           <div class="authorname content">
             <span class="lable">作者：</span>
-            <el-link href="?" target="_blank">{{
+            <ul class="author-ul">
+          <li
+          class="author"
+            @click="toAuthor(index)"
+            v-for="(item, index) in literature.authorList"
+            :key="index"
+          >
+            <l-author :author="item"></l-author>
+          </li>
+        </ul>
+            
+            <!-- <el-link href="?" target="_blank">{{
               literature.authorName
-            }}</el-link>
-            <!-- <a href="???"></a> -->
+            }}</el-link> -->
           </div>
           <div class="abstract content">
             <div>
@@ -35,10 +43,10 @@
               {{ item.str }}
             </el-link>
           </div>
-          <div class="doi content">
+          <!-- <div class="doi content">
             <span class="lable">DOI：</span>
             <span>{{ literature.DOI }}</span>
-          </div>
+          </div> -->
           <div class="classification content">
             <span class="lable">分类：</span>
 
@@ -54,7 +62,7 @@
             <div class="button-left">
               <l-button
                 size="small"
-                round="true"
+                :round="true"
                 type="primary"
                 @click="star()"
               >
@@ -64,23 +72,26 @@
                     'el-icon-star-on': staron,
                   }"
                 ></i>
-                <!-- <i :class="{'el-icon-star-off':true}"></i> -->
                 <span> 收藏</span>
               </l-button>
-              <l-button size="small" round="true" type="primary">
+              <l-button size="small" :round="true" type="primary">
                 <i class="el-icon-edit"></i>
                 <span> 引用</span>
               </l-button>
-              <l-button size="small" round="true" type="primary">
+              <l-button size="small" :round="true" type="primary">
                 <i class="el-icon-edit"></i>
                 <span> 分享</span>
               </l-button>
-              <l-button size="small" round="true" type="primary">
+              <l-button size="small" :round="true" type="primary">
                 <i class="el-icon-edit"></i>
                 <span> ？？？</span>
               </l-button>
             </div>
             <div class="button-right">
+              <l-button size="medium" type="primary" class="report">
+                <i class="el-icon-edit"></i>
+                <span> 举报文献 </span>
+              </l-button>
               <l-button size="medium" type="primary" class="download">
                 <i class="el-icon-edit"></i>
                 <span> 下载文献 </span>
@@ -103,7 +114,7 @@
           <li
             class="op-item"
             @click="toChild(index)"
-            :class="[currentIndex == index ? 'op-item--active' : '']"
+            :class="[currentIndex == index ? 'op-item--active' : 'op-item--inside']"
             v-for="(item, index) in navList"
             :key="index"
           >
@@ -111,74 +122,54 @@
             <div class="op-content">
               {{ item.name }}
             </div>
-            <!-- <div class="op-bar"></div> -->
           </li>
         </ul>
       </div>
     </div>
-
-    <div class="info-bottom">
-      <div class="liter">
-        <ul>
-          <li v-for="(item, index) in referList">
-            <!-- <l-test class="litercard" :refer="refermsg"></l-test> -->
-            <l-followlicard class="litercard" :refer="item"></l-followlicard>
-          </li>
-        </ul>
-      </div>
-
-      <div class="authercard">
-        <div class="auth-top">
-          <div class="auth-title">相关研究者</div>
-        </div>
-        <div class="auth-bottom">
-          <div class="auth-part1">
-            <div class="auth-part1-left">
-              <div class="auth-name">阿尔托莉雅</div>
-              <div class="auth-work">saber</div>
-              <div class="auth-workunit">工作单位：不列颠</div>
-            </div>
-            <div class="auth-part1-right">
-              <img
-                src="./img/test.jpg"
-                alt=""
-                class="l-root-card--reporter-pic"
-              />
-            </div>
-          </div>
-          <div class="auth-part2">
-            个人简介：身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世.身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世
-          </div>
-          <div class="auth-part3">
-            <l-button>关注</l-button>
-            <l-button>个人门户</l-button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- </div> -->
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import LTest from "./childCpn/test.vue";
 import LFollowlicard from "./childCpn/followlicard.vue";
-import LLeftmenu from "./childCpn/leftmenu.vue";
+import LAuthor from "./childCpn/author.vue";
 
 export default {
   name: "Literature",
   components: {
-    LTest,
-    LLeftmenu,
     LFollowlicard,
+    LAuthor
   },
   data() {
     return {
       literature: {
         literatureID: "123",
         title: "Saber我的",
-        authorID: "123456",
-        authorName: "lw",
+        authorList:[
+          {
+          autherID:"",
+        realName: "阿尔托莉雅",
+        organization: "不列颠",
+        image: "test",
+        introduction:
+          "身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世.身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世",
+        },
+          {
+            authorID:"",
+      realName:"lw",
+      image:"test",
+      organization:"",
+      introduction:"",
+          },
+          {
+            authorID:"",
+      realName:"lw",
+      image:"test",
+      organization:"",
+      introduction:"",
+          },
+        ],
+        
         abstract:
           "Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的",
         keyWord: [
@@ -195,7 +186,6 @@ export default {
             str: "Saber我的",
           },
         ],
-        DOI: "123456",
         classification: [
           {
             id: 1,
@@ -210,41 +200,11 @@ export default {
             str: "night",
           },
         ],
+        download:"",
       }, //文献
+      
       staroff: true,
       staron: false,
-      referList: [
-        {
-          title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
-          authors: ["Saber", "Lancer"],
-          tags: ["tag 1", "tag 2"],
-          time: "2020-11-26",
-          img: ["../img/test.jpg", "../img/test.jpg", "../img/test.jpg"],
-          brief:
-            "Tumor suppressor genes can be inactivated by several mechanisms and, in a majority of cases, both alleles need to be affected. One of the mechanisms of inactivation is due to deletions ranging from dozen to hundreds of nucleotides; such deletions are often missed by variant callers. HomDelDetect is a method to detect such homozygous deletions in cancer models, such as cancer cell lines and potentially patient tumor derived xenografts. This method can be applied to partial exome, whole exome, whole genome sequencing, and RNA-seq data. We applied our method across a panel of CCLE cancer cell lines and observed good concordance with SNP array-based analysis and also detected deletions which have been missed by variant callers and by SNP arrays, demonstrating the ability of HomDelDetect to improve the annotations of tumor suppressor genes in cancer models. This article is protected by copyright. All rights reserved​",
-          read_time: 10,
-        },
-        {
-          title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
-          authors: ["Saber", "Lancer"],
-          tags: ["tag 1", "tag 2"],
-          time: "2020-11-26",
-          img: ["../img/test.jpg", "../img/test.jpg", "../img/test.jpg"],
-          brief:
-            "Tumor suppressor genes can be inactivated by several mechanisms and, in a majority of cases, both alleles need to be affected. One of the mechanisms of inactivation is due to deletions ranging from dozen to hundreds of nucleotides; such deletions are often missed by variant callers. HomDelDetect is a method to detect such homozygous deletions in cancer models, such as cancer cell lines and potentially patient tumor derived xenografts. This method can be applied to partial exome, whole exome, whole genome sequencing, and RNA-seq data. We applied our method across a panel of CCLE cancer cell lines and observed good concordance with SNP array-based analysis and also detected deletions which have been missed by variant callers and by SNP arrays, demonstrating the ability of HomDelDetect to improve the annotations of tumor suppressor genes in cancer models. This article is protected by copyright. All rights reserved​",
-          read_time: 10,
-        },
-      ],
-      refermsg: {
-        title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
-        authors: ["Saber", "Lancer"],
-        tags: ["tag 1", "tag 2"],
-        time: "2020-11-26",
-        img: ["../img/test.jpg", "../img/test.jpg", "../img/test.jpg"],
-        brief:
-          "Tumor suppressor genes can be inactivated by several mechanisms and, in a majority of cases, both alleles need to be affected. One of the mechanisms of inactivation is due to deletions ranging from dozen to hundreds of nucleotides; such deletions are often missed by variant callers. HomDelDetect is a method to detect such homozygous deletions in cancer models, such as cancer cell lines and potentially patient tumor derived xenografts. This method can be applied to partial exome, whole exome, whole genome sequencing, and RNA-seq data. We applied our method across a panel of CCLE cancer cell lines and observed good concordance with SNP array-based analysis and also detected deletions which have been missed by variant callers and by SNP arrays, demonstrating the ability of HomDelDetect to improve the annotations of tumor suppressor genes in cancer models. This article is protected by copyright. All rights reserved​",
-        read_time: 10,
-      },
       navList: [
         {
           name: "参考文献",
@@ -255,13 +215,14 @@ export default {
           router: "relation",
         },
         {
-          name: "文献评论",
-          router: "comment",
+          name: "数据统计",
+          router: "stats",
         },
         {
-          name: "相关动态",
-          router: "news",
+          name: "文献评论",
+          router: "review",
         },
+        
       ],
     };
   },
@@ -279,11 +240,11 @@ export default {
       switch (this.$route.path) {
         case "/literature/reference":
           return 0;
-        case "/message/invitation":
+        case "/literature/relation":
           return 1;
-        case "/message/comment":
+        case "/literature/stats":
           return 2;
-        case "/message/system":
+        case "/literature/review":
           return 3;
       }
     },
@@ -324,6 +285,12 @@ export default {
   /* background: #dfe6e9; */
   width: 750px;
 }
+.top-left .author{
+  margin-right: 10px;  
+}
+.top-left .author-ul{
+  display: flex;
+}
 .top-right {
   width: 250px;
   margin-top: 50px;
@@ -353,7 +320,7 @@ export default {
   padding-left: 5px;
 }
 .op-item {
-  margin-top: 20px;
+  margin-top: 10px;
   margin-right: 30px;
   cursor: pointer;
 }
@@ -362,11 +329,59 @@ export default {
   padding-bottom: 5px;
 }
 
-.op-item--active,
-.op-item:hover {
-  /* color: #2faee3; */
+
+
+.op-item--inside {
+  color: #6b757b;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  font-size: 17.5px;
+  /* padding-left: 5px; */
+  /* padding-right: 5px;
+  margin-right: 25px; */
+  position: relative;
+}
+
+.op-item--inside:before {
+  background-color: var(--color-tint);
+  bottom: 0px;
+  content: "";
+  height: 1.7px;
+  left: 50%;
+  position: absolute;
+  transition: all 0.3s;
+  width: 0;
+}
+
+.op-item--inside:hover {
   color: var(--color-tint);
-  /* text-decoration:underline */
+}
+
+.op-item--inside:hover:before {
+  left: 0;
+  right: 0;
+  width: 100%;
+}
+
+.op-item--active {
+  color: var(--color-tint);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  font-size: 17.5px;
+  position: relative;
+}
+
+.op-item--active:before {
+  background-color: var(--color-tint);
+  bottom: 0px;
+  content: "";
+  height: 1.7px;
+  left: 0%;
+  position: absolute;
+  transition: all 0.3s;
+  width: 100%;
 }
 
 .op-bar {
@@ -380,131 +395,6 @@ export default {
   margin-left: 20px; */
 }
 
-.info-bottom {
-  width: 1100px;
-  margin: auto;
-  display: flex;
-  justify-content: space-between;
-}
-
-.info-bottom .authercard {
-  width: 325px;
-  height: 350px;
-  border: 1px solid #95a5a6;
-  margin-top: 20px;
-  margin-right: 20px;
-  background: white;
-  /* background: rgb(245, 240, 240); */
-}
-
-/*.authercard的样式在这块定义*/
-.authercard {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.authercard .auth-top {
-  height: 65px;
-  width: 100%;
-  border-bottom-color: black;
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.authercard .auth-title {
-  font-size: 18px;
-}
-
-.auth-bottom {
-  display: flex;
-  flex-direction: column;
-  width: 80%;
-  align-self: center;
-  align-items: center;
-}
-
-.authercard .auth-part1 {
-  display: flex;
-  width: 100%;
-  /* background: rgb(243, 230, 230); */
-}
-
-.authercard .auth-part1-left {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  font-size: 15px;
-  margin-top: 10px;
-  /* background: #000; */
-}
-
-.authercard .auth-name{
-  font-weight: 600;
-}
-
-.authercard .auth-work{
-  color: #777;
-}
-
-.authercard .auth-workunit{
-  color: #777;
-}
-
-.authercard .auth-part1-right {
-  align-self: flex-end;
-}
-
-.authercard .auth-part2{
-  margin-top: 10px;
-  font-size: 13px;
-  margin-right: 25px;
-  text-align: justify;
-    display: -webkit-box;
--webkit-box-orient: vertical;
--webkit-line-clamp: 8;
-overflow: hidden;
-}
-
-.authercard .auth-part3{
-  margin-top: 15px;
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-}
-
-.authercard .auth-part3 .l-button{
-  margin-right: 30px;
-}
-
-.l-root-card--reporter-pic {
-  border-radius: 30px;
-  border: 1px solid #e83015;
-  cursor: pointer;
-  height: 60px;
-  margin-bottom: 10px;
-  margin-left: 20px;
-  margin-right: 5px;
-  margin-top: 10px;
-  transition: 0.2s;
-  width: 60px;
-}
-
-.l-root-card--reporter-pic:hover {
-  box-shadow: 0px 0px 1px 2px rgba(224, 37, 62, 0.219);
-  transition: 0.2s;
-}
-/*完*/
-.info-bottom .litercard {
-  width: 700px;
-  /* height: 450px; */
-  /* border: 3px solid #95a5a6; */
-  /* margin-top: 5px; */
-  /* background: rgb(245, 240, 240); */
-}
 .title {
   display: flex;
   justify-content: center;
@@ -513,6 +403,7 @@ overflow: hidden;
 .abstract {
   display: flex;
   text-align: left;
+  letter-spacing: 0.5px;
 }
 .lable {
   display: inline-block;
@@ -522,6 +413,7 @@ overflow: hidden;
 .content {
   margin-top: 15px;
   font-size: 14px;
+  display: flex;
 }
 .el-link {
   margin-right: 8px;
@@ -529,7 +421,7 @@ overflow: hidden;
 .button {
   display: flex;
   justify-content: space-between;
-  margin-top: 15px;
+  margin-top: 18px;
   width: 100%;
 }
 .button .l-button {
