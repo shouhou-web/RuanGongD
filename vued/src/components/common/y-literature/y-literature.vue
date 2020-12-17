@@ -24,11 +24,14 @@
 export default {
   name: "y-literature",
   props: {
-    title: '',
-    id: '',
-    authors: [],
-    tags: [],
-    read_time: 0
+    title: String,
+    id: String,
+    authors: Array,
+    tags: Array,
+    read_time: {
+      type: Number,
+      default: 0
+    }
   },
   methods: {
     gotoLiterature() {

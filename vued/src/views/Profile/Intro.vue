@@ -224,6 +224,10 @@ export default {
     this.pieChart.series[0].data = this.introLiteraturesTopTags;
     this.barChart.xAxis.data = this.introWorkInfo.members;
     this.barChart.series[0].data = this.introWorkInfo.publishCount;
+
+    // 进入个人门户
+    let userID = this.$route.query.userID
+    
   },
   components: {
     UserPosts,
