@@ -10,9 +10,20 @@
           </div>
           <div class="authorname content">
             <span class="lable">作者：</span>
-            <el-link href="?" target="_blank">{{
+            <ul class="author-ul">
+          <li
+          class="author"
+            @click="toAuthor(index)"
+            v-for="(item, index) in literature.authorList"
+            :key="index"
+          >
+            <l-author :author="item"></l-author>
+          </li>
+        </ul>
+            
+            <!-- <el-link href="?" target="_blank">{{
               literature.authorName
-            }}</el-link>
+            }}</el-link> -->
           </div>
           <div class="abstract content">
             <div>
@@ -32,10 +43,10 @@
               {{ item.str }}
             </el-link>
           </div>
-          <div class="doi content">
+          <!-- <div class="doi content">
             <span class="lable">DOI：</span>
             <span>{{ literature.DOI }}</span>
-          </div>
+          </div> -->
           <div class="classification content">
             <span class="lable">分类：</span>
 
@@ -77,6 +88,10 @@
               </l-button>
             </div>
             <div class="button-right">
+              <l-button size="medium" type="primary" class="report">
+                <i class="el-icon-edit"></i>
+                <span> 举报文献 </span>
+              </l-button>
               <l-button size="medium" type="primary" class="download">
                 <i class="el-icon-edit"></i>
                 <span> 下载文献 </span>
@@ -117,19 +132,44 @@
 
 <script>
 import LFollowlicard from "./childCpn/followlicard.vue";
+import LAuthor from "./childCpn/author.vue";
 
 export default {
   name: "Literature",
   components: {
     LFollowlicard,
+    LAuthor
   },
   data() {
     return {
       literature: {
         literatureID: "123",
         title: "Saber我的",
-        authorID: "123456",
-        authorName: "lw",
+        authorList:[
+          {
+          autherID:"",
+        realName: "阿尔托莉雅",
+        organization: "不列颠",
+        image: "test",
+        introduction:
+          "身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世.身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世",
+        },
+          {
+            authorID:"",
+      realName:"lw",
+      image:"test",
+      organization:"",
+      introduction:"",
+          },
+          {
+            authorID:"",
+      realName:"lw",
+      image:"test",
+      organization:"",
+      introduction:"",
+          },
+        ],
+        
         abstract:
           "Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的",
         keyWord: [
@@ -146,7 +186,6 @@ export default {
             str: "Saber我的",
           },
         ],
-        DOI: "123456",
         classification: [
           {
             id: 1,
@@ -161,7 +200,9 @@ export default {
             str: "night",
           },
         ],
+        download:"",
       }, //文献
+      
       staroff: true,
       staron: false,
       navList: [
@@ -179,7 +220,7 @@ export default {
         },
         {
           name: "文献评论",
-          router: "comment",
+          router: "review",
         },
         
       ],
@@ -203,7 +244,7 @@ export default {
           return 1;
         case "/literature/stats":
           return 2;
-        case "/literature/comment":
+        case "/literature/review":
           return 3;
       }
     },
@@ -244,6 +285,12 @@ export default {
   /* background: #dfe6e9; */
   width: 750px;
 }
+.top-left .author{
+  margin-right: 10px;  
+}
+.top-left .author-ul{
+  display: flex;
+}
 .top-right {
   width: 250px;
   margin-top: 50px;
@@ -273,7 +320,7 @@ export default {
   padding-left: 5px;
 }
 .op-item {
-  margin-top: 20px;
+  margin-top: 10px;
   margin-right: 30px;
   cursor: pointer;
 }
@@ -291,8 +338,8 @@ export default {
   flex-direction: column;
   font-size: 17.5px;
   /* padding-left: 5px; */
-  padding-right: 5px;
-  margin-right: 25px;
+  /* padding-right: 5px;
+  margin-right: 25px; */
   position: relative;
 }
 
@@ -323,10 +370,6 @@ export default {
   display: flex;
   flex-direction: column;
   font-size: 17.5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  /* margin-left: 15px; */
-  margin-right: 15px;
   position: relative;
 }
 
@@ -360,6 +403,7 @@ export default {
 .abstract {
   display: flex;
   text-align: left;
+  letter-spacing: 0.5px;
 }
 .lable {
   display: inline-block;
@@ -369,6 +413,7 @@ export default {
 .content {
   margin-top: 15px;
   font-size: 14px;
+  display: flex;
 }
 .el-link {
   margin-right: 8px;
@@ -376,7 +421,7 @@ export default {
 .button {
   display: flex;
   justify-content: space-between;
-  margin-top: 15px;
+  margin-top: 18px;
   width: 100%;
 }
 .button .l-button {

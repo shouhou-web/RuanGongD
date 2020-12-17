@@ -7,8 +7,6 @@
         </li>
       </ul>
     </div>
-
-    <l-authorcard :author="auther"></l-authorcard>
   </div>
 </template>
 
@@ -44,7 +42,7 @@ export default {
       ],
       auther: {
         autherID:"",
-        realName: "阿尔托莉雅",
+        realname: "阿尔托莉雅",
         work: "saber",
         organization: "不列颠",
         image: "test",

@@ -21,6 +21,10 @@ const Classify = () => import("views/Literature/Classify.vue");
 // const Search = () => import("views/Literature/Search.vue");
 const Publication = () => import("views/Literature/Publication.vue");
 const Reference = () => import("views/Literature/Reference.vue");
+const Relation = () => import("views/Literature/Relation.vue");
+const Stats = () => import("views/Literature/Stats.vue");
+const Review = () => import("views/Literature/Review.vue");
+
 
 // 消息相关组件
 const Message = () => import("views/Message/Message.vue");
@@ -80,19 +84,19 @@ const routes = [
         component: Reference
       },
       {
-        path: "/literature/related",
-        name: "Related",
-        component: System
+        path: "/literature/relation",
+        name: "Relation",
+        component: Relation
       },
       {
         path: "/literature/stats",
         name: "Stats",
-        component: Comment
+        component: Stats
       },
       {
-        path: "/literature/comment",
-        name: "Comment",
-        component: Comment
+        path: "/literature/review",
+        name: "Review",
+        component: Review
       }
     ]
   },
