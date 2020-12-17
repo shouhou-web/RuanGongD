@@ -2,7 +2,7 @@
   <!-- 门户界面 -->
   <div id="intro" class="intro">
     <m-app-header></m-app-header>
-    <div class="intro-header">
+    <div class="block-header">
       <div class="intro-profile">
         <div class="intro-profile-info">
           <div class="intro-headshot">
@@ -58,7 +58,6 @@
                 <div class="name-style">{{ onefollowingUser.name }}</div>
                 <div class="intro-style">{{ onefollowingUser.intro }}</div>
               </div>
-              <div class="following-op" @click="cancleFollow(onefollowingUser.followingID)">unfollow</div>
             </div>
           </div>
         </div>
@@ -237,9 +236,10 @@ export default {
 
 <style scoped>
 .intro {
+  font-family: Consolas;
 }
 
-.intro-header {
+.block-header {
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
   height: 193px;
@@ -453,10 +453,12 @@ export default {
   /*border: 1px solid red;*/
   font-size: 0.7rem;
   padding: 5%;
-  color: #000000;
+  color: #777777;
 }
 
 .following-content {
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
 }
 
 .following-info {
@@ -528,7 +530,7 @@ export default {
   font-size: 0.7rem;
   font-weight: 700;
   color: white;
-  margin-left: 40%;
+  margin-left: 45%;
 }
 
 .profile-icon {

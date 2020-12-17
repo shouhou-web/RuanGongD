@@ -43,7 +43,7 @@
           <div class="user-intro-content" v-if="userInfoStatue">
             <div class="intro-content">
               <div class="intro-content-details">
-                <div class="intro-font-1">{{ introName }}</div>
+                <div class="intro-font-1" @click="gotoIntro(authorID)">{{ introName }}</div>
                 <div class="intro-font-2">
                   {{introLocation}}
                 </div>
@@ -57,7 +57,7 @@
             </div>
           </div>
           <div class="user-application" v-if="!userInfoStatue">
-            <div class="application">申请加入门户</div>
+            <div class="application" @click="applyForIntro()">申请加入门户</div>
           </div>
         </div>
         <div class="user-follow">
@@ -122,7 +122,7 @@ export default {
       userIntroState: true,
       userIntro: "北航软件学院",
       userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
-      userInfoStatue: true,
+      userInfoStatue: false,
 
       // user收藏文献集合
       favorLiteratures: [
@@ -258,6 +258,12 @@ export default {
     },
     opSwitch(opID) {
       this.op = opID
+    },
+    gotoIntro(authorID) {
+      this.$router.push({path: '/intro'})
+    },
+    applyForIntro() {
+      this.$router.push({path: '/applyIntro'})
     }
   },
   components: {
@@ -269,6 +275,7 @@ export default {
 
 <style scoped>
 .profile {
+  font-family: Consolas;
   /*letter-spacing: 2px;*/
 }
 
@@ -302,6 +309,7 @@ export default {
   /*border: 1px solid red;*/
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 .headshot-img {
@@ -320,8 +328,8 @@ export default {
   justify-content: center;
   opacity: 0;
   position: absolute;
-  left: 20%;
-  top: 78px;
+  left: 13px;
+  top: 20px;
   right: 0;
   bottom: 0;
   transition: ease-in-out 0.3s;
@@ -598,6 +606,10 @@ export default {
   text-align: center;
   font-size: 0.800rem;
   letter-spacing: 2px;
+}
+
+.application:hover {
+  cursor: pointer;
 }
 
 .user-intro-change {
