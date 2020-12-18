@@ -32,6 +32,32 @@
           <div class="header__avator" @click="toProfile">
             <img :src="$store.state.user.image" alt="" />
           </div>
+          <div @click="showAvator" class="header__down">
+            <img src="@/assets/icons/home/down.png" alt="" />
+            <div
+              class="header__down--hide"
+              v-if="isHeaderDown"
+              @mouseleave="hideAvator"
+            >
+              <ul>
+                <li v-for="(item, index) in avatorList" :key="index">
+                  <div
+                    class="header__down__item"
+                    v-if="item.type == curType"
+                    @click="toAvator(item.path)"
+                  >
+                    {{ item.name }}
+                  </div>
+                </li>
+                <div class="header__down__div"></div>
+                <li>
+                  <div class="header__down__item" @click="exit">
+                    登出账户
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
         <div v-else class="header__right--unlog">
           <a class="header__right__log" href="/login">Log in</a>
@@ -59,7 +85,30 @@ export default {
           check: false
         }
       ],
-      isColor: false
+      avatorList: [
+        {
+          type: 0,
+          name: "个人空间",
+          path: "/profile"
+        },
+        {
+          type: 1,
+          name: "个人门户",
+          path: "/intro"
+        },
+        {
+          type: 1,
+          name: "个人动态",
+          path: "/intro"
+        },
+        {
+          type: 2,
+          name: "管理员",
+          path: "/root"
+        }
+      ],
+      isColor: false,
+      isHeaderDown: false
     };
   },
   methods: {
@@ -80,11 +129,21 @@ export default {
         path: "/profile",
         query: { userID: this.$store.state.user.userID }
       });
+    },
+    showAvator() {
+      this.isHeaderDown = true;
+    },
+    hideAvator() {
+      this.isHeaderDown = false;
     }
   },
   computed: {
     isLogin() {
       return this.$store.state.user != null;
+    },
+    curType() {
+      return 1;
+      // return this.$store.state.user.userIdentity;
     }
   },
   created() {
@@ -132,6 +191,7 @@ export default {
 }
 
 .header__right {
+  align-items: center;
   display: flex;
 }
 
@@ -146,6 +206,74 @@ export default {
   height: 42px;
   margin-right: 20px;
   width: 42px;
+}
+
+.header__down {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 16px;
+  margin: 3px 0 0 -15px;
+  position: relative;
+  width: 16px;
+}
+
+.header__down img {
+  height: 100%;
+  width: 100%;
+}
+
+.header__down--hide {
+  background-color: #fff;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13), 0 3px 6px rgba(0, 0, 0, 0.09);
+  display: flex;
+  flex-direction: column;
+  left: -200px;
+  min-width: 230px;
+  position: absolute;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  top: 36px;
+  z-index: 7000;
+}
+
+.header__down--hide li {
+  font-size: 0.875rem;
+  padding: 0 2px;
+}
+
+.header__down--hide li:hover .header__down__item::before {
+  content: "";
+  position: absolute;
+  /* background: #bbb; */
+  background-color: var(--color-tint);
+  transform: translate(0, 0%);
+  transition: 0.15s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+  right: 100%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+}
+
+.header__down__item {
+  align-items: center;
+  background: #fff;
+  border: 0;
+  color: #555;
+  cursor: pointer;
+  display: flex;
+  padding: 0.7375rem 1.25rem;
+  text-align: left;
+  position: relative;
+  width: 100%;
+}
+
+.header__down__div {
+  display: block;
+  height: 1px;
+  background: #ddd;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .header__icon:hover {
