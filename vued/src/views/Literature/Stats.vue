@@ -9,6 +9,7 @@
 <script>
 import ECharts from "vue-echarts";
 import VeLine from "v-charts/lib/line.common";
+import {getStats} from "network/literature"
 
 require("echarts/lib/chart/bar");
 require("echarts/lib/chart/line");
@@ -21,7 +22,6 @@ export default {
   name: "Stats",
   data() {
     return {
-      referTimes:[1,2,3,4,5,6,7,8,9,10,11,12],
       collectTimes:[1,2,3,4,5,6,7,8,9,10,11,12],
       readTimes:[1,2,3,4,5,6,7,8,9,10,11,12],
       commentTimes:[1,2,3,4,5,6,7,8,9,10,11,12],
@@ -33,7 +33,7 @@ export default {
           textStyle: {
             fontSize: 15,
           },
-          data: ["被引数", "收藏数", "阅读数", "评论数"],
+          data: ["收藏数", "阅读数", "评论数"],
         },
         grid: {
           left: "3%",
@@ -50,26 +50,24 @@ export default {
           type: "category",
           boundaryGap: false,
           data: [
-            "二月",
-            "二月",
-            "二月",
-            "二月",
-            "二月",
-            "二月",
-            "二月",
-            "二月",
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sept",
+            "Oct",
+            "Nov",
+            "Dec",
           ],
         },
         yAxis: {
           type: "value",
         },
         series: [
-          {
-            name: "被引数",
-            type: "line",
-            stack: "总量",
-            data: [120, 132, 101, 134, 90, 230, 210],
-          },
           {
             name: "收藏数",
             type: "line",
@@ -91,6 +89,14 @@ export default {
         ],
       },
     };
+  },
+  create(){
+    getStats(this.$route.query.literatureID)
+    .then(res=>{
+      this.collectTimes = res.collectTimes;
+      this.readTimes = res.readTimes;
+      this.commentTimes = res.commentTimes;
+    })
   },
   mounted() {},
   methods: {},

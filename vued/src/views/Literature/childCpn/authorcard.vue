@@ -1,26 +1,34 @@
 <template>
-  <div id="authercard" class="authercard">
+  <div id="authorcard" class="authorcard">
     <div class="auth-top">
       <div class="auth-title">相关研究者</div>
     </div>
     <div class="auth-bottom">
       <div class="auth-part1">
         <div class="auth-part1-left">
-          <div class="auth-name">{{author.realName}}</div>
-          <div class="auth-work">{{author.work}}</div>
-          <div class="auth-workunit">{{author.organization}}</div>
+          <div class="auth-name">{{ author.realName }}</div>
+          <!-- <div class="auth-work">{{author.work}}</div> -->
+          <div class="auth-workunit">{{ author.organization }}</div>
         </div>
         <div class="auth-part1-right">
           <!-- <img src="../img/test.jpg" alt="" class="l-root-card--reporter-pic" /> -->
-          <img :src="require('@/assets/image/literature/' + author.image+ '.jpg')" alt="" class="l-root-card--reporter-pic" />
+          <img
+            :src="require('@/assets/image/literature/' + author.image + '.jpg')"
+            alt=""
+            class="l-root-card--reporter-pic"
+            @click="toAuthor(author.authorID)"
+          />
         </div>
       </div>
       <div class="auth-part2">
-        个人简介：{{author.introduction}}
+        <div class="introduction">
+          <span class="intro">个人简介：</span>
+          <span>{{ author.introduction }}</span>
+        </div>
       </div>
       <div class="auth-part3">
-        <l-button>关注</l-button>
-        <l-button>个人门户</l-button>
+        <l-button @click="follow(author.authorID)">关注</l-button>
+        <l-button @click="toAuthor(author.authorID)">个人门户</l-button>
       </div>
     </div>
   </div>
@@ -28,41 +36,53 @@
 
 <script>
 export default {
-  name: "Authercard",
-  props:{
+  name: "Authorcard",
+  props: {
     author: {
-      authorID:"",
-      realName:"",
-      work:"",
-      organization:"",
-      image:"",
-      introduction:"",
-    }
+      authorID: "",
+      realName: "",
+      organization: "",
+      image: "",
+      introduction: "",
+    },
   },
   data() {
     return {};
   },
-  methods: {},
+  methods: {
+    toAuthor(authorID) {
+      this.$router.push({
+        path: "/profile",
+        query: {
+          userID: authorID,
+        },
+      });
+    },
+    follow(authorID) {
+      console.log("test");
+    },
+  },
+
   components: {},
 };
 </script>
 
 <style scoped>
-.authercard {
+.authorcard {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 325px;
   height: 350px;
-  border: 1px solid #95a5a6;
+  border: 1px solid #dddddd;
   margin-top: 20px;
   margin-right: 20px;
   background: white;
 }
-.authercard .auth-top {
+.authorcard .auth-top {
   height: 65px;
   width: 100%;
-  border-bottom-color: black;
+  border-bottom-color: #dddddd;
   border-bottom-style: solid;
   border-bottom-width: 1px;
   display: flex;
@@ -70,7 +90,7 @@ export default {
   align-items: center;
 }
 
-.authercard .auth-title {
+.authorcard .auth-title {
   font-size: 18px;
 }
 
@@ -82,13 +102,13 @@ export default {
   align-items: center;
 }
 
-.authercard .auth-part1 {
+.authorcard .auth-part1 {
   display: flex;
   width: 100%;
   /* background: rgb(243, 230, 230); */
 }
 
-.authercard .auth-part1-left {
+.authorcard .auth-part1-left {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -99,26 +119,25 @@ export default {
   /* background: #000; */
 }
 
-.authercard .auth-name {
+.authorcard .auth-name {
+  padding-top: 12px;
   font-weight: 600;
 }
 
-.authercard .auth-work {
+.authorcard .auth-workunit {
+  padding-bottom: 8px;
   color: #777;
 }
 
-.authercard .auth-workunit {
-  color: #777;
-}
-
-.authercard .auth-part1-right {
+.authorcard .auth-part1-right {
   align-self: flex-end;
 }
 
-.authercard .auth-part2 {
+.authorcard .auth-part2 {
+  height: 126px;
   margin-top: 10px;
   font-size: 13px;
-  letter-spacing:0.5px;
+  letter-spacing: 0.5px;
   line-height: 16px;
   margin-right: 25px;
   text-align: justify;
@@ -128,7 +147,7 @@ export default {
   overflow: hidden;
 }
 
-.authercard .auth-part3 {
+.authorcard .auth-part3 {
   margin-top: 15px;
   margin-left: 30px;
   width: 100%;
@@ -136,7 +155,7 @@ export default {
   justify-content: flex-start;
 }
 
-.authercard .auth-part3 .l-button {
+.authorcard .auth-part3 .l-button {
   margin-right: 30px;
 }
 
@@ -158,8 +177,13 @@ export default {
   transition: 0.2s;
 }
 
-.l-button{
+.l-button {
   padding-left: 18px;
   padding-right: 18px;
+}
+
+.intro {
+  font-size: 14px;
+  font-weight: 550;
 }
 </style>

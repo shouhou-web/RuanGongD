@@ -215,15 +215,16 @@ export default {
 }
 
 .comment-container {
-  width: 61%;
+  width: 700px;
   min-width: 400px;
-  margin: 0 auto;
 }
 
 .input-container {
   width: 100%;
   min-width: 400px;
   margin: 0 auto;
+ background: white;
+
 }
 
 .card {
@@ -236,6 +237,7 @@ export default {
   border: 1px solid #ddd;
   box-shadow: 0 0px 2px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.12);
   padding: 20px 30px 20px 30px;
+  background: white;
 }
 
 .card-header {
