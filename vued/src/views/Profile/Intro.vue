@@ -15,15 +15,18 @@
             </div>
           </div>
           <div class="publish">
-            <create_literature></create_literature>
+            <create_literature v-if="isSelfIntro"></create_literature>
+            <div v-if="!isSelfIntro && !isFollowing" class="publish-button">关注</div>
+            <div v-if="!isSelfIntro && isFollowing" class="publish-button-nice">已关注</div>
           </div>
         </div>
         <div class="profile-op">
           <div class="op-switch">
             <div class="op-all" @click="opSwitch(0)">个人文献</div>
             <div class="op-all" @click="opSwitch(1)">个人动态</div>
+            <div class="op-all" @click="opSwitch(2)">收藏文献</div>
           </div>
-          <div :class="{ 'bar': opID == 0, 'bar-change': opID == 1 }"></div>
+          <div :class="{ 'bar': opID == 0, 'bar-change-1': opID == 1, 'bar-change-2': opID == 2 }"></div>
         </div>
       </div>
     </div>
@@ -31,6 +34,7 @@
       <div class="content-left">
         <my-literatures :userID="userID" v-if="opID == 0"></my-literatures>
         <user-posts :userId="userID" v-if="opID == 1"></user-posts>
+        <favor :userID="userID" v-if="opID == 2"></favor>
       </div>
       <div class="content-right">
         <div class="chart-part">
@@ -50,8 +54,8 @@
           <div class="oneChart-style" v-if="introLiteraturesTopTags == null"><img src="../../assets/image/no-data.png"></div>
         </div>
         <div class="followed">
-          <div class="follow-part-head">follower (2)</div>
-          <div class="following-content">
+          <div class="follow-part-head">follower ({{ followers.length }})</div>
+          <div class="following-content" v-if="followers.length > 0">
             <div class="one-following" v-for="(onefollowingUser, i) in followers">
               <img :src="onefollowingUser.imgSrc" class="intro-img img-plus">
               <div class="following-info">
@@ -71,6 +75,7 @@ import ECharts from 'vue-echarts'
 import MyLiteratures from "@/views/Profile/MyLiteratures";
 import UserPosts from "@/views/Forum/childCpn/user-posts";
 import create_literature from "@/views/Literature/childCpn/create_literature";
+import Favor from "@/views/Profile/Favor";
 
 require('echarts/lib/chart/bar')
 require('echarts/lib/chart/line')
@@ -84,6 +89,9 @@ export default {
   data() {
     return {
       intro: {},
+
+      isSelfIntro: false,
+      isFollowing: false,
 
       introName: "猫猫头科研院",
       introPublish: 100,
@@ -101,22 +109,7 @@ export default {
       opID: 0,
 
       // 关注我的用户集合
-      followers: [
-        {
-          followerID: 1,
-          imgSrc: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3824999008,143707972&fm=26&gp=0.jpg",
-          name: "Ma Hanyuan",
-          intro: "Beihang University (BUAA)",
-          isfollowed: true
-        },
-        {
-          followerID: 2,
-          imgSrc: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3824999008,143707972&fm=26&gp=0.jpg",
-          name: "Ma Hanyuan",
-          intro: "Beihang University (BUAA)",
-          isfollowed: false
-        },
-      ],
+      followers: [],
 
       introLiteraturesPublishedData: [100, 200, 500, 100],
       introLiteraturesTopTags: [
@@ -206,16 +199,24 @@ export default {
     this.pieChart.series[0].data = this.introLiteraturesTopTags;
 
     // 进入个人门户
-    let userID = this.$route.query.userID
+    let authorID = this.$route.query.authorID
+
+    if (authorID == this.$store.state.user.authorID){
+      this.isSelfIntro = false
+    } else {
+      // 获取是否关注门户
+    }
 
     // 获取门户信息：文献发布量 + 文献tag
   },
   components: {
+    Favor,
     create_literature,
     UserPosts,
     'v-chart': ECharts,
     'myLiteratures': MyLiteratures,
-    'user-posts': UserPosts
+    'user-posts': UserPosts,
+    'favor': Favor
   },
 };
 </script>
@@ -308,9 +309,32 @@ export default {
   color: white;
   font-size: 0.800rem;
   letter-spacing: 2px;
+  transition: ease-in-out 0.3s;
 }
 
 .publish-button:hover {
+  color: #4F6EF2;
+  background-color: white;
+  border: 1px solid #4F6EF2;
+  cursor: pointer;
+  transition: ease-in-out 0.3s;
+}
+
+.publish-button-nice {
+  margin: 0 auto;
+  padding: 10px;
+  width: 70%;
+  /*border: 1px solid black;*/
+  border-radius: 2px;
+  text-align: center;
+  background-color: white;
+  color: #4F6EF2;
+  border: 1px solid #4F6EF2;
+  font-size: 0.800rem;
+  letter-spacing: 2px;
+}
+
+.publish-button-nice:hover {
   cursor: pointer;
 }
 
@@ -340,13 +364,23 @@ export default {
   transition: ease-in-out 0.3s;
 }
 
-.bar-change {
+.bar-change-1 {
   background-color: #4F6EF2;
   border-radius: 2px;
   height: 2px;
   width: 50px;
   margin-top: 10px;
   margin-left: 110px;
+  transition: ease-in-out 0.3s;
+}
+
+.bar-change-2 {
+  background-color: #4F6EF2;
+  border-radius: 2px;
+  height: 2px;
+  width: 50px;
+  margin-top: 10px;
+  margin-left: 202px;
   transition: ease-in-out 0.3s;
 }
 

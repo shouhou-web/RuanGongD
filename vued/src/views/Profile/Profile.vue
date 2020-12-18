@@ -31,29 +31,7 @@
       </div>
       <div class="content-right">
         <div class="user-intro">
-          <div class="user-intro-header" v-if="userInfoStatue">
-            <div class="user-intro-header-content">Intro</div>
-            <div class="user-intro-change">
-              <div class="edit">
-                Edit
-                <img src="../../assets/icons/profile/edit.svg" class="profile-icon">
-              </div>
-            </div>
-          </div>
-          <div class="user-intro-content" v-if="userInfoStatue">
-            <div class="intro-content">
-              <div class="intro-content-details">
-                <div class="intro-font-1" @click="gotoIntro(user.authorID)">{{ user.realName }}</div>
-                <div class="intro-font-2">
-                  {{ user.introduction }}
-                </div>
-              </div>
-            </div>
-            <div class="intro-img">
-              <img :src="user.introImage" class="intro-img-details">
-            </div>
-          </div>
-          <div class="user-application" v-if="!userInfoStatue">
+          <div class="user-application">
             <div class="application" @click="applyForIntro()">申请加入门户</div>
           </div>
         </div>
@@ -63,7 +41,7 @@
           </div>
           <div class="following">
             <div class="follow-part-head">following ({{ followUsers.length }})</div>
-            <div class="following-content">
+            <div class="following-content" v-if="followUsers.length > 0">
               <div class="one-following" v-for="(onefollowingUser, i) in followUsers">
                 <img :src="onefollowingUser.imgSrc" class="intro-img img-plus">
                 <div class="following-info">
@@ -104,7 +82,7 @@
 <script>
 import yLiterature from '@/components/common/y-literature/y-literature'
 import Favor from "@/views/Profile/Favor";
-import { getUserFollowingList, getUserInformation, getUserIntro } from "@/network/profile";
+import { getUserFollowingList, getUserInformation } from "@/network/profile";
 
 export default {
   name: "Profile",
@@ -117,8 +95,6 @@ export default {
 
       // 当前我的门户
       userIntro: {},
-
-      userInfoStatue: true,
 
       // user收藏文献集合
       favorLiteratures: [],
@@ -147,16 +123,10 @@ export default {
 
       console.log(this.user)
 
-      // 获取个人信息：我的关注 + 我的门户 + 我的收藏
+      // 获取个人信息：我的关注 + 我的收藏
       getUserFollowingList(userID)
       .then((follow) => { this.followUsers = follow, console.log("follow:", follow) } )
       .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
-
-      if (this.user.authorID.length > 0) {
-        getUserIntro(this.user.authorID)
-        .then((intro) => { this.intro = intro } )
-        .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
-      }
     }
     // 进入其他用户个人主页
     else {
@@ -529,7 +499,7 @@ export default {
 }
 
 .user-intro-header {
-  height: 60px;
+  height: 40px;
   width: 100%;
   border-bottom: 1px solid #ddd;
   display: flex;
@@ -599,11 +569,14 @@ export default {
   color: #111111;
   font-weight: 700;
   font-size: 1rem;
+  transition: ease-in-out 0.5s;
 }
 
 .intro-font-1:hover {
-  border-bottom: 1px solid #777777;
+  /*border-bottom: 1px solid #777777;*/
+  color: #4F6EF2;
   cursor: pointer;
+  transition: ease-in-out 0.5s;
 }
 
 .intro-font-2 {
@@ -628,6 +601,10 @@ export default {
   max-height: 100%;
 }
 
+.intro-img-details:hover {
+  cursor: pointer;
+}
+
 .user-follow {
   width: 100%;
   height: auto;
@@ -638,7 +615,7 @@ export default {
 
 .follow-header {
   width: 100%;
-  height: 55px;
+  height: 40px;
   border-bottom: 1px solid #ddd;
   display: flex;
   align-items: center;
@@ -653,10 +630,6 @@ export default {
 .following {
   border-bottom: 1px solid #ddd;
   padding-bottom: 20px;
-}
-
-.befollowed {
-
 }
 
 .follow-part-head {
