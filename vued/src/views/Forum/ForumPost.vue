@@ -264,8 +264,8 @@ import {
   deleteComment,
   commentPost
 } from "@/network/forum";
-import getLiterature from "@/network/literature";
-import MHeader from "../../components/common/m-header/m-header.vue";
+import { getLiterature } from "@/network/literature";
+import MHeader from "@/components/common/m-header/m-header";
 
 export default {
   name: "FormPost",
@@ -903,7 +903,7 @@ html {
   height: 40px;
   width: 80px;
   align-items: center;
-  justify-content: end;
+  justify-content: flex-end;
   margin-left: auto;
   padding-right: 12px;
   color: rgb(96, 98, 102);
