@@ -1,4 +1,5 @@
 import { request } from "@/network/request";
+import {use} from "element-ui/src/locale";
 
 // 个人信息系统
 let baseURL = "http://185.133.193.251:8082";
@@ -26,4 +27,23 @@ export function getUserFollowersList(userID) {
 // 获取用户对象
 export function getUserInformation(userID) {
   return request(baseURL, { url: "/getUserInformation", params: { userID }, method: "get"})
+}
+
+// 修改用户信息
+export function editProfile(userID, username, realName, userDegree, image, organization, emailAddress, phoneNumber) {
+  return request(baseURL,
+    {
+      url: "/editProfile",
+      params: {
+        userID: userID,
+        username: username,
+        realName: realName,
+        userDegree: userDegree,
+        image: image,
+        organization: organization,
+        emailAddress: emailAddress,
+        phoneNumber: phoneNumber
+      },
+      method: "post"
+  })
 }
