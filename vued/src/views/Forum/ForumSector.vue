@@ -74,7 +74,7 @@
                 elevation="1"
                 color="#4F6EF2"
                 @click="followSector()"
-                ><div>{{followedText}}</div></v-btn
+                ><div>{{ followedText }}</div></v-btn
               >
             </el-col>
           </el-row>
@@ -91,7 +91,7 @@
                   <div class="postInfo">
                     <v-card-title>
                       <div class="postName" @click="goToPost(item.postId)">
-                        {{ item.postName }}
+                        {{ handleTitle(item.postName, 48) }}
                       </div>
                     </v-card-title>
                     <v-card-subtitle>
@@ -215,6 +215,21 @@ export default {
           editorAvatar: "https://i.loli.net/2020/08/11/Rqm3hEG6bnHLsd4.png",
           editTime: "MM月dd日 HH:mm",
           tags: ["测试标签1", "测试标签2", "测试标签3", "测试标签4"]
+        },
+        {
+          postId: "01",
+          postName:
+            "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十",
+          replyNum: "1023",
+          viewNum: "1002001",
+          creatorId: "01",
+          creatorName: "测试用户",
+          createTime: "MM月dd日 HH:mm",
+          editorId: "02",
+          editorName: "测测用户",
+          editorAvatar: "https://i.loli.net/2020/08/11/Rqm3hEG6bnHLsd4.png",
+          editTime: "MM月dd日 HH:mm",
+          tags: ["测试标签1", "测试标签2", "测试标签3", "测试标签4"]
         }
       ]
     };
@@ -226,9 +241,9 @@ export default {
       if (num >= 1000) return (num / 1000).toFixed(1) + "k";
       return num.toString();
     },
-    handleTitle(str) {
-      let maxLength = 17;
-      if (str.length > maxLength) return str.substring(0, maxLength - 2) + "..";
+    handleTitle(str, len) {
+      let maxLength = len;
+      if (str.length > maxLength) return str.substring(0, maxLength - 1) + "..";
       return str;
     },
     goToUser(id) {
@@ -363,7 +378,7 @@ export default {
     );
     let start = ((parseInt(this.page) - 1) * this.pageSize).toString();
     //getPosts
-    getPosts(this.sectorId, start, pageSize, this.sort, this.keyword)
+    getPosts(this.sectorId, start, this.pageSize, this.sort, this.keyword)
       .then(res => {
         console.log("getPosts");
         console.log(res);
@@ -438,10 +453,11 @@ export default {
 }*/
 .postName {
   cursor: pointer;
-  font-size: 25px;
+  font-size: 17px;
 }
-/*.creator {
-}*/
+.creator {
+  font-size: 13px;
+}
 .creatorName {
   cursor: pointer;
   /*color: var(--color-tint);*/
@@ -453,6 +469,7 @@ export default {
   margin-right: 3px;
 }
 .displayNum {
+  margin-left: 10px;
   position: absolute;
   top: 50%;
   transform: translateY(-45%);

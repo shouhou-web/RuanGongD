@@ -101,15 +101,18 @@ export default {
       }
     },
     reply() {
+      console.log(this.message.messageID);
       replyMsg(this.message.messageID, this.content)
         .then(res => {
-          if (res == 1)
+          if (res == 1) {
+            this.content = "";
+            this.isOpen = false;
             this.$notify({
               title: "成功",
               message: "回复成功~",
               type: "success"
             });
-          else throw new console.error();
+          } else throw new console.error();
         })
         .catch(err => {
           this.$notify.error({
@@ -122,14 +125,14 @@ export default {
       console.log(this.message.messageID);
       deleteMsg(this.message.messageID)
         .then(res => {
-          if (res == 0) {
+          if (res == 1) {
             this.$notify({
               title: "成功",
               message: "删除消息成功",
               type: "success"
             });
             this.$emit("delete");
-          }
+          } else throw new console.error();
         })
         .catch(err => {
           this.$notify.error({
