@@ -60,12 +60,12 @@ export default {
   line-height: 20px;
   padding-left: 5px;
   margin-bottom: 5px;
-  transition: ease-in-out 0.5s;
+  transition: ease-in-out 0.3s;
 }
 
 .title:hover {
   color: #4F6EF2;
-  transition: ease-in-out 0.5s;
+  transition: ease-in-out 0.3s;
   cursor: pointer;
 }
 

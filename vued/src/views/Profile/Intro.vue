@@ -15,7 +15,9 @@
             </div>
           </div>
           <div class="publish">
-            <create_literature></create_literature>
+            <create_literature v-if="isSelfIntro"></create_literature>
+            <div v-if="!isSelfIntro && !isFollowing" class="publish-button">关注</div>
+            <div v-if="!isSelfIntro && isFollowing" class="publish-button-nice">已关注</div>
           </div>
         </div>
         <div class="profile-op">
@@ -84,6 +86,9 @@ export default {
   data() {
     return {
       intro: {},
+
+      isSelfIntro: false,
+      isFollowing: false,
 
       introName: "猫猫头科研院",
       introPublish: 100,
@@ -206,7 +211,15 @@ export default {
     this.pieChart.series[0].data = this.introLiteraturesTopTags;
 
     // 进入个人门户
-    let userID = this.$route.query.userID
+    let authorID = this.$route.query.authorID
+
+    if (authorID == this.$store.state.user.authorID){
+      this.isSelfIntro = false
+    } else {
+      // 获取是否关注门户
+    }
+
+
 
     // 获取门户信息：文献发布量 + 文献tag
   },
@@ -308,9 +321,32 @@ export default {
   color: white;
   font-size: 0.800rem;
   letter-spacing: 2px;
+  transition: ease-in-out 0.3s;
 }
 
 .publish-button:hover {
+  color: #4F6EF2;
+  background-color: white;
+  border: 1px solid #4F6EF2;
+  cursor: pointer;
+  transition: ease-in-out 0.3s;
+}
+
+.publish-button-nice {
+  margin: 0 auto;
+  padding: 10px;
+  width: 70%;
+  /*border: 1px solid black;*/
+  border-radius: 2px;
+  text-align: center;
+  background-color: white;
+  color: #4F6EF2;
+  border: 1px solid #4F6EF2;
+  font-size: 0.800rem;
+  letter-spacing: 2px;
+}
+
+.publish-button-nice:hover {
   cursor: pointer;
 }
 
