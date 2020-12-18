@@ -44,3 +44,26 @@ export function getRelatedAuthor(venue) {
     method: "post"
   });
 }
+
+//获取文献数据
+export function getStats(literatureID) {
+  return request(baseURL, {
+    url: "/getStats",
+    params: {
+      literatureID
+    },
+    method: "post"
+  });
+}
+
+//收藏文献
+export function collect(userID,literatureID) {
+  return request(baseURL, {
+    url: "/collect",
+    params: {
+      userID,
+      literatureID
+    },
+    method: "post"
+  });
+}

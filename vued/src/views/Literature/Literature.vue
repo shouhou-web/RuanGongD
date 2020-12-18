@@ -49,7 +49,7 @@
                 size="small"
                 :round="true"
                 type="primary"
-                @click="star()"
+                @click="collectLiterature()"
               >
                 <i
                   :class="{
@@ -59,26 +59,32 @@
                 ></i>
                 <span> 收藏</span>
               </l-button>
-              <l-button size="small" :round="true" type="primary">
+              <l-button
+                size="small"
+                :round="true"
+                type="primary"
+                @click="referFormat()"
+              >
                 <i class="el-icon-edit"></i>
                 <span> 引用</span>
               </l-button>
               <l-button size="small" :round="true" type="primary">
-                <i class="el-icon-edit"></i>
+                <i class="el-icon-position"></i>
                 <span> 分享</span>
-              </l-button>
-              <l-button size="small" :round="true" type="primary">
-                <i class="el-icon-edit"></i>
-                <span> ？？？</span>
               </l-button>
             </div>
             <div class="button-right">
-              <l-button size="medium" type="primary" class="report">
-                <i class="el-icon-edit"></i>
+              <l-button
+                size="medium"
+                type="primary"
+                class="report"
+                @click="reportLiterature()"
+              >
+                <i class="el-icon-warning-outline"></i>
                 <span> 举报文献 </span>
               </l-button>
               <l-button size="medium" type="primary" class="download">
-                <i class="el-icon-edit"></i>
+                <i class="el-icon-download"></i>
                 <span> 下载文献 </span>
               </l-button>
             </div>
@@ -113,6 +119,56 @@
         </ul>
       </div>
     </div>
+
+    <div data-app="true">
+      <!-- 举报对话框  -->
+      <v-dialog v-model="reportDialog" max-width="600">
+        <v-card elevation="3">
+          <v-card-title>举报文献</v-card-title>
+          <v-card-text>
+            <el-form
+              :model="reportForm"
+              label-width="80px"
+              :rules="reportRule"
+              ref="reportForm"
+            >
+              <el-form-item label="举报理由" prop="reportContent">
+                <el-input
+                  class="report-content"
+                  type="textarea"
+                  v-model="reportForm.reportContent"
+                  placeholder="请输入举报理由"
+                  :autosize="{ minRows: 5, maxRows: 12 }"
+                  resize="none"
+                  maxlength="801"
+                ></el-input>
+              </el-form-item>
+            </el-form>
+          </v-card-text>
+          <v-card-actions>
+            <div class="footer">
+              <v-btn
+                color="var(--color-main)"
+                @click="handleReport('reportForm')"
+              >
+                <font color="white">举报</font>
+              </v-btn>
+              <v-btn @click="reportDialog = false">取消</v-btn>
+            </div>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <m-hover ref="hover" @submit="submit" @cancel="cancel">
+        <div class="hover-referformat1">
+MLA格式引文：{{literature.MLAformat}}
+        </div>
+        <el-divider></el-divider>
+        <div class="hover-referformat2">
+APA格式引文：{{literature.APAformat}}
+        </div>
+      </m-hover>
+    </div>
+
     <router-view></router-view>
   </div>
 </template>
@@ -120,7 +176,15 @@
 <script>
 import LFollowlicard from "./childCpn/followlicard.vue";
 import LAuthor from "./childCpn/author.vue";
-import { getLiterature } from "network/literature";
+import { getLiterature, collect } from "network/literature";
+import {
+  getPostInfo,
+  reportPost,
+  deletePost,
+  reportComment,
+  deleteComment,
+  commentPost,
+} from "network/forum.js";
 
 export default {
   name: "Literature",
@@ -175,6 +239,9 @@ export default {
           },
         ],
         download: "",
+        MLAformat:
+          "[1]俞文雅,陶红武,曾顺,谭跃刚.四足机器人斜坡对角小跑运动控制研究[J].武汉科技大学学报,2021,44(01):60-67.",
+          APAformat:"qwertyuio"
       }, //文献
 
       staroff: true,
@@ -197,11 +264,106 @@ export default {
           router: "review",
         },
       ],
+      //举报相关
+      reportDialog: false,
+      reportForm: {
+        reportContent: "",
+        reportCommentId: "",
+      },
+      reportRule: {
+        reportContent: [
+          {
+            required: true,
+            message: "请输入举报理由",
+            trigger: "blur",
+          },
+          {
+            min: 5,
+            max: 800,
+            message: "举报理由长度在 5-800 个字符之间",
+            trigger: "blur",
+          },
+        ],
+      },
     };
   },
   methods: {
-    star() {
-      (this.staroff = !this.staroff), (this.staron = !this.staron);
+    collectLiterature() {
+      //未登录用户无法收藏
+      if (this.$store.state.userID == null) {
+        this.$notify.warning("您还未登录");
+      } else {
+        (this.staroff = !this.staroff), (this.staron = !this.staron);
+        collect(this.$store.state.userID, literature.literatureID).then(
+          (res) => {
+            //收藏成功
+            if (res == 0) {
+              this.$notify.success("收藏成功");
+            }
+            //收藏失败
+            else if (res == -1) {
+              this.$notify.warning("收藏失败");
+            }
+          }
+        );
+      }
+    },
+    referFormat() {
+      this.$refs.hover.showHover({
+    title: "引用文献",
+    // submitBtn: "确定",
+    // cancelBtn: "起飞"
+  });
+    },
+
+    reportLiterature() {
+      this.reportDialog = true;
+    },
+    // 举报
+    handleReport(formName) {
+      let pass = false;
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          pass = true;
+        }
+      });
+      if (!pass) return;
+
+      if (this.reportPost == true) {
+        reportPost(this.userId, this.postId, this.reportForm.reportContent)
+          .then((res) => {
+            console.log("report post");
+            console.log(res);
+            if (res.data.result == "true") {
+              this.reportDialog = false;
+            } else {
+              this.$notify.error("举报失败，请稍后再试。");
+            }
+          })
+          .catch((err) => {
+            this.$notify.error("举报失败，请稍后再试。");
+            console.log(err);
+          });
+      } else {
+        reportComment(
+          this.userId,
+          this.reportForm.reportCommentId,
+          this.reportForm.reportContent
+        )
+          .then((res) => {
+            console.log("report comment");
+            console.log(res);
+            if (res.data.result == "true") {
+              this.reportDialog = false;
+            } else {
+              this.$notify.error("举报失败，请稍后再试。");
+            }
+          })
+          .catch((err) => {
+            this.$notify.error("举报失败，请稍后再试。");
+            console.log(err);
+          });
+      }
     },
     toChild(index) {
       let target = this.navList[index].router;
@@ -216,11 +378,13 @@ export default {
       });
     },
   },
-  create(){
-    getLiterature(this.$route.query.literatureID)
-    .then(res => {
-      this.literature = res; 
-    })
+
+
+
+  create() {
+    getLiterature(this.$route.query.literatureID).then((res) => {
+      this.literature = res;
+    });
   },
   computed: {
     currentIndex() {
@@ -418,5 +582,31 @@ export default {
 }
 .el-menu {
   background: #e2ebf0;
+}
+.report-content{
+  margin-top: 10px;
+}
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  margin: auto;
+  padding-bottom: 10px;
+  width: 80%;
+}
+.footer .v-btn{
+  margin-right: 20px;
+}
+.el-form-item{
+  margin-bottom: 0;
+}
+.hover-referformat1{
+  font-size: 12px;
+  margin-top: 20px;
+  -webkit-user-select: text;
+}
+.hover-referformat2{
+  font-size: 12px;
+  margin-bottom: 30px;
+  -webkit-user-select: text;
 }
 </style>
