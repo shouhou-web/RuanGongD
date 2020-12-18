@@ -12,7 +12,7 @@
             </a>
           </div>
           <div class="username">
-            <div class="user-nickname">{{ user.userName }}</div>
+            <div class="user-nickname">{{ user.username }}</div>
             <div class="user-degree" @click="openChangeProfileHover">
               {{ retUserDegree() }}
               <img src="../../assets/icons/profile/edit.svg" class="profile-icon">
@@ -44,16 +44,13 @@
             <div class="intro-content">
               <div class="intro-content-details">
                 <div class="intro-font-1" @click="gotoIntro(user.authorID)">{{ user.realName }}</div>
-<!--                <div class="intro-font-2">-->
-<!--                  {{introLocation}}-->
-<!--                </div>-->
-<!--                <div class="intro-font-2">-->
-<!--                  {{introDepartment}}-->
-<!--                </div>-->
+                <div class="intro-font-2">
+                  {{ user.introduction }}
+                </div>
               </div>
             </div>
             <div class="intro-img">
-              <img :src="userIntro.introImg" class="intro-img-details">
+              <img :src="user.introImage" class="intro-img-details">
             </div>
           </div>
           <div class="user-application" v-if="!userInfoStatue">
@@ -160,7 +157,6 @@ export default {
         .then((intro) => { this.intro = intro } )
         .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
       }
-
     }
     // 进入其他用户个人主页
     else {
