@@ -24,7 +24,9 @@ export default {
     }
   },
   created() {
-    // getUserFavorLiteratures(this.userID).then()
+    getUserFavorLiteratures(this.userID)
+    .then((favor) => { this.favorLiteratures = favor })
+    .catch((err) => { this.$notify.error({ title: "网络错误", message: "请稍后重试~" }) })
   }
 }
 </script>
