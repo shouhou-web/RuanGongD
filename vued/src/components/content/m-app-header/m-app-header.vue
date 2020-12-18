@@ -15,7 +15,7 @@
         </ul>
       </div>
       <div slot="right">
-        <div class="header__right">
+        <div v-if="isLogin" class="header__right">
           <div
             class="header__icon"
             @mouseover="color"
@@ -30,11 +30,12 @@
             <img v-else src="@/assets/icons/header/msg.png" alt="" />
           </div>
           <div class="header__avator" @click="toProfile">
-            <img
-              src="https://img-static.mihoyo.com/communityweb/upload/820f461e107e17f11d8fa8c5e45d5289.png"
-              alt=""
-            />
+            <img :src="$store.state.user.image" alt="" />
           </div>
+        </div>
+        <div v-else class="header__right--unlog">
+          <a class="header__right__log" href="/login">Log in</a>
+          <a class="header__right__reg" href="/register">Join for free</a>
         </div>
       </div>
     </m-header>
@@ -63,7 +64,6 @@ export default {
   },
   methods: {
     jump(e) {
-      // this.$store.commit("changeAppHeader", e);
       console.log(e);
       this.$router.push({
         path: e.path
@@ -73,13 +73,22 @@ export default {
       this.isColor = !this.isColor;
     },
     toMessage() {
-      this.$store.commit("changeAppHeader", {});
       this.$router.push({ path: "/message" });
     },
     toProfile() {
-      this.$store.commit("changeAppHeader", {});
-      this.$router.push({ path: "/profile", query: { userID: this.$store.state.user.userID } });
+      this.$router.push({
+        path: "/profile",
+        query: { userID: this.$store.state.user.userID }
+      });
     }
+  },
+  computed: {
+    isLogin() {
+      return this.$store.state.user != null;
+    }
+  },
+  created() {
+    // console.log(this.$store.state.user);
   },
   components: {}
 };
@@ -152,5 +161,33 @@ export default {
 .header__avator img {
   height: 90%;
   width: 90%;
+  border-radius: 50%;
+}
+
+.header__right__log,
+.header__right__reg {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 18px;
+  padding-bottom: 3px;
+}
+
+.header__right__log {
+  color: #677469;
+}
+
+.header__right__log:hover {
+  border-bottom: 2px solid #677469;
+  text-decoration: none;
+}
+
+.header__right__reg {
+  color: var(--color-main);
+  margin-left: 20px;
+}
+
+.header__right__reg:hover {
+  border-bottom: 2px solid var(--color-main);
+  text-decoration: none;
 }
 </style>

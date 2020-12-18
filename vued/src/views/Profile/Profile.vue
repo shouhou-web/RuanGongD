@@ -12,7 +12,7 @@
             </a>
           </div>
           <div class="username">
-            <div class="user-nickname">{{ user.userName }}</div>
+            <div class="user-nickname">{{ user.username }}</div>
             <div class="user-degree" @click="openChangeProfileHover">
               {{ retUserDegree() }}
               <img src="../../assets/icons/profile/edit.svg" class="profile-icon">
@@ -45,15 +45,12 @@
               <div class="intro-content-details">
                 <div class="intro-font-1" @click="gotoIntro(user.authorID)">{{ user.realName }}</div>
                 <div class="intro-font-2">
-                  {{introLocation}}
-                </div>
-                <div class="intro-font-2">
-                  {{introDepartment}}
+                  {{ user.introduction }}
                 </div>
               </div>
             </div>
             <div class="intro-img">
-              <img :src="introImg" class="intro-img-details">
+              <img :src="user.introImage" class="intro-img-details">
             </div>
           </div>
           <div class="user-application" v-if="!userInfoStatue">
@@ -80,34 +77,34 @@
         </div>
       </div>
     </div>
-<!--    <m-hover ref="changeProfile" @submit="submit" @cancel="cancel">-->
-<!--      <div class="change-profile-outter">-->
-<!--        <div class="change-nickname">-->
-<!--          <div class="hover-input-header">change nickname</div>-->
-<!--          <div class="hover-input">-->
-<!--            <input v-model="newNickName"></input>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div class="change-degree">-->
-<!--          <div class="hover-input-header">change degree</div>-->
-<!--          <div>-->
-<!--            <select v-model="newDegree" class="hover-input">-->
-<!--              <option v-for="option in options" v-bind:value="option.value">-->
-<!--                {{ option.text }}-->
-<!--              </option>-->
-<!--            </select>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </m-hover>-->
-<!--    <m-hover ref="changeHeadshot" @submit="submit" @cancel="cancel"></m-hover>-->
+    <m-hover ref="changeProfile" @submit="submit" @cancel="cancel">
+      <div class="change-profile-outter">
+        <div class="change-nickname">
+          <div class="hover-input-header">change nickname</div>
+          <div class="hover-input">
+            <input v-model="newNickName"></input>
+          </div>
+        </div>
+        <div class="change-degree">
+          <div class="hover-input-header">change degree</div>
+          <div>
+            <select v-model="newDegree" class="hover-input">
+              <option v-for="option in options" v-bind:value="option.value">
+                {{ option.text }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </m-hover>
+    <m-hover ref="changeHeadshot" @submit="submit" @cancel="cancel"></m-hover>
   </div>
 </template>
 
 <script>
 import yLiterature from '@/components/common/y-literature/y-literature'
 import Favor from "@/views/Profile/Favor";
-import { getUserFollowingList } from "@/network/profile";
+import { getUserFollowingList, getUserInformation, getUserIntro } from "@/network/profile";
 
 export default {
   name: "Profile",
@@ -135,7 +132,10 @@ export default {
         { text: '研究生', value: '2' },
         { text: '博士生', value: '3' },
         { text: '博士后', value: '4' },
-      ]
+      ],
+
+      newNickName: "",
+      newDegree: 0
     };
   },
   created() {
@@ -157,7 +157,6 @@ export default {
         .then((intro) => { this.intro = intro } )
         .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
       }
-
     }
     // 进入其他用户个人主页
     else {
@@ -171,6 +170,9 @@ export default {
       getUserIntro(this.user.authorID)
       .then((userIntro) => { this.userIntro = userIntro, console.log("intro", userIntro)})
     }
+
+    this.newNickName = this.user.username
+    this.userDegree = this.user.userDegree
   },
   methods: {
     retUserDegree() {
@@ -209,6 +211,12 @@ export default {
     },
     applyForIntro() {
       this.$router.push({path: '/applyIntro'})
+    },
+    submit() {
+
+    },
+    cancel() {
+
     }
   },
   components: {
