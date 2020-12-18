@@ -60,9 +60,12 @@ export default {
   line-height: 20px;
   padding-left: 5px;
   margin-bottom: 5px;
+  transition: ease-in-out 0.5s;
 }
 
 .title:hover {
+  color: #4F6EF2;
+  transition: ease-in-out 0.5s;
   cursor: pointer;
 }
 
@@ -97,10 +100,15 @@ export default {
   border: 1px solid #4F6EF2;
   background-color: white;
   color: #4F6EF2;
+  transition: ease-in-out 0.5s;
 }
 
 .leftpart-tags:hover {
   cursor: pointer;
+  border: 1px solid white;
+  background-color: #4F6EF2;
+  color: white;
+  transition: ease-in-out 0.5s;
 }
 
 .authors {

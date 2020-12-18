@@ -63,6 +63,7 @@ export default {
     }
   },
   created() {
+    // 获取author的文献列表
 
   }
 }

@@ -33,12 +33,6 @@
         <div class="user-intro">
           <div class="user-intro-header" v-if="userInfoStatue">
             <div class="user-intro-header-content">Intro</div>
-            <div class="user-intro-change">
-              <div class="edit">
-                Edit
-                <img src="../../assets/icons/profile/edit.svg" class="profile-icon">
-              </div>
-            </div>
           </div>
           <div class="user-intro-content" v-if="userInfoStatue">
             <div class="intro-content">
@@ -50,7 +44,7 @@
               </div>
             </div>
             <div class="intro-img">
-              <img :src="user.introImage" class="intro-img-details">
+              <img :src="user.introImage" class="intro-img-details" @click="gotoIntro(user.authorID)">
             </div>
           </div>
           <div class="user-application" v-if="!userInfoStatue">
@@ -529,7 +523,7 @@ export default {
 }
 
 .user-intro-header {
-  height: 60px;
+  height: 40px;
   width: 100%;
   border-bottom: 1px solid #ddd;
   display: flex;
@@ -599,11 +593,14 @@ export default {
   color: #111111;
   font-weight: 700;
   font-size: 1rem;
+  transition: ease-in-out 0.5s;
 }
 
 .intro-font-1:hover {
-  border-bottom: 1px solid #777777;
+  /*border-bottom: 1px solid #777777;*/
+  color: #4F6EF2;
   cursor: pointer;
+  transition: ease-in-out 0.5s;
 }
 
 .intro-font-2 {
@@ -628,6 +625,10 @@ export default {
   max-height: 100%;
 }
 
+.intro-img-details:hover {
+  cursor: pointer;
+}
+
 .user-follow {
   width: 100%;
   height: auto;
@@ -638,7 +639,7 @@ export default {
 
 .follow-header {
   width: 100%;
-  height: 55px;
+  height: 40px;
   border-bottom: 1px solid #ddd;
   display: flex;
   align-items: center;
