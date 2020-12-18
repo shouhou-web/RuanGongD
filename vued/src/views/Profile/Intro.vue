@@ -15,7 +15,7 @@
             </div>
           </div>
           <div class="publish">
-            <div class="publish-button">发表文献</div>
+            <create_literature></create_literature>
           </div>
         </div>
         <div class="profile-op">
@@ -70,6 +70,7 @@
 import ECharts from 'vue-echarts'
 import MyLiteratures from "@/views/Profile/MyLiteratures";
 import UserPosts from "@/views/Forum/childCpn/user-posts";
+import create_literature from "@/views/Literature/childCpn/create_literature";
 
 require('echarts/lib/chart/bar')
 require('echarts/lib/chart/line')
@@ -82,6 +83,8 @@ export default {
   name: "Intro",
   data() {
     return {
+      intro: {},
+
       introName: "猫猫头科研院",
       introPublish: 100,
       introMemberNum: 20,
@@ -90,7 +93,7 @@ export default {
 
       userName: 'Ma Zhengchang',
       userDegree: 1,
-      userID: '0',
+      userID: "123aaa",
       userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
 
       followStatue: false,
@@ -194,27 +197,6 @@ export default {
     }
   },
   methods: {
-    openAllMemberList() {
-      this.$refs.allMember.showHover({
-        title: "所有用户",
-        submitBtn: null,
-        cancelBtn: null
-      })
-    },
-    retUserDegree(userDegree) {
-      if (userDegree == 0) return "高中";
-      else if (userDegree == 1) return "Bachelor of Engineering";
-      else if (userDegree == 2) return "研究生";
-      else if (userDegree == 3) return "博士生";
-      else if (userDegree == 4) return "博士后";
-      else return "";
-    },
-    cancleFollow() {
-      this.$notify.info("已取消关注")
-    },
-    doFollow() {
-      this.$notify.success("关注成功")
-    },
     opSwitch(opID) {
       this.opID = opID
     }
@@ -222,10 +204,14 @@ export default {
   created() {
     this.lineChart.series[0].data = this.introLiteraturesPublishedData;
     this.pieChart.series[0].data = this.introLiteraturesTopTags;
-    this.barChart.xAxis.data = this.introWorkInfo.members;
-    this.barChart.series[0].data = this.introWorkInfo.publishCount;
+
+    // 进入个人门户
+    let userID = this.$route.query.userID
+
+    // 获取门户信息：文献发布量 + 文献tag
   },
   components: {
+    create_literature,
     UserPosts,
     'v-chart': ECharts,
     'myLiteratures': MyLiteratures,
@@ -322,6 +308,10 @@ export default {
   color: white;
   font-size: 0.800rem;
   letter-spacing: 2px;
+}
+
+.publish-button:hover {
+  cursor: pointer;
 }
 
 .op-switch {

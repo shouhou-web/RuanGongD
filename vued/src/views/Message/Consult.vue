@@ -18,23 +18,23 @@ import consultMessage from "./childCpn/consult-message";
 export default {
   name: "Consult",
   created() {
-    // getConsultMsg(this.$store.state.user.userID)
-    //   .then(res => {
-    //     console.log("consult", res);
-    //     this.messageList = res;
-    //   })
-    //   .then(getConsultMsg(this.$store.state.user.userID))
-    //   // .then(
-    //   //   getAllMsgNum(this.$store.state.user.userID).then((res) => {
-    //   //     this.$store.commit("setAllMsgNum", res);
-    //   //   })
-    //   // )
-    //   .catch(err => {
-    //     this.$notify.error({
-    //       title: "网络错误",
-    //       message: "请稍后重试~"
-    //     });
-    //   });
+    getConsultMsg(this.$store.state.user.userID)
+      .then(res => {
+        console.log("consult", res);
+        this.messageList = res;
+      })
+      .then(getConsultMsg(this.$store.state.user.userID))
+      // .then(
+      //   getAllMsgNum(this.$store.state.user.userID).then((res) => {
+      //     this.$store.commit("setAllMsgNum", res);
+      //   })
+      // )
+      .catch(err => {
+        this.$notify.error({
+          title: "网络错误",
+          message: "请稍后重试~"
+        });
+      });
   },
   methods: {
     deleteItem(index) {

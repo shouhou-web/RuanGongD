@@ -14,18 +14,18 @@ import YLiterature from "@/components/common/y-literature/y-literature";
 
 export default {
   name: "MyLiteratures",
-  props: { userID : '' },
+  props: { userID : String },
   components: { YLiterature },
   data () {
     return {
       // user收藏文献集合
       myLiteratures: [
         {
-          literatureID: 0,
+          literatureID: "0",
           title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
           authors: [
             {
-              userID: 0,
+              userID: "0",
               userName: 'Yu Haomiao',
               userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
             }
@@ -34,11 +34,11 @@ export default {
           read_time: 10,
         },
         {
-          literatureID: 1,
+          literatureID: "1",
           title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
           authors: [
             {
-              userID: 0,
+              userID: "0",
               userName: 'Yu Haomiao',
               userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
             }
@@ -47,11 +47,11 @@ export default {
           read_time: 10,
         },
         {
-          literatureID: 2,
+          literatureID: "2",
           title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
           authors: [
             {
-              userID: 0,
+              userID: "0",
               userName: 'Yu Haomiao',
               userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
             }
@@ -63,6 +63,7 @@ export default {
     }
   },
   created() {
+
   }
 }
 </script>

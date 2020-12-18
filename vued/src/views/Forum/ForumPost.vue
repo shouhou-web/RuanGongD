@@ -1,6 +1,7 @@
+<!-- TODO 左上角，返回到来源 -->
 <template>
   <!-- 动态页面 -->
-  <div id="formPost" data-app="true">
+  <div id="forumPost" data-app="true">
     <m-app-header></m-app-header>
 
     <!-- 动态内容 -->
@@ -52,9 +53,23 @@
                 </v-icon>
                 {{ postInfo.viewNum }}
               </div>
-              <div class="post-time">发布于 {{ postInfo.createTime }}</div>
+              <div class="post-time">创建于 {{ postInfo.createTime }}</div>
             </div>
             <div class="post-content">{{ postInfo.postContent }}</div>
+            <div
+              class="post-cite"
+              v-if="postInfo.citeId != '-1'"
+              @click="jumpToLiterature(citedLiterature.literatureID)"
+            >
+              <div class="post-cite-item">
+                <div class="post-cite-title">
+                  {{ citedLiterature.title }}
+                </div>
+                <div class="post-cite-abstract">
+                  {{ citedLiterature.abstract }}
+                </div>
+              </div>
+            </div>
             <div class="post-tags">
               <div class="tag-item" v-for="tag in postInfo.postTags" :key="tag">
                 <div class="tag-content">{{ tag }}</div>
@@ -78,7 +93,7 @@
           v-for="comment in comments"
           :key="comment.floor"
         >
-          <div class="card-divider" v-if="comment.floor != 1"></div>
+          <div class="card-divider" v-if="comment.floor != 2"></div>
           <div class="card-header">
             <div class="avatar">
               <v-btn
@@ -172,41 +187,44 @@
     </div>
 
     <!-- 举报对话框  -->
-    <v-dialog v-model="reportDialog" max-width="600">
+    <v-dialog v-model="reportDialog" max-width="800" persistent>
       <v-card elevation="3">
-        <v-card-title v-if="reportPost == true">举报动态</v-card-title>
-        <v-card-title v-else>举报评论</v-card-title>
-        <v-card-text>
-          <el-form
-            :model="reportForm"
-            label-width="80px"
-            :rules="reportRule"
-            ref="reportForm"
-          >
-            <el-form-item label="举报理由" prop="reportContent">
-              <el-input
-                class="report-content"
-                type="textarea"
+        <v-form v-model="reportFormValid">
+          <v-card-title v-if="reportPost == true">举报动态</v-card-title>
+          <v-card-title v-else>举报评论</v-card-title>
+          <v-card-text>
+            <div class="form-item">
+              <div class="form-label">
+                <span class="required-star">*</span>举报理由
+              </div>
+              <v-textarea
+                class="report-textarea"
                 v-model="reportForm.reportContent"
-                placeholder="请输入举报理由"
-                :autosize="{ minRows: 5, maxRows: 12 }"
-                resize="none"
-                maxlength="801"
-              ></el-input>
-            </el-form-item>
-          </el-form>
-        </v-card-text>
-        <v-card-actions>
-          <div class="footer">
-            <v-btn
-              color="var(--color-main)"
-              @click="handleReport('reportForm')"
-            >
-              <font color="white">举报</font>
-            </v-btn>
-            <v-btn @click="reportDialog = false">取消</v-btn>
-          </div>
-        </v-card-actions>
+                placeholder="请输入举报内容"
+                outlined
+                counter
+                rows="5"
+                auto-grow
+                required
+                dense
+                color="var(--color-main)"
+                :rules="reportRule"
+              ></v-textarea>
+            </div>
+          </v-card-text>
+          <v-card-actions>
+            <div class="footer">
+              <v-btn
+                color="var(--color-main)"
+                :disabled="!reportFormValid"
+                @click="handleReport()"
+              >
+                <font color="white">举报</font>
+              </v-btn>
+              <v-btn @click="reportDialog = false">取消</v-btn>
+            </div>
+          </v-card-actions>
+        </v-form>
       </v-card>
     </v-dialog>
 
@@ -244,8 +262,9 @@ import {
   deletePost,
   reportComment,
   deleteComment,
-  commentPost,
-} from "network/forum.js";
+  commentPost
+} from "@/network/forum";
+import getLiterature from "@/network/literature";
 import MHeader from "../../components/common/m-header/m-header.vue";
 
 export default {
@@ -266,29 +285,21 @@ export default {
       commentFormValid: false,
       reportForm: {
         reportContent: "",
-        reportCommentId: "",
+        reportCommentId: ""
       },
+      reportFormValid: false,
       commentRule: [
-        (v) => !!v,
-        (v) =>
+        v => !!v,
+        v =>
           (v.length <= 800 && v.length >= 5) ||
-          "评论内容长度在 5-800 个字符之间",
+          "评论内容长度在 5-800 个字符之间"
       ],
-      reportRule: {
-        reportContent: [
-          {
-            required: true,
-            message: "请输入举报理由",
-            trigger: "blur",
-          },
-          {
-            min: 5,
-            max: 800,
-            message: "举报理由长度在 5-800 个字符之间",
-            trigger: "blur",
-          },
-        ],
-      },
+      reportRule: [
+        v => !!v,
+        v =>
+          (v.length <= 600 && v.length >= 5) ||
+          "举报内容长度在 5-600 个字符之间"
+      ],
       postInfo: {
         creatorId: "1",
         creatorName: "Codevka",
@@ -300,56 +311,63 @@ export default {
         postTags: ["Lorem", "ipsum", "dolor"],
         viewNum: "1926",
         replyNum: "817",
-        citeId: "-1",
+        citeId: "123"
       },
       comments: [
         {
           commentId: "1",
-          commenterId: "123",
+          commenterId: "14",
           commenterName: "BI",
           commenterAvatar: "https://i.loli.net/2020/11/27/9fbGvYknV8KejFS.png",
           floor: 2,
           commentContent: "AI nb!",
-          commentTime: "今天 11:45",
+          commentTime: "今天 11:45"
         },
         {
           commentId: "2",
-          commenterId: "2333",
+          commenterId: "13",
           commenterName: "AI",
           commenterAvatar: "https://i.loli.net/2020/11/27/3tz2XEraSwl8skK.png",
-          floor: 1,
+          floor: 3,
           commentContent: "BI nb!",
-          commentTime: "1926-08-17",
+          commentTime: "1926-08-17"
         },
         //   {
         //     commentId: "4",
         //     commenterId: "1234",
         //     commenterName: "CI",
         //     commenterAvatar: "https://i.loli.net/2020/11/27/3tz2XEraSwl8skK.png",
-        //     floor: 3,
+        //     floor: 5,
         //     commentContent: "DI nb!",
         //     commentTime: "8 分钟前",
         //   },
         {
           commentId: "3",
-          commenterId: "21",
+          commenterId: "12",
           commenterName: "Spam  Bot",
           commenterAvatar: "https://i.loli.net/2020/11/30/jm2i7g9qL61SkE8.png",
           floor: 4,
           commentContent:
             "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-          commentTime: "刚刚",
+          commentTime: "刚刚"
         },
-        //   {
-        //     commentId: "1233",
-        //     commenterId: "1",
-        //     commenterName: "Codevka",
-        //     commenterAvatar: "https://i.loli.net/2020/11/26/soiOjIlZFpELuTW.png",
-        //     floor: 5,
-        //     commentContent: "No spam.",
-        //     commentTime: "刚刚",
-        //   },
+        {
+          commentId: "1233",
+          commenterId: "1",
+          commenterName: "Codevka",
+          commenterAvatar: "https://i.loli.net/2020/11/26/soiOjIlZFpELuTW.png",
+          floor: 5,
+          commentContent: "No spam.",
+          commentTime: "刚刚"
+        }
       ],
+      citedLiterature: {
+        literatureID: "123",
+        title: "Lorem ipsum dolor sit amet",
+        abstract:
+          "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, ..."
+        // 只显示摘要的前150行
+      }
     };
   },
   methods: {
@@ -368,13 +386,19 @@ export default {
       this.$router.push({
         path: "/profile",
         query: {
-          userID: userId,
-        },
+          userID: userId
+        }
       });
     },
 
-    reply() {
-      console.log("reply");
+    jumpToLiterature(literatureId) {
+      console.log("jump to " + literatureId);
+      this.$router.push({
+        path: "/literature",
+        query: {
+          // TODO
+        }
+      });
     },
 
     showReport(commentId) {
@@ -389,28 +413,34 @@ export default {
     },
 
     // 举报
-    handleReport(formName) {
-      let pass = false;
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          pass = true;
-        }
-      });
-      if (!pass) return;
+    handleReport() {
+      console.log("reportForm:");
+      console.log(this.reportForm);
 
       if (this.reportPost == true) {
         reportPost(this.userId, this.postId, this.reportForm.reportContent)
-          .then((res) => {
+          .then(res => {
             console.log("report post");
             console.log(res);
             if (res.data.result == "true") {
               this.reportDialog = false;
+              this.$notify({
+                title: "操作成功",
+                message: "举报成功！请等候管理员处理",
+                type: "success"
+              });
             } else {
-              this.$notify.error("举报失败，请稍后再试。");
+              this.$notify.error({
+                title: "操作失败",
+                message: "举报失败，请稍后再试。"
+              });
             }
           })
-          .catch((err) => {
-            this.$notify.error("举报失败，请稍后再试。");
+          .catch(err => {
+            this.$notify.error({
+              title: "操作失败",
+              message: "举报失败，请稍后再试。"
+            });
             console.log(err);
           });
       } else {
@@ -419,17 +449,28 @@ export default {
           this.reportForm.reportCommentId,
           this.reportForm.reportContent
         )
-          .then((res) => {
+          .then(res => {
             console.log("report comment");
             console.log(res);
             if (res.data.result == "true") {
               this.reportDialog = false;
+              this.$notify({
+                title: "操作成功",
+                message: "举报成功！请等候管理员处理",
+                type: "success"
+              });
             } else {
-              this.$notify.error("举报失败，请稍后再试。");
+              this.$notify.error({
+                title: "操作失败",
+                message: "举报失败，请稍后再试。"
+              });
             }
           })
-          .catch((err) => {
-            this.$notify.error("举报失败，请稍后再试。");
+          .catch(err => {
+            this.$notify.error({
+              title: "操作失败",
+              message: "举报失败，请稍后再试。"
+            });
             console.log(err);
           });
       }
@@ -449,39 +490,72 @@ export default {
     handleDelete() {
       if (this.deletePost == true) {
         deletePost(this.userId, this.postId)
-          .then((res) => {
+          .then(res => {
             console.log("delete post");
             console.log(res);
             if (res.data.result == "true") {
               this.deleteDialog = false;
-              this.$notify.success("删除成功！");
+              this.$notify({
+                title: "操作成功",
+                message: "删除成功！",
+                type: "success"
+              });
               // TODO 返回（到哪？）
               // this.$router.push({
               //   path: "/",
               //   query: {},
               // });
             } else {
-              this.$notify.error("删除失败，请稍后再试。");
+              this.$notify.error({
+                title: "操作失败",
+                message: "删除失败，请稍后再试。"
+              });
             }
           })
-          .catch((err) => {
-            this.$notify.error("删除失败，请稍后再试。");
+          .catch(err => {
+            this.$notify.error({
+              title: "操作失败",
+              message: "删除失败，请稍后再试。"
+            });
             console.log(err);
           });
       } else {
         deleteComment(this.userId, this.deleteCommentId)
-          .then((res) => {
+          .then(res => {
             console.log("delete comment");
             console.log(res);
             if (res.data.result == "true") {
               this.deleteDialog = false;
-              this.$notify.success("删除成功！");
+
+              for (var i = 0; i < this.comments.length; i++) {
+                if (this.deleteCommentId == this.comments[i].commentId)
+                  this.comments.splice(i, 1);
+              }
+              if (this.comments[0] && this.comments[0].floor == 3)
+                this.comments[0].floor--;
+              for (var i = 1; i < this.comments.length; i++) {
+                if (this.comments[i].floor - this.comments[i - 1].floor == 2)
+                  this.comments[i].floor--;
+              }
+              // FIXME: 跳到其他页面，再使用浏览器的返回时，无法持久存放修改后的数据
+
+              this.$notify({
+                title: "操作成功",
+                message: "删除成功！",
+                type: "success"
+              });
             } else {
-              this.$notify.error("删除失败，请稍后再试。");
+              this.$notify.error({
+                title: "操作失败",
+                message: "删除失败，请稍后再试。"
+              });
             }
           })
-          .catch((err) => {
-            this.$notify.error("删除失败，请稍后再试。");
+          .catch(err => {
+            this.$notify.error({
+              title: "操作失败",
+              message: "删除失败，请稍后再试。"
+            });
             console.log(err);
           });
       }
@@ -489,52 +563,87 @@ export default {
 
     handleComment() {
       commentPost(this.userId, this.postId, this.commentContent)
-        .then((res) => {
+        .then(res => {
           console.log("comment post");
           console.log(res);
           if (res.data.result == "true") {
+            var len = this.comments.length;
+            this.comments.push({
+              commentId: "1",
+              commenterId: this.userId,
+              commenterName: this.userName,
+              commenterAvatar: this.userAvatar,
+              floor: len + 2,
+              commentContent: this.commentContent,
+              commentTime: "刚刚"
+            });
+            // FIXME: 跳到其他页面，再使用浏览器的返回时，无法持久存放修改后的数据
+            this.$notify({
+              title: "操作成功",
+              message: "评论发表成功！",
+              type: "success"
+            });
             this.commentContent = "";
-            this.$notify.success("评论发表成功！");
           } else {
-            this.$notify.error("评论失败，请稍后再试。");
+            this.$notify.error({
+              title: "操作失败",
+              message: "评论失败，请稍后再试。"
+            });
           }
         })
-        .catch((err) => {
-          this.$notify.error("评论失败，请稍后再试。");
+        .catch(err => {
+          this.$notify.error({
+            title: "操作失败",
+            message: "评论失败，请稍后再试。"
+          });
           console.log(err);
         });
-    },
+    }
   },
   components: {},
   created() {
     this.postId = this.$route.query.postId;
-    // this.userId = this.$store.state.userID; // TODO 等待统一
-    // TODO 获取 userName, userAvatar
+    // this.userId = this.$store.state.user.userID; // TODO 等待统一
+    // this.userName = this.$store.state.user.userName;
+    // this.userAvatar = this.$store.state.user.imagePath;
     console.log("postId: " + this.postId + "\nuserId: " + this.userId);
 
-    // getPostInfo(this.userId, this.postId)
-    //   .then((res) => {
-    //     console.log("getPostInfo");
-    //     console.log(res);
-    //     this.postInfo.postName = res.data.postName;
-    //     this.postInfo.postContent = res.data.postContent;
-    //     this.postInfo.replyNum = res.data.replyNum;
-    //     this.postInfo.viewNum = res.data.viewNum;
-    //     this.postInfo.creatorId = res.data.creatorId;
-    //     this.postInfo.creatorAvatar = res.data.creatorAvatar;
-    //     this.postInfo.createTime = res.data.createTime;
-    //     this.postInfo.postTags = res.data.tags;
-    //     this.postInfo.citeId = res.data.citeId;
-    //     this.comments = res.data.comments;
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    getPostInfo(this.userId, this.postId)
+      .then(res => {
+        console.log("getPostInfo");
+        console.log(res);
+        this.postInfo.postName = res.data.postName;
+        this.postInfo.postContent = res.data.postContent;
+        this.postInfo.replyNum = res.data.replyNum;
+        this.postInfo.viewNum = res.data.viewNum;
+        this.postInfo.creatorId = res.data.creatorId;
+        this.postInfo.creatorAvatar = res.data.creatorAvatar;
+        this.postInfo.createTime = res.data.createTime;
+        this.postInfo.postTags = res.data.tags;
+        this.postInfo.citeId = res.data.citeId;
+        this.comments = res.data.comments;
+
+        getLiterature(this.postInfo.citeId)
+          .then(res => {
+            console.log(getLiterature);
+            console.log(res);
+            this.citedLiterature.literatureID = res.data.literatureID;
+            this.citedLiterature.title = res.data.title;
+            this.citedLiterature.abstract =
+              res.data.abstract.slice(0, 150) + "..."; // 摘要截断
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      })
+      .catch(err => {
+        console.log(err);
+      });
 
     this.comments.sort(function(a, b) {
       return a.floor - b.floor;
     }); // 对 comments 按楼层升序排序
-  },
+  }
 };
 </script>
 
@@ -551,18 +660,21 @@ html {
   height: 100%;
   margin: 0 auto;
   margin-top: 50px;
+  background-color: #ffffff;
 }
 
 .comment-container {
   width: 61%;
   min-width: 400px;
   margin: 0 auto;
+  background-color: #ffffff;
 }
 
 .input-container {
   width: 61%;
   min-width: 400px;
   margin: 0 auto;
+  background-color: #ffffff;
 }
 
 .card {
@@ -656,7 +768,37 @@ html {
   line-height: 1.35;
   font-size: 1rem;
   margin-top: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.post-cite {
+  border: 1px solid #efefef;
+  margin: 0 auto;
+  width: 50%;
+  margin-bottom: 20px;
+  background-color: #efefef;
+  border-radius: 16px;
+}
+
+.post-cite:hover {
+  cursor: pointer;
+}
+
+.post-cite-item {
+  margin: 15px 21px 15px 21px;
+}
+
+.post-cite-title {
+  font-weight: bold;
+  font-size: 1.1rem;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 8px;
+}
+
+.post-cite-abstract {
+  font-size: 0.8rem;
+  line-height: 1.25;
 }
 
 .post-reply-button {
@@ -680,7 +822,7 @@ html {
   line-height: 1.3;
   color: #555;
   padding: 5px;
-  background-color: #ddd;
+  background-color: #efefef;
   padding-top: 0.16em;
   padding-bottom: 0.16em;
   margin-top: -0.16em;
@@ -750,19 +892,30 @@ html {
   width: 40%;
 }
 
-.el-input__inner,
-.el-textarea__inner {
-  border-color: rgba(158, 158, 158);
+.form-item {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 15px;
 }
 
-.el-input__inner:hover,
-.el-textarea__inner:hover {
-  border-color: rgba(36, 36, 36);
+.form-label {
+  display: flex;
+  height: 40px;
+  width: 80px;
+  align-items: center;
+  justify-content: end;
+  margin-left: auto;
+  padding-right: 12px;
+  color: rgb(96, 98, 102);
+  font-size: 0.9rem;
 }
 
-.el-input__inner:focus,
-.el-textarea__inner:focus {
-  border-color: rgba(64, 158, 255);
-  border-width: 2px;
+.report-textarea {
+  font-size: 0.9rem;
+}
+
+.required-star {
+  color: rgb(245, 108, 108);
+  padding-right: 3px;
 }
 </style>

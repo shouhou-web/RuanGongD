@@ -6,13 +6,13 @@
       <div class="user-profile">
         <div class="profile-info">
           <div class="headshot">
-            <img :src="userImgSrc" class="headshot-img">
+            <img :src="user.image" class="headshot-img">
             <a class="headshot__hide" title="修改头像" @click="openChangeHeadshot">
               <img src="../../assets/image/edit.png" class="headshot__inner--samll">
             </a>
           </div>
           <div class="username">
-            <div class="user-nickname">{{ userNickName }}</div>
+            <div class="user-nickname">{{ user.username }}</div>
             <div class="user-degree" @click="openChangeProfileHover">
               {{ retUserDegree() }}
               <img src="../../assets/icons/profile/edit.svg" class="profile-icon">
@@ -27,33 +27,30 @@
     </div>
     <div class="profile-content">
       <div class="content-left">
-        <favor :userID="userID"></favor>
+        <favor :userID="user.userID"></favor>
       </div>
       <div class="content-right">
         <div class="user-intro">
           <div class="user-intro-header" v-if="userInfoStatue">
-            <div class="user-intro-header-content">
-              Current affiliation
-            </div>
+            <div class="user-intro-header-content">Intro</div>
             <div class="user-intro-change">
-              Edit
-              <img src="../../assets/icons/profile/edit.svg" class="profile-icon">
+              <div class="edit">
+                Edit
+                <img src="../../assets/icons/profile/edit.svg" class="profile-icon">
+              </div>
             </div>
           </div>
           <div class="user-intro-content" v-if="userInfoStatue">
             <div class="intro-content">
               <div class="intro-content-details">
-                <div class="intro-font-1" @click="gotoIntro(authorID)">{{ introName }}</div>
+                <div class="intro-font-1" @click="gotoIntro(user.authorID)">{{ user.realName }}</div>
                 <div class="intro-font-2">
-                  {{introLocation}}
-                </div>
-                <div class="intro-font-2">
-                  {{introDepartment}}
+                  {{ user.introduction }}
                 </div>
               </div>
             </div>
             <div class="intro-img">
-              <img :src="introImg" class="intro-img-details">
+              <img :src="user.introImage" class="intro-img-details">
             </div>
           </div>
           <div class="user-application" v-if="!userInfoStatue">
@@ -65,7 +62,7 @@
             <div class="follow-header-content">Follow</div>
           </div>
           <div class="following">
-            <div class="follow-part-head">following (1)</div>
+            <div class="follow-part-head">following ({{ followUsers.length }})</div>
             <div class="following-content">
               <div class="one-following" v-for="(onefollowingUser, i) in followUsers">
                 <img :src="onefollowingUser.imgSrc" class="intro-img img-plus">
@@ -107,104 +104,27 @@
 <script>
 import yLiterature from '@/components/common/y-literature/y-literature'
 import Favor from "@/views/Profile/Favor";
+import { getUserFollowingList, getUserInformation, getUserIntro } from "@/network/profile";
+
 export default {
   name: "Profile",
   data() {
     return {
-      // user
-      user: '',
-      userID: '0',
+      isSelfProfile: true,
 
-      // 用户信息
-      userName: 'Yu Haomiao',
-      userNickName: 'Yu Haomiao',
-      userDegree: 1,
-      userIntroState: true,
-      userIntro: "北航软件学院",
-      userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
-      userInfoStatue: false,
+      // user
+      user: {},
+
+      // 当前我的门户
+      userIntro: {},
+
+      userInfoStatue: true,
 
       // user收藏文献集合
-      favorLiteratures: [
-        {
-          literatureID: 0,
-          title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
-            authors: [
-            {
-              userID: 0,
-              userName: 'Yu Haomiao',
-              userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
-            }
-          ],
-          tags: ["tag 1", "tag 2"],
-          read_time: 10,
-        },
-        {
-          literatureID: 1,
-          title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
-          authors: [
-            {
-              userID: 0,
-              userName: 'Yu Haomiao',
-              userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
-            }
-          ],
-          tags: ["tag 1", "tag 2"],
-          read_time: 10,
-        },
-        {
-          literatureID: 2,
-          title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
-          authors: [
-            {
-              userID: 0,
-              userName: 'Yu Haomiao',
-              userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
-            }
-          ],
-          tags: ["tag 1", "tag 2"],
-          read_time: 10,
-        },
-      ],
+      favorLiteratures: [],
 
       // user关注用户集合
-      followUsers: [
-        {
-          followingID: 1,
-          imgSrc: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3824999008,143707972&fm=26&gp=0.jpg",
-          name: "Ma Hanyuan",
-          intro: "Beihang University (BUAA)"
-        },
-      ],
-
-      // 关注我的用户集合
-      followers: [
-        {
-          followerID: 1,
-          imgSrc: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3824999008,143707972&fm=26&gp=0.jpg",
-          name: "Ma Hanyuan",
-          intro: "Beihang University (BUAA)",
-          isfollowed: true
-        },
-        {
-          followerID: 2,
-          imgSrc: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3824999008,143707972&fm=26&gp=0.jpg",
-          name: "Ma Hanyuan",
-          intro: "Beihang University (BUAA)",
-          isfollowed: false
-        },
-      ],
-
-      introID: 0,
-      introImg: "https://i1.rgstatic.net/ii/institution.image/AS%3A267456919080961%401440778106588_l",
-      introName: "Beihang University (BUAA)",
-      introLocation: "Beijing, China",
-      introDepartment: "Software Engineering Institute (SEI)",
-
-      newNickName: '',
-      newDegree: 0,
-      inputOnblur: false,
-      selectFollowingUserID: 0,
+      followUsers: [],
 
       options: [
         { text: '高中', value: '0' },
@@ -212,20 +132,47 @@ export default {
         { text: '研究生', value: '2' },
         { text: '博士生', value: '3' },
         { text: '博士后', value: '4' },
-      ]
+      ],
+
+      newNickName: "",
+      newDegree: 0
     };
   },
   created() {
     let userID = this.$route.query.userID;
 
+    // 当前用户进入自己的主页
     if (userID == this.$store.state.user.userID) {
-      // 当前用户进入自己的主页
       this.user = this.$store.state.user;
-    } else {
 
+      console.log(this.user)
+
+      // 获取个人信息：我的关注 + 我的门户 + 我的收藏
+      getUserFollowingList(userID)
+      .then((follow) => { this.followUsers = follow, console.log("follow:", follow) } )
+      .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
+
+      if (this.user.authorID.length > 0) {
+        getUserIntro(this.user.authorID)
+        .then((intro) => { this.intro = intro } )
+        .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
+      }
     }
-    this.newNickName = this.userNickName
-    this.newDegree = this.userDegree
+    // 进入其他用户个人主页
+    else {
+      this.isSelfProfile = false
+
+      // 获取当前用户对象
+      getUserInformation(userID)
+      .then((user) => { this.user = user, console.log("user", user) } )
+      .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
+
+      getUserIntro(this.user.authorID)
+      .then((userIntro) => { this.userIntro = userIntro, console.log("intro", userIntro)})
+    }
+
+    this.newNickName = this.user.username
+    this.userDegree = this.user.userDegree
   },
   methods: {
     retUserDegree() {
@@ -260,10 +207,16 @@ export default {
       this.op = opID
     },
     gotoIntro(authorID) {
-      this.$router.push({path: '/intro'})
+      this.$router.push({path: '/intro', query: { authorID: this.user.authorID }})
     },
     applyForIntro() {
       this.$router.push({path: '/applyIntro'})
+    },
+    submit() {
+
+    },
+    cancel() {
+
     }
   },
   components: {
@@ -464,7 +417,7 @@ export default {
 
 .title:hover {
   cursor: pointer;
-  border-bottom: 1px solid black;
+  /*border-bottom: 1px solid black;*/
 }
 
 .tags {
@@ -536,7 +489,7 @@ export default {
 
 .authorname:hover {
   cursor: pointer;
-  border-bottom: 1px solid #000000;
+  /*border-bottom: 1px solid #000000;*/
 }
 
 .read-time {
@@ -621,7 +574,7 @@ export default {
 }
 
 .user-intro-change:hover {
-  border-bottom: 1px solid #777777;
+  /*border-bottom: 1px solid #777777;*/
   color: #4a4a4a;
 }
 
@@ -771,11 +724,15 @@ export default {
 .befollowed-op-to-follow:hover {
   height: fit-content;
   cursor: pointer;
-  border-bottom: 1px solid black;
+  /*border-bottom: 1px solid black;*/
 }
 
 .befollowed-content {
   padding-bottom: 20px;
+}
+
+.edit {
+  margin-left: 80px;
 }
 
 .profile-icon {

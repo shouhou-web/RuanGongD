@@ -60,6 +60,7 @@ export default {
     submit() {
       // 对邮箱进行正则判断
       var emailReg = /^\d{8}@(buaa.edu.cn)+$/;
+
       if (!emailReg.test(this.email)) this.emailWarning = true
       else if (this.application.length > 50) this.$notify.warning("申请理由不可超过50字")
       else {
@@ -68,6 +69,7 @@ export default {
       }
     },
     cancle() {
+      this.$notify.info("已取消申请")
       this.$router.go(-1);
     }
   },
