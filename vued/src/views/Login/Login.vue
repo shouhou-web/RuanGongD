@@ -34,8 +34,7 @@ export default {
   data() {
     return {
       userID: "",
-      userPsw: "",
-      userInfo: ""
+      userPsw: ""
     };
   },
   methods: {
@@ -67,8 +66,9 @@ export default {
             });
             return;
           }
-          this.userInfo = res;
+          console.log(res);
           this.$notify.success("登陆成功");
+          this.$store.commit("login", res);
           this.$router.push("/");
         })
         .catch(err => {
