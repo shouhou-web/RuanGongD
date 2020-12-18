@@ -101,6 +101,7 @@
                 persistent-hint
                 outlined
                 color="var(--color-main)"
+                clearable
               >
                 <v-btn>test</v-btn>
               </v-select>
