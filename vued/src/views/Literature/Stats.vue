@@ -22,9 +22,6 @@ export default {
   name: "Stats",
   data() {
     return {
-      collectTimes:[1,2,3,4,5,6,7,8,9,10,11,12],
-      readTimes:[1,2,3,4,5,6,7,8,9,10,11,12],
-      commentTimes:[1,2,3,4,5,6,7,8,9,10,11,12],
       option: {
         tooltip: {
           trigger: "axis",
@@ -72,7 +69,7 @@ export default {
             name: "收藏数",
             type: "line",
             stack: "总量",
-            data: [220, 182, 191, 234, 290, 330, 310],
+            data : [1,2,3,4,5,6,7,8,9,10,11,12],
           },
           {
             name: "阅读数",
@@ -90,12 +87,13 @@ export default {
       },
     };
   },
-  create(){
+  created(){
+    console.log(this.$route.query.literatureID);
     getStats(this.$route.query.literatureID)
     .then(res=>{
-      this.collectTimes = res.collectTimes;
-      this.readTimes = res.readTimes;
-      this.commentTimes = res.commentTimes;
+      this.option.series[0].data = res.collectTimes;
+      this.option.series[1].data = res.readTimes;
+      this.option.series[2].data = res.commentTimes;
     })
   },
   mounted() {},

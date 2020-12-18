@@ -175,8 +175,7 @@
         </div>
       </m-hover>
     </div>
-
-    <router-view :referList="referList" :author="relatedAuther"></router-view>
+    <router-view :venue="literature.venue"></router-view>
   </div>
 </template>
 
@@ -449,7 +448,7 @@ export default {
     },
   },
 
-  create() {
+  created() {
     getLiterature(this.$route.query.literatureID).then((res) => {
       this.literature = res;
     });

@@ -27,7 +27,7 @@
         </div>
       </div>
       <div class="auth-part3">
-        <l-button @click="follow(author.authorID)">关注</l-button>
+        <l-button @click="follow(author.authorID) ">关注</l-button>
         <l-button @click="toAuthor(author.authorID)">个人门户</l-button>
       </div>
     </div>
@@ -47,7 +47,9 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      isFollowed:
+    };
   },
   methods: {
     toAuthor(authorID) {
