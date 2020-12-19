@@ -13,10 +13,9 @@ const mutations = {
   // 登录
   login(state, info) {
     console.log(info);
-    state.token = true;
     state.user = info;
     // sessionStorage.clear();
-    sessionStorage.setItem("user", JSON.stringify(state.user));
+    // sessionStorage.setItem("user", JSON.stringify(state.user));
   },
   // 登出
   logout(state) {

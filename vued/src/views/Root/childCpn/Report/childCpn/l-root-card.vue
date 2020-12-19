@@ -4,7 +4,7 @@
       <div class="l-root-card--content-upper">
         <div class="l-root-card--content-info">
           <img
-            class="l-root-card--pic"
+            class="l-root-card--reporter-pic"
             :src="require('@/assets/image/root/' + imgPath1 + '.jpg')"
           />
           <slot name="reporterProfile"></slot>
@@ -20,16 +20,16 @@
           <div v-else-if="type == 4" class="l-root-card--content-connect">
             举报了动态
           </div>
+          <a class="l-root-card--notice" title="待处理" v-if="!hasRead">!</a>
           <img
-            class="l-root-card--pic"
+            class="l-root-card--reportee-pic"
             :src="require('@/assets/image/root/' + imgPath2 + '.jpg')"
             v-if="type == 2"
           />
           <slot name="reportee"></slot>
-          <span class="l-root-card--notice" v-if="!hasRead">!</span>
         </div>
         <ul class="l-root-card--options">
-          <li class="l-root-card--accept" @mouseover="accept" @mouseout="accept">
+          <li class="l-root-card--accept" @mouseover="accept" @mouseout="accept" @click="toAccept">
             <img
               src="@/assets/icons/root/accept.svg"
               class="l-root-card--options-accept"
@@ -41,7 +41,7 @@
               v-else
             />
           </li>
-          <li class="l-root-card--reject" @mouseover="reject" @mouseout="reject">
+          <li class="l-root-card--reject" @mouseover="reject" @mouseout="reject" @click="toReject">
             <img
               src="@/assets/icons/root/reject.svg"
               class="l-root-card--options-reject"
@@ -53,7 +53,7 @@
               v-else
             />
           </li>
-          <li class="l-root-card--delete" @mouseover="del" @mouseout="del">
+          <li class="l-root-card--delete" @mouseover="del" @mouseout="del" @click="toDelete">
             <img
               src="@/assets/icons/root/delete.svg"
               class="l-root-card--options-delete"
@@ -132,6 +132,15 @@ export default {
     },
     reject() {
       this.onReject = !this.onReject;
+    },
+    toAccept() {
+      this.$emit("approveReport");
+    },
+    toReject() {
+      this.$emit("rejectReport");
+    },
+    toDelete() {
+      this.$emit("deleteReport");
     }
   }
 };
@@ -166,10 +175,9 @@ export default {
   align-items: center;
   display: flex;
   flex-direction: row;
-  margin-right: 40px;
 }
 
-.l-root-card--pic {
+.l-root-card--reporter-pic {
   border-radius: 25px;
   border: 1px solid #6b757b;
   cursor: pointer;
@@ -186,16 +194,17 @@ export default {
   font-weight: 800;
   font-size: 15px;
   margin-left: 20px;
-  margin-right: 20px;
+  margin-right: 5px;
 }
 
 .l-root-card--notice {
   background-color: #ffb11b;
   border-radius: 10px;
   color: #ffffff;
+  cursor: pointer;
   display: block;
   height: 15px;
-  margin-left: 10px;
+  margin-right: 25px;
   text-align: center;
   width: 15px;
 }
@@ -233,6 +242,7 @@ export default {
 
 .l-root-card--accept {
   clip-path: circle(35px at 100% 50%);
+  cursor: pointer;
   height: 70px;
   left: 0%;
   position: absolute;
@@ -242,6 +252,7 @@ export default {
 
 .l-root-card--reject {
   clip-path: circle(35px at 0% 100%);
+  cursor: pointer;
   height: 35px;
   left: 50%;
   position: absolute;
@@ -251,6 +262,7 @@ export default {
 
 .l-root-card--delete {
   clip-path: circle(35px at 0% 0%);
+  cursor: pointer;
   height: 35px;
   left: 50%;
   position: absolute;
@@ -301,7 +313,7 @@ export default {
   padding-top: 20px;
   padding-left: 30px;
   padding-right: 20px;
-  padding-bottom: 10px;
+  padding-bottom: 20px;
   text-indent: 1.5em;
 }
 
@@ -314,16 +326,16 @@ export default {
   border-radius: 25px;
   border: 1px solid #6b757b;
   cursor: pointer;
-  height: 50px;
+  height: 43px;
   margin-bottom: 20px;
   margin-right: 5px;
   margin-top: 20px;
   transition: 0.2s;
-  width: 50px;
+  width: 43px;
 }
 
 .l-root-card--reportee-pic:hover {
-  box-shadow: 0px 0px 1px 2px rgba(224, 37, 62, 0.219);
+  box-shadow: 0px 0px 1px 2px rgba(66, 150, 230, 0.473);
   transition: 0.2s;
 }
 

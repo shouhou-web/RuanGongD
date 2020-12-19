@@ -39,7 +39,7 @@ export default {
 .login-button--default {
   border: 2px solid var(--color-tint);
   border-radius: 8px;
-  color: #6b757b;
+  color: var(--color-tint);
   font-family: Georgia;
   font-size: 17px;
   height: 50px;

@@ -9,6 +9,9 @@
         :type="item.reportType"
         :canShowMore="item.trimmedContent != null"
         @toShowMore="resetTrim($event, index)"
+        @approveReport="toApprove($event, index)"
+        @rejectReport="toReject($event, index)"
+        @deleteReport="toDelete($event, index)"
       >
         <template v-slot:reporterProfile>
           <div class="report-profile">
@@ -45,7 +48,7 @@ export default {
         {
           hasRead: false,
           postID: "E387HB9CS1234",
-          postContent: "This is a card used to test posts reports!!!",
+          postContent: "This is a card used to test posts reports!!!This is a card used to test posts reports!!!This is a card used to test posts reports!!!",
           isTrimmed: true,
           trimmedContent:
             "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a very....",
@@ -148,6 +151,15 @@ export default {
   methods: {
     resetTrim(e, index) {
       this.reportList[index].isTrimmed = !this.reportList[index].isTrimmed;
+    },
+    toApprove(e, index) {
+      console.log(index);
+    },
+    toReject(e, index) {
+      console.log(index);
+    },
+    toDelete(e, index) {
+      console.log(index);
     }
   },
   components: { LRootCard }
@@ -209,6 +221,10 @@ export default {
 .reportee-title {
   color: #6b757b;
   cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 540px;
+  white-space: nowrap;
 }
 
 .reportee-title:hover {
