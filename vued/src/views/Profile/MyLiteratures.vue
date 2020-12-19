@@ -26,6 +26,7 @@ export default {
           authors: [
             {
               userID: "0",
+              authorID: "0",
               userName: 'Yu Haomiao',
               userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
             }
@@ -39,6 +40,7 @@ export default {
           authors: [
             {
               userID: "0",
+              authorID: "0",
               userName: 'Yu Haomiao',
               userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
             }
@@ -52,6 +54,7 @@ export default {
           authors: [
             {
               userID: "0",
+              authorID: "0",
               userName: 'Yu Haomiao',
               userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
             }
@@ -63,6 +66,7 @@ export default {
     }
   },
   created() {
+    // 获取author的文献列表
 
   }
 }

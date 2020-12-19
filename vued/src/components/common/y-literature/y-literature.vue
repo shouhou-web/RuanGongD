@@ -9,7 +9,7 @@
     <div class="authors">
       <div v-for="(one_author, i) in authors" class="author-list">
         <img :src="one_author.userImgSrc" class="authorImg">
-        <div class="authorname">{{one_author.userName}}</div>
+        <div class="authorname" @click="gotoIntro(one_author.userID, one_author.authorID)">{{one_author.userName}}</div>
       </div>
     </div>
     <div class="read-time">
@@ -37,6 +37,9 @@ export default {
     gotoLiterature() {
       this.$notify.success("跳转ing")
     },
+    gotoIntro(userID, authorID) {
+      this.$router.push({ path: "/intro", query: { userID: userID, authorID: authorID } })
+    }
   }
 }
 </script>
@@ -60,9 +63,12 @@ export default {
   line-height: 20px;
   padding-left: 5px;
   margin-bottom: 5px;
+  transition: ease-in-out 0.3s;
 }
 
 .title:hover {
+  color: #4F6EF2;
+  transition: ease-in-out 0.3s;
   cursor: pointer;
 }
 
@@ -97,10 +103,15 @@ export default {
   border: 1px solid #4F6EF2;
   background-color: white;
   color: #4F6EF2;
+  transition: ease-in-out 0.5s;
 }
 
 .leftpart-tags:hover {
   cursor: pointer;
+  border: 1px solid white;
+  background-color: #4F6EF2;
+  color: white;
+  transition: ease-in-out 0.5s;
 }
 
 .authors {
