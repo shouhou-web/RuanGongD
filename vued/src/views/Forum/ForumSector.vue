@@ -230,6 +230,21 @@ export default {
           editorAvatar: "https://i.loli.net/2020/08/11/Rqm3hEG6bnHLsd4.png",
           editTime: "MM月dd日 HH:mm",
           tags: ["测试标签1", "测试标签2", "测试标签3", "测试标签4"]
+        },
+        {
+          postId: "01",
+          postName:
+            "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十",
+          replyNum: "1023",
+          viewNum: "1002001",
+          creatorId: "01",
+          creatorName: "测试用户",
+          createTime: "MM月dd日 HH:mm",
+          editorId: "02",
+          editorName: "测测用户",
+          editorAvatar: "https://i.loli.net/2020/08/11/Rqm3hEG6bnHLsd4.png",
+          editTime: "MM月dd日 HH:mm",
+          tags: []
         }
       ]
     };
