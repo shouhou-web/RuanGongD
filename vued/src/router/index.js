@@ -99,7 +99,7 @@ const routes = [
       {
         path: "/",
         // redirect重定向
-        redirect: "/literature/reference"
+        redirect: "/literature/relation"
       },
       {
         path: "/literature/reference",

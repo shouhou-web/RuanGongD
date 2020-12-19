@@ -94,3 +94,14 @@ export function collect(userID,literatureID) {
     method: "post"
   });
 }
+
+//根据authorid找user+author的信息
+export function getAuthorInformation(authorID) {
+  return request({
+    url: "/getAuthorInformation",
+    params: {
+      authorID
+    },
+    method: "post"
+  });
+}

@@ -8,7 +8,7 @@
       </ul>
     </div>
 
-    <l-authorcard :author="author"></l-authorcard>
+    <l-authorcard :authorID="authorID"></l-authorcard>
   </div>
 </template>
 
@@ -116,15 +116,7 @@ export default {
           readTimes: 10, //阅读次数
         }, //文献
       ],
-      author: {
-        authorID: "",
-        realName: "阿尔托莉雅",
-        work: "saber",
-        organization: "不列颠",
-        image: "test",
-        introduction:
-          "身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世.身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世",
-      },
+      authorID:"",
     };
   },
   created() {
@@ -133,7 +125,7 @@ export default {
       this.referList = res;
     });
     getRelatedAuthor(this.venue).then((res) => {
-      this.author = res;
+      this.authorID = res;
     });
   },
   methods: {},
