@@ -40,7 +40,7 @@ export function createLiterature(createLiForm) {
 
 //获取文献详情
 export function getLiterature(literatureID) {
-  return request({
+  return request(baseURL,{
     url: "/getLiterature",
     params: {
       literatureID
@@ -97,7 +97,7 @@ export function collect(userID,literatureID) {
 
 //根据authorid找user+author的信息
 export function getAuthorInformation(authorID) {
-  return request({
+  return request(baseURL,{
     url: "/getAuthorInformation",
     params: {
       authorID
