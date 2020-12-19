@@ -54,9 +54,48 @@ export function follow(followerID, userID, option) {
   )
 }
 
-// 获取用户门户信息
-export function getIntroInformation(authorID) {
-  return request(baseURL, { url: "/getIntroInformation", params: { authorID }, method: "get"})
+// 申请门户、认证
+export function apply(userID, authorID, emailAddress, content) {
+  return request(
+    baseURL,
+    {
+      params: {
+        userID: userID,
+        authorID: authorID,
+        emailAddress: emailAddress,
+        content: content
+      },
+      method: "post"
+    }
+  )
+}
+
+// 申请认证时的邮箱认证
+export function emailVerification(emailAddress) {
+  return request(
+    baseURL,
+    {
+      params: {
+        emailAddress: emailAddress
+      },
+      method: "get"
+    }
+  )
+}
+
+// 举报门户
+export function reportGate(userID, content, authorID) {
+  return request(
+    baseURL,
+    {
+      params: {
+        userID: userID,
+        content: content,
+        authorID: authorID
+      },
+      method: "post"
+    }
+  )
 }
 
 // 获取用户对象
@@ -65,13 +104,41 @@ export function getUserInformation(userID) {
 }
 
 // 获取当前用户是否关注该门户
-export function getIntroFollowStatue(userID, authorID) {
+export function getIntroFollowStatus(userID, authorID) {
   return request(
     baseURL,
     {
-      url: "/getIntroFollowStatue",
+      url: "/getIntroFollowStatus",
       params: {
         userID: userID,
+        authorID: authorID
+      },
+      method: "get"
+    }
+  )
+}
+
+// 获取门户近一年的发布文献数量
+export function getPublishState(authorID) {
+  return request(
+    "185.133.193.251:8081",
+    {
+      url: "/getPublishState",
+      params: {
+        authorID: authorID
+      },
+      method: "get"
+    }
+  )
+}
+
+// 获取作者相关信息
+export function getAuthorInformation(authorID) {
+  return request(
+    "185.133.193.251:8081",
+    {
+      url: "/getAuthorInformation",
+      params: {
         authorID: authorID
       },
       method: "get"

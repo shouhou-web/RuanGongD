@@ -6,6 +6,9 @@
                   :authors="onefollowingLiterature.authors"
                   :tags="onefollowingLiterature.tags"
                   :read_time="onefollowingLiterature.read_time"></y-literature>
+    <div v-if="favorLiteratures.length == 0" class="none">
+      <img src="../../assets/image/no-img.png" class="none-img">
+    </div>
   </div>
 </template>
 
@@ -32,5 +35,13 @@ export default {
 </script>
 
 <style scoped>
+.none {
+  border: 1px solid #dddddd;
+  background-color: white;
+}
 
+.none-img {
+  width: 30%;
+  margin-left: 33%;
+}
 </style>

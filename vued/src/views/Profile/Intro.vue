@@ -6,25 +6,26 @@
       <div class="intro-profile">
         <div class="intro-profile-info">
           <div class="intro-headshot">
-            <img :src="introImgSrc" class="headshot-img">
+            <img :src="intro.image" class="headshot-img">
           </div>
           <div class="introName">
-            <div class="intro-name">{{ introName }}</div>
+            <div class="intro-name">{{ intro.realName }}</div>
             <div class="intro-pos">
-              {{ introPos }}
+              {{ intro.organization }}
             </div>
           </div>
           <div class="publish">
-            <create_literature v-if="isSelfIntro"></create_literature>
-            <div v-if="!isSelfIntro && !isFollowing" class="publish-button">关注</div>
-            <div v-if="!isSelfIntro && isFollowing" class="publish-button-nice">已关注</div>
+            <create_literature v-if="isApplied && isSelfIntro"></create_literature>
+            <div v-if="isApplied && !isSelfIntro && !isFollowing" class="publish-button">关注</div>
+            <div v-if="isApplied && !isSelfIntro && isFollowing" class="publish-button-nice" @click="cancleFollowIntro">已关注</div>
+            <div v-if="!isApplied" class="publish-button-apply" @click="applyIntro">申请认证当前门户</div>
           </div>
         </div>
         <div class="profile-op">
           <div class="op-switch">
             <div class="op-all" @click="opSwitch(0)">个人文献</div>
             <div class="op-all" @click="opSwitch(1)">个人动态</div>
-            <div class="op-all" @click="opSwitch(2)">收藏文献</div>
+            <div class="op-all" @click="opSwitch(2)" v-if="isSelfIntro">收藏文献</div>
           </div>
           <div :class="{ 'bar': opID == 0, 'bar-change-1': opID == 1, 'bar-change-2': opID == 2 }"></div>
         </div>
@@ -32,9 +33,9 @@
     </div>
     <div class="intro-content">
       <div class="content-left">
-        <my-literatures :userID="userID" v-if="opID == 0"></my-literatures>
-        <user-posts :userId="userID" v-if="opID == 1"></user-posts>
-        <favor :userID="userID" v-if="opID == 2"></favor>
+        <my-literatures :userID="intro.userID" v-if="opID == 0"></my-literatures>
+        <user-posts :userId="intro.userID" v-if="opID == 1"></user-posts>
+        <favor :userID="intro.userID" v-if="opID == 2"></favor>
       </div>
       <div class="content-right">
         <div class="chart-part">
@@ -45,19 +46,11 @@
           <div class="oneChart-style" v-if="introLiteraturesPublishedData != null"><v-chart :options="lineChart"></v-chart></div>
           <div class="oneChart-style" v-if="introLiteraturesPublishedData == null"><img src="../../assets/image/no-data.png"></div>
         </div>
-        <div class="chart-part">
-          <div class="chart-header">
-            <div class="chart-type">pie chart</div>
-            <div class="chart-name">文献tag统计</div>
-          </div>
-          <div class="oneChart-style" v-if="introLiteraturesTopTags != null"><v-chart :options="pieChart"></v-chart></div>
-          <div class="oneChart-style" v-if="introLiteraturesTopTags == null"><img src="../../assets/image/no-data.png"></div>
-        </div>
         <div class="followed">
           <div class="follow-part-head">follower ({{ followers.length }})</div>
           <div class="following-content" v-if="followers.length > 0">
             <div class="one-following" v-for="(onefollowingUser, i) in followers">
-              <img :src="onefollowingUser.imgSrc" class="intro-img img-plus">
+              <img :src="onefollowingUser.image" class="intro-img img-plus">
               <div class="following-info">
                 <div class="name-style">{{ onefollowingUser.name }}</div>
                 <div class="intro-style">{{ onefollowingUser.intro }}</div>
@@ -76,6 +69,7 @@ import MyLiteratures from "@/views/Profile/MyLiteratures";
 import UserPosts from "@/views/Forum/childCpn/user-posts";
 import create_literature from "@/views/Literature/childCpn/create_literature";
 import Favor from "@/views/Profile/Favor";
+import { getIntroFollowStatus, getPublishState, getAuthorInformation, follow } from "@/network/profile";
 
 require('echarts/lib/chart/bar')
 require('echarts/lib/chart/line')
@@ -88,49 +82,29 @@ export default {
   name: "Intro",
   data() {
     return {
-      intro: {},
+      intro: {
+        // authorID:"",
+        // realName:"",
+        // organization:"",
+        // userID:"",
+        // image:"",
+        // introduction:"",
+      },
 
       isSelfIntro: false,
       isFollowing: false,
-
-      introName: "猫猫头科研院",
-      introPublish: 100,
-      introMemberNum: 20,
-      introImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
-      introPos: "Bei jing China",
-
-      userName: 'Ma Zhengchang',
-      userDegree: 1,
-      userID: "123aaa",
-      userImgSrc: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
-
-      followStatue: false,
+      isApplied: false,
 
       opID: 0,
 
       // 关注我的用户集合
       followers: [],
 
-      introLiteraturesPublishedData: [100, 200, 500, 100],
-      introLiteraturesTopTags: [
-        {value: 335, name: '直接访问'},
-        {value: 310, name: '邮件营销'},
-        {value: 234, name: '联盟广告'},
-        {value: 135, name: '视频广告'},
-        {value: 15, name: '搜索引擎1'},
-        {value: 153, name: '搜索引擎2'},
-        {value: 122, name: '搜索引擎3'}
-      ],
-      introWorkInfo: {
-        members: ['mgg', 'Tony', 'samshui', '1', '2', '3'],
-        publishCount: [100, 200, 150, 1, 2, 200]
-      },
+      // 门户发布文献数据
+      introLiteraturesPublishedData: [],
 
       lineChart: {
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {type: 'cross'}
-        },
+        tooltip: { trigger: 'axis', axisPointer: { type: 'cross' } },
         xAxis: {
           type: 'category',
           boundaryGap: true,
@@ -146,68 +120,95 @@ export default {
             name: '发布量',
             type: 'line',
             smooth: true,
-            data: [300, 280, 250, 260, 270, 300, 550, 500, 400, 390, 380, 390],
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
           },
         ]
       },
-      pieChart: {
-        tooltip: {
-          trigger: 'item',
-          formatter: '{a} <br/>{b}: {c} ({d}%)'
-        },
-        series: [
-          {
-            name: '相关标签',
-            type: 'pie',
-            radius: ['60%', '70%'],
-            avoidLabelOverlap: false,
-            label: {
-              show: false,
-              position: 'center'
-            },
-            emphasis: {
-              label: {
-                show: true,
-                fontSize: '25',
-                fontWeight: 'bold',
-                fontFamily: 'SimSun',
-              }
-            },
-            labelLine: {
-              show: false
-            },
-            data: []
-          }
-        ]
-      },
-
-      onefollowingLiterature: {
-        title: "Improving Auto-Augment via Augmentation-Wise Weight Sharing",
-        authors: ["Ma Hanyuan"],
-        tags: ["tag 1", "tag 2"],
-        read_time: 10,
-      }
     }
   },
   methods: {
     opSwitch(opID) {
       this.opID = opID
+    },
+    cancleFollowIntro() {
+      follow(this.$route.query.userID, this.intro.authorID, 0)
+      .then((res) => {
+        if (res == -1) this.$notify.warning("取消关注失败，请重试")
+        else this.$notify.success("取消关注成功")
+      })
+      .catch((err) => {
+        this.$notify.error( { title: "网络错误", message: "请稍后重试~" } )
+      })
+    },
+    applyIntro() {
+      this.$router.push(
+        {
+          path: "/applyIntro",
+          query: {
+            userID: this.$route.query.userID,
+            authorID: this.intro.authorID
+          }
+        })
     }
   },
   created() {
-    this.lineChart.series[0].data = this.introLiteraturesPublishedData;
-    this.pieChart.series[0].data = this.introLiteraturesTopTags;
-
     // 进入个人门户
     let authorID = this.$route.query.authorID
+    let userID = this.$route.query.userID
 
-    if (authorID == this.$store.state.user.authorID){
-      this.isSelfIntro = false
-    } else {
-      // 获取是否关注门户
-    }
+    // 获取intro
+    getAuthorInformation(authorID)
+    .then((intro) => {
+      this.intro = intro
 
-    // 获取门户信息：文献发布量 + 文献tag
+      // 该门户是否被认领
+      if (intro.userID = null) this.isApplied = false
+      else this.isApplied = true
+    })
+    .catch((err) => {
+      this.$notify.error(
+        {
+          title: "网络错误",
+          message: "请稍后重试~"
+        }
+      )
+    })
+
+    // 判断当前门户状态
+    getIntroFollowStatus(userID, authorID)
+    .then((res) => {
+      if (res == 0) this.isSelfIntro = true
+      else if (res == 1) this.isFollowing = true
+      else if (res == 2) {
+        this.isSelfIntro = false
+        this.isFollowing = false
+      }
+      else if (res == -1) this.$notify.error("获取当前门户信息出错，请重试")
+      else this.$notify.error("出现其他异常，请联系管理人员")
+    })
+    .catch((err) => {
+      this.$notify.error(
+        {
+          title: "网络错误",
+          message: "请稍后重试~"
+        }
+      )
+    })
+
+    // 获取门户信息：文献发布量
+    getPublishState(authorID)
+    .then((publish) => {
+      this.introLiteraturesPublishedData = publish
+      this.lineChart.series[0].data = this.introLiteraturesPublishedData;
+    })
+    .catch((err) => {
+      this.$notify.error(
+        {
+          title: "网络错误",
+          message: "请稍后重试~"
+        }
+      )
+    })
   },
   components: {
     Favor,
@@ -332,9 +333,36 @@ export default {
   border: 1px solid #4F6EF2;
   font-size: 0.800rem;
   letter-spacing: 2px;
+  transition: ease-in-out 0.3s;
 }
 
 .publish-button-nice:hover {
+  border: 1px solid red;
+  color: red;
+  cursor: pointer;
+  transition: ease-in-out 0.3s;
+}
+
+.publish-button-apply {
+  margin: 0 auto;
+  padding: 10px;
+  width: 70%;
+  /*border: 1px solid black;*/
+  border-radius: 2px;
+  text-align: center;
+  background-color: #96bf47;
+  color: white;
+  border: 1px solid #96bf47;
+  font-size: 0.800rem;
+  letter-spacing: 2px;
+  transition: ease-in-out 0.3s;
+}
+
+.publish-button-apply:hover {
+  border: 1px solid #96bf47;
+  color: #96bf47;
+  background-color: white;
+  transition: ease-in-out 0.3s;
   cursor: pointer;
 }
 
@@ -390,10 +418,6 @@ export default {
   margin-left: 10%;
 }
 
-.profile-icon {
-  width: 15px;
-}
-
 .intro-content {
   margin: 0 auto;
   margin-top: 30px;
@@ -411,43 +435,6 @@ export default {
   /*background-color: white;*/
   display: flex;
   flex-direction: column;
-}
-
-.members {
-  width: 100%;
-  height: auto;
-  background-color: white;
-  border: 1px solid #dddddd;
-  display: flex;
-  flex-direction: column;
-}
-
-.member-header {
-  display: flex;
-  align-items: center;
-  padding-left: 10px;
-  width: 100%;
-  border-bottom: 1px solid #dddddd;
-  height: 30px;
-  font-size: 0.8rem;
-  color: #777777;
-}
-
-.member-img {
-  width: 40px;
-  border-radius: 50%;
-  margin: 5px;
-}
-
-.imgs {
-  padding-left: 8px;
-}
-
-.more-icon {
-  width: 20px;
-  border-radius: 50%;
-  margin-bottom: 13px;
-  margin-left: 13px;
 }
 
 .chart-part {
@@ -509,6 +496,10 @@ export default {
   color: #999999;
 }
 
+.intro-style:hover {
+  cursor: pointer;
+}
+
 .intro-img {
   border: 1px solid #e3e3e3;
   width: 70px;
@@ -555,226 +546,5 @@ export default {
   font-weight: 700;
   color: white;
   margin-left: 45%;
-}
-
-.profile-icon {
-  width: 15px;
-}
-
-.look-all {
-  color: black;
-  margin-left: 70%;
-  display: flex;
-  flex-direction: row;
-}
-
-.look-all:hover {
-  cursor: pointer;
-  border-bottom: 1px solid black;
-}
-
-.one-follow-literature {
-  width: 100%;
-  height: 170px;
-  border: 1px solid #dddddd;
-  background-color: white;
-  padding: 30px 25px 27px 25px;
-  margin-bottom: 20px;
-}
-
-.title {
-  font-size: 0.9rem;
-  color: black;
-  font-weight: 700;
-  width: fit-content;
-  height: 25px;
-  line-height: 20px;
-  padding-left: 5px;
-  margin-bottom: 5px;
-}
-
-.title:hover {
-  cursor: pointer;
-  border-bottom: 1px solid black;
-}
-
-.tags {
-  width: 100%;
-  height: 32px;
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 5px;
-}
-
-.first-tag {
-  border-radius: 3px;
-  width: fit-content;
-  padding: 3px;
-  margin: 5px;
-  font-size: 0.8rem;
-  color: white;
-  background-color: #4F6EF2;
-}
-
-.first-tag:hover {
-  cursor: pointer;
-}
-
-.leftpart-tags {
-  border-radius: 3px;
-  width: fit-content;
-  padding: 3px;
-  margin: 5px;
-  font-size: 0.8rem;
-  border: 1px solid #4F6EF2;
-  background-color: white;
-  color: #4F6EF2;
-}
-
-.leftpart-tags:hover {
-  cursor: pointer;
-}
-
-.authors {
-  width: 100%;
-  height: 25px;
-  margin-bottom: 5px;
-}
-
-.author-list {
-  display: flex;
-  flex-direction: row;
-  margin: 0 auto;
-  align-items: center;
-}
-
-.authorImg {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  margin-top: 1.5px;
-  margin-left: 5px;
-}
-
-.authorname {
-  font-size: 0.8rem;
-  color: #000000;
-  margin-left: 2px;
-}
-
-.authorname:hover {
-  cursor: pointer;
-  border-bottom: 1px solid #000000;
-}
-
-.read-time {
-  width: 100%;
-  height: 25px;
-  font-size: 0.8rem;
-  color: #999999;
-  padding-left: 5px;
-}
-
-.read-time-content {
-  height: 100%;
-  margin-top: 3px;
-}
-
-.literature-ops {
-  margin: 0 auto;
-  width: 100%;
-  height: calc(100% - 75px - 32px);
-  display: flex;
-}
-
-.one-op {
-}
-
-.all-members-list-outter {
-  margin: 0 auto;
-  width: 400px;
-  height: auto;
-  padding: 10px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  max-height: 500px;
-  overflow: auto;
-}
-
-.one-member {
-  border: 1px solid #dddddd;
-  width: 100%;
-  height: 70px;
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 10px;
-}
-
-.one-member-headshot {
-  margin-left: 5px;
-  width: 60px;
-  height: 60px;
-  padding-top: 4px;
-}
-
-.member-headshot-style {
-  width: 100%;
-  border-radius: 50%;
-  margin: 0 auto;
-}
-
-.one-member-info {
-  width: 50%;
-  max-width: 50%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  padding-top: 5%;
-  padding-left: 2%;
-}
-
-.member-name {
-  margin-left: 10px;
-  width: 170px;
-  height: fit-content;
-  font-size: 0.875rem;
-  font-weight: 700;
-  margin-bottom: 5px;
-  max-width: 170px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.member-name:hover {
-  cursor: pointer;
-  width: fit-content;
-  border-bottom: 1px solid black;
-}
-
-.member-degree {
-  margin-left: 10px;
-  width: 170px;
-  height: fit-content;
-  font-size: 0.7rem;
-  color: #777777;
-}
-
-.one-member-follow-statue {
-  padding-top: 26px;
-  text-align: center;
-  width: calc(97% - 170px - 60px);
-  font-size: 0.7rem;
-}
-
-.one-member-follow-statue:hover {
-  cursor: pointer;
-}
-
-.red-font {
-  color: red;
-}
-
-.black-font {
-  color: black;
 }
 </style>

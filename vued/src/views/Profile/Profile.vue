@@ -7,16 +7,23 @@
         <div class="profile-info">
           <div class="headshot">
             <img :src="user.image" class="headshot-img">
-            <a class="headshot__hide" title="修改头像" @click="openChangeHeadshot">
+            <a class="headshot__hide" title="修改头像" @click="openChangeHeadshot" v-if="isSelfProfile">
               <img src="../../assets/image/edit.png" class="headshot__inner--samll">
             </a>
           </div>
           <div class="username">
-            <div class="user-nickname">{{ user.username }}</div>
-            <div class="user-degree" @click="openChangeProfileHover">
-              {{ retUserDegree() }}
-              <img src="../../assets/icons/profile/edit.svg" class="profile-icon">
+            <div class="user-nickname" @click="openChangeProfileHover">
+              {{ user.username }}
+              <img src="../../assets/icons/profile/edit.svg" class="profile-icon" @click="openChangeProfileHover">
             </div>
+            <div class="user-degree" v-if="isSelfProfile">
+              {{ retUserDegree() }}
+            </div>
+            <div class="user-degree" v-else>
+              {{ retUserDegree() }}
+            </div>
+            <div class="user-phone">{{ user.phoneNumber }}</div>
+            <div class="user-email">{{ user.emailAddress }}</div>
           </div>
         </div>
         <div class="profile-op">
@@ -30,27 +37,31 @@
         <favor :userID="user.userID"></favor>
       </div>
       <div class="content-right">
-        <div class="user-intro">
+        <div class="user-intro" v-if="isSelfProfile">
           <div class="user-application">
-            <div class="application" @click="applyForIntro()">申请加入门户</div>
+            <!-- todo -->
+            <div class="application" @click="gotoIntro(user.userID, user.authorID)">当前还未认证门户</div>
           </div>
         </div>
         <div class="user-follow">
           <div class="follow-header">
             <div class="follow-header-content">Follow</div>
           </div>
-          <div class="following">
+          <div class="following" v-if="followUsers.length > 0">
             <div class="follow-part-head">following ({{ followUsers.length }})</div>
-            <div class="following-content" v-if="followUsers.length > 0">
+            <div class="following-content">
               <div class="one-following" v-for="(onefollowingUser, i) in followUsers">
-                <img :src="onefollowingUser.imgSrc" class="intro-img img-plus">
+                <img :src="onefollowingUser.introImg" class="intro-img img-plus" @click="gotoIntro(onefollowingUser.userID, onefollowingUser.authorID)">
                 <div class="following-info">
-                  <div class="name-style">{{ onefollowingUser.name }}</div>
-                  <div class="intro-style">{{ onefollowingUser.intro }}</div>
+                  <div class="name-style">{{ onefollowingUser.username }}</div>
+                  <div class="intro-style" @click="gotoIntro(onefollowingUser.userID, onefollowingUser.authorID)">{{ onefollowingUser.realName }}</div>
                 </div>
-                <div class="following-op" @click="cancleFollow(onefollowingUser.followingID)">unfollow</div>
+                <div class="following-op" @click="cancleFollow(this.$store.state.user.userID, onefollowingUser.authorID)">unfollow</div>
               </div>
             </div>
+          </div>
+          <div v-else>
+            <img src="../../assets/image/no-follow.png" class="img-none">
           </div>
         </div>
       </div>
@@ -59,8 +70,14 @@
       <div class="change-profile-outter">
         <div class="change-nickname">
           <div class="hover-input-header">change nickname</div>
-          <div class="hover-input">
-            <input v-model="newNickName"></input>
+          <div>
+            <input v-model="newNickName" class="hover-input"></input>
+          </div>
+        </div>
+        <div class="change-nickname">
+          <div class="hover-input-header">change phone</div>
+          <div>
+            <input v-model="newPhone" class="hover-input"></input>
           </div>
         </div>
         <div class="change-degree">
@@ -75,7 +92,28 @@
         </div>
       </div>
     </m-hover>
-    <m-hover ref="changeHeadshot" @submit="submit" @cancel="cancel"></m-hover>
+    <m-hover ref="changeHeadshot" @submit="submit" @cancel="cancel">
+      <el-upload action="#" list-type="picture-card" :auto-upload="false" class="img-upload">
+        <i slot="default" class="el-icon-plus"></i>
+        <div slot="file" slot-scope="{file}">
+          <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
+          <span class="el-upload-list__item-actions">
+        <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
+          <i class="el-icon-zoom-in"></i>
+        </span>
+        <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleDownload(file)">
+          <i class="el-icon-download"></i>
+        </span>
+        <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleRemove(file)">
+          <i class="el-icon-delete"></i>
+        </span>
+      </span>
+        </div>
+      </el-upload>
+      <el-dialog :visible.sync="dialogVisible">
+        <img width="100%" :src="dialogImageUrl" alt="">
+      </el-dialog>
+    </m-hover>
   </div>
 </template>
 
@@ -103,57 +141,33 @@ export default {
       followUsers: [],
 
       options: [
-        { text: '高中', value: '0' },
-        { text: '本科生', value: '1' },
-        { text: '研究生', value: '2' },
-        { text: '博士生', value: '3' },
-        { text: '博士后', value: '4' },
+        { text: '高中生 (High school)', value: '0' },
+        { text: '本科生 (UnderGraduates)', value: '1' },
+        { text: '研究生 (Graduate)', value: '2' },
+        { text: '博士生 (Doctor)', value: '3' },
+        { text: '博士后 (Post-Doctoral)', value: '4' },
       ],
 
       newNickName: "",
-      newDegree: 0
+      newDegree: 0,
+      newPhone: "",
+
+      dialogImageUrl: '',
+      dialogVisible: false,
+      disabled: false
     };
-  },
-  created() {
-    let userID = this.$route.query.userID;
-
-    // 当前用户进入自己的主页
-    if (userID == this.$store.state.user.userID) {
-      this.user = this.$store.state.user;
-
-      console.log(this.user)
-
-      // 获取个人信息：我的关注 + 我的收藏
-      getUserFollowingList(userID)
-      .then((follow) => { this.followUsers = follow, console.log("follow:", follow) } )
-      .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
-    }
-    // 进入其他用户个人主页
-    else {
-      this.isSelfProfile = false
-
-      // 获取当前用户对象
-      getUserInformation(userID)
-      .then((user) => { this.user = user, console.log("user", user) } )
-      .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
-
-      getUserIntro(this.user.authorID)
-      .then((userIntro) => { this.userIntro = userIntro, console.log("intro", userIntro)})
-    }
-
-    this.newNickName = this.user.username
-    this.userDegree = this.user.userDegree
   },
   methods: {
     retUserDegree() {
-      if (this.userDegree == 0) return "高中";
-      else if (this.userDegree == 1) return "Bachelor of Engineering";
-      else if (this.userDegree == 2) return "研究生";
-      else if (this.userDegree == 3) return "博士生";
-      else if (this.userDegree == 4) return "博士后";
+      if (this.userDegree == 0) return "高中生(High school)";
+      else if (this.userDegree == 1) return "本科生(UnderGraduates)";
+      else if (this.userDegree == 2) return "研究生(Graduate)";
+      else if (this.userDegree == 3) return "博士生(Doctor)";
+      else if (this.userDegree == 4) return "博士后(Post-Doctoral)";
       else return "";
     },
     openChangeProfileHover() {
+      this.newDegree = this.user.userDegree
       this.$refs.changeProfile.showHover({
         title: "修改个人资料",
         submitBtn: "取消",
@@ -167,26 +181,102 @@ export default {
         cancelBtn: "提交"
       });
     },
-    cancleFollow(selectUserID) {
-      this.$notify.info("已取消关注")
-    },
-    doFollow(selectUserID) {
-      this.$notify.success("关注成功")
+    cancleFollow(userID, followID) {
+      let followerID = userID
+      let followedID = followID
+
+      follow(followerID, followedID, 0)
+      .then((res) => {
+        if (res == 0)
+          this.$notify.warning("取消关注失败，请刷新重试")
+        else {
+          this.$notify.success("取消关注成功")
+          // todo 再次调用一次关注成员列表获取
+        }
+      })
+      .catch((err) => {
+        this.$notify.error(
+          {
+            title: "网络错误",
+            message: "请稍后重试~"
+          }
+        )
+      })
     },
     opSwitch(opID) {
       this.op = opID
     },
-    gotoIntro(authorID) {
-      this.$router.push({path: '/intro', query: { authorID: this.user.authorID }})
+    gotoIntro(userID, authorID) {
+      this.$router.push(
+        {
+          path: '/intro',
+          query: {
+            userID: userID,
+            authorID: authorID
+          }
+        }
+      )
     },
-    applyForIntro() {
-      this.$router.push({path: '/applyIntro'})
+    handleRemove(file) {
+      console.log(file);
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
+    handleDownload(file) {
+      console.log(file);
     },
     submit() {
-
+      editProfile(this.user.userID,
+        this.newNickName,
+        this.user.realName,
+        this.newDegree,
+        this.user.image,
+        this.user.organization,
+        this.user.emailAddress,
+        this.newPhone)
+      .then((res) => {
+        if (res == 0) this.$notify.success("修改成功")
+        else if (res == 1) this.$notify.warning("用户名重复或已被使用")
+        else if (res == -1) this.$notify.error("修改异常，请检查网络")
+      })
+      .catch((err) => {
+        this.$notify.error( { title: "网络错误", message: "请稍后重试~" } )
+      })
     },
     cancel() {
+    }
+  },
+  created() {
+    let userID = this.$route.query.userID;
 
+    // 当前用户进入自己的主页
+    if (userID == this.$store.state.user.userID) {
+      this.user = this.$store.state.user;
+
+      console.log(this.user)
+
+      this.newNickName = this.user.username
+      this.userDegree = this.user.userDegree
+      this.newPhone = this.user.phoneNumber
+
+      // 获取个人信息：我的关注 + 我的收藏
+      getUserFollowingList(userID)
+        .then((follow) => { this.followUsers = follow, console.log("follow:", follow) } )
+        .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
+    }
+    // 进入其他用户个人主页
+    else {
+      this.isSelfProfile = false
+
+      // 获取当前用户对象
+      getUserInformation(userID)
+        .then((user) => { this.user = user, console.log("user", user) } )
+        .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
+
+      getUserIntro(this.user.authorID)
+        .then((userIntro) => { this.userIntro = userIntro, console.log("intro", userIntro)})
     }
   },
   components: {
@@ -280,10 +370,14 @@ export default {
 
 .user-nickname {
   margin-left: 2%;
-  margin-top: 7%;
+  margin-top: 4%;
   line-height: 1,2;
   color: #111;
   font-size: 1.375rem;
+}
+
+.user-nickname:hover {
+  cursor: pointer;
 }
 
 .user-degree {
@@ -293,12 +387,24 @@ export default {
   line-height: 1,2;
   color: #555;
   font-size: 0.875rem;
-  cursor: pointer;
 }
 
-.user-degree:hover {
-  border-bottom: 1px solid #777777;
-  color: #545454;
+.user-phone {
+  max-width: fit-content;
+  margin-left: 2%;
+  margin-top: 1%;
+  line-height: 1,2;
+  color: #555;
+  font-size: 0.875rem;
+}
+
+.user-email {
+  max-width: fit-content;
+  margin-left: 2%;
+  margin-top: 1%;
+  line-height: 1,2;
+  color: #555;
+  font-size: 0.875rem;
 }
 
 .publish {
@@ -635,7 +741,6 @@ export default {
 .follow-part-head {
   width: 100%;
   height: 54px;
-  /*border: 1px solid red;*/
   font-size: 0.7rem;
   padding: 5%;
   color: #000000;
@@ -712,6 +817,10 @@ export default {
   width: 15px;
 }
 
+.profile-icon:hover {
+  cursor: pointer;
+}
+
 .change-profile-outter {
   width: 400px;
   height: auto;
@@ -743,11 +852,17 @@ export default {
 }
 
 .hover-input {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   width: 70%;
   padding: 5px;
   margin-top: 5px;
   border: 1px solid #dddddd;
+  transition: ease-in-out 0.5s;
+}
+
+.hover-input:focus {
+  border: 1px solid #4F6EF2;
+  transition: ease-in-out 0.5s;
 }
 
 .hover-select {
@@ -763,4 +878,16 @@ export default {
 .option {
 }
 
+.img-none {
+  width: 100%;
+}
+
+select {
+  outline: none;
+}
+
+.img-upload {
+  margin: 0 auto;
+  margin-top: 10px;
+}
 </style>
