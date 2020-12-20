@@ -55,12 +55,12 @@ export default {
   data() {
     return {
       intro: {
-        authorID:"",
-        realName:"",
-        organization:"",
-        userID:"",
-        image:"",
-        introduction:"",
+        // authorID:"",
+        // realName:"",
+        // organization:"",
+        // userID:"",
+        // image:"",
+        // introduction:"",
       },
 
       codeInput: "",
@@ -87,7 +87,7 @@ export default {
       }
       else if (this.application.length > 50) this.$notify.warning("申请理由不可超过50字")
       else {
-        apply(userID, authorID, this.email, this.application)
+        apply(userID, authorID, this.intro.realName, this.email, this.application)
         .then((res) => {
           if (res == 0) this.$notify.success("申请认证成功")
           else if (res == 1) {

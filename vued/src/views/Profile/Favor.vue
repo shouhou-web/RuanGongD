@@ -14,7 +14,7 @@
 
 <script>
 import YLiterature from "@/components/common/y-literature/y-literature";
-import { getUserFavorLiteratures } from "@/network/profile"
+import { getFavorLiteratures } from "@/network/profile"
 
 export default {
   name: "Favor",
@@ -27,8 +27,11 @@ export default {
     }
   },
   created() {
-    getUserFavorLiteratures(this.userID)
-    .then((favor) => { this.favorLiteratures = favor })
+    getFavorLiteratures(this.userID)
+    .then((favor) => {
+      this.favorLiteratures = favor
+      console.log("favor", favor)
+    })
     .catch((err) => { this.$notify.error({ title: "网络错误", message: "请稍后重试~" }) })
   }
 }
