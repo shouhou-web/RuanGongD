@@ -56,6 +56,22 @@ const mutations = {
   },
   inputSearchList(state, change) {
     state.searchList[change.index].value = change.value;
+  },
+  // profile相关修改
+  setImagePath(state, image) {
+    state.user.image = image;
+  },
+  setUserName(state, userName) {
+    state.user.username = userName;
+  },
+  setEmailAddress(state, emailAddress) {
+    state.user.emailAddress = emailAddress;
+  },
+  setPhoneNumber(state, phone) {
+    state.user.phoneNumber = phone
+  },
+  setUserDegree(state, degree) {
+    state.user.userDegree = degree
   }
 };
 

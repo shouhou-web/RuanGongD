@@ -34,7 +34,7 @@
     <div class="intro-content">
       <div class="content-left">
 <!--        <my-literatures :userID="intro.userID" v-if="opID == 0"></my-literatures>-->
-        <manage :userID="intro.userID"></manage>
+        <manage :userID="intro.userID" v-if="opID == 0"></manage>
         <user-posts :userId="intro.userID" v-if="opID == 1"></user-posts>
         <favor :userID="intro.userID" v-if="opID == 2"></favor>
       </div>
