@@ -66,7 +66,7 @@
         </div>
       </div>
     </div>
-    <m-hover ref="changeProfile" @submit="submit" @cancel="cancel">
+    <m-hover ref="changeProfile" @submit="submitEdit" @cancel="cancel">
       <div class="change-profile-outter">
         <div class="change-nickname">
           <div class="hover-input-header">change nickname</div>
@@ -227,7 +227,7 @@ export default {
     handleDownload(file) {
       console.log(file);
     },
-    submit() {
+    submitEdit() {
       editProfile(this.user.userID,
         this.newNickName,
         this.user.realName,
@@ -244,6 +244,9 @@ export default {
       .catch((err) => {
         this.$notify.error( { title: "网络错误", message: "请稍后重试~" } )
       })
+    },
+    submiy() {
+
     },
     cancel() {
     }
@@ -838,7 +841,7 @@ export default {
 
 .change-nickname {
   margin-left: 60px;
-  margin-top: 20px;
+  margin-top: 10px;
   width: 100%;
   display: flex;
   flex-direction: column;

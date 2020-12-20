@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="favor">
     <y-literature v-for="(onefollowingLiterature, i) in favorLiteratures"
                   :id="onefollowingLiterature.literatureID"
                   :title="onefollowingLiterature.title"
@@ -35,13 +35,39 @@ export default {
 </script>
 
 <style scoped>
+.favor {
+  width: 101%;
+  max-height: 601px;
+  overflow: scroll;
+}
+
+.favor::-webkit-scrollbar {
+  /*滚动条整体样式*/
+  width : 5px;  /*高宽分别对应横竖滚动条的尺寸*/
+  height: 1px;
+}
+.favor::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius   : 2px;
+  background-color: #4F6EF2;
+}
+.favor::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  box-shadow   : inset 0 0 5px rgba(255, 255, 255, 0.2);
+  background   : none;
+  border-radius: 10px;
+}
+
+
 .none {
+  height: 600px;
   border: 1px solid #dddddd;
   background-color: white;
 }
 
 .none-img {
   width: 30%;
-  margin-left: 33%;
+  margin-left: 34%;
+  margin-top: 180px;
 }
 </style>
