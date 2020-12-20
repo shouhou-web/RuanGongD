@@ -165,7 +165,7 @@
 </template>
 
 <script>
-import { getAllSectors } from "network/forum.js";
+import { getAllSectors, getFollowedPosts } from "network/forum.js";
 import MHeader from "../../components/common/m-header/m-header.vue";
 import CreatePost from "./childCpn/create-post.vue";
 import CreateConsultation from "./childCpn/create-consultation.vue";
@@ -333,11 +333,18 @@ export default {
   },
   components: { MHeader, CreatePost, CreateConsultation },
   created() {
-    //CreatePost;
-    //todo: 获取分区信息
     getAllSectors()
       .then(res => {
         console.log("getAllSectors");
+        console.log(res);
+        this.sectors = res.data.sectors;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    getFollowedPosts(this.currentUser)
+      .then(res => {
+        console.log("getFollowedPosts");
         console.log(res);
         this.sectors = res.data.sectors;
       })
