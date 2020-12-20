@@ -16,20 +16,24 @@
             :src="author.image"
             alt=""
             class="l-root-card--reporter-pic"
-            @click="toAuthor(authorID)"
+            @click="toAuthor(author.userID,authorID)"
           />
         </div>
       </div>
       <div class="auth-part2">
-        <div class="introduction">
+        <div class="introduction" v-if="this.author.introduction != 0">
           <span class="intro">个人简介：</span>
           <span>{{ author.introduction }}</span>
         </div>
+        <!-- 没有个人简介的情况 -->
+        <div class="introduction" v-if="this.author.introduction.length == 0">
+          <span class="intro">暂无个人简介</span>
+        </div>
       </div>
       <div class="auth-part3">
-        <l-button @click="followAuthor(authorID)" v-if="!isFollowed">关注</l-button>
-        <l-button @click="followAuthor(authorID)" v-if="isFollowed" class="isfollowed">已关注</l-button>
-        <l-button @click="toAuthor(authorID)">个人门户</l-button>
+        <l-button @click="followAuthor(author.userID)" v-if="!isFollowed">关注</l-button>
+        <l-button @click="followAuthor(author.userID)" v-if="isFollowed" class="isfollowed">已关注</l-button>
+        <l-button @click="toAuthor(author.userID,authorID)">个人门户</l-button>
       </div>
     </div>
   </div>
@@ -52,27 +56,28 @@ export default {
             userID: "",
             image: "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=66747141,2601833110&fm=26&gp=0.jpg",
             introduction:
-              "身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世.身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世",
+              "身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世。",
           },
       isFollowed:true,
     };
   },
   methods: {
     //跳转到个人门户
-    toAuthor(authorID) {
+    toAuthor(userID,authorID) {
       this.$router.push({
         path: "/profile",
         query: {
-          userID: authorID,
+          userID: userID,
+          autherID:authorID,
         },
       });
     },
     //关注和取消关注
-    followAuthor(authorID) {
+    followAuthor(userID) {
       console.log("test");
       //已关注，要取消关注
       if(this.isFollowed){
-        follow(this.$route.query.userID,authorID,0)//缺少authorid找userid的步骤
+        follow(this.$route.query.userID,userID,0)//缺少authorid找userid的步骤
         .then(res=>{
           if(res == 0){
             this.$notify.success("取消关注成功");
@@ -84,7 +89,7 @@ export default {
       }
       //未关注，要关注作者
       else{
-        follow(this.$route.query.userID,authorID,1)//缺少authorid找userid的步骤
+        follow(this.$route.query.userID,userID,1)//缺少authorid找userid的步骤
         .then(res=>{
           if(res == 0){
             this.$notify.success("关注成功");

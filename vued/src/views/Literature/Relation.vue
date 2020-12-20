@@ -45,14 +45,7 @@ export default {
           ],
           abstract:
             "Tumor suppressor genes can be inactivated by several mechanisms and, in a majority of cases, both alleles need to be affected. One of the mechanisms of inactivation is due to deletions ranging from dozen to hundreds of nucleotides; such deletions are often missed by variant callers. HomDelDetect is a method to detect such homozygous deletions in cancer models, such as cancer cell lines and potentially patient tumor derived xenografts. This method can be applied to partial exome, whole exome, whole genome sequencing, and RNA-seq data. We applied our method across a panel of CCLE cancer cell lines and observed good concordance with SNP array-based analysis and also detected deletions which have been missed by variant callers and by SNP arrays, demonstrating the ability of HomDelDetect to improve the annotations of tumor suppressor genes in cancer models. This article is protected by copyright. All rights reserved", //摘要
-          keyWord: [
-            {
-              str: "aaa",
-            },
-            {
-              str: "bbb",
-            },
-          ],
+          keyWord: ["aaa","bbb"],
           year: "2020", //文献年份
           readTimes: 10, //阅读次数
         }, //文献
@@ -75,14 +68,7 @@ export default {
           ],
           abstract:
             "Tumor suppressor genes can be inactivated by several mechanisms and, in a majority of cases, both alleles need to be affected. One of the mechanisms of inactivation is due to deletions ranging from dozen to hundreds of nucleotides; such deletions are often missed by variant callers. HomDelDetect is a method to detect such homozygous deletions in cancer models, such as cancer cell lines and potentially patient tumor derived xenografts. This method can be applied to partial exome, whole exome, whole genome sequencing, and RNA-seq data. We applied our method across a panel of CCLE cancer cell lines and observed good concordance with SNP array-based analysis and also detected deletions which have been missed by variant callers and by SNP arrays, demonstrating the ability of HomDelDetect to improve the annotations of tumor suppressor genes in cancer models. This article is protected by copyright. All rights reserved", //摘要
-          keyWord: [
-            {
-              str: "aaa",
-            },
-            {
-              str: "bbb",
-            },
-          ],
+          keyWord: ["aaa","bbb"],
           year: "2020", //文献年份
           readTimes: 10, //阅读次数
         }, //文献
@@ -104,14 +90,7 @@ export default {
           ],
           abstract:
             "Tumor suppressor genes can be inactivated by several mechanisms and, in a majority of cases, both alleles need to be affected. One of the mechanisms of inactivation is due to deletions ranging from dozen to hundreds of nucleotides; such deletions are often missed by variant callers. HomDelDetect is a method to detect such homozygous deletions in cancer models, such as cancer cell lines and potentially patient tumor derived xenografts. This method can be applied to partial exome, whole exome, whole genome sequencing, and RNA-seq data. We applied our method across a panel of CCLE cancer cell lines and observed good concordance with SNP array-based analysis and also detected deletions which have been missed by variant callers and by SNP arrays, demonstrating the ability of HomDelDetect to improve the annotations of tumor suppressor genes in cancer models. This article is protected by copyright. All rights reserved", //摘要
-          keyWord: [
-            {
-              str: "aaa",
-            },
-            {
-              str: "bbb",
-            },
-          ],
+          keyWord: ["aaa","bbb"],
           year: "2020", //文献年份
           readTimes: 10, //阅读次数
         }, //文献

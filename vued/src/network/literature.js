@@ -105,3 +105,41 @@ export function getAuthorInformation(authorID) {
     method: "post"
   });
 }
+
+//举报文献
+export function reportLiterature(userID, literatureID, title, Content) {
+  return request(baseURL,{
+    url: "/reportLiterature",
+    params: {
+      userID, 
+      literatureID, 
+      title,
+      Content
+    },
+    method: "post"
+  });
+}
+
+//获取文献的评论列表
+export function getComment(literatureID) {
+  return request(baseURL,{
+    url: "/getComment",
+    params: {
+      literatureID, 
+    },
+    method: "post"
+  });
+}
+
+//评论文献
+export function comment(userID, literatureID, content) {
+  return request(baseURL,{
+    url: "/comment",
+    params: {
+      userID,
+      literatureID, 
+      content
+    },
+    method: "post"
+  });
+}

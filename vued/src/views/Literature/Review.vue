@@ -11,7 +11,12 @@
           <div class="card-divider" v-if="comment.floor != 1"></div>
           <div class="card-header">
             <div class="avatar">
-              <v-btn fab icon x-small @click="jumpToProfile(comment.commenterId)">
+              <v-btn
+                fab
+                icon
+                x-small
+                @click="jumpToProfile(comment.commenterId)"
+              >
                 <v-avatar size="32px">
                   <img :src="comment.commenterAvatar" />
                 </v-avatar>
@@ -30,15 +35,11 @@
                 @click="showDelete(comment.commentId)"
               >
                 <!-- 是作者：可以删除评论 -->
-                <v-icon>
-                  mdi-delete
-                </v-icon>
+                <v-icon> mdi-delete </v-icon>
               </v-btn>
               <v-btn icon v-else @click="showReport(comment.commentId)">
                 <!-- 不是作者：可以举报评论 -->
-                <v-icon>
-                  mdi-alert-octagon
-                </v-icon>
+                <v-icon> mdi-alert-octagon </v-icon>
               </v-btn>
             </div>
           </div>
@@ -88,12 +89,75 @@
           </div>
         </div>
       </div>
-
     </div>
+
+    <!-- 举报对话框  -->
+      <v-dialog v-model="reportDialog" max-width="600">
+        <v-card elevation="3">
+          <v-card-title>举报评论</v-card-title>
+          <v-card-text>
+            <el-form
+              :model="reportForm"
+              label-width="80px"
+              :rules="reportRule"
+              ref="reportForm"
+            >
+              <el-form-item label="举报理由" prop="reportContent">
+                <el-input
+                  class="report-content"
+                  type="textarea"
+                  v-model="reportForm.reportContent"
+                  placeholder="请输入举报理由"
+                  :autosize="{ minRows: 5, maxRows: 12 }"
+                  resize="none"
+                  maxlength="801"
+                ></el-input>
+              </el-form-item>
+            </el-form>
+          </v-card-text>
+          <v-card-actions>
+            <div class="footer">
+              <v-btn
+                color="var(--color-main)"
+                @click="handleReport()"
+              >
+                <font color="white">举报</font>
+              </v-btn>
+              <v-btn @click="reportDialog = false">取消</v-btn>
+            </div>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+    <v-dialog v-model="deleteDialog" max-width="400">
+      <v-card elevation="3">
+        <div>
+          <v-card-title>删除评论</v-card-title>
+          <v-card-text> 是否真的要删除这条评论？ </v-card-text>
+        </div>
+        <v-card-actions>
+          <div class="footer">
+            <v-btn color="#ff6060" @click="handleDelete">
+              <font color="white">删除</font>
+            </v-btn>
+            <v-btn @click="deleteDialog = false">取消</v-btn>
+          </div>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import {
+  getPostInfo,
+  deletePost,
+  reportComment,
+  deleteComment,
+  commentPost,
+} from "network/forum.js";
+import { getComment, comment } from "network/literature";
+
 export default {
   name: "Review",
   data() {
@@ -110,7 +174,28 @@ export default {
           (v.length <= 800 && v.length >= 5) ||
           "评论内容长度在 5-800 个字符之间",
       ],
-
+      reportDialog: false, // 是否展示举报界面
+      deleteDialog: false, // 是否展示删除界面
+      deleteCommentId: "",
+      commentContent: "",
+      commentFormValid: false,
+      reportForm: {
+        reportContent: "",
+        reportCommentId: ""
+      },
+      reportFormValid: false,
+      commentRule: [
+        v => !!v,
+        v =>
+          (v.length <= 800 && v.length >= 5) ||
+          "评论内容长度在 5-800 个字符之间"
+      ],
+      reportRule: [
+        v => !!v,
+        v =>
+          (v.length <= 600 && v.length >= 5) ||
+          "举报内容长度在 5-600 个字符之间"
+      ],
       comments: [
         {
           commentId: "1",
@@ -144,7 +229,7 @@ export default {
     };
   },
   methods: {
-      jumpToProfile(userId) {
+    jumpToProfile(userId) {
       console.log("jump to " + userId);
       this.$router.push({
         path: "/profile",
@@ -153,7 +238,7 @@ export default {
         },
       });
     },
-      showDelete(commentId) {
+    showDelete(commentId) {
       this.deleteDialog = true;
       if (commentId == -1) {
         this.deletePost = true;
@@ -165,19 +250,101 @@ export default {
     showReport(commentId) {
       this.reportDialog = true;
       this.reportForm.reportContent = "";
-      if (commentId == -1) {
-        this.reportPost = true;
-      } else {
-        this.reportPost = false;
         this.reportForm.reportCommentId = commentId;
-      }
     },
+    handleReport() {
+      reportComment(
+        this.userId,
+        this.reportForm.reportCommentId,
+        this.reportForm.reportContent
+      )
+        .then((res) => {
+          console.log("report comment");
+          console.log(res);
+          if (res.data.result == "true") {
+            this.reportDialog = false;
+            this.$notify({
+              title: "操作成功",
+              message: "举报成功！请等候管理员处理",
+              type: "success",
+            });
+          } else {
+            this.$notify.error({
+              title: "操作失败",
+              message: "举报失败，请稍后再试。",
+            });
+          }
+        })
+        .catch((err) => {
+          this.$notify.error({
+            title: "操作失败",
+            message: "举报失败，请稍后再试。",
+          });
+          console.log(err);
+        });
+    },
+
+    handleDelete() {
+      deleteComment(this.userId, this.deleteCommentId)
+        .then((res) => {
+          console.log("delete comment");
+          console.log(res);
+          if (res.data.result == "true") {
+            this.deleteDialog = false;
+
+            for (var i = 0; i < this.comments.length; i++) {
+              if (this.deleteCommentId == this.comments[i].commentId)
+                this.comments.splice(i, 1);
+            }
+            if (this.comments[0] && this.comments[0].floor == 3)
+              this.comments[0].floor--;
+            for (var i = 1; i < this.comments.length; i++) {
+              if (this.comments[i].floor - this.comments[i - 1].floor == 2)
+                this.comments[i].floor--;
+            }
+            // FIXME: 跳到其他页面，再使用浏览器的返回时，无法持久存放修改后的数据
+
+            this.$notify({
+              title: "操作成功",
+              message: "删除成功！",
+              type: "success",
+            });
+          } else {
+            this.$notify.error({
+              title: "操作失败",
+              message: "删除失败，请稍后再试。",
+            });
+          }
+        })
+        .catch((err) => {
+          this.$notify.error({
+            title: "操作失败",
+            message: "删除失败，请稍后再试。",
+          });
+          console.log(err);
+        });
+    },
+
     handleComment() {
-      commentPost(this.userId, this.postId, this.commentContent)
+      commentPost(
+        this.userId,
+        this.$route.query.literatureID,
+        this.commentContent
+      )
         .then((res) => {
           console.log("comment post");
           console.log(res);
-          if (res.data.result == "true") {
+          if (res == 0) {
+            var len = this.comments.length;
+            this.comments.push({
+              commentId: "1",
+              commenterId: this.userId,
+              commenterName: this.userName,
+              commenterAvatar: this.userAvatar,
+              floor: len + 2,
+              commentContent: this.commentContent,
+              commentTime: "刚刚",
+            });
             this.commentContent = "";
             this.$notify.success("评论发表成功！");
           } else {
@@ -192,11 +359,12 @@ export default {
   },
   components: {},
   created() {
-    this.postId = this.$route.query.postId;
+    getComment(this.$route.query.literatureID).then((res) => {
+      this.comments = res;
+    });
     // this.userId = this.$store.state.userID; // TODO 等待统一
     // TODO 获取 userName, userAvatar
-    console.log("postId: " + this.postId + "\nuserId: " + this.userId);
-    this.comments.sort(function(a, b) {
+    this.comments.sort(function (a, b) {
       return a.floor - b.floor;
     }); // 对 comments 按楼层升序排序
   },
@@ -204,8 +372,8 @@ export default {
 </script>
 
 <style scoped>
-#Review{
-    width: 1100px;
+#Review {
+  width: 1100px;
   margin: auto;
   display: flex;
 
@@ -223,8 +391,7 @@ export default {
   width: 100%;
   min-width: 400px;
   margin: 0 auto;
- background: white;
-
+  background: white;
 }
 
 .card {
@@ -314,9 +481,15 @@ export default {
 
 .footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   margin: auto;
   padding-bottom: 10px;
-  width: 40%;
+  width: 80%;
+}
+.footer .v-btn {
+  margin-right: 20px;
+}
+.report-content {
+  margin-top: 10px;
 }
 </style>

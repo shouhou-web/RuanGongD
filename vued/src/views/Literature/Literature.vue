@@ -13,8 +13,8 @@
             <ul class="author-ul">
               <li
                 class="author"
-                @click="toAuthor(item.authorID)"
                 v-for="(item, index) in literature.authorList"
+                @click="toAuthor(item.userID, item.authorID)"
                 :key="index"
               >
                 <l-author :author="item"></l-author>
@@ -40,7 +40,7 @@
               :key="index"
               href="javascript:void(0);"
             >
-              <span @click="searchKey(item.str)">{{ item.str }}</span>
+              <span @click="searchKey(item)">{{ item }}</span>
             </el-link>
           </div>
           <div class="doi content">
@@ -85,7 +85,7 @@
                 size="medium"
                 type="primary"
                 class="report"
-                @click="reportLiterature()"
+                @click="reportLi()"
               >
                 <i class="el-icon-warning-outline"></i>
                 <span> 举报文献 </span>
@@ -103,7 +103,7 @@
             <div class="b1">
               <img src="./img/test.jpg" alt="" />
             </div>
-            <div class="b2">{{literature.venue}}</div>
+            <div class="b2">{{ literature.venue }}</div>
           </div>
         </div>
       </div>
@@ -165,7 +165,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <m-hover ref="hover" >
+      <m-hover ref="hover">
         <div class="hover-referformat1">
           MLA格式引文：{{ literature.MLAformat }}
         </div>
@@ -182,10 +182,9 @@
 <script>
 import LFollowlicard from "./childCpn/followlicard.vue";
 import LAuthor from "./childCpn/author.vue";
-import { getLiterature, collect } from "network/literature";
+import { getLiterature, collect, reportLiterature } from "network/literature";
 import {
   getPostInfo,
-  reportPost,
   deletePost,
   reportComment,
   deleteComment,
@@ -210,7 +209,8 @@ export default {
             realName: "阿尔托莉雅",
             organization: "不列颠",
             userID: "",
-            image: "test",
+            image:
+              "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=66747141,2601833110&fm=26&gp=0.jpg",
             introduction:
               "身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世.身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世",
           },
@@ -234,23 +234,13 @@ export default {
 
         abstract:
           "Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的",
-        keyWord: [
-          {
-            str: "Saber我的",
-          },
-          {
-            str: "Saber我的",
-          },
-          {
-            str: "Saber我的",
-          },
-        ],
+        keyWord: ["Saber我的", "Saber我的", "Saber我的"],
         download: "",
         MLAformat:
           "[1]俞文雅,陶红武,曾顺,谭跃刚.四足机器人斜坡对角小跑运动控制研究[J].武汉科技大学学报,2021,44(01):60-67.",
         APAformat: "qwertyuio",
-        venue:"xxxxxxxx",
-        doi:"123456",
+        venue: "xxxxxxxx",
+        doi: "123456",
       }, //文献
 
       staroff: true,
@@ -316,12 +306,10 @@ export default {
     referFormat() {
       this.$refs.hover.showHover({
         title: "引用文献",
-        // submitBtn: "确定",
-        // cancelBtn: "起飞"
       });
     },
 
-    reportLiterature() {
+    reportLi() {
       this.reportDialog = true;
     },
     // 举报
@@ -334,51 +322,36 @@ export default {
       });
       if (!pass) return;
 
-      if (this.reportPost == true) {
-        reportPost(this.userId, this.postId, this.reportForm.reportContent)
-          .then((res) => {
-            console.log("report post");
-            console.log(res);
-            if (res.data.result == "true") {
-              this.reportDialog = false;
-            } else {
-              this.$notify.error("举报失败，请稍后再试。");
-            }
-          })
-          .catch((err) => {
+      reportLiterature(
+        this.userId,
+        this.literature.literatureID,
+        this.literature.title,
+        this.reportForm.reportContent
+      )
+        .then((res) => {
+          console.log("report post");
+          console.log(res);
+          if (res == 0) {
+            this.reportDialog = false;
+          } else {
             this.$notify.error("举报失败，请稍后再试。");
-            console.log(err);
-          });
-      } else {
-        reportComment(
-          this.userId,
-          this.reportForm.reportCommentId,
-          this.reportForm.reportContent
-        )
-          .then((res) => {
-            console.log("report comment");
-            console.log(res);
-            if (res.data.result == "true") {
-              this.reportDialog = false;
-            } else {
-              this.$notify.error("举报失败，请稍后再试。");
-            }
-          })
-          .catch((err) => {
-            this.$notify.error("举报失败，请稍后再试。");
-            console.log(err);
-          });
-      }
+          }
+        })
+        .catch((err) => {
+          this.$notify.error("举报失败，请稍后再试。");
+          console.log(err);
+        });
     },
     toChild(index) {
       let target = this.navList[index].router;
       this.$router.push("/literature/" + target);
     },
-    toAuthor(authorID) {
+    toAuthor(userID, authorID) {
       this.$router.push({
         path: "/profile",
         query: {
-          userID: authorID,
+          userID: userID,
+          autherID: authorID,
         },
       });
     },

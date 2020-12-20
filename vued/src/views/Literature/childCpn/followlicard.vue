@@ -18,7 +18,7 @@
     </div>
     <div class="keyWord">
       <div v-for="(item, index) in refer.keyWord" class="keyWord-list">
-          <div class="key">{{ item.str}}</div>
+          <div class="key">{{ item}}</div>
         </div>
     </div>
     <div class="read-time">
@@ -46,11 +46,7 @@ export default {
         },
       ],
       abstract: "", //摘要
-      keyWord: [
-        {
-          str: "",
-        },
-      ],
+      keyWord: [],
       year: "", //文献年份
       readTimes: 0, //阅读次数
     }, //文献
@@ -148,7 +144,7 @@ export default {
 .authorname {
   font-size: 0.8rem;
   color: #000000;
-  margin-left: 2px;
+  margin-left: 5px;
 }
 
 .authorname:hover {
