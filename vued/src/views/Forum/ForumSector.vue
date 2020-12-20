@@ -262,8 +262,7 @@ export default {
       return str;
     },
     goToUser(id) {
-      //todo: 跳转到用户
-
+      //跳转到用户
       this.$router.push({
         path: "/profile",
         query: { userID: id }
@@ -271,14 +270,13 @@ export default {
     },
     goToPost(id) {
       //跳转到动态
-
       this.$router.push({
         path: "/forumPost",
         query: { postId: id }
       });
     },
     followSector() {
-      //todo: (或解除)关注分区
+      //关注(或解除)分区
       let textString = this.followed == "0" ? "关注分区" : "取消关注分区";
       followSector(this.currentUser, this.sectorId)
         .then(res => {
@@ -372,7 +370,7 @@ export default {
       return this.followed == "0" ? "关注" : "已关注";
     },
     currentUser() {
-      //todo: userId
+      //userId
       return this.$store.state.user.userID;
     }
   },

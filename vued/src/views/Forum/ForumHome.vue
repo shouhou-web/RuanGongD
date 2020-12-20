@@ -299,15 +299,14 @@ export default {
       return "回复于 " + time;
     },
     goToUser(id) {
-      //todo: 跳转到用户
-
+      //跳转到用户
       this.$router.push({
         path: "/profile",
         query: { userID: id }
       });
     },
     goToSector(id) {
-      //todo: 跳转到分区
+      //跳转到分区
       this.$router.push({
         path: "/forumSector",
         query: {
@@ -359,7 +358,6 @@ export default {
 #forumHome {
   margin: 20px auto;
   width: var(--width-main);
-  /*background-image: url();*/
 }
 .m-header {
   width: 100vw;
@@ -375,7 +373,6 @@ export default {
   margin-bottom: 1px;
   border-radius: 0px;
   width: 1120px;
-  /*background-color: white;*/
   height: 190px;
   display: flex;
   flex-direction: column;
