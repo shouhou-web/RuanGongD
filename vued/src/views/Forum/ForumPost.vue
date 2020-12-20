@@ -603,9 +603,9 @@ export default {
   components: {},
   created() {
     this.postId = this.$route.query.postId;
-    // this.userId = this.$store.state.user.userID; // TODO 等待统一
-    // this.userName = this.$store.state.user.userName;
-    // this.userAvatar = this.$store.state.user.imagePath;
+    this.userId = this.$store.state.user.userID; // TODO 等待统一
+    this.userName = this.$store.state.user.userName;
+    this.userAvatar = this.$store.state.user.imagePath;
     console.log("postId: " + this.postId + "\nuserId: " + this.userId);
 
     getPostInfo(this.userId, this.postId)
