@@ -18,10 +18,7 @@
     </div>
 
     <div class="authors">
-      <div
-        v-for="(name, i) in refer.authors"
-        class="author-list"
-      >
+      <div v-for="(name, i) in refer.authors" class="author-list">
         <img :src="refer.userImgSrc" class="authorImg" />
         <div class="authorname">{{ refer.name }}</div>
       </div>
@@ -30,9 +27,7 @@
       {{ refer.brief }}
     </div>
     <div class="read-time">
-      <div class="read-time-content">
-        {{ refer.read_time }} Reads
-      </div>
+      <div class="read-time-content">{{ refer.read_time }} Reads</div>
     </div>
     <div class="literature-ops">
       <div class="one-op"></div>
@@ -46,16 +41,13 @@ export default {
   props: {
     refer: {
       title: "",
-    authors: [],
-    tags: [],
-    time: "",
-    img: [],
-    brief: "",
-    read_time: 0,
-    }
-    
-  },
-  data() {
+      authors: [],
+      tags: [],
+      time: "",
+      img: [],
+      brief: "",
+      read_time: 0,
+    },
   },
   methods: {},
   components: {},

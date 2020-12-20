@@ -5,7 +5,7 @@
       <div slot="left">
         <ul class="header__switch">
           <li
-            :class="{ 'is-active': item.name == $store.state.appHeaderCurName }"
+            :class="{ 'is-active': index == $store.state.appHeaderCurIndex }"
             v-for="(item, index) in switchList"
             :key="index"
             @click="jump(item)"
@@ -15,7 +15,7 @@
         </ul>
       </div>
       <div slot="right">
-        <div class="header__right">
+        <div v-if="isLogin" class="header__right">
           <div
             class="header__icon"
             @mouseover="color"
@@ -30,11 +30,38 @@
             <img v-else src="@/assets/icons/header/msg.png" alt="" />
           </div>
           <div class="header__avator" @click="toProfile">
-            <img
-              src="https://img-static.mihoyo.com/communityweb/upload/820f461e107e17f11d8fa8c5e45d5289.png"
-              alt=""
-            />
+            <img :src="$store.state.user.image" alt="" />
           </div>
+          <div @click="showAvator" class="header__down">
+            <img src="@/assets/icons/home/down.png" alt="" />
+            <div
+              class="header__down--hide"
+              v-if="isHeaderDown"
+              @mouseleave="hideAvator"
+            >
+              <ul>
+                <li v-for="(item, index) in avatorList" :key="index">
+                  <div
+                    class="header__down__item"
+                    v-if="item.type == curType"
+                    @click="toAvator(item.path)"
+                  >
+                    {{ item.name }}
+                  </div>
+                </li>
+                <div class="header__down__div"></div>
+                <li>
+                  <div class="header__down__item" @click="logOut">
+                    登出账户
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div v-else class="header__right--unlog">
+          <a class="header__right__log" href="/login">Log in</a>
+          <a class="header__right__reg" href="/register">Join for free</a>
         </div>
       </div>
     </m-header>
@@ -50,38 +77,110 @@ export default {
         {
           name: "主页",
           path: "/",
-          check: true
+          check: true,
         },
         {
           name: "论坛",
           path: "/forumHome",
-          check: false
-        }
+          check: false,
+        },
       ],
-      isColor: false
+      avatorList: [
+        {
+          type: 0,
+          name: "个人空间",
+          path: "/profile",
+        },
+        {
+          type: 1,
+          name: "个人门户",
+          path: "/intro",
+        },
+        {
+          type: 1,
+          name: "个人动态",
+          path: "/intro",
+        },
+        {
+          type: 2,
+          name: "后台管理",
+          path: "/root",
+        },
+      ],
+      isColor: false,
+      isHeaderDown: false,
     };
   },
   methods: {
     jump(e) {
-      this.$store.commit("changeAppHeader", e);
       console.log(e);
       this.$router.push({
-        path: e.path
+        path: e.path,
       });
     },
     color() {
       this.isColor = !this.isColor;
     },
     toMessage() {
-      this.$store.commit("changeAppHeader", {});
       this.$router.push({ path: "/message" });
     },
     toProfile() {
-      this.$store.commit("changeAppHeader", {});
-      this.$router.push({ path: "/profile" });
-    }
+      this.$router.push({
+        path: "/profile",
+        query: { userID: this.$store.state.user.userID },
+      });
+    },
+    toIntro() {
+      this.$router.push({
+        path: "/intro",
+        query: {
+          userID: this.$store.state.user.userID,
+          authorID: this.$store.state.user.authorID,
+        },
+      });
+    },
+    toRoot() {
+      this.$router.push({
+        path: "/root",
+        query: { userID: this.$store.state.user.userID },
+      });
+    },
+    showAvator() {
+      this.isHeaderDown = true;
+    },
+    hideAvator() {
+      this.isHeaderDown = false;
+    },
+    toAvator(path) {
+      switch (path) {
+        case "/profile":
+          this.toProfile();
+          break;
+        case "/intro":
+          this.toIntro();
+          break;
+        case "/root":
+          this.toRoot();
+          break;
+      }
+    },
+    logOut() {
+      this.$store.commit("logout");
+    },
   },
-  components: {}
+  computed: {
+    isLogin() {
+      return this.$store.state.user != null;
+    },
+    curType() {
+      // return 2;
+      return this.$store.state.user.userIdentity;
+    },
+  },
+  created() {
+    // console.log(this.$store.state.user);
+  },
+  components: {},
 };
 </script>
 
@@ -123,6 +222,7 @@ export default {
 }
 
 .header__right {
+  align-items: center;
   display: flex;
 }
 
@@ -139,6 +239,74 @@ export default {
   width: 42px;
 }
 
+.header__down {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 16px;
+  margin: 3px 0 0 -15px;
+  position: relative;
+  width: 16px;
+}
+
+.header__down img {
+  height: 100%;
+  width: 100%;
+}
+
+.header__down--hide {
+  background-color: #fff;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13), 0 3px 6px rgba(0, 0, 0, 0.09);
+  display: flex;
+  flex-direction: column;
+  left: -200px;
+  min-width: 230px;
+  position: absolute;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  top: 36px;
+  z-index: 7000;
+}
+
+.header__down--hide li {
+  font-size: 0.875rem;
+  padding: 0 2px;
+}
+
+.header__down--hide li:hover .header__down__item::before {
+  content: "";
+  position: absolute;
+  /* background: #bbb; */
+  background-color: var(--color-tint);
+  transform: translate(0, 0%);
+  transition: 0.15s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+  right: 100%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+}
+
+.header__down__item {
+  align-items: center;
+  background: #fff;
+  border: 0;
+  color: #555;
+  cursor: pointer;
+  display: flex;
+  padding: 0.7375rem 1.25rem;
+  text-align: left;
+  position: relative;
+  width: 100%;
+}
+
+.header__down__div {
+  display: block;
+  height: 1px;
+  background: #ddd;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
 .header__icon:hover {
   background-color: #888;
 }
@@ -152,5 +320,33 @@ export default {
 .header__avator img {
   height: 90%;
   width: 90%;
+  border-radius: 50%;
+}
+
+.header__right__log,
+.header__right__reg {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 18px;
+  padding-bottom: 3px;
+}
+
+.header__right__log {
+  color: #677469;
+}
+
+.header__right__log:hover {
+  border-bottom: 2px solid #677469;
+  text-decoration: none;
+}
+
+.header__right__reg {
+  color: var(--color-main);
+  margin-left: 20px;
+}
+
+.header__right__reg:hover {
+  border-bottom: 2px solid var(--color-main);
+  text-decoration: none;
 }
 </style>

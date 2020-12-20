@@ -72,7 +72,7 @@
         </div>
       </li>
     </ul>
-    <search-date v-if="isAdvance && isShow" @changeTime="changeTime" />
+    <search-date v-if="isAdvance && isShow" @change-time="changeTime" />
   </div>
 </template>
 
@@ -148,6 +148,7 @@ export default {
         this.$store.commit("initSearchList");
     },
     changeTime(e) {
+      console.log(e.start, e.end);
       this.start = e.start;
       this.end = e.end;
     },
@@ -171,6 +172,7 @@ export default {
       if (this.$store.state.isAdvance)
         advance(this.$store.state.searchList, this.start, this.end)
           .then((res) => {
+            console.log("advance", res);
             this.$router.push({
               path: "/search",
               query: {
@@ -193,6 +195,7 @@ export default {
       else
         search(this.$store.state.searchList[0])
           .then((res) => {
+            console.log("search", res);
             this.$router.push({
               path: "/search",
               query: {

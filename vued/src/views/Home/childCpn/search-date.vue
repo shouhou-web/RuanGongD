@@ -3,12 +3,25 @@
   <div id="search-date">
     <div class="date">
       <span class="date__title">发表时间：</span>
-      <span class="date__key">{{ start }}</span>
-      <input type="date" v-model="start" />
+      <div class="block">
+        <el-date-picker
+          v-model="start"
+          type="year"
+          value-format="yyyy"
+          placeholder="起始"
+        >
+        </el-date-picker>
+      </div>
       <span class="date__and">--</span>
-      <span class="date__key"> {{ end }} </span>
-      <input type="date" v-model="end" />
-      <span class="date__btn" v-if="start || end" @click="cancelTime">+</span>
+      <div class="block">
+        <el-date-picker
+          v-model="end"
+          type="year"
+          value-format="yyyy"
+          placeholder="终止"
+        >
+        </el-date-picker>
+      </div>
     </div>
   </div>
 </template>
@@ -23,21 +36,16 @@ export default {
     };
   },
   watch: {
-    start: function(val, oldVal) {
+    start(val, oldVal) {
       if (val > this.end) this.end = this._dateAddDays(this.start, 1);
       this._changeTime();
+      // console.log(this.start, this.end);
     },
-    end: function(val, oldVal) {
+    end(val, oldVal) {
       if (val < this.start) this.start = this._dateAddDays(this.end, -1);
       this._changeTime();
+      // console.log(this.start, this.end);
     }
-  },
-  created() {
-    let date = new Date();
-    let temp =
-      date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-    this.end = temp;
-    this.start = "1700-01-01";
   },
   methods: {
     cancelTime() {
@@ -47,14 +55,9 @@ export default {
     },
     _dateAddDays(dateStr, dayCount) {
       // 调整日期
-      var tempDate = new Date(dateStr.replace(/-/g, "/")); //把日期字符串转换成日期格式
-      var resultDate = new Date((tempDate / 1000 + 86400 * dayCount) * 1000); //增加n天后的日期
-      var resultDateStr =
-        resultDate.getFullYear() + "-" + (resultDate.getMonth() + 1) + "-"; //将日期转化为字符串格式
-      if (resultDate.getDate() > "10") resultDateStr += resultDate.getDate();
-      else resultDateStr += "0" + resultDate.getDate();
-      console.log(resultDateStr);
-      return resultDateStr;
+      let origin = parseInt(dateStr);
+      origin += dayCount;
+      return origin.toString();
     },
     _changeTime() {
       this.$emit("change-time", {
@@ -71,7 +74,7 @@ export default {
   align-items: center;
   display: flex;
   line-height: 20px;
-  margin: 0 auto;
+  margin: 16px auto;
   width: 710px;
   height: 28px;
   padding: 14px 15px 14px 0;
@@ -133,5 +136,9 @@ input[type="date"]::-webkit-datetime-edit {
 
 .date__btn:hover {
   color: #53a2e3;
+}
+
+.el-input {
+  width: 100px;
 }
 </style>

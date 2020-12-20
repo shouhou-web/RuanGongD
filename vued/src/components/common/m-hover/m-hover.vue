@@ -1,16 +1,23 @@
 <template>
   <div id="suspended">
     <!-- 阴影 -->
-    <div :class="[onShow ? '' : 'hide']" @click="cancel" class="mask"></div>
-    <div :class="[onShow ? 'show' : 'hide']" :style="{ left: left }">
-      <div class="wrapper">
-        <div v-if="title" class="title">
+    <div
+      :class="[onShow ? '' : 'hover-hide']"
+      @click="cancel"
+      class="hover-mask"
+    ></div>
+    <div
+      :class="[onShow ? 'hover-show' : 'hover-hide']"
+      :style="{ left: left }"
+    >
+      <div class="hover-wrapper">
+        <div v-if="title" class="hover-title">
           {{ title }}
         </div>
-        <div class="main">
+        <div class="hover-main">
           <slot></slot>
         </div>
-        <div v-if="submitBtn || cancelBtn" class="footer">
+        <div v-if="submitBtn || cancelBtn" class="hover-footer">
           <l-button v-if="submitBtn" @click="submit" size="small">
             {{ submitBtn }}
           </l-button>
@@ -69,6 +76,9 @@ export default {
       this.submitBtn = submitBtn;
       this.cancelBtn = cancelBtn;
     },
+    hideHover() {
+      this.onShow = false;
+    },
   },
 };
 </script>
@@ -80,7 +90,7 @@ export default {
   align-items: center;
 }
 
-#suspended .mask {
+#suspended .hover-mask {
   position: fixed;
   width: 100vw;
   height: 100vh;
@@ -91,7 +101,7 @@ export default {
   z-index: 1628;
 }
 
-#suspended .show {
+#suspended .hover-show {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -102,17 +112,17 @@ export default {
   z-index: 1629;
 }
 
-#suspended .hide {
+#suspended .hover-hide {
   position: fixed;
   display: none;
 }
 
-#suspended .wrapper {
+#suspended .hover-wrapper {
   background-color: #fff;
   border-radius: 4px;
 }
 
-#suspended .title {
+#suspended .hover-title {
   border-bottom: 1px solid #f0f0f0;
   font-size: 16px;
   font-weight: bold;
@@ -121,13 +131,13 @@ export default {
   padding: 15px 30px;
 }
 
-#suspended .main {
+#suspended .hover-main {
   display: flex;
   flex-direction: column;
   padding: 0 20px;
 }
 
-#suspended .footer {
+#suspended .hover-footer {
   display: flex;
   justify-content: space-around;
   margin: 20px 30px;

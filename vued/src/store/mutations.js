@@ -8,21 +8,16 @@ const mutations = {
   },
   // 全局导航栏跳转
   changeAppHeader(state, cur) {
-    state.appHeaderCurName = cur.name;
+    state.appHeaderCurIndex = cur;
   },
   // 登录
   login(state, info) {
     console.log(info);
-    state.token = true;
     state.user = info;
-    // sessionStorage.clear();
-    sessionStorage.setItem("user", JSON.stringify(state.user));
   },
   // 登出
   logout(state) {
-    state.token = false;
-    state.user = {};
-    sessionStorage.clear();
+    state.user = null;
   },
   changeAdvance(state) {
     state.isAdvance = !state.isAdvance;

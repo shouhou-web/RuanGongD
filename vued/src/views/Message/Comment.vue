@@ -12,25 +12,29 @@
 </template>
 
 <script>
-// import { getCommentMsg, getAllMsgNum } from "network/message";
+import { getCommentMsg } from "network/message";
 import CommentMessage from "./childCpn/comment-message";
 export default {
   name: "Application",
   created() {
     console.log(this.$store.state.user.userID);
-    // getCommentMsg(this.$store.state.user.userID)
-    //   .then((res) => {
-    //     console.log("res", res);
-    //     this.messageList = res;
-    //   })
-    //   .then(
-    //     getCommentMsg(this.$store.state.user.userID)
-    //   )
-    //   .then(
-    //     getAllMsgNum(this.$store.state.user.userID).then((res) => {
-    //       this.$store.commit("setAllMsgNum", res);
-    //     })
-    //   );
+    getCommentMsg(this.$store.state.user.userID)
+      .then(res => {
+        console.log("res", res);
+        this.messageList = res;
+      })
+      .then(getCommentMsg(this.$store.state.user.userID))
+      // .then(
+      //   getAllMsgNum(this.$store.state.user.userID).then(res => {
+      //     this.$store.commit("setAllMsgNum", res);
+      //   })
+      // );
+      .catch(err => {
+        this.$notify.error({
+          title: "网络错误",
+          message: "请稍后重试~"
+        });
+      });
   },
   methods: {
     deleteItem(index) {

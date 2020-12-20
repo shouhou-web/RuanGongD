@@ -3,13 +3,13 @@
     <div class="title" @click="gotoLiterature()">{{ title }}</div>
     <div class="tags">
       <div v-for="(a_tag, i) in tags">
-        <div :class="{'first-tag': i==0, 'leftpart-tags': i != 0}">{{a_tag}}</div>
+        <div class="leftpart-tags">{{a_tag}}</div>
       </div>
     </div>
     <div class="authors">
       <div v-for="(one_author, i) in authors" class="author-list">
-        <img :src="one_author.userImgSrc" class="authorImg">
-        <div class="authorname">{{one_author.userName}}</div>
+        <img :src="one_author.image" class="authorImg">
+        <div class="authorname" @click="gotoIntro(one_author.userID, one_author.authorID)">{{one_author.username}}</div>
       </div>
     </div>
     <div class="read-time">
@@ -24,16 +24,22 @@
 export default {
   name: "y-literature",
   props: {
-    title: '',
-    id: '',
-    authors: [],
-    tags: [],
-    read_time: 0
+    title: String,
+    id: String,
+    authors: Array,
+    tags: Array,
+    read_time: {
+      type: Number,
+      default: 0
+    }
   },
   methods: {
     gotoLiterature() {
       this.$notify.success("跳转ing")
     },
+    gotoIntro(userID, authorID) {
+      this.$router.push({ path: "/intro", query: { userID: userID, authorID: authorID } })
+    }
   }
 }
 </script>
@@ -57,11 +63,13 @@ export default {
   line-height: 20px;
   padding-left: 5px;
   margin-bottom: 5px;
+  transition: ease-in-out 0.3s;
 }
 
 .title:hover {
+  color: #4F6EF2;
+  transition: ease-in-out 0.3s;
   cursor: pointer;
-  border-bottom: 1px solid black;
 }
 
 .tags {
@@ -95,10 +103,15 @@ export default {
   border: 1px solid #4F6EF2;
   background-color: white;
   color: #4F6EF2;
+  transition: ease-in-out 0.5s;
 }
 
 .leftpart-tags:hover {
   cursor: pointer;
+  border: 1px solid white;
+  background-color: #4F6EF2;
+  color: white;
+  transition: ease-in-out 0.5s;
 }
 
 .authors {
@@ -125,12 +138,12 @@ export default {
 .authorname {
   font-size: 0.8rem;
   color: #000000;
-  margin-left: 2px;
+  margin-left: 5px;
+  margin-top: 5px;
 }
 
 .authorname:hover {
   cursor: pointer;
-  border-bottom: 1px solid #000000;
 }
 
 .read-time {

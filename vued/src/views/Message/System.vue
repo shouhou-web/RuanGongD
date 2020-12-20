@@ -12,7 +12,7 @@
 </template>
 
 <script>
-// import { getSystemMsg, getAllMsgNum } from "network/message";
+import { getSystemMsg } from "network/message";
 import SystemMessage from "./childCpn/system-message";
 export default {
   content: "Message",
@@ -61,17 +61,18 @@ export default {
     };
   },
   created() {
+    console.log(this.$store.state)
     getSystemMsg(this.$store.state.user.userID)
       .then((res) => {
         console.log("system message", res);
         this.messageList = res;
       })
-      .then(getSystemMsg(this.$store.state.user.userID))
-      .then(
-        getAllMsgNum(this.$store.state.user.userID).then((res) => {
-          this.$store.commit("setAllMsgNum", res);
-        })
-      )
+      // .then(getSystemMsg(this.$store.state.user.userID))
+      // .then(
+      //   getAllMsgNum(this.$store.state.user.userID).then((res) => {
+      //     this.$store.commit("setAllMsgNum", res);
+      //   })
+      // )
       .catch((err) => {
         this.$notify.error({
           title: "网络错误",
