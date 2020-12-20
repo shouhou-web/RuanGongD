@@ -1,49 +1,62 @@
 <template>
-  <div class="apply-cards--indiser">
-    <div
-      class="apply-card"
-      v-for="(item, index) in applicationList"
-      :key="index"
-    >
-      <l-apply-card
-        class="delay"
-        :style="{ 'animation-delay': index * 200 + 'ms' }"
-        :imgPath="item.imgPath"
-        :canShowMore="item.trimmedContent != null"
-        :emailAddress="item.emailAddress"
-        @toShowMore="resetTrim($event, index)"
-        @approveReport="toApprove($event, index)"
-        @rejectReport="toReject($event, index)"
-      >
-        <template v-slot:apllyerProfile>
-          <div class="apply-profile">
-            <span class="apply-name">{{ item.userName }}</span>
-            <span class="apply-job">{{ item.userDegree }}</span>
-          </div>
-        </template>
-        <template v-slot:applyee>
-          <span class="applyee-name">{{ item.realName }}</span>
-        </template>
-        <template v-slot:detail>
-          <span class="apply-detail" v-if="item.isTrimmed">
-            {{ item.trimmedContent }}
-          </span>
-          <span class="apply-detail" v-else>
-            {{ item.content }}
-          </span>
-        </template>
-      </l-apply-card>
-    </div>
-    <m-hover ref="hover" @submit="doReject">
-      <div class="reject-hover">
-        <textarea
-          class="reject-input"
-          placeholder="请在此输入驳回原因"
-          autofocus
-          v-model="msgContent"
-        ></textarea>
+  <div class="apply-cards--all">
+    <div class="apply-cards--header">
+      <div class="report-nav">
+        <ul class="nav-all">
+          <li>
+            <div class="nav-item--active">
+              门户申请
+            </div>
+          </li>
+        </ul>
       </div>
-    </m-hover>
+    </div>
+    <div class="apply-cards--indiser">
+      <div
+        class="apply-card"
+        v-for="(item, index) in applicationList"
+        :key="index"
+      >
+        <l-apply-card
+          class="delay"
+          :style="{ 'animation-delay': index * 200 + 'ms' }"
+          :imgPath="item.imgPath"
+          :canShowMore="item.trimmedContent != null"
+          :emailAddress="item.emailAddress"
+          @toShowMore="resetTrim($event, index)"
+          @approveReport="toApprove($event, index)"
+          @rejectReport="toReject($event, index)"
+        >
+          <template v-slot:apllyerProfile>
+            <div class="apply-profile">
+              <span class="apply-name">{{ item.userName }}</span>
+              <span class="apply-job">{{ item.userDegree }}</span>
+            </div>
+          </template>
+          <template v-slot:applyee>
+            <span class="applyee-name">{{ item.realName }}</span>
+          </template>
+          <template v-slot:detail>
+            <span class="apply-detail" v-if="item.isTrimmed">
+              {{ item.trimmedContent }}
+            </span>
+            <span class="apply-detail" v-else>
+              {{ item.content }}
+            </span>
+          </template>
+        </l-apply-card>
+      </div>
+      <m-hover ref="hover" @submit="doReject">
+        <div class="reject-hover">
+          <textarea
+            class="reject-input"
+            placeholder="请在此输入驳回原因"
+            autofocus
+            v-model="msgContent"
+          ></textarea>
+        </div>
+      </m-hover>
+    </div>
   </div>
 </template>
 
@@ -142,7 +155,8 @@ export default {
   },
   methods: {
     resetTrim(e, index) {
-      this.applicationList[index].isTrimmed = !this.applicationList[index].isTrimmed;
+      this.applicationList[index].isTrimmed = !this.applicationList[index]
+        .isTrimmed;
     },
     toApprove(e, index) {
       console.log(index);
@@ -165,12 +179,61 @@ export default {
 </script>
 
 <style>
+.apply-cards--all {
+  width: 900px;
+}
+
+.apply-cards--header {
+  background-color: #ffffff;
+  border: #e3e2e6 solid 0.5px;
+  border-radius: 4px;
+  height: 60px;
+  margin-bottom: 20px;
+  width: 900px;
+}
+
+.report-nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-all {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  padding-top: 20px;
+  padding-left: 20px;
+}
+
+.nav-item--active {
+  color: var(--color-tint);
+  display: flex;
+  flex-direction: column;
+  font-size: 17.5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-left: 15px;
+  margin-right: 15px;
+  position: relative;
+}
+
+.nav-item--active:before {
+  background-color: var(--color-tint);
+  bottom: -5px;
+  content: "";
+  height: 1.7px;
+  left: 0%;
+  position: absolute;
+  transition: all 0.3s;
+  width: 100%;
+}
+
 .apply-cards--indiser {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 106px);
+  height: calc(100vh - 186px);
   overflow: auto;
-  width: 900px;
+  width: 904px;
 }
 
 .apply-cards--indiser::-webkit-scrollbar {
