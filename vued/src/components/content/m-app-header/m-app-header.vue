@@ -325,7 +325,7 @@ export default {
 
 .header__right__log,
 .header__right__reg {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   line-height: 18px;
   padding-bottom: 3px;
