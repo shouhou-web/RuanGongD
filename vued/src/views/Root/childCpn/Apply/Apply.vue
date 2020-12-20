@@ -206,7 +206,7 @@ export default {
 }
 
 .nav-item--active {
-  color: var(--color-tint);
+  color: #6b757b;
   display: flex;
   flex-direction: column;
   font-size: 17.5px;
@@ -215,17 +215,6 @@ export default {
   margin-left: 15px;
   margin-right: 15px;
   position: relative;
-}
-
-.nav-item--active:before {
-  background-color: var(--color-tint);
-  bottom: -5px;
-  content: "";
-  height: 1.7px;
-  left: 0%;
-  position: absolute;
-  transition: all 0.3s;
-  width: 100%;
 }
 
 .apply-cards--indiser {
