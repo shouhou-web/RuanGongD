@@ -33,7 +33,8 @@
     </div>
     <div class="intro-content">
       <div class="content-left">
-        <my-literatures :userID="intro.userID" v-if="opID == 0"></my-literatures>
+<!--        <my-literatures :userID="intro.userID" v-if="opID == 0"></my-literatures>-->
+        <manage :userID="intro.userID"></manage>
         <user-posts :userId="intro.userID" v-if="opID == 1"></user-posts>
         <favor :userID="intro.userID" v-if="opID == 2"></favor>
       </div>
@@ -69,6 +70,7 @@ import MyLiteratures from "@/views/Profile/MyLiteratures";
 import UserPosts from "@/views/Forum/childCpn/user-posts";
 import create_literature from "@/views/Literature/childCpn/create_literature";
 import Favor from "@/views/Profile/Favor";
+import Manage from "@/views/Literature/Manage";
 import { getIntroFollowStatus, getPublishState, getAuthorInformation, follow } from "@/network/profile";
 
 require('echarts/lib/chart/bar')
@@ -217,7 +219,8 @@ export default {
     'v-chart': ECharts,
     'myLiteratures': MyLiteratures,
     'user-posts': UserPosts,
-    'favor': Favor
+    'favor': Favor,
+    'manage': Manage
   },
 };
 </script>

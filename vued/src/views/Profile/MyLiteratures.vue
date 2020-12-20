@@ -18,7 +18,7 @@ export default {
   components: { YLiterature },
   data () {
     return {
-      // user收藏文献集合
+      // user文献集合
       myLiteratures: [
         {
           literatureID: "0",
