@@ -1,49 +1,54 @@
 <template>
-  <div class="report-cards--indiser">
-    <div class="report-card" v-for="(item, index) in reportList" :key="index">
-      <l-root-card
+  <div class="apply-cards--indiser">
+    <div
+      class="apply-card"
+      v-for="(item, index) in applicationList"
+      :key="index"
+    >
+      <l-apply-card
         class="delay"
         :style="{ 'animation-delay': index * 200 + 'ms' }"
-        :hasRead="item.hasRead"
-        :imgPath1="item.reporterInfo.image"
-        :type="item.reportType"
+        :imgPath="item.imgPath"
         :canShowMore="item.trimmedContent != null"
+        :emailAddress="item.emailAddress"
         @toShowMore="resetTrim($event, index)"
         @approveReport="toApprove($event, index)"
         @rejectReport="toReject($event, index)"
-        @deleteReport="toDelete($event, index)"
       >
-        <template v-slot:reporterProfile>
-          <div class="report-profile">
-            <span class="report-name">{{ item.reporterInfo.userName }}</span>
-            <span class="report-job">{{ item.reporterInfo.userDegree }}</span>
+        <template v-slot:apllyerProfile>
+          <div class="apply-profile">
+            <span class="apply-name">{{ item.userName }}</span>
+            <span class="apply-job">{{ item.userDegree }}</span>
           </div>
         </template>
-        <template v-slot:reportee>
-          <span class="reportee-title"
-            >&quot;{{ item.articleTitle }}&quot;</span
-          >
+        <template v-slot:applyee>
+          <span class="applyee-name">{{ item.realName }}</span>
         </template>
         <template v-slot:detail>
-          <span class="report-detail" v-if="item.isTrimmed">
+          <span class="apply-detail" v-if="item.isTrimmed">
             {{ item.trimmedContent }}
           </span>
-          <span class="report-detail" v-else>
-            {{ item.reportContent }}
+          <span class="apply-detail" v-else>
+            {{ item.content }}
           </span>
         </template>
-      </l-root-card>
+      </l-apply-card>
     </div>
     <m-hover ref="hover" @submit="doReject">
       <div class="reject-hover">
-        <textarea class="reject-input" placeholder="请在此输入驳回原因" autofocus v-model="msgContent"></textarea>
+        <textarea
+          class="reject-input"
+          placeholder="请在此输入驳回原因"
+          autofocus
+          v-model="msgContent"
+        ></textarea>
       </div>
     </m-hover>
   </div>
 </template>
 
 <script>
-import LRootCard from "./l-root-card.vue";
+import LApplyCard from "./childCpn/l-apply-card.vue";
 
 export default {
   name: "Doc",
@@ -51,115 +56,93 @@ export default {
     return {
       temp_index: -1,
       msgContent: "",
-      show: false,
-      reportList: [
+      applicationList: [
         {
-          hasRead: false,
-          articleID: "E387HB9CS1234",
-          articleTitle:
-            "This is a card used to test article reports!!!This is a card used to test article reports!!!This is a card used to test article reports!!!",
+          realName: "Tonyliujie",
+          authorID: "",
           isTrimmed: true,
           trimmedContent:
             "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a veryonylyc is a very handsome bot, his name....",
-          reportContent:
+          content:
             "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          reportType: 1,
-          reportID: "",
-          reporterInfo: {
-            userID: "",
-            userName: "Tonylyc",
-            userIdentity: 2,
-            image: "lyc",
-            realName: "",
-            userDegree: "本科生"
-          }
+          applicationID: "",
+          userID: "",
+          userName: "Tonylyc",
+          userIdentity: 2,
+          imgPath: "lyc",
+          userDegree: "本科生",
+          emailAddress: "2290549567@qq.com"
         },
         {
-          hasRead: false,
-          articleID: "E387HB9CS1234",
-          articleTitle: "This is a card used to test article reports!!!",
+          realName: "Tonyliujie",
+          authorID: "",
           isTrimmed: true,
           trimmedContent:
-            "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a very....",
-          reportContent:
+            "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a veryonylyc is a very handsome bot, his name....",
+          content:
             "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          reportType: 1,
-          reportID: "",
-          reporterInfo: {
-            userID: "",
-            userName: "Tonylyc",
-            userIdentity: 2,
-            image: "lyc",
-            realName: "",
-            userDegree: "本科生"
-          }
+          applicationID: "",
+          userID: "",
+          userName: "Tonylyc",
+          userIdentity: 2,
+          imgPath: "lyc",
+          userDegree: "本科生",
+          emailAddress: "2290549567@qq.com"
         },
         {
-          hasRead: false,
-          articleID: "E387HB9CS1234",
-          articleTitle: "This is a card used to test article reports!!!",
+          realName: "Tonyliujie",
+          authorID: "",
           isTrimmed: true,
           trimmedContent:
-            "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a very....",
-          reportContent:
+            "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a veryonylyc is a very handsome bot, his name....",
+          content:
             "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          reportType: 1,
-          reportID: "",
-          reporterInfo: {
-            userID: "",
-            userName: "Tonylyc",
-            userIdentity: 2,
-            image: "lyc",
-            realName: "",
-            userDegree: "本科生"
-          }
+          applicationID: "",
+          userID: "",
+          userName: "Tonylyc",
+          userIdentity: 2,
+          imgPath: "lyc",
+          userDegree: "本科生",
+          emailAddress: "2290549567@qq.com"
         },
         {
-          hasRead: false,
-          articleID: "E387HB9CS1234",
-          articleTitle: "This is a card used to test article reports!!!",
+          realName: "Tonyliujie",
+          authorID: "",
           isTrimmed: true,
           trimmedContent:
-            "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a very....",
-          reportContent:
+            "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a veryonylyc is a very handsome bot, his name....",
+          content:
             "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          reportType: 1,
-          reportID: "",
-          reporterInfo: {
-            userID: "",
-            userName: "Tonylyc",
-            userIdentity: 2,
-            image: "lyc",
-            realName: "",
-            userDegree: "本科生"
-          }
+          applicationID: "",
+          userID: "",
+          userName: "Tonylyc",
+          userIdentity: 2,
+          imgPath: "lyc",
+          userDegree: "本科生",
+          emailAddress: "2290549567@qq.com"
         },
         {
-          hasRead: false,
-          articleID: "E387HB9CS1234",
-          articleTitle: "This is a card used to test article reports!!!",
+          realName: "Tonyliujie",
+          authorID: "",
           isTrimmed: true,
           trimmedContent:
-            "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a very....",
-          reportContent:
+            "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a veryonylyc is a very handsome bot, his name....",
+          content:
             "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          reportType: 1,
-          reportID: "",
-          reporterInfo: {
-            userID: "",
-            userName: "Tonylyc",
-            userIdentity: 2,
-            image: "lyc",
-            realName: "",
-            userDegree: "本科生"
-          }
+          applicationID: "",
+          userID: "",
+          userName: "Tonylyc",
+          userIdentity: 2,
+          imgPath: "lyc",
+          userDegree: "本科生",
+          emailAddress: "2290549567@qq.com"
         }
       ]
     };
   },
   methods: {
     resetTrim(e, index) {
-      this.reportList[index].isTrimmed = !this.reportList[index].isTrimmed;
+      this.applicationList[index].isTrimmed = !this.applicationList[index].isTrimmed;
     },
     toApprove(e, index) {
       console.log(index);
@@ -172,84 +155,87 @@ export default {
         cancelBtn: "取消"
       });
     },
-    toDelete(e, index) {
-      console.log(index);
-    },
     doReject() {
       console.log(this.temp_index);
       console.log(this.msgContent);
     }
   },
-  components: { LRootCard }
+  components: { LApplyCard }
 };
 </script>
 
 <style>
-.report-cards--indiser {
+.apply-cards--indiser {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 186px);
+  height: calc(100vh - 106px);
   overflow: auto;
-  width: 904px;
+  width: 900px;
 }
 
-.report-cards--indiser::-webkit-scrollbar {
+.apply-cards--indiser::-webkit-scrollbar {
   width: 4px;
 }
 
-.report-cards--indiser::-webkit-scrollbar-track {
+.apply-cards--indiser::-webkit-scrollbar-track {
   background-color: transparent;
 }
 
-.report-cards--indiser::-webkit-scrollbar-thumb {
+.apply-cards--indiser::-webkit-scrollbar-thumb {
   background-color: #d4dadd;
   border-radius: 2px;
 }
 
-.report-card {
+.apply-card {
   margin-bottom: 20px;
 }
 
-.report-card:last-child {
+.apply-card:last-child {
   margin-bottom: 0.5px;
 }
 
-.report-profile {
+.apply-profile {
   display: flex;
   flex-direction: column;
 }
 
-.report-name {
+.apply-name {
   color: #6b757b;
   cursor: pointer;
   font-size: 15px;
   margin-bottom: 5px;
 }
 
-.report-name:hover {
+.apply-name:hover {
   color: var(--color-tint);
   transition: 0.3s;
 }
 
-.report-job {
+.apply-job {
   color: #6b757b;
   font-size: 10px;
 }
 
-.reportee-title {
+.applyee-name {
   color: #6b757b;
   cursor: pointer;
+  font-style: italic;
+  font-size: 18px;
+  font-weight: 100;
+  margin-left: 20px;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 540px;
+  transition: 0.5s;
+  width: 300px;
   white-space: nowrap;
 }
 
-.reportee-title:hover {
-  text-decoration-line: underline;
+.applyee-name:hover {
+  color: var(--color-tint);
+  transition: 0.5s;
 }
 
-.report-detail {
+.apply-detail {
   color: #6b757b;
   transition: 0.5s;
 }
