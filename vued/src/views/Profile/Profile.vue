@@ -7,16 +7,23 @@
         <div class="profile-info">
           <div class="headshot">
             <img :src="user.image" class="headshot-img">
-            <a class="headshot__hide" title="修改头像" @click="openChangeHeadshot">
+            <a class="headshot__hide" title="修改头像" @click="openChangeHeadshot" v-if="isSelfProfile">
               <img src="../../assets/image/edit.png" class="headshot__inner--samll">
             </a>
           </div>
           <div class="username">
-            <div class="user-nickname">{{ user.username }}</div>
-            <div class="user-degree" @click="openChangeProfileHover">
-              {{ retUserDegree() }}
-              <img src="../../assets/icons/profile/edit.svg" class="profile-icon">
+            <div class="user-nickname" @click="openChangeProfileHover">
+              {{ user.username }}
+              <img src="../../assets/icons/profile/edit.svg" class="profile-icon" @click="openChangeProfileHover">
             </div>
+            <div class="user-degree" v-if="isSelfProfile">
+              {{ retUserDegree() }}
+            </div>
+            <div class="user-degree" v-else>
+              {{ retUserDegree() }}
+            </div>
+            <div class="user-phone">{{ user.phoneNumber }}</div>
+            <div class="user-email">{{ user.emailAddress }}</div>
           </div>
         </div>
         <div class="profile-op">
@@ -30,59 +37,110 @@
         <favor :userID="user.userID"></favor>
       </div>
       <div class="content-right">
-        <div class="user-intro">
+        <div class="user-intro" v-if="isSelfProfile">
           <div class="user-application">
-            <div class="application" @click="applyForIntro()">申请加入门户</div>
+            <!-- todo -->
+            <div class="application" @click="gotoIntro(user.userID, user.authorID)">当前还未认证门户</div>
           </div>
         </div>
         <div class="user-follow">
           <div class="follow-header">
             <div class="follow-header-content">Follow</div>
           </div>
-          <div class="following">
+          <div class="following" v-if="followUsers.length > 0">
             <div class="follow-part-head">following ({{ followUsers.length }})</div>
-            <div class="following-content" v-if="followUsers.length > 0">
+            <div class="following-content">
               <div class="one-following" v-for="(onefollowingUser, i) in followUsers">
-                <img :src="onefollowingUser.imgSrc" class="intro-img img-plus">
+                <img :src="onefollowingUser.image" class="intro-img img-plus" @click="gotoIntro(onefollowingUser.userID, onefollowingUser.authorID)">
                 <div class="following-info">
-                  <div class="name-style">{{ onefollowingUser.name }}</div>
-                  <div class="intro-style">{{ onefollowingUser.intro }}</div>
+                  <div class="name-style">{{ onefollowingUser.username }}</div>
+                  <div class="intro-style" @click="gotoIntro(onefollowingUser.userID, onefollowingUser.authorID)">{{ onefollowingUser.realName }}</div>
                 </div>
-                <div class="following-op" @click="cancleFollow(onefollowingUser.followingID)">unfollow</div>
+                <div class="following-op" @click="cancleFollow(this.$store.state.user.userID, onefollowingUser.authorID)">unfollow</div>
               </div>
             </div>
+          </div>
+          <div v-else>
+            <img src="../../assets/image/no-follow.png" class="img-none">
           </div>
         </div>
       </div>
     </div>
-    <m-hover ref="changeProfile" @submit="submit" @cancel="cancel">
-      <div class="change-profile-outter">
-        <div class="change-nickname">
-          <div class="hover-input-header">change nickname</div>
-          <div class="hover-input">
-            <input v-model="newNickName"></input>
+    <m-hover ref="changeProfile" @submit="submitEdit" @cancel="cancel">
+      <div class="edit">
+        <div class="edit-header">
+          <div :class="{'edit-button': editOp != 0, 'edit-button-chosen': editOp == 0}" @click="changeEditOp(0)">修改用户名</div>
+          <div :class="{'edit-button': editOp != 1, 'edit-button-chosen': editOp == 1}" @click="changeEditOp(1)">修改邮箱</div>
+          <div :class="{'edit-button': editOp != 2, 'edit-button-chosen': editOp == 2}" @click="changeEditOp(2)">修改其他信息</div>
+        </div>
+        <div class="edit-body">
+          <div class="edit-username" v-if="editOp == 0">
+            <input class="hover-input" v-model="newNickName"></input>
+          </div>
+          <div class="edit-email" v-else-if="editOp == 1">
+            <div class="input-email">
+              <input class="hover-input" v-model="newEmail" @focusout="checkEmail"></input>
+              <div :class="{ 'warning': emailWarning && !getRightEmail, 'none': !emailWarning && !getRightEmail, 'really-none': getRightEmail }">请使用*.edu.cn后缀的邮箱申请</div>
+              <div v-if="getRightEmail" class="code">
+                <div class="code-request" @click="requestCode">获取验证码</div>
+                <input v-model="editCode" class="code-input"></input>
+              </div>
+            </div>
+            <div class="get-code"></div>
+          </div>
+          <div class="edit-other" v-else-if="editOp == 2">
+            <div>
+              <select v-model="newDegree" class="hover-input">
+                <option v-for="option in options" v-bind:value="option.value">
+                  {{ option.text }}
+                </option>
+              </select>
+            </div>
+            <input class="hover-input" v-model="newPhone"></input>
           </div>
         </div>
-        <div class="change-degree">
-          <div class="hover-input-header">change degree</div>
-          <div>
-            <select v-model="newDegree" class="hover-input">
-              <option v-for="option in options" v-bind:value="option.value">
-                {{ option.text }}
-              </option>
-            </select>
-          </div>
-        </div>
+<!--        <div class="edit-buttons">-->
+<!--          <div class="edit-button-submit">提交</div>-->
+<!--          <div class="edit-button-cancle">取消</div>-->
+<!--        </div>-->
       </div>
     </m-hover>
-    <m-hover ref="changeHeadshot" @submit="submit" @cancel="cancel"></m-hover>
+    <m-hover ref="changeHeadshot" @submit="submit" @cancel="cancel">
+      <el-upload action="#" list-type="picture-card" :auto-upload="false" class="img-upload">
+        <i slot="default" class="el-icon-plus"></i>
+        <div slot="file" slot-scope="{file}">
+          <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
+          <span class="el-upload-list__item-actions">
+        <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
+          <i class="el-icon-zoom-in"></i>
+        </span>
+        <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleDownload(file)">
+          <i class="el-icon-download"></i>
+        </span>
+        <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleRemove(file)">
+          <i class="el-icon-delete"></i>
+        </span>
+      </span>
+        </div>
+      </el-upload>
+      <el-dialog :visible.sync="dialogVisible">
+        <img width="100%" :src="dialogImageUrl" alt="">
+      </el-dialog>
+    </m-hover>
   </div>
 </template>
 
 <script>
 import yLiterature from '@/components/common/y-literature/y-literature'
 import Favor from "@/views/Profile/Favor";
-import { getUserFollowingList, getUserInformation } from "@/network/profile";
+import {
+  getUserFollowingList,
+  getUserInformation,
+  editProfile,
+  editUserName,
+  editUserEmailAddress,
+  emailVerification
+} from "@/network/profile";
 
 export default {
   name: "Profile",
@@ -103,16 +161,192 @@ export default {
       followUsers: [],
 
       options: [
-        { text: '高中', value: '0' },
-        { text: '本科生', value: '1' },
-        { text: '研究生', value: '2' },
-        { text: '博士生', value: '3' },
-        { text: '博士后', value: '4' },
+        { text: '高中生 (High school)', value: '0' },
+        { text: '本科生 (UnderGraduates)', value: '1' },
+        { text: '研究生 (Graduate)', value: '2' },
+        { text: '博士生 (Doctor)', value: '3' },
+        { text: '博士后 (Post-Doctoral)', value: '4' },
       ],
 
       newNickName: "",
-      newDegree: 0
+      newDegree: 0,
+      newPhone: "",
+      newEmail: "",
+      editCode: "",
+      code: "",
+
+      dialogImageUrl: '',
+      dialogVisible: false,
+      disabled: false,
+
+      editOp: 0,
+      emailWarning: false,
+      getRightEmail: false
     };
+  },
+  methods: {
+    retUserDegree() {
+      if (this.userDegree == 0) return "高中生(High school)";
+      else if (this.userDegree == 1) return "本科生(UnderGraduates)";
+      else if (this.userDegree == 2) return "研究生(Graduate)";
+      else if (this.userDegree == 3) return "博士生(Doctor)";
+      else if (this.userDegree == 4) return "博士后(Post-Doctoral)";
+      else return "";
+    },
+    openChangeProfileHover() {
+      this.newDegree = this.user.userDegree
+      this.$refs.changeProfile.showHover({
+        title: "修改个人资料",
+        submitBtn: "提交",
+        cancelBtn: "取消"
+      });
+    },
+    openChangeHeadshot() {
+      this.$refs.changeHeadshot.showHover({
+        title: "修改头像",
+        submitBtn: "提交",
+        cancelBtn: "取消"
+      });
+    },
+    cancleFollow(userID, followID) {
+      let followerID = userID
+      let followedID = followID
+
+      follow(followerID, followedID, 0)
+      .then((res) => {
+        if (res == 0)
+          this.$notify.warning("取消关注失败，请刷新重试")
+        else {
+          this.$notify.success("取消关注成功")
+          // todo 再次调用一次关注成员列表获取
+        }
+      })
+      .catch((err) => {
+        this.$notify.error(
+          {
+            title: "网络错误",
+            message: "请稍后重试~"
+          }
+        )
+      })
+    },
+    opSwitch(opID) {
+      this.op = opID
+    },
+    gotoIntro(userID, authorID) {
+      this.$router.push(
+        {
+          path: '/intro',
+          query: {
+            userID: userID,
+            authorID: authorID
+          }
+        }
+      )
+    },
+    handleRemove(file) {
+      console.log(file);
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
+    handleDownload(file) {
+      console.log(file);
+    },
+    requestCode() {
+      emailVerification(this.newEmail)
+      .then((code) => {
+        console.log("code", code)
+        if (code == null) this.$notify.warning("验证码出现异常，请重试")
+        else this.code = code
+      })
+      .catch((err) => {
+        this.$notify.error(
+          {
+            title: "网络错误",
+            message: "请稍后重试~"
+          }
+        )
+      })
+    },
+    submitEdit() {
+      // name
+      if (this.editOp == 0) {
+        editUserName(this.user.userID, this.newNickName)
+        .then((res) => {
+          if (res == 0) this.$notify.success("用户名修改成功")
+          else if (res == 1) this.$notify.warning("用户名已被使用")
+          else if (res == -1) this.$notify.error("修改异常，请检查网络")
+        })
+        .catch((err) => {
+          this.$notify.error( { title: "网络错误", message: "请稍后重试~" } )
+        })
+      }
+      // email
+      else if (this.editOp == 1) {
+        // 对邮箱进行正则判断
+        var emailReg = /^\d{8}@(buaa.edu.cn)+$/;
+
+        if (!emailReg.test(this.newEmail)) {
+          this.emailWarning = true
+          this.$notify.warning("请检查邮箱")
+        }
+        else {
+          if (this.editCode != this.code) {
+            this.$notify.warning("验证码错误")
+          }
+          else {
+            editUserEmailAddress(this.user.userID, this.newEmail)
+            .then((res) => {
+              if (res == 0) this.$notify.success("用户邮箱修改成功")
+              else if (res == 1) this.$notify.warning("邮箱已被使用")
+              else if (res == -1) this.$notify.error("修改异常，请检查网络")
+            })
+            .catch((err) => {
+              this.$notify.error( { title: "网络错误", message: "请稍后重试~" } )
+            })
+          }
+        }
+      }
+      // others
+      else if (this.editOp == 2) {
+        editProfile(
+          this.user.userID,
+          this.user.realName,
+          this.newDegree,
+          this.user.image,
+          this.user.organization,
+          this.newPhone)
+          .then((res) => {
+            if (res == 0) this.$notify.success("修改成功")
+            else if (res == -1) this.$notify.error("修改异常，请检查网络")
+          })
+          .catch((err) => {
+            this.$notify.error( { title: "网络错误", message: "请稍后重试~" } )
+          })
+      }
+    },
+    submit() {
+    },
+    cancel() {
+    },
+    changeEditOp(opID) {
+      this.editOp = opID
+    },
+    checkEmail() {
+      // 对邮箱进行正则判断
+      var emailReg = /^\d{8}@(buaa.edu.cn)+$/;
+
+      if (!emailReg.test(this.newEmail)) {
+        this.emailWarning = true
+        this.getRightEmail = false
+      }
+      else {
+        this.emailWarning = false
+        this.getRightEmail = true
+      }
+    }
   },
   created() {
     let userID = this.$route.query.userID;
@@ -123,10 +357,14 @@ export default {
 
       console.log(this.user)
 
+      this.newNickName = this.user.username
+      this.userDegree = this.user.userDegree
+      this.newPhone = this.user.phoneNumber
+
       // 获取个人信息：我的关注 + 我的收藏
       getUserFollowingList(userID)
-      .then((follow) => { this.followUsers = follow, console.log("follow:", follow) } )
-      .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
+        .then((follow) => { this.followUsers = follow, console.log("follow:", follow) } )
+        .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
     }
     // 进入其他用户个人主页
     else {
@@ -134,59 +372,11 @@ export default {
 
       // 获取当前用户对象
       getUserInformation(userID)
-      .then((user) => { this.user = user, console.log("user", user) } )
-      .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
+        .then((user) => { this.user = user, console.log("user", user) } )
+        .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
 
       getUserIntro(this.user.authorID)
-      .then((userIntro) => { this.userIntro = userIntro, console.log("intro", userIntro)})
-    }
-
-    this.newNickName = this.user.username
-    this.userDegree = this.user.userDegree
-  },
-  methods: {
-    retUserDegree() {
-      if (this.userDegree == 0) return "高中";
-      else if (this.userDegree == 1) return "Bachelor of Engineering";
-      else if (this.userDegree == 2) return "研究生";
-      else if (this.userDegree == 3) return "博士生";
-      else if (this.userDegree == 4) return "博士后";
-      else return "";
-    },
-    openChangeProfileHover() {
-      this.$refs.changeProfile.showHover({
-        title: "修改个人资料",
-        submitBtn: "取消",
-        cancelBtn: "提交"
-      });
-    },
-    openChangeHeadshot() {
-      this.$refs.changeHeadshot.showHover({
-        title: "修改头像",
-        submitBtn: "取消",
-        cancelBtn: "提交"
-      });
-    },
-    cancleFollow(selectUserID) {
-      this.$notify.info("已取消关注")
-    },
-    doFollow(selectUserID) {
-      this.$notify.success("关注成功")
-    },
-    opSwitch(opID) {
-      this.op = opID
-    },
-    gotoIntro(authorID) {
-      this.$router.push({path: '/intro', query: { authorID: this.user.authorID }})
-    },
-    applyForIntro() {
-      this.$router.push({path: '/applyIntro'})
-    },
-    submit() {
-
-    },
-    cancel() {
-
+        .then((userIntro) => { this.userIntro = userIntro, console.log("intro", userIntro)})
     }
   },
   components: {
@@ -280,10 +470,14 @@ export default {
 
 .user-nickname {
   margin-left: 2%;
-  margin-top: 7%;
+  margin-top: 4%;
   line-height: 1,2;
   color: #111;
   font-size: 1.375rem;
+}
+
+.user-nickname:hover {
+  cursor: pointer;
 }
 
 .user-degree {
@@ -293,12 +487,24 @@ export default {
   line-height: 1,2;
   color: #555;
   font-size: 0.875rem;
-  cursor: pointer;
 }
 
-.user-degree:hover {
-  border-bottom: 1px solid #777777;
-  color: #545454;
+.user-phone {
+  max-width: fit-content;
+  margin-left: 2%;
+  margin-top: 1%;
+  line-height: 1,2;
+  color: #555;
+  font-size: 0.875rem;
+}
+
+.user-email {
+  max-width: fit-content;
+  margin-left: 2%;
+  margin-top: 1%;
+  line-height: 1,2;
+  color: #555;
+  font-size: 0.875rem;
 }
 
 .publish {
@@ -635,7 +841,6 @@ export default {
 .follow-part-head {
   width: 100%;
   height: 54px;
-  /*border: 1px solid red;*/
   font-size: 0.7rem;
   padding: 5%;
   color: #000000;
@@ -705,11 +910,141 @@ export default {
 }
 
 .edit {
-  margin-left: 80px;
+  /*border: 1px solid #dddddd;*/
+  width: 600px;
+  margin-top: 20px;
+  padding-bottom: 10px;
+}
+
+.edit-header {
+  /*border-bottom: 1px solid #dddddd;*/
+  height: 40px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  padding-top: 10px;
+  margin-bottom: 10px;
+}
+
+.edit-buttons {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.edit-button {
+  border: 1px solid #4F6EF2;
+  height: fit-content;
+  padding: 5px;
+  font-size: 0.8rem;
+  color: #4F6EF2;
+  border-radius: 2px;
+  transition: ease-in-out 0.3s;
+}
+
+.edit-button:hover {
+  cursor: pointer;
+}
+
+.edit-button-chosen {
+  border: 1px solid #4f6ef2;
+  height: fit-content;
+  padding: 5px;
+  font-size: 0.8rem;
+  color: #ffffff;
+  border-radius: 2px;
+  background-color: #4F6EF2;
+  transition: ease-in-out 0.3s;
+}
+
+.edit-button-chosen:hover {
+  cursor: pointer;
+}
+
+.edit-button-submit {
+  width: 15%;
+  text-align: center;
+  border: 1px solid #4f6ef2;
+  height: fit-content;
+  padding: 5px;
+  font-size: 0.8rem;
+  color: #ffffff;
+  border-radius: 2px;
+  background-color: #4F6EF2;
+  transition: ease-in-out 0.3s;
+}
+
+.edit-button-submit:hover {
+  border: 1px solid #4f6ef2;
+  height: fit-content;
+  padding: 5px;
+  font-size: 0.8rem;
+  color: #4F6EF2;
+  border-radius: 2px;
+  background-color: white;
+  transition: ease-in-out 0.3s;
+  cursor: pointer;
+}
+
+.edit-button-cancle {
+  width: 15%;
+  text-align: center;
+  border: 1px solid red;
+  height: fit-content;
+  padding: 5px;
+  font-size: 0.8rem;
+  color: #ffffff;
+  border-radius: 2px;
+  background-color: red;
+  transition: ease-in-out 0.3s;
+}
+
+.edit-button-cancle:hover {
+  border: 1px solid red;
+  height: fit-content;
+  padding: 5px;
+  font-size: 0.8rem;
+  color: red;
+  border-radius: 2px;
+  background-color: white;
+  transition: ease-in-out 0.3s;
+  cursor: pointer;
+}
+
+.edit-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-username {
+  padding-top: 40px;
+  border: 1px dashed #dddddd;
+  height: 150px;
+  transition: ease-in-out 0.3s;
+}
+
+.edit-email {
+  padding-top: 40px;
+  border: 1px dashed #dddddd;
+  height: 200px;
+  transition: ease-in-out 0.3s;
+}
+
+.edit-other {
+  padding-top: 40px;
+  border: 1px dashed #dddddd;
+  height: 210px;
+  transition: ease-in-out 0.3s;
 }
 
 .profile-icon {
   width: 15px;
+}
+
+.profile-icon:hover {
+  cursor: pointer;
 }
 
 .change-profile-outter {
@@ -729,7 +1064,7 @@ export default {
 
 .change-nickname {
   margin-left: 60px;
-  margin-top: 20px;
+  margin-top: 10px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -743,11 +1078,18 @@ export default {
 }
 
 .hover-input {
-  font-size: 0.8rem;
-  width: 70%;
+  width: 65%;
+  font-size: 0.9rem;
   padding: 5px;
-  margin-top: 5px;
+  margin-top: 20px;
+  margin-left: 17.5%;
   border: 1px solid #dddddd;
+  transition: ease-in-out 0.5s;
+}
+
+.hover-input:focus {
+  border: 1px solid #4F6EF2;
+  transition: ease-in-out 0.5s;
 }
 
 .hover-select {
@@ -763,4 +1105,85 @@ export default {
 .option {
 }
 
+.img-none {
+  width: 100%;
+}
+
+select {
+  outline: none;
+}
+
+.img-upload {
+  margin: 0 auto;
+  margin-top: 10px;
+}
+
+.warning {
+  color: red;
+  font-size: 0.800rem;
+  letter-spacing: 2px;
+  margin: 0 auto;
+  margin-top: 8px;
+  margin-left: 17%;
+}
+
+.none {
+  color: #a7a7a7;
+  font-size: 0.800rem;
+  letter-spacing: 2px;
+  margin: 0 auto;
+  margin-top: 8px;
+  margin-left: 17%;
+}
+
+.really-none {
+  color: white;
+  font-size: 0.800rem;
+  letter-spacing: 2px;
+  margin: 0 auto;
+  margin-top: 8px;
+  margin-left: 17%;
+}
+
+.code {
+  display: flex;
+  flex-direction: row;
+  /*border: 1px solid red;*/
+  margin-left: 17.5%;
+}
+
+.code-request {
+  color: white;
+  background-color: #4F6EF2;
+  padding: 5px;
+  border-radius: 2px;
+  font-size: 0.800rem;
+  letter-spacing: 2px;
+  margin-right: 103px;
+  border: 1px solid #4F6EF2;
+  transition: ease-in-out 0.3s;
+}
+
+.code-request:hover {
+  color: #4F6EF2;
+  background-color: white;
+  border-radius: 2px;
+  border: 1px solid #4F6EF2;
+  transition: ease-in-out 0.3s;
+  cursor: pointer;
+}
+
+.code-input {
+  border: 1px solid #dddddd;
+  border-radius: 2px;
+  width: 200px;
+  padding: 2px;
+  padding-left: 5px;
+  transition: ease-in-out 0.3s;
+}
+
+.code-input:focus {
+  border: 1px solid #4F6EF2;
+  transition: ease-in-out 0.3s;
+}
 </style>

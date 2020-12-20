@@ -8,8 +8,8 @@
     </div>
     <div class="authors">
       <div v-for="(one_author, i) in authors" class="author-list">
-        <img :src="one_author.userImgSrc" class="authorImg">
-        <div class="authorname" @click="gotoIntro(one_author.userID, one_author.authorID)">{{one_author.userName}}</div>
+        <img :src="one_author.image" class="authorImg">
+        <div class="authorname" @click="gotoIntro(one_author.userID, one_author.authorID)">{{one_author.username}}</div>
       </div>
     </div>
     <div class="read-time">

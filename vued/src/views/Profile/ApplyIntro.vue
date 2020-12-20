@@ -8,10 +8,10 @@
         </div>
         <div class="intro-intro">
           <div>
-            <img :src="introImg" class="intro-img" v-if="introImg.length > 0">
+            <img :src="intro.image" class="intro-img" v-if="intro.image.length > 0">
             <img src="../../assets/image/no-img.png" class="intro-img" v-else>
           </div>
-          <div class="intro-name">{{ introName }}</div>
+          <div class="intro-name">{{ intro.realName }}</div>
         </div>
       </div>
       <div class="apply">
@@ -23,8 +23,13 @@
             <div class="form-header">邮箱</div>
             <div class="emails">
               <input class="email-input" v-model="email" @focus="emailWarning = false"></input>
-              <div :class="{ 'warning': emailWarning, 'none': !emailWarning }">邮箱格式错误，请使用*.edu.cn后缀的邮箱申请</div>
+              <div :class="{ 'warning': emailWarning, 'none': !emailWarning }">请使用*.edu.cn后缀的邮箱申请</div>
             </div>
+          </div>
+          <div class="code">
+            <div class="code-request" @click="getCode">获取验证码</div>
+            <input class="code-input" v-model="codeInput"></input>
+            <div :class="{ 'warning': codeWarning, 'none': !codeWarning }">验证码错误</div>
           </div>
           <div class="application">
             <div class="form-header" v-model="application">申请原因</div>
@@ -43,41 +48,106 @@
 </template>
 
 <script>
+import { getAuthorInformation, emailVerification, apply } from "@/network/profile";
+
 export default {
   name: "Apply",
   data() {
     return {
-      introImg: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1194807023,955890570&fm=26&gp=0.jpg",
-      introName: "BUAASE",
+      intro: {
+        // authorID:"",
+        // realName:"",
+        // organization:"",
+        // userID:"",
+        // image:"",
+        // introduction:"",
+      },
 
+      codeInput: "",
+      code: "",
       email: "",
       application: "",
 
+      codeWarning: false,
       emailWarning: false,
     }
   },
   methods: {
     submit() {
+      let authorID = this.$route.query.authorID
+      let userID = this.$route.query.userID
+
       // 对邮箱进行正则判断
       var emailReg = /^\d{8}@(buaa.edu.cn)+$/;
 
       if (!emailReg.test(this.email)) this.emailWarning = true
+      else if (this.codeInput != this.code) {
+        this.codeWarning = true
+        this.$notify.warning("验证码错误")
+      }
       else if (this.application.length > 50) this.$notify.warning("申请理由不可超过50字")
       else {
-        this.$notify.success("申请提交成功")
-        this.$router.go(-1)
+        apply(userID, authorID, this.intro.realName, this.email, this.application)
+        .then((res) => {
+          if (res == 0) this.$notify.success("申请认证成功")
+          else if (res == 1) {
+            this.$notify.info("已经发送过待认证的申请")
+            this.$router.go(-1)
+          }
+          else {
+            this.$notify.warning("申请发送失败，请重试")
+          }
+        })
+        .catch((err) => {
+          this.$notify.error( { title: "网络错误", message: "请稍后重试~" } )
+        })
       }
     },
     cancle() {
       this.$notify.info("已取消申请")
       this.$router.go(-1);
+    },
+    getCode() {
+      // 对邮箱进行正则判断
+      var emailReg = /^\d{8}@(buaa.edu.cn)+$/;
+
+      if (!emailReg.test(this.email)) {
+        this.emailWarning = true
+        this.$notify.warning("请检查邮箱")
+      } else {
+        emailVerification(this.email)
+        .then((code) => {
+          if (code == null) this.$notify.warning("验证码出现异常，请重试")
+          else this.code = code
+        })
+        .catch((err) => {
+          this.$notify.error(
+            {
+              title: "网络错误",
+              message: "请稍后重试~"
+            }
+          )
+        })
+      }
     }
   },
   watch: {
     application() {
-      if (this.application.length == 51)
-        this.$notify.warning("申请理由不可超过50字")
+      if (this.application.length == 201)
+        this.$notify.warning("申请理由不可超过200字")
     }
+  },
+  created() {
+    let authorID = this.$route.query.authorID
+    let userID = this.$route.query.userID
+
+    getAuthorInformation(authorID)
+    .then((intro) => {
+      this.intro = intro
+    })
+    .catch((err) => {
+      this.$notify.error( { title: "网络错误", message: "请稍后重试~" } )
+    })
   }
 }
 </script>
@@ -166,7 +236,9 @@ export default {
 }
 
 .emails {
-  margin-bottom: 30px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
 }
 
 .email-input {
@@ -175,6 +247,12 @@ export default {
   height: 30px;
   padding-left: 5px;
   margin-bottom: 5px;
+  transition: ease-in-out 0.3s;
+}
+
+.email-input:focus {
+  border: 1px solid #4F6EF2;
+  transition: ease-in-out 0.3s;
 }
 
 .application-input {
@@ -185,15 +263,22 @@ export default {
 }
 
 textarea {
+  border-radius: 2px;
   outline: none;
   resize: none;
+  transition: ease-in-out 0.3s;
+}
+
+textarea:focus {
+  border: 1px solid #4F6EF2;
+  transition: ease-in-out 0.3s;
 }
 
 .submit {
   height: 20%;
   display: flex;
   flex-direction: row;
-  padding-top: 50px;
+  padding-top: 20px;
 }
 
 .submit-button {
@@ -234,11 +319,55 @@ textarea {
   color: red;
   font-size: 0.800rem;
   letter-spacing: 2px;
+  margin: 0 auto;
+  margin-top: 8px;
 }
 
 .none {
   color: white;
   font-size: 0.800rem;
   letter-spacing: 2px;
+}
+
+.code {
+  display: flex;
+  flex-direction: row;
+  /*border: 1px solid red;*/
+  margin-bottom: 20px;
+}
+
+.code-request {
+  color: white;
+  background-color: #4F6EF2;
+  padding: 5px;
+  border-radius: 2px;
+  font-size: 0.800rem;
+  letter-spacing: 2px;
+  margin-right: 93px;
+  border: 1px solid #4F6EF2;
+  transition: ease-in-out 0.3s;
+}
+
+.code-request:hover {
+  color: #4F6EF2;
+  background-color: white;
+  border-radius: 2px;
+  border: 1px solid #4F6EF2;
+  transition: ease-in-out 0.3s;
+  cursor: pointer;
+}
+
+.code-input {
+  border: 1px solid #dddddd;
+  border-radius: 2px;
+  width: 200px;
+  padding: 2px;
+  padding-left: 5px;
+  transition: ease-in-out 0.3s;
+}
+
+.code-input:focus {
+  border: 1px solid #4F6EF2;
+  transition: ease-in-out 0.3s;
 }
 </style>
