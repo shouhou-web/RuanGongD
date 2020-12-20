@@ -45,10 +45,6 @@ export default {
         {
           name: "发送系统消息",
           route: "sysmsg"
-        },
-        {
-          name: "管理用户权限",
-          route: "mgauthor"
         }
       ]
     };
@@ -74,10 +70,12 @@ export default {
           return 0;
         case "/root/apply":
           return 1;
+        case "/root/apply/gate":
+          return 1;
+        case "/root/apply/gate":
+          return 1;
         case "/root/sysmsg":
           return 2;
-        case "/root/mgauthor":
-          return 3;
       }
     }
   }

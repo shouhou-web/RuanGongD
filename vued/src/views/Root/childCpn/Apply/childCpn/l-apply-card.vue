@@ -5,28 +5,13 @@
         <div class="l-root-card--content-info">
           <img
             class="l-root-card--reporter-pic"
-            :src="require('@/assets/image/root/' + imgPath1 + '.jpg')"
+            :src="require('@/assets/image/root/' + imgPath + '.jpg')"
           />
-          <slot name="reporterProfile"></slot>
-          <div v-if="type == 1" class="l-root-card--content-connect">
-            举报了文献
+          <slot name="apllyerProfile"></slot>
+          <div class="l-root-card--content-connect">
+            使用邮箱 {{ emailAddress }} 申请了门户
           </div>
-          <div v-else-if="type == 2" class="l-root-card--content-connect">
-            举报了门户
-          </div>
-          <div v-else-if="type == 3" class="l-root-card--content-connect">
-            举报了评论
-          </div>
-          <div v-else-if="type == 4" class="l-root-card--content-connect">
-            举报了动态
-          </div>
-          <a class="l-root-card--notice" title="待处理" v-if="!hasRead">!</a>
-          <img
-            class="l-root-card--reportee-pic"
-            :src="require('@/assets/image/root/' + imgPath2 + '.jpg')"
-            v-if="type == 2"
-          />
-          <slot name="reportee"></slot>
+          <slot name="applyee"></slot>
         </div>
         <ul class="l-root-card--options">
           <li
@@ -63,23 +48,6 @@
               v-else
             />
           </li>
-          <li
-            class="l-root-card--delete"
-            @mouseover="del"
-            @mouseout="del"
-            @click="toDelete"
-          >
-            <img
-              src="@/assets/icons/root/delete.svg"
-              class="l-root-card--options-delete"
-              v-if="!onDelete"
-            />
-            <img
-              src="@/assets/icons/root/delete-select.svg"
-              class="l-root-card--options-delete"
-              v-else
-            />
-          </li>
         </ul>
       </div>
       <div class="l-root-card--divider">
@@ -110,15 +78,14 @@ export default {
       type: Boolean,
       default: false
     },
-    imgPath1: "",
-    imgPath2: "",
+    imgPath: "",
     canShowMore: {
       type: Boolean,
       default: true
     },
-    type: {
-      type: Number,
-      default: 0
+    emailAddress: {
+      type: String,
+      default: ""
     }
   },
   data() {
@@ -142,9 +109,6 @@ export default {
     accept() {
       this.onAccept = !this.onAccept;
     },
-    del() {
-      this.onDelete = !this.onDelete;
-    },
     reject() {
       this.onReject = !this.onReject;
     },
@@ -153,9 +117,6 @@ export default {
     },
     toReject() {
       this.$emit("rejectReport");
-    },
-    toDelete() {
-      this.$emit("deleteReport");
     }
   }
 };
@@ -210,6 +171,7 @@ export default {
   font-size: 15px;
   margin-left: 20px;
   margin-right: 5px;
+  white-space: nowrap;
 }
 
 .l-root-card--notice {
@@ -243,15 +205,7 @@ export default {
   height: 20px;
   left: 4px;
   position: absolute;
-  top: 8px;
-  width: 20px;
-}
-
-.l-root-card--options-delete {
-  height: 20px;
-  left: 4.5px;
-  position: absolute;
-  top: 4.5px;
+  top: 23.5px;
   width: 20px;
 }
 
@@ -266,22 +220,12 @@ export default {
 }
 
 .l-root-card--reject {
-  clip-path: circle(35px at 0% 100%);
+  clip-path: circle(35px at 0% 50%);
   cursor: pointer;
-  height: 35px;
+  height: 70px;
   left: 50%;
   position: absolute;
   top: 0%;
-  width: 35px;
-}
-
-.l-root-card--delete {
-  clip-path: circle(35px at 0% 0%);
-  cursor: pointer;
-  height: 35px;
-  left: 50%;
-  position: absolute;
-  top: 50%;
   width: 35px;
 }
 
