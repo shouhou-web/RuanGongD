@@ -1,8 +1,15 @@
 <template>
   <div id="suspended">
     <!-- 阴影 -->
-    <div :class="[onShow ? '' : 'hover-hide']" @click="cancel" class="hover-mask"></div>
-    <div :class="[onShow ? 'hover-show' : 'hover-hide']" :style="{ left: left }">
+    <div
+      :class="[onShow ? '' : 'hover-hide']"
+      @click="cancel"
+      class="hover-mask"
+    ></div>
+    <div
+      :class="[onShow ? 'hover-show' : 'hover-hide']"
+      :style="{ left: left }"
+    >
       <div class="hover-wrapper">
         <div v-if="title" class="hover-title">
           {{ title }}
@@ -68,6 +75,9 @@ export default {
       this.title = title;
       this.submitBtn = submitBtn;
       this.cancelBtn = cancelBtn;
+    },
+    hideHover() {
+      this.onShow = false;
     },
   },
 };
