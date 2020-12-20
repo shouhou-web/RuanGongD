@@ -86,8 +86,8 @@ export default {
     initSearch: Object,
     isShow: {
       type: Boolean,
-      dafault: true
-    }
+      dafault: true,
+    },
   },
   created() {
     console.log(this.initSearch);
@@ -99,13 +99,13 @@ export default {
   data() {
     return {
       start: "",
-      end: ""
+      end: "",
     };
   },
   watch: {
     searchList(val, oldVal) {
       this.$emit("change-list", val);
-    }
+    },
   },
   computed: {
     isAdvance() {
@@ -119,7 +119,7 @@ export default {
         h += 28;
         return h + "px";
       } else return "50px";
-    }
+    },
   },
   methods: {
     changeType(e, index, type) {
@@ -127,7 +127,7 @@ export default {
       let change = {
         value: e,
         index,
-        type
+        type,
       };
       this.$store.commit("changeSearchList", change);
     },
@@ -135,7 +135,7 @@ export default {
       console.log(e.target.value, index);
       let change = {
         value: e.target.value,
-        index
+        index,
       };
       this.$store.commit("inputSearchList", change);
     },
@@ -171,7 +171,8 @@ export default {
       // });
       if (this.$store.state.isAdvance)
         advance(this.$store.state.searchList, this.start, this.end)
-          .then(res => {
+          .then((res) => {
+            console.log("advance", res);
             this.$router.push({
               path: "/search",
               query: {
@@ -181,19 +182,20 @@ export default {
                 litList2: res.literatureList2,
                 authorList: res.authorList,
                 venueList: res.venueList,
-                yearList: res.yearList
-              }
+                yearList: res.yearList,
+              },
             });
           })
-          .catch(err => {
+          .catch((err) => {
             this.$notify.error({
               title: "错误",
-              message: "网络异常，请稍后重试"
+              message: "网络异常，请稍后重试",
             });
           });
       else
         search(this.$store.state.searchList[0])
-          .then(res => {
+          .then((res) => {
+            console.log("search", res);
             this.$router.push({
               path: "/search",
               query: {
@@ -203,22 +205,22 @@ export default {
                 litList2: res.literatureList2,
                 authorList: res.authorList,
                 venueList: res.venueList,
-                yearList: res.yearList
-              }
+                yearList: res.yearList,
+              },
             });
           })
-          .catch(err => {
+          .catch((err) => {
             this.$notify.error({
               title: "错误",
-              message: "网络异常，请稍后重试"
+              message: "网络异常，请稍后重试",
             });
           });
-    }
+    },
   },
   components: {
     SearchDate,
-    MClickDropdown
-  }
+    MClickDropdown,
+  },
 };
 </script>
 

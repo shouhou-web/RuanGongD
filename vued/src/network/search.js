@@ -18,9 +18,7 @@ export function advance(detail, start, end) {
 export function search(detail) {
   return request(baseURL, {
     url: "/search",
-    params: {
-      detail
-    },
+    data: detail,
     method: "post"
   });
 }
