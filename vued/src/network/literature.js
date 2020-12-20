@@ -60,13 +60,23 @@ export function getRelation(area) {
   });
 }
 
-
 //获取相关作者
 export function getRelatedAuthor(venue) {
   return request(baseURL, {
     url: "/getRelatedAuthor",
     params: {
       venue
+    },
+    method: "post"
+  });
+}
+
+// 获取个人文献
+export function getMyLiterature(authorID) {
+  return request(baseURL, {
+    url: "/getMyLiterature",
+    params: {
+      authorID
     },
     method: "post"
   });
