@@ -1,59 +1,115 @@
 <template>
   <div id="author">
-    <el-popover
-  placement="right"
-
-  trigger="hover">
-  <div class="authercard">
-      <div class="auth-bottom">
-      <div class="auth-part1">
-        <div class="auth-part1-left">
-          <div class="auth-name">{{author.realName}}</div>
-          <div class="auth-work">{{author.work}}</div>
-          <div class="auth-workunit">{{author.organization}}</div>
+    <el-popover placement="right" trigger="hover">
+      <div class="authercard">
+        <div class="auth-bottom">
+          <div class="auth-part1">
+            <div class="auth-part1-left">
+              <div class="auth-name">{{ author.realName }}</div>
+              <div class="auth-workunit">{{ author.organization }}</div>
+            </div>
+            <div class="auth-part1-right">
+              <!-- <img src="../img/test.jpg" alt="" class="l-root-card--reporter-pic" /> -->
+              <img
+                :src="author.image"
+                alt=""
+                class="l-root-card--reporter-pic"
+              />
+            </div>
+          </div>
+          <div class="auth-part2">
+            <div class="introduction" v-if="this.author.introduction != 0">
+              <span class="intro">个人简介：</span>
+              <span>{{ author.introduction }}</span>
+            </div>
+            <!-- 没有个人简介的情况 -->
+            <div
+              class="introduction"
+              v-if="this.author.introduction.length == 0"
+            >
+              <span class="intro">暂无个人简介</span>
+            </div>
+          </div>
+          <div class="auth-part3" v-if="isFollowed != null">
+            <l-button @click="followAuthor(author.userID)" v-if="!isFollowed"
+              >关注</l-button
+            >
+            <l-button
+              @click="followAuthor(author.userID)"
+              v-if="isFollowed"
+              class="isfollowed"
+              >已关注</l-button
+            >
+          </div>
         </div>
-        <div class="auth-part1-right">
-          <!-- <img src="../img/test.jpg" alt="" class="l-root-card--reporter-pic" /> -->
-          <img :src="require('@/assets/image/literature/' + author.image+ '.jpg')" alt="" class="l-root-card--reporter-pic" />
-        </div>
       </div>
-      <div class="auth-part2">
-        个人简介：{{author.introduction}}
-      </div>
-      <div class="auth-part3">
-        <l-button>关注</l-button>
-      </div>
-    </div>
-  </div>
-  
-  <el-link href="?" target="_blank" slot="reference">{{author.realName}}</el-link>
-</el-popover>
 
+      <el-link href="?" target="_blank" slot="reference">{{
+        author.realName
+      }}</el-link>
+    </el-popover>
   </div>
 </template>
 
 <script>
+import { getIntroFollowStatus, follow } from "network/profile";
 export default {
   name: "Author",
   props: {
-    author: {
-      authorID:"",
-      realName:"",
-      image:"",
-      organization:"",
-      introduction:"",
-    },
+    author: Object
   },
   data() {
-    return {};
+    return {
+      isFollowed: null
+    };
   },
-  methods: {},
-  components: {},
+  methods: {
+    //关注和取消关注
+    followAuthor(userID) {
+      console.log("test");
+      //已关注，要取消关注
+      if (this.isFollowed) {
+        follow(this.$route.query.userID, userID, 0) //缺少authorid找userid的步骤
+          .then(res => {
+            if (res == 0) {
+              this.$notify.success("取消关注成功");
+            } else if (res == -1) {
+              this.$notify.error("取消关注失败，请重试");
+            }
+          });
+      }
+      //未关注，要关注作者
+      else {
+        follow(this.$route.query.userID, userID, 1) //缺少authorid找userid的步骤
+          .then(res => {
+            if (res == 0) {
+              this.$notify.success("关注成功");
+            } else if (res == -1) {
+              this.$notify.error("关注失败，请重试");
+            }
+          });
+      }
+      this.isFollowed = !this.isFollowed;
+    }
+  },
+  created() {
+    if (this.$store.state.user != null)
+      getIntroFollowStatus(
+        this.$store.state.user.userID,
+        this.author.authorID
+      ).then(res => {
+        //已关注
+        if (res == 1) this.isFollowed = true;
+        //未关注
+        else if (res == 2) this.isFollowed = false;
+      });
+  },
+  components: {}
 };
 </script>
 
 <style scoped>
-#author{
+#author {
   display: inline;
 }
 .authercard {
@@ -148,8 +204,23 @@ export default {
   transition: 0.2s;
 }
 
-.l-button{
+.l-button {
   padding-left: 18px;
   padding-right: 18px;
+}
+
+.intro {
+  font-size: 14px;
+  font-weight: 550;
+}
+
+.auth-part3 .isfollowed {
+  background: #c6e2ff;
+  color: #777;
+}
+
+.auth-part3 .l-button {
+  margin-right: 30px;
+  width: 90px;
 }
 </style>

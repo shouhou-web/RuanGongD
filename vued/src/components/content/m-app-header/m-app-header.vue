@@ -29,7 +29,13 @@
             />
             <img v-else src="@/assets/icons/header/msg.png" alt="" />
           </div>
-          <div class="header__avator" @click="toProfile">
+          <div v-if="curType == 0" class="header__avator" @click="toProfile">
+            <img :src="$store.state.user.image" alt="" />
+          </div>
+          <div v-if="curType == 1" class="header__avator" @click="toIntro">
+            <img :src="$store.state.user.image" alt="" />
+          </div>
+          <div v-if="curType == 2" class="header__avator" @click="toRoot">
             <img :src="$store.state.user.image" alt="" />
           </div>
           <div @click="showAvator" class="header__down">
@@ -59,10 +65,24 @@
             </div>
           </div>
         </div>
-        <div v-else class="header__right--unlog">
-          <a class="header__right__log" href="/login">Log in</a>
-          <a class="header__right__reg" href="/register">Join for free</a>
-        </div>
+        <ul v-else class="header__switch">
+          <li
+            :class="{ 'is-active': 2 == $store.state.appHeaderCurIndex }"
+            @click="jump({ path: '/login' })"
+          >
+            登录
+          </li>
+          <li
+            :class="{ 'is-active': 3 == $store.state.appHeaderCurIndex }"
+            @click="jump({ path: '/register' })"
+          >
+            注册
+          </li>
+        </ul>
+        <!-- <div v-else class="header__right--unlog">
+          <a class="header__right__log" href="/login">登录</a>
+          <a class="header__right__reg" href="/register">注册</a>
+        </div> -->
       </div>
     </m-header>
   </div>
@@ -99,7 +119,7 @@ export default {
         {
           type: 1,
           name: "个人动态",
-          path: "/intro",
+          path: "/intro/1",
         },
         {
           type: 2,
@@ -130,12 +150,13 @@ export default {
         query: { userID: this.$store.state.user.userID },
       });
     },
-    toIntro() {
+    toIntro(e) {
       this.$router.push({
         path: "/intro",
         query: {
           userID: this.$store.state.user.userID,
           authorID: this.$store.state.user.authorID,
+          see: e,
         },
       });
     },
@@ -157,7 +178,10 @@ export default {
           this.toProfile();
           break;
         case "/intro":
-          this.toIntro();
+          this.toIntro(0);
+          break;
+        case "/intro/1":
+          this.toIntro(1);
           break;
         case "/root":
           this.toRoot();
@@ -166,6 +190,9 @@ export default {
     },
     logOut() {
       this.$store.commit("logout");
+      this.$router.push({
+        path: "/",
+      });
     },
   },
   computed: {

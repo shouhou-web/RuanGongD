@@ -80,7 +80,7 @@ export default {
   border-radius: 4px;
   height: 60px;
   margin-bottom: 20px;
-  width: 900px;
+  width: 904px;
 }
 
 .report-nav {

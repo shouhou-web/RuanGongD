@@ -25,7 +25,7 @@
           <div class="op-switch">
             <div class="op-all" @click="opSwitch(0)">个人文献</div>
             <div class="op-all" @click="opSwitch(1)">个人动态</div>
-            <div class="op-all" @click="opSwitch(2)" v-if="isSelfIntro">收藏文献</div>
+            <div class="op-all" @click="opSwitch(2)">收藏文献</div>
           </div>
           <div :class="{ 'bar': opID == 0, 'bar-change-1': opID == 1, 'bar-change-2': opID == 2 }"></div>
         </div>
@@ -34,7 +34,7 @@
     <div class="intro-content">
       <div class="content-left">
 <!--        <my-literatures :userID="intro.userID" v-if="opID == 0"></my-literatures>-->
-        <manage :userID="intro.userID"></manage>
+        <manage :userID="intro.userID" v-if="opID == 0"></manage>
         <user-posts :userId="intro.userID" v-if="opID == 1"></user-posts>
         <favor :userID="intro.userID" v-if="opID == 2"></favor>
       </div>
@@ -157,6 +157,10 @@ export default {
     // 进入个人门户
     let authorID = this.$route.query.authorID
     let userID = this.$route.query.userID
+    let see = this.$route.query.see
+
+    if (see == null) this.opID = 0
+    else this.opID = see
 
     // 获取intro
     getAuthorInformation(authorID)

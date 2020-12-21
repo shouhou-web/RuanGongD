@@ -1,56 +1,75 @@
 <template>
   <div class="one-follow-literature">
-    <div class="liter-img" v-for="(item, i) in refer.img">
-      <img :src="item" alt="" />
-    </div>
-    <div class="title">{{ refer.title }}</div>
+    <y-literature
+      :title="refer.title"
+      :id="refer.literatureID"
+      :authors="refer.authors"
+      :tags="refer.keyWord"
+      :read_time="refer.year"
+    ></y-literature>
+
+    <!-- <div class="title" @click="toLiterature(refer.literatureID)">{{ refer.title }}</div>
     <div class="test1">
-      <div class="tags">
-        <div class="tag" v-for="(a_tag, i) in refer.tags">
-          <div :class="{ 'first-tag': i == 0, 'leftpart-tags': i != 0 }">
-            {{ a_tag }}
-          </div>
+      <div class="authors">
+        <div v-for="(item, index) in refer.authorList" class="author-list">
+          <img :src="item.image" class="authorImg" />
+          <div class="authorname" @click="toAuthor(item.autherID)">{{ item.realName }}</div>
         </div>
       </div>
       <div class="time">
-        {{ refer.time }}
+        {{ refer.year }}
       </div>
     </div>
 
-    <div class="authors">
-      <div v-for="(name, i) in refer.authors" class="author-list">
-        <img :src="refer.userImgSrc" class="authorImg" />
-        <div class="authorname">{{ refer.name }}</div>
-      </div>
-    </div>
     <div class="brief">
-      {{ refer.brief }}
+      {{ refer.abstract }}
+    </div>
+    <div class="keyWord">
+      <div v-for="(item, index) in refer.keyWord" class="keyWord-list">
+          <div class="key">{{ item}}</div>
+        </div>
     </div>
     <div class="read-time">
-      <div class="read-time-content">{{ refer.read_time }} Reads</div>
+      <div class="read-time-content">{{ refer.readTimes }} Reads</div>
     </div>
     <div class="literature-ops">
       <div class="one-op"></div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
+import YLiterature from "@/components/common/y-literature/y-literature";
+
 export default {
   name: "Message",
   props: {
-    refer: {
-      title: "",
-      authors: [],
-      tags: [],
-      time: "",
-      img: [],
-      brief: "",
-      read_time: 0,
-    },
+    refer: Object
   },
-  methods: {},
-  components: {},
+  components: {
+    YLiterature
+  },
+  created() {
+    console.log(this.refer);
+  },
+  methods: {
+    toAuthor(authorID) {
+      this.$router.push({
+        path: "/profile",
+        query: {
+          userID: authorID
+        }
+      });
+    },
+    toLiterature(literatureID) {
+      this.$router.push({
+        path: "/literature",
+        query: {
+          userID: literatureID
+        }
+      });
+    }
+  }
 };
 </script>
 
@@ -75,7 +94,7 @@ export default {
 
 .one-follow-literature > .test1 {
   display: flex;
-  align-items: center;
+  /* align-items: center; */
 }
 
 .time {
@@ -100,45 +119,7 @@ export default {
   border-bottom: 1px solid black;
 }
 
-.tags {
-  /* width: 100%; */
-  height: 32px;
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 5px;
-}
-
-.first-tag {
-  border-radius: 3px;
-  width: fit-content;
-  padding: 3px;
-  margin: 5px;
-  font-size: 0.8rem;
-  color: white;
-  background-color: #4f6ef2;
-}
-
-.first-tag:hover {
-  cursor: pointer;
-}
-
-.leftpart-tags {
-  border-radius: 3px;
-  width: fit-content;
-  padding: 3px;
-  margin: 5px;
-  font-size: 0.8rem;
-  border: 1px solid #4f6ef2;
-  background-color: white;
-  color: #4f6ef2;
-}
-
-.leftpart-tags:hover {
-  cursor: pointer;
-}
-
 .authors {
-  width: 100%;
   height: 25px;
   margin-bottom: 5px;
   display: flex;
@@ -163,12 +144,18 @@ export default {
 .authorname {
   font-size: 0.8rem;
   color: #000000;
-  margin-left: 2px;
+  margin-left: 5px;
 }
 
 .authorname:hover {
   cursor: pointer;
   border-bottom: 1px solid #000000;
+}
+
+.time {
+  align-self: flex-end;
+  margin-left: 40px;
+  padding-bottom: 5px;
 }
 
 .read-time {
@@ -190,6 +177,8 @@ export default {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
   overflow: hidden;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .literature-ops {
@@ -199,6 +188,14 @@ export default {
   display: flex;
 }
 
-.one-op {
+.keyWord {
+  display: flex;
+  font-size: 14px;
+  color: #999999;
+  margin-bottom: 8px;
+}
+.keyWord-list {
+  margin-right: 10px;
+  margin-left: 5px;
 }
 </style>

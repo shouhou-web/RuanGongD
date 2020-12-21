@@ -41,7 +41,7 @@ const ApplyIntro = () => import("views/Profile/ApplyIntro.vue");
 const Root = () => import("views/Root/Root.vue");
 const Report = () => import("views/Root/childCpn/Report/Report.vue");
 const Apply = () => import("views/Root/childCpn/Apply/Apply.vue");
-const Sysmsg = () => import("views/Root/childCpn/Sysmsg.vue");
+// const Sysmsg = () => import("views/Root/childCpn/Sysmsg/Sysmsg.vue");
 const Doc = () => import("views/Root/childCpn/Report/childCpn/Doc.vue");
 const Gate = () => import("views/Root/childCpn/Report/childCpn/Gate.vue");
 const Creport = () => import("views/Root/childCpn/Report/childCpn/Comment.vue");
@@ -98,7 +98,7 @@ const routes = [
       {
         path: "/",
         // redirect重定向
-        redirect: "/literature/reference"
+        redirect: "/literature/relation"
       },
       {
         path: "/literature/reference",
@@ -178,11 +178,11 @@ const routes = [
         name: "Apply",
         component: Apply,
       },
-      {
-        path: "/root/sysmsg",
-        name: "Sysmsg",
-        component: Sysmsg
-      }
+      // {
+      //   path: "/root/sysmsg",
+      //   name: "Sysmsg",
+      //   component: Sysmsg
+      // }
     ]
   },
   {
@@ -248,6 +248,8 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.path.slice(0, 6) == "/forum") store.commit("changeAppHeader", 1);
   else if (to.path == "/") store.commit("changeAppHeader", 0);
+  else if (to.path == "/login") store.commit('changeAppHeader', 2)
+  else if (to.path == "/register") store.commit('changeAppHeader', 3)
   else store.commit("changeAppHeader", -1);
   next();
 });

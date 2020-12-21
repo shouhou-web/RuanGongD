@@ -9,7 +9,7 @@ export function request(baseURL, config) {
   const instance = axios.create({
     // baseURL: '/api',
     baseURL,
-    timeout: 5000
+    timeout: 30000
   });
 
   //2.axios拦截器
