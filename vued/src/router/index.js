@@ -248,6 +248,8 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.path.slice(0, 6) == "/forum") store.commit("changeAppHeader", 1);
   else if (to.path == "/") store.commit("changeAppHeader", 0);
+  else if (to.path == "/login") store.commit('changeAppHeader', 2)
+  else if (to.path == "/register") store.commit('changeAppHeader', 3)
   else store.commit("changeAppHeader", -1);
   next();
 });
