@@ -15,12 +15,25 @@ export function editLiterature(userID, Lid, url) {
 }
 
 //发布文献
-export function createLiterature(createLiForm) {
+export function createLiterature(userID, createLiForm) {
   //console.log(createLiForm);
   return request(baseURL, {
     url: "/createLiterature",
     params: {
+      userID,
       createLiForm
+    },
+    method: "post"
+  });
+}
+
+// 通过作者名获取作者列表
+export function getAuthors(authorName) {
+  //console.log(createLiForm);
+  return request(baseURL, {
+    url: "/getAuthors",
+    params: {
+      authorName
     },
     method: "post"
   });
