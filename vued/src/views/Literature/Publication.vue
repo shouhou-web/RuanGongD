@@ -164,11 +164,12 @@
 <script>
   import CreateLiterature from "./childCpn/create_literature";
   import MHeader from "../../components/common/m-header/m-header.vue";
-  import {createLiterature} from "../../network/literature";
+  import {createLiterature, getAuthors} from "../../network/literature";
 export default {
   name: "Publication",
   data() {
     return {
+      userId: "",
       state: "",
       dialog: false, // 是否显示悬浮窗
       liRule: {
@@ -318,7 +319,7 @@ export default {
       console.log(this.createLiForm);
       // for test
 
-      createLiterature(this.createLiForm)
+      createLiterature(this.userId, this.createLiForm)
         .then((res) => {
           console.log("createPost");
           console.log(res);
@@ -344,6 +345,17 @@ export default {
 
     querySearchAsync(queryString, callback) {
       var list = [{}];
+      getAuthors(queryString).then((response)=>{
+        //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
+        for(let i of response.data){
+          i.value = i.name;  //将想要展示的数据作为value
+        }
+        this.authorList = response.data;
+        callback(this.authorList);
+      }).catch((error)=>{
+        console.log(this.authorList);
+      });
+      /*
       for(let i of this.authorList){
         i.value = i.name;  //将想要展示的数据作为value
       }
@@ -352,6 +364,8 @@ export default {
         ? list.filter(this.createFilter(queryString))
         : list;
       callback(list);
+      */
+
       /* var list = [{}];
       //调用的后台接口
       let url = 后台接口地址 + queryString;
@@ -388,6 +402,9 @@ export default {
         this.$nextTick(() => this.createLiForm.keywords.pop());
       }
     },
+  },
+  created() {
+    this.data().userId = this.$store.state.user.userID;
   },
   components: { MHeader, CreateLiterature },
 };
