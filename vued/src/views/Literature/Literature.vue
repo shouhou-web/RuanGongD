@@ -295,18 +295,26 @@ export default {
   methods: {
     collectLiterature() {
       //未登录用户无法收藏
-      if (this.$store.state.userID == null) {
+      if (this.$store.state.user == null) {
         this.$notify.warning("您还未登录");
       } else {
-        (this.staroff = !this.staroff), (this.staron = !this.staron);
-        collect(this.$store.state.userID, literature.literatureID).then(res => {
+        let option = this.staroff == true ? 1 : 0;
+        collect(
+          this.$store.state.user.userID,
+          this.literature.literatureID,
+          this.literature.title,
+          option
+        ).then(res => {
+          console.log("collect", res);
           //收藏成功
           if (res == 0) {
-            this.$notify.success("收藏成功");
+            this.staroff = !this.staroff;
+            this.staron = !this.staron;
+            this.$notify.success("操作成功");
           }
           //收藏失败
           else if (res == -1) {
-            this.$notify.warning("收藏失败");
+            this.$notify.warning("操作失败");
           }
         });
       }
