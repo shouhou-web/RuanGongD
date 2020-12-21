@@ -1,5 +1,5 @@
 import { request } from "@/network/request";
-let baseURL = "http://185.133.193.251:8081";
+let baseURL = "http://60.205.189.66:8081";
 
 // 修改文献链接
 export function editLiterature(userID, Lid, url) {

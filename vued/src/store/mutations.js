@@ -63,10 +63,13 @@ const mutations = {
     state.user.emailAddress = emailAddress;
   },
   setPhoneNumber(state, phone) {
-    state.user.phoneNumber = phone
+    state.user.phoneNumber = phone;
   },
   setUserDegree(state, degree) {
-    state.user.userDegree = degree
+    state.user.userDegree = degree;
+  },
+  setSearchRes(state, res) {
+    state.searchRes = res;
   }
 };
 
