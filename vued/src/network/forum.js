@@ -1,7 +1,7 @@
 import { request } from "@/network/request";
 
 //社交系统
-let baseURL = "http://39.99.154.244:8083";
+let baseURL = "http://60.205.189.66:8083";
 
 /*
   字段类型默认为String
