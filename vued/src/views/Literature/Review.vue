@@ -1,22 +1,5 @@
 <template>
   <div id="Review">
-    <!-- <div class="comments">
-      <ul>
-        <li v-for="(item, index) in commentList" class="commentcard">
-            <div class="cardtop">
-                <div class="cardimage">
-
-                </div>
-                <div class="">
-
-                </div>
-            </div>
-            <div class="cardbottom">
-                {{item.comment}}
-            </div>
-        </li>
-      </ul>
-    </div> -->
     <!-- 评论区 -->
     <div class="comment-container" v-if="comments.length >= 1">
       <div class="card">
@@ -36,12 +19,6 @@
             </div>
             <div class="commenter-name">
               {{ comment.commenterName }}
-            </div>
-            <div
-              class="poster-tag"
-              v-if="comment.commenterId == postInfo.creatorId"
-            >
-              楼主
             </div>
             <div class="comment-time">
               {{ comment.commentTime }}
@@ -66,12 +43,52 @@
             </div>
           </div>
           <div class="card-item">
-            <div class="post-content">
+            <div class="comment-content">
               {{ comment.commentContent }}
             </div>
           </div>
         </div>
       </div>
+
+      <div class="input-container">
+        <div class="card">
+          <div class="card-header">
+            <div class="avatar">
+              <v-avatar size="48px">
+                <img :src="userAvatar" />
+              </v-avatar>
+            </div>
+            <div class="poster-name">
+              {{ userName }}
+            </div>
+          </div>
+          <div class="card-item">
+            <v-form v-model="commentFormValid" class="comment-form">
+              <v-textarea
+                ref="commentarea"
+                v-model="commentContent"
+                outlined
+                counter
+                rows="4"
+                auto-grow
+                required
+                color="var(--color-main)"
+                :rules="commentRule"
+              ></v-textarea>
+              <div class="post-reply-button">
+                <v-btn
+                  color="var(--color-main)"
+                  :disabled="!commentFormValid"
+                  @click="handleComment"
+                >
+                  <font color="white">发表</font>
+                </v-btn>
+              </div>
+            </v-form>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
@@ -81,33 +98,47 @@ export default {
   name: "Review",
   data() {
     return {
+      userId: "123",
+      userName: "Codevka",
+      userAvatar: "https://i.loli.net/2020/11/26/soiOjIlZFpELuTW.png",
+
+      commentContent: "",
+      commentFormValid: false,
+      commentRule: [
+        (v) => !!v,
+        (v) =>
+          (v.length <= 800 && v.length >= 5) ||
+          "评论内容长度在 5-800 个字符之间",
+      ],
+
       comments: [
         {
-          postCommentID: "123",
-          postID: "456",
-          userID: "789",
-          image: "test",
-          username: "lw",
-          content: "圣杯战争是TYPE-MOON出品的《Fate/stay night》和《Fate/Zero》等Fate系列作品中出现的概念。围绕着能实现持有者心愿的“圣杯”的争夺战，就是广义上的圣杯战争。 [1] 本来“降灵仪式·英灵召唤”是用来拯救灵长世界的决战魔术，立于七个属性顶点的七名英灵——冠位(Grand)从者会现身将阻碍着灵长世界发展的大灾害给讨灭。而人类为了自己的方便，将这种魔术降格而成的召唤系统就是圣杯战争了。",
-          commentTime: "2020-12-17",
+          commentId: "1",
+          commenterId: "123",
+          commenterName: "BI",
+          commenterAvatar: "https://i.loli.net/2020/11/27/9fbGvYknV8KejFS.png",
+          floor: 2,
+          commentContent: "AI nb!",
+          commentTime: "今天 11:45",
         },
         {
-          postCommentID: "123",
-          postID: "456",
-          userID: "789",
-          image: "test",
-          username: "lw",
-          content: "圣杯战争是TYPE-MOON出品的《Fate/stay night》和《Fate/Zero》等Fate系列作品中出现的概念。围绕着能实现持有者心愿的“圣杯”的争夺战，就是广义上的圣杯战争。 [1] 本来“降灵仪式·英灵召唤”是用来拯救灵长世界的决战魔术，立于七个属性顶点的七名英灵——冠位(Grand)从者会现身将阻碍着灵长世界发展的大灾害给讨灭。而人类为了自己的方便，将这种魔术降格而成的召唤系统就是圣杯战争了。",
-          commentTime: "2020-12-17",
+          commentId: "2",
+          commenterId: "2333",
+          commenterName: "AI",
+          commenterAvatar: "https://i.loli.net/2020/11/27/3tz2XEraSwl8skK.png",
+          floor: 1,
+          commentContent: "BI nb!",
+          commentTime: "1926-08-17",
         },
         {
-          postCommentID: "123",
-          postID: "456",
-          userID: "789",
-          image: "test",
-          username: "lw",
-          content: "圣杯战争是TYPE-MOON出品的《Fate/stay night》和《Fate/Zero》等Fate系列作品中出现的概念。围绕着能实现持有者心愿的“圣杯”的争夺战，就是广义上的圣杯战争。 [1] 本来“降灵仪式·英灵召唤”是用来拯救灵长世界的决战魔术，立于七个属性顶点的七名英灵——冠位(Grand)从者会现身将阻碍着灵长世界发展的大灾害给讨灭。而人类为了自己的方便，将这种魔术降格而成的召唤系统就是圣杯战争了。",
-          commentTime: "2020-12-17",
+          commentId: "3",
+          commenterId: "21",
+          commenterName: "Spam  Bot",
+          commenterAvatar: "https://i.loli.net/2020/11/30/jm2i7g9qL61SkE8.png",
+          floor: 4,
+          commentContent:
+            "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+          commentTime: "刚刚",
         },
       ],
     };
@@ -141,6 +172,23 @@ export default {
         this.reportForm.reportCommentId = commentId;
       }
     },
+    handleComment() {
+      commentPost(this.userId, this.postId, this.commentContent)
+        .then((res) => {
+          console.log("comment post");
+          console.log(res);
+          if (res.data.result == "true") {
+            this.commentContent = "";
+            this.$notify.success("评论发表成功！");
+          } else {
+            this.$notify.error("评论失败，请稍后再试。");
+          }
+        })
+        .catch((err) => {
+          this.$notify.error("评论失败，请稍后再试。");
+          console.log(err);
+        });
+    },
   },
   components: {},
   created() {
@@ -162,22 +210,22 @@ export default {
   display: flex;
 
   margin-top: 20px;
-  
+
   flex-direction: column;
 }
-.comments{
-    width: 700px;
-      background: white;
-      height: 1000px;
-}
-.commentcard{
-    border: 1px #ddd solid;
-}
+
 .comment-container {
   width: 61%;
   min-width: 400px;
   margin: 0 auto;
 }
+
+.input-container {
+  width: 100%;
+  min-width: 400px;
+  margin: 0 auto;
+}
+
 .card {
   width: initial;
   box-sizing: border-box;
@@ -189,42 +237,58 @@ export default {
   box-shadow: 0 0px 2px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.12);
   padding: 20px 30px 20px 30px;
 }
-.card-divider {
-  height: 1px;
-  background: rgb(223, 223, 223);
-  margin: 10px 0 10px 0;
-}
+
 .card-header {
   padding-top: 5px;
   display: flex;
   flex-direction: row;
   position: relative;
 }
+
+.card-item {
+  padding-bottom: 3px;
+  display: block;
+  margin: 0;
+}
+
 .avatar {
   position: relative;
   /* margin-left: 20px; */
   display: flex;
   align-items: center;
 }
-.commenter-name {
+
+.poster-name {
   display: flex;
   align-items: center;
-  font-size: 14px;
+  font-size: 1.15rem;
   font-weight: bold;
   margin-left: 10px;
 }
-.poster-tag {
-  font-size: 0.8rem;
-  display: flex;
-  align-items: center;
-  color: white;
-  padding: 5px;
-  background-color: var(--color-main);
-  margin: auto;
-  margin-left: 10px;
-  border-radius: 5px;
+
+.post-reply-button {
   height: fit-content;
 }
+
+.card-divider {
+  height: 1px;
+  background: rgb(223, 223, 223);
+  margin: 10px 0 10px 0;
+}
+
+.commenter-name {
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.comment-action {
+  display: flex;
+  align-items: center;
+}
+
 .comment-time {
   display: flex;
   align-items: center;
@@ -233,20 +297,24 @@ export default {
   font-size: 0.8rem;
   color: #555;
 }
-.comment-action {
-  display: flex;
-  align-items: center;
+
+.comment-form {
+  margin-top: 20px;
 }
-.card-item {
-  padding-bottom: 3px;
-  display: block;
-  margin: 0;
-}
-.post-content {
+
+.comment-content {
   height: fit-content;
-  line-height: 1.35;
-  font-size: 14px;
+  line-height: 1.2;
+  font-size: 0.9rem;
   margin-top: 10px;
   margin-bottom: 15px;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  margin: auto;
+  padding-bottom: 10px;
+  width: 40%;
 }
 </style>

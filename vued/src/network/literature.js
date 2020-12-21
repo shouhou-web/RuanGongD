@@ -1,19 +1,7 @@
 import { request } from "@/network/request";
 let baseURL = "http://185.133.193.251:8081";
 
-// 获取个人文献列表
-export function getMyLiterature(userID) {
-  return request(baseURL, {
-    url: "/getMyLiterature",
-    params: {
-      userID
-    },
-    method: "post"
-  });
-}
-
 // 修改文献链接
-// 获取个人文献列表
 export function editLiterature(userID, Lid, url) {
   return request(baseURL, {
     url: "/editLiterature",
@@ -60,13 +48,23 @@ export function getRelation(area) {
   });
 }
 
-
 //获取相关作者
 export function getRelatedAuthor(venue) {
   return request(baseURL, {
     url: "/getRelatedAuthor",
     params: {
       venue
+    },
+    method: "post"
+  });
+}
+
+// 获取个人文献
+export function getMyLiterature(authorID) {
+  return request(baseURL, {
+    url: "/getMyLiterature",
+    params: {
+      authorID
     },
     method: "post"
   });

@@ -9,6 +9,9 @@
         :type="item.reportType"
         :canShowMore="item.trimmedContent != null"
         @toShowMore="resetTrim($event, index)"
+        @approveReport="toApprove($event, index)"
+        @rejectReport="toReject($event, index)"
+        @deleteReport="toDelete($event, index)"
       >
         <template v-slot:reporterProfile>
           <div class="report-profile">
@@ -31,6 +34,11 @@
         </template>
       </l-root-card>
     </div>
+    <m-hover ref="hover" @submit="doReject">
+      <div class="reject-hover">
+        <textarea class="reject-input" placeholder="请在此输入驳回原因" autofocus v-model="msgContent"></textarea>
+      </div>
+    </m-hover>
   </div>
 </template>
 
@@ -41,14 +49,18 @@ export default {
   name: "Doc",
   data() {
     return {
+      temp_index: -1,
+      msgContent: "",
+      show: false,
       reportList: [
         {
           hasRead: false,
           articleID: "E387HB9CS1234",
-          articleTitle: "This is a card used to test article reports!!!",
+          articleTitle:
+            "This is a card used to test article reports!!!This is a card used to test article reports!!!This is a card used to test article reports!!!",
           isTrimmed: true,
           trimmedContent:
-            "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a very....",
+            "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a veryonylyc is a very handsome bot, his name....",
           reportContent:
             "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
           reportType: 1,
@@ -148,6 +160,24 @@ export default {
   methods: {
     resetTrim(e, index) {
       this.reportList[index].isTrimmed = !this.reportList[index].isTrimmed;
+    },
+    toApprove(e, index) {
+      console.log(index);
+    },
+    toReject(e, index) {
+      this.temp_index = index;
+      this.$refs.hover.showHover({
+        title: "请填写驳回原因",
+        submitBtn: "确定",
+        cancelBtn: "取消"
+      });
+    },
+    toDelete(e, index) {
+      console.log(index);
+    },
+    doReject() {
+      console.log(this.temp_index);
+      console.log(this.msgContent);
     }
   },
   components: { LRootCard }
@@ -209,6 +239,10 @@ export default {
 .reportee-title {
   color: #6b757b;
   cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 540px;
+  white-space: nowrap;
 }
 
 .reportee-title:hover {
@@ -224,6 +258,39 @@ export default {
   opacity: 0;
   animation: outin 1s 1;
   animation-fill-mode: forwards;
+}
+
+.reject-hover {
+  width: 500px;
+}
+
+.reject-input {
+  border: #cdccd1 solid 0.5px;
+  border-radius: 4px;
+  height: 300px;
+  margin: 30px auto;
+  outline: none;
+  padding: 10px 10px;
+  resize: none;
+  width: 100%;
+}
+
+textarea:-ms-input-placeholder {
+  cursor: pointer;
+  color: #6b757b;
+}
+
+.reject-input::-webkit-scrollbar {
+  width: 4px;
+}
+
+.reject-input::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.reject-input::-webkit-scrollbar-thumb {
+  background-color: #d4dadd;
+  border-radius: 2px;
 }
 
 @keyframes outin {

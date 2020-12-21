@@ -51,7 +51,7 @@
                 </li>
                 <div class="header__down__div"></div>
                 <li>
-                  <div class="header__down__item" @click="exit">
+                  <div class="header__down__item" @click="logOut">
                     登出账户
                   </div>
                 </li>
@@ -77,45 +77,45 @@ export default {
         {
           name: "主页",
           path: "/",
-          check: true
+          check: true,
         },
         {
           name: "论坛",
           path: "/forumHome",
-          check: false
-        }
+          check: false,
+        },
       ],
       avatorList: [
         {
           type: 0,
           name: "个人空间",
-          path: "/profile"
+          path: "/profile",
         },
         {
           type: 1,
           name: "个人门户",
-          path: "/intro"
+          path: "/intro",
         },
         {
           type: 1,
           name: "个人动态",
-          path: "/intro"
+          path: "/intro",
         },
         {
           type: 2,
-          name: "管理员",
-          path: "/root"
-        }
+          name: "后台管理",
+          path: "/root",
+        },
       ],
       isColor: false,
-      isHeaderDown: false
+      isHeaderDown: false,
     };
   },
   methods: {
     jump(e) {
       console.log(e);
       this.$router.push({
-        path: e.path
+        path: e.path,
       });
     },
     color() {
@@ -127,7 +127,22 @@ export default {
     toProfile() {
       this.$router.push({
         path: "/profile",
-        query: { userID: this.$store.state.user.userID }
+        query: { userID: this.$store.state.user.userID },
+      });
+    },
+    toIntro() {
+      this.$router.push({
+        path: "/intro",
+        query: {
+          userID: this.$store.state.user.userID,
+          authorID: this.$store.state.user.authorID,
+        },
+      });
+    },
+    toRoot() {
+      this.$router.push({
+        path: "/root",
+        query: { userID: this.$store.state.user.userID },
       });
     },
     showAvator() {
@@ -135,21 +150,37 @@ export default {
     },
     hideAvator() {
       this.isHeaderDown = false;
-    }
+    },
+    toAvator(path) {
+      switch (path) {
+        case "/profile":
+          this.toProfile();
+          break;
+        case "/intro":
+          this.toIntro();
+          break;
+        case "/root":
+          this.toRoot();
+          break;
+      }
+    },
+    logOut() {
+      this.$store.commit("logout");
+    },
   },
   computed: {
     isLogin() {
       return this.$store.state.user != null;
     },
     curType() {
-      return 1;
-      // return this.$store.state.user.userIdentity;
-    }
+      // return 2;
+      return this.$store.state.user.userIdentity;
+    },
   },
   created() {
     // console.log(this.$store.state.user);
   },
-  components: {}
+  components: {},
 };
 </script>
 
@@ -294,7 +325,7 @@ export default {
 
 .header__right__log,
 .header__right__reg {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   line-height: 18px;
   padding-bottom: 3px;

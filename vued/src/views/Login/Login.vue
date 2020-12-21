@@ -26,7 +26,7 @@
 <script>
 import LLoginInput from "./childCpn/l-Login-Input.vue";
 import LLoginButton from "./childCpn/l-Login-Button.vue";
-import { login } from "network/user";
+import { login } from "network/login-register";
 
 export default {
   components: { LLoginInput, LLoginButton },
@@ -34,8 +34,7 @@ export default {
   data() {
     return {
       userID: "",
-      userPsw: "",
-      userInfo: ""
+      userPsw: ""
     };
   },
   methods: {
@@ -67,8 +66,10 @@ export default {
             });
             return;
           }
-          this.userInfo = res;
+          console.log(res);
           this.$notify.success("登陆成功");
+          this.$store.commit("login", res);
+          this.$router.push("/");
         })
         .catch(err => {
           this.$notify.error({

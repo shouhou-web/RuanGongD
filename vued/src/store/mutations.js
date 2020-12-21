@@ -13,16 +13,11 @@ const mutations = {
   // 登录
   login(state, info) {
     console.log(info);
-    state.token = true;
     state.user = info;
-    // sessionStorage.clear();
-    sessionStorage.setItem("user", JSON.stringify(state.user));
   },
   // 登出
   logout(state) {
-    state.token = false;
-    state.user = {};
-    sessionStorage.clear();
+    state.user = null;
   },
   changeAdvance(state) {
     state.isAdvance = !state.isAdvance;

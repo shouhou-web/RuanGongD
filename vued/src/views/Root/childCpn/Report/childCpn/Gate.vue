@@ -10,6 +10,9 @@
         :type="item.reportType"
         :canShowMore="item.trimmedContent != null"
         @toShowMore="resetTrim($event, index)"
+        @approveReport="toApprove($event, index)"
+        @rejectReport="toReject($event, index)"
+        @deleteReport="toDelete($event, index)"
       >
         <template v-slot:reporterProfile>
           <div class="report-profile">
@@ -190,6 +193,15 @@ export default {
   methods: {
     resetTrim(e, index) {
       this.reportList[index].isTrimmed = !this.reportList[index].isTrimmed;
+    },
+    toApprove(e, index) {
+      console.log(index);
+    },
+    toReject(e, index) {
+      console.log(index);
+    },
+    toDelete(e, index) {
+      console.log(index);
     }
   },
   components: { LRootCard }
@@ -246,15 +258,6 @@ export default {
 .report-job {
   color: #6b757b;
   font-size: 10px;
-}
-
-.reportee-title {
-  color: #6b757b;
-  cursor: pointer;
-}
-
-.reportee-title:hover {
-  text-decoration-line: underline;
 }
 
 .report-detail {

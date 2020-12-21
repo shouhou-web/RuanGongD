@@ -175,13 +175,13 @@ export default {
         title: [
           {
             required: true,
-            message: "请输入动态标题",
+            message: "请输入文献标题",
             trigger: "blur",
           },
           {
             min: 2,
             max: 40,
-            message: "动态标题长度在 2-40 个字符之间",
+            message: "文献标题长度在 2-40 个字符之间",
             trigger: "blur",
           },
         ],

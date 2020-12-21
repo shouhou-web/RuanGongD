@@ -40,9 +40,8 @@ const ApplyIntro = () => import("views/Profile/ApplyIntro.vue");
 // 管理员相关组件
 const Root = () => import("views/Root/Root.vue");
 const Report = () => import("views/Root/childCpn/Report/Report.vue");
-const Apply = () => import("views/Root/childCpn/Apply.vue");
+const Apply = () => import("views/Root/childCpn/Apply/Apply.vue");
 const Sysmsg = () => import("views/Root/childCpn/Sysmsg.vue");
-const Mgauthor = () => import("views/Root/childCpn/Mgauthor.vue");
 const Doc = () => import("views/Root/childCpn/Report/childCpn/Doc.vue");
 const Gate = () => import("views/Root/childCpn/Report/childCpn/Gate.vue");
 const Creport = () => import("views/Root/childCpn/Report/childCpn/Comment.vue");
@@ -177,17 +176,12 @@ const routes = [
       {
         path: "/root/apply",
         name: "Apply",
-        component: Apply
+        component: Apply,
       },
       {
         path: "/root/sysmsg",
         name: "Sysmsg",
         component: Sysmsg
-      },
-      {
-        path: "/root/mgauthor",
-        name: "Mgauthor",
-        component: Mgauthor
       }
     ]
   },

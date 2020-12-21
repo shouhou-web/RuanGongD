@@ -1,6 +1,6 @@
 <template>
-  <div class="login-button--all">
-    <button :class="[ buttonType ? 'login-button--' + buttonType : '' ]" @click="handleClick">{{ words }}</button>
+  <div class="register-button--all">
+    <button :class="[ buttonType ? 'register-button--' + buttonType : '' ]" @click="handleClick">{{ words }}</button>
   </div>
 </template>
 
@@ -30,16 +30,16 @@ export default {
 </script>
 
 <style scoped>
-.login-button--all {
+.register-button--all {
   margin: 10px auto;
   position: relative;
   width: 80%;
 }
 
-.login-button--default {
+.register-button--default {
   border: 2px solid var(--color-tint);
   border-radius: 8px;
-  color: #6b757b;
+  color: var(--color-tint);
   font-family: Georgia;
   font-size: 17px;
   height: 50px;
@@ -49,13 +49,13 @@ export default {
   -webkit-user-select: none;
 }
 
-.login-button--default:hover {
+.register-button--default:hover {
   background-color: var(--color-tint);
   color: #ffffff;
   transition: 0.3s;
 }
 
-.login-button--white {
+.register-button--white {
   border: 2px solid #6b757b;
   border-radius: 8px;
   color: #6b757b;
@@ -68,7 +68,7 @@ export default {
   -webkit-user-select: none;
 }
 
-.login-button--white:hover {
+.register-button--white:hover {
   background-color:#6b757b;
   color: #ffffff;
   transition: 0.3s;
