@@ -1,11 +1,12 @@
 <template>
   <div class="one-follow-literature">
-    <y-literatrue
+    <y-literature
       :title="refer.title"
       :id="refer.literatureID"
       :authors="refer.authors"
       :tags="refer.keyWord"
-    ></y-literatrue>
+      :read_time="refer.year"
+    ></y-literature>
 
     <!-- <div class="title" @click="toLiterature(refer.literatureID)">{{ refer.title }}</div>
     <div class="test1">
