@@ -1,5 +1,5 @@
 import { request } from "@/network/request";
-let baseURL = "http://185.133.193.251:8081";
+let baseURL = "http://60.205.189.66:8081";
 
 // 修改文献链接
 export function editLiterature(userID, Lid, url) {
@@ -15,12 +15,25 @@ export function editLiterature(userID, Lid, url) {
 }
 
 //发布文献
-export function createLiterature(createLiForm) {
+export function createLiterature(userID, createLiForm) {
   //console.log(createLiForm);
   return request(baseURL, {
-    url: "/createLiterature",
+    url: "/addLiterature",
     params: {
+      userID,
       createLiForm
+    },
+    method: "post"
+  });
+}
+
+// 通过作者名获取作者列表
+export function getAuthors(authorName) {
+  //console.log(createLiForm);
+  return request(baseURL, {
+    url: "/getAuthors",
+    params: {
+      authorName
     },
     method: "post"
   });
@@ -71,12 +84,14 @@ export function getStats(literatureID) {
 }
 
 //收藏文献
-export function collect(userID, literatureID) {
+export function collect(userID, literatureID, title, option) {
   return request(baseURL, {
     url: "/collect",
     params: {
       userID,
-      literatureID
+      literatureID,
+      title,
+      option
     },
     method: "post"
   });

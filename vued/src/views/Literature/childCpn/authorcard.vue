@@ -116,8 +116,9 @@ export default {
   },
   created() {
     if (this.$store.state.user != null)
-      getIntroFollowStatus(this.$store.state.userID, this.authorID).then(
+      getIntroFollowStatus(this.$store.state.user.userID, this.authorID).then(
         res => {
+          console.log("followStatus", res);
           //已关注
           if (res == 1) {
             this.isFollowed = true;

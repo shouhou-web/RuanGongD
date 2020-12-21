@@ -127,12 +127,16 @@
             <span class="total"> 共 {{ totalPage }} 页 </span>
             <ul class="page">
               <a @click="changePage(1)" href="javascript:void(0);">首页</a>
-              <a @click="changePage('down')" href="javascript:void(0);"
-                >上一页</a
-              >
+              <a @click="changePage('down')" href="javascript:void(0);">
+                上一页
+              </a>
               <li v-for="item in totalPage" :key="item">
                 <span v-if="item == curPage" class="cur">{{ item }}</span>
-                <a v-else @click="changePage(item)" href="javascript:void(0);">
+                <a
+                  v-else-if="item >= curPage && item <= curPage + 7"
+                  @click="changePage(item)"
+                  href="javascript:void(0);"
+                >
                   {{ item }}
                 </a>
               </li>
@@ -172,253 +176,11 @@ export default {
         num: "3,567",
         query: "1884-2021: ((covid) WN ALL)"
       },
-      authorList: [
-        {
-          key: "朱毅",
-          value: 1769
-        },
-        {
-          key: "赵红华",
-          value: 2
-        },
-        {
-          key: "Other",
-          value: 1798
-        }
-      ],
-      yearList: [
-        {
-          key: "Open Access",
-          value: 1769
-        },
-        {
-          key: "Other",
-          value: 1798
-        }
-      ],
-      venueList: [
-        {
-          key: "Open Access",
-          value: 1769
-        },
-        {
-          key: "Other",
-          value: 1798
-        }
-      ],
+      authorList: [],
+      yearList: [],
+      venueList: [],
       targetList: [],
-      sourceList: [
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["朱毅", "赵红华", "程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["赵红华", "程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["朱毅", "赵红华", "程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["赵红华", "程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["朱毅", "赵红华", "程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["赵红华", "程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["朱毅", "赵红华", "程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["赵红华", "程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "第二页面",
-          author: ["朱毅", "赵红华", "程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["赵红华", "程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["朱毅", "赵红华", "程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["赵红华", "程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["朱毅", "赵红华", "程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["赵红华", "程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["朱毅", "赵红华", "程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["赵红华", "程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "第三页",
-          author: ["朱毅", "赵红华", "程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["赵红华", "程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["朱毅", "赵红华", "程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["赵红华", "程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        },
-        {
-          title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
-          author: ["程伟"],
-          venue: "航空维修与工程",
-          year: "2020-10-23",
-          ciation: 1024
-        }
-      ],
+      sourceList: [],
       authorFilter: [],
       venueFilter: [],
       yearFilter: []
@@ -427,13 +189,15 @@ export default {
   created() {
     console.log(this.$route.query);
     let query = this.$route.query;
+    // 按相关度排序的lit
+    this.litList1 = this.$store.state.searchRes.litList1;
     // 按被引数排序的lit
-    this.litList1 = query.litList1;
+    this.litList2 = this.$store.state.searchRes.litList2;
     // 按发表时间排序的lit
-    this.litList2 = query.litList2;
-    this.authorList = query.authorList;
-    this.venueList = query.venueList;
-    this.yearList = query.yearList;
+    this.litList3 = this.$store.state.searchRes.litList3;
+    this.authorList = this.$store.state.searchRes.authorList;
+    this.venueList = this.$store.state.searchRes.venueList;
+    this.yearList = this.$store.state.searchRes.yearList;
     this.sourceList = this.litList1;
     this.targetList = this.sourceList;
   },
