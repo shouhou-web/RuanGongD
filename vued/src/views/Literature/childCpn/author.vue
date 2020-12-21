@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { getIntroFollowStatue,follow} from "network/profile";
+import { getIntroFollowStatus,follow} from "network/profile";
 export default {
   name: "Author",
   props: {

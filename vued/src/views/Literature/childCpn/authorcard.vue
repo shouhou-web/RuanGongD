@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { getIntroFollowStatue,follow,getAuthorInformation} from "network/profile";
+import { getIntroFollowStatus,follow,getAuthorInformation} from "network/profile";
 
 export default {
   name: "Authorcard",
