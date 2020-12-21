@@ -95,7 +95,7 @@ export default {
 .login-main {
   display: flex;
   margin: 25px auto 0;
-  width: var(--width-main);
+  /* width: var(--width-main); */
 }
 
 .login-all {

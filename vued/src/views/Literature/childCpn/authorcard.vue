@@ -16,7 +16,7 @@
             :src="author.image"
             alt=""
             class="l-root-card--reporter-pic"
-            @click="toAuthor(author.userID,authorID)"
+            @click="toAuthor(author.userID, authorID)"
           />
         </div>
       </div>
@@ -30,96 +30,110 @@
           <span class="intro">暂无个人简介</span>
         </div>
       </div>
-      <div class="auth-part3">
-        <l-button @click="followAuthor(author.userID)" v-if="!isFollowed">关注</l-button>
-        <l-button @click="followAuthor(author.userID)" v-if="isFollowed" class="isfollowed">已关注</l-button>
-        <l-button @click="toAuthor(author.userID,authorID)">个人门户</l-button>
+      <div class="auth-part3" v-if="isFollowed != null">
+        <l-button @click="followAuthor(author.userID)" v-if="!isFollowed">
+          关注
+        </l-button>
+        <l-button
+          @click="followAuthor(author.userID)"
+          v-if="isFollowed"
+          class="isfollowed"
+        >
+          已关注
+        </l-button>
+        <l-button @click="toAuthor(author.userID, authorID)">个人门户</l-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getIntroFollowStatus,follow,getAuthorInformation} from "network/profile";
+import {
+  getIntroFollowStatus,
+  follow,
+  getAuthorInformation
+} from "network/profile";
 
 export default {
   name: "Authorcard",
   props: {
-    authorID:"",
+    authorID: String
   },
   data() {
     return {
       author: {
-            autherID: "123",
-            realName: "阿尔托莉雅",
-            organization: "不列颠",
-            userID: "",
-            image: "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=66747141,2601833110&fm=26&gp=0.jpg",
-            introduction:
-              "身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世。",
-          },
-      isFollowed:true,
+        autherID: "123",
+        realName: "阿尔托莉雅",
+        organization: "不列颠",
+        userID: "",
+        image:
+          "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=66747141,2601833110&fm=26&gp=0.jpg",
+        introduction:
+          "身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世。"
+      },
+      // author: {},
+      isFollowed: null
     };
   },
   methods: {
     //跳转到个人门户
-    toAuthor(userID,authorID) {
+    toAuthor(userID, authorID) {
       this.$router.push({
         path: "/profile",
         query: {
           userID: userID,
-          autherID:authorID,
-        },
+          autherID: authorID
+        }
       });
     },
     //关注和取消关注
     followAuthor(userID) {
       console.log("test");
       //已关注，要取消关注
-      if(this.isFollowed){
-        follow(this.$route.query.userID,userID,0)//缺少authorid找userid的步骤
-        .then(res=>{
-          if(res == 0){
-            this.$notify.success("取消关注成功");
-          }
-          else if(res == -1){
-            this.$notify.error("取消关注失败，请重试");
-          }
-        })
+      if (this.isFollowed) {
+        follow(this.$route.query.userID, userID, 0) //缺少authorid找userid的步骤
+          .then(res => {
+            if (res == 0) {
+              this.$notify.success("取消关注成功");
+            } else if (res == -1) {
+              this.$notify.error("取消关注失败，请重试");
+            }
+          });
       }
       //未关注，要关注作者
-      else{
-        follow(this.$route.query.userID,userID,1)//缺少authorid找userid的步骤
-        .then(res=>{
-          if(res == 0){
-            this.$notify.success("关注成功");
-          }
-          else if(res == -1){
-            this.$notify.error("关注失败，请重试");
-          }
-        })
+      else {
+        follow(this.$route.query.userID, userID, 1) //缺少authorid找userid的步骤
+          .then(res => {
+            if (res == 0) {
+              this.$notify.success("关注成功");
+            } else if (res == -1) {
+              this.$notify.error("关注失败，请重试");
+            }
+          });
       }
       this.isFollowed = !this.isFollowed;
-    },
+    }
   },
-  created(){
-    getIntroFollowStatue(this.$route.query.userID,this.authorID)
-    .then(res=>{
-      //已关注
-      if(res == 1){
-        this.isFollowed = true;
-      }
-      //未关注
-      else if(res == 2){
-        this.isFollowed = false;
-      }
-    });
-    getAuthorInformation(this.authorID)
-    .then(res=>{
+  created() {
+    if (this.$store.state.user != null)
+      getIntroFollowStatus(this.$store.state.userID, this.authorID).then(
+        res => {
+          //已关注
+          if (res == 1) {
+            this.isFollowed = true;
+          }
+          //未关注
+          else if (res == 2) {
+            this.isFollowed = false;
+          }
+        }
+      );
+    getAuthorInformation(this.authorID).then(res => {
+      console.log("author", res);
       this.author = res;
-    })
+    });
   },
-  components: {},
+  components: {}
 };
 </script>
 
@@ -218,8 +232,8 @@ export default {
   width: 90px;
 }
 
-.authorcard .auth-part3 .isfollowed{
-  background:#c6e2ff;
+.authorcard .auth-part3 .isfollowed {
+  background: #c6e2ff;
   color: #777;
 }
 

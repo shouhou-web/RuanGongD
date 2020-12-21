@@ -50,84 +50,79 @@
           </div>
         </div>
       </div>
-
-      <div class="input-container">
-        <div class="card">
-          <div class="card-header">
-            <div class="avatar">
-              <v-avatar size="48px">
-                <img :src="userAvatar" />
-              </v-avatar>
-            </div>
-            <div class="poster-name">
-              {{ userName }}
-            </div>
+    </div>
+    <div class="input-container">
+      <div class="card">
+        <div class="card-header">
+          <div class="avatar">
+            <v-avatar size="48px">
+              <img :src="userAvatar" />
+            </v-avatar>
           </div>
-          <div class="card-item">
-            <v-form v-model="commentFormValid" class="comment-form">
-              <v-textarea
-                ref="commentarea"
-                v-model="commentContent"
-                outlined
-                counter
-                rows="4"
-                auto-grow
-                required
+          <div class="poster-name">
+            {{ userName }}
+          </div>
+        </div>
+        <div class="card-item">
+          <v-form v-model="commentFormValid" class="comment-form">
+            <v-textarea
+              ref="commentarea"
+              v-model="commentContent"
+              outlined
+              counter
+              rows="4"
+              auto-grow
+              required
+              color="var(--color-main)"
+              :rules="commentRule"
+            ></v-textarea>
+            <div class="post-reply-button">
+              <v-btn
                 color="var(--color-main)"
-                :rules="commentRule"
-              ></v-textarea>
-              <div class="post-reply-button">
-                <v-btn
-                  color="var(--color-main)"
-                  :disabled="!commentFormValid"
-                  @click="handleComment"
-                >
-                  <font color="white">发表</font>
-                </v-btn>
-              </div>
-            </v-form>
-          </div>
+                :disabled="!commentFormValid"
+                @click="handleComment"
+              >
+                <font color="white">发表</font>
+              </v-btn>
+            </div>
+          </v-form>
         </div>
       </div>
     </div>
-
     <!-- 举报对话框  -->
-      <v-dialog v-model="reportDialog" max-width="600">
-        <v-card elevation="3">
-          <v-card-title>举报评论</v-card-title>
-          <v-card-text>
-            <el-form
-              :model="reportForm"
-              label-width="80px"
-              :rules="reportRule"
-              ref="reportForm"
-            >
-              <el-form-item label="举报理由" prop="reportContent">
-                <el-input
-                  class="report-content"
-                  type="textarea"
-                  v-model="reportForm.reportContent"
-                  placeholder="请输入举报理由"
-                  :autosize="{ minRows: 5, maxRows: 12 }"
-                  resize="none"
-                  maxlength="801"
-                ></el-input>
-              </el-form-item>
-            </el-form>
-          </v-card-text>
-          <v-card-actions>
-            <div class="footer">
-              <v-btn
-                color="var(--color-main)"
-                @click="handleReport()"
-              >
-                <font color="white">举报</font>
-              </v-btn>
-              <v-btn @click="reportDialog = false">取消</v-btn>
-            </div>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+    <v-dialog v-model="reportDialog" max-width="600">
+      <v-card elevation="3">
+        <v-card-title>举报评论</v-card-title>
+        <v-card-text>
+          <el-form
+            :model="reportForm"
+            label-width="80px"
+            :rules="reportRule"
+            ref="reportForm"
+          >
+            <el-form-item label="举报理由" prop="reportContent">
+              <el-input
+                class="report-content"
+                type="textarea"
+                v-model="reportForm.reportContent"
+                placeholder="请输入举报理由"
+                :autosize="{ minRows: 5, maxRows: 12 }"
+                resize="none"
+                maxlength="801"
+              ></el-input>
+            </el-form-item>
+          </el-form>
+        </v-card-text>
+        <v-card-actions>
+          <div class="footer">
+            <v-btn color="var(--color-main)" @click="handleReport()">
+              <font color="white">举报</font>
+            </v-btn>
+            <v-btn @click="reportDialog = false">取消</v-btn>
+          </div>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <v-dialog v-model="deleteDialog" max-width="400">
       <v-card elevation="3">
@@ -153,13 +148,31 @@ import {
   getPostInfo,
   deletePost,
   reportComment,
-  deleteComment,
-  commentPost,
+  deleteComment
 } from "network/forum.js";
 import { getComment, comment } from "network/literature";
 
 export default {
   name: "Review",
+  props: {
+    literature: Object
+  },
+  created() {
+    console.log(this.literature.literatureID);
+    getComment(this.literature.literatureID)
+      .then(res => {
+        console.log("comment", res);
+        if (res == null) this.comments = [];
+        else this.comments = res;
+      })
+      .then(
+        // this.userId = this.$store.state.userID; // TODO 等待统一
+        // TODO 获取 userName, userAvatar
+        this.comments.sort(function(a, b) {
+          return a.floor - b.floor;
+        }) // 对 comments 按楼层升序排序
+      );
+  },
   data() {
     return {
       userId: "123",
@@ -169,10 +182,10 @@ export default {
       commentContent: "",
       commentFormValid: false,
       commentRule: [
-        (v) => !!v,
-        (v) =>
+        v => !!v,
+        v =>
           (v.length <= 800 && v.length >= 5) ||
-          "评论内容长度在 5-800 个字符之间",
+          "评论内容长度在 5-800 个字符之间"
       ],
       reportDialog: false, // 是否展示举报界面
       deleteDialog: false, // 是否展示删除界面
@@ -196,36 +209,7 @@ export default {
           (v.length <= 600 && v.length >= 5) ||
           "举报内容长度在 5-600 个字符之间"
       ],
-      comments: [
-        {
-          commentId: "1",
-          commenterId: "123",
-          commenterName: "BI",
-          commenterAvatar: "https://i.loli.net/2020/11/27/9fbGvYknV8KejFS.png",
-          floor: 2,
-          commentContent: "AI nb!",
-          commentTime: "今天 11:45",
-        },
-        {
-          commentId: "2",
-          commenterId: "2333",
-          commenterName: "AI",
-          commenterAvatar: "https://i.loli.net/2020/11/27/3tz2XEraSwl8skK.png",
-          floor: 1,
-          commentContent: "BI nb!",
-          commentTime: "1926-08-17",
-        },
-        {
-          commentId: "3",
-          commenterId: "21",
-          commenterName: "Spam  Bot",
-          commenterAvatar: "https://i.loli.net/2020/11/30/jm2i7g9qL61SkE8.png",
-          floor: 4,
-          commentContent:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-          commentTime: "刚刚",
-        },
-      ],
+      comments: []
     };
   },
   methods: {
@@ -234,8 +218,8 @@ export default {
       this.$router.push({
         path: "/profile",
         query: {
-          userID: userId,
-        },
+          userID: userId
+        }
       });
     },
     showDelete(commentId) {
@@ -250,7 +234,7 @@ export default {
     showReport(commentId) {
       this.reportDialog = true;
       this.reportForm.reportContent = "";
-        this.reportForm.reportCommentId = commentId;
+      this.reportForm.reportCommentId = commentId;
     },
     handleReport() {
       reportComment(
@@ -258,7 +242,7 @@ export default {
         this.reportForm.reportCommentId,
         this.reportForm.reportContent
       )
-        .then((res) => {
+        .then(res => {
           console.log("report comment");
           console.log(res);
           if (res.data.result == "true") {
@@ -266,19 +250,19 @@ export default {
             this.$notify({
               title: "操作成功",
               message: "举报成功！请等候管理员处理",
-              type: "success",
+              type: "success"
             });
           } else {
             this.$notify.error({
               title: "操作失败",
-              message: "举报失败，请稍后再试。",
+              message: "举报失败，请稍后再试。"
             });
           }
         })
-        .catch((err) => {
+        .catch(err => {
           this.$notify.error({
             title: "操作失败",
-            message: "举报失败，请稍后再试。",
+            message: "举报失败，请稍后再试。"
           });
           console.log(err);
         });
@@ -286,7 +270,7 @@ export default {
 
     handleDelete() {
       deleteComment(this.userId, this.deleteCommentId)
-        .then((res) => {
+        .then(res => {
           console.log("delete comment");
           console.log(res);
           if (res.data.result == "true") {
@@ -307,31 +291,27 @@ export default {
             this.$notify({
               title: "操作成功",
               message: "删除成功！",
-              type: "success",
+              type: "success"
             });
           } else {
             this.$notify.error({
               title: "操作失败",
-              message: "删除失败，请稍后再试。",
+              message: "删除失败，请稍后再试。"
             });
           }
         })
-        .catch((err) => {
+        .catch(err => {
           this.$notify.error({
             title: "操作失败",
-            message: "删除失败，请稍后再试。",
+            message: "删除失败，请稍后再试。"
           });
           console.log(err);
         });
     },
 
     handleComment() {
-      commentPost(
-        this.userId,
-        this.$route.query.literatureID,
-        this.commentContent
-      )
-        .then((res) => {
+      comment(this.userId, this.literature.literatureID, this.commentContent)
+        .then(res => {
           console.log("comment post");
           console.log(res);
           if (res == 0) {
@@ -343,7 +323,7 @@ export default {
               commenterAvatar: this.userAvatar,
               floor: len + 2,
               commentContent: this.commentContent,
-              commentTime: "刚刚",
+              commentTime: "刚刚"
             });
             this.commentContent = "";
             this.$notify.success("评论发表成功！");
@@ -351,23 +331,13 @@ export default {
             this.$notify.error("评论失败，请稍后再试。");
           }
         })
-        .catch((err) => {
+        .catch(err => {
           this.$notify.error("评论失败，请稍后再试。");
           console.log(err);
         });
-    },
+    }
   },
-  components: {},
-  created() {
-    getComment(this.$route.query.literatureID).then((res) => {
-      this.comments = res;
-    });
-    // this.userId = this.$store.state.userID; // TODO 等待统一
-    // TODO 获取 userName, userAvatar
-    this.comments.sort(function (a, b) {
-      return a.floor - b.floor;
-    }); // 对 comments 按楼层升序排序
-  },
+  components: {}
 };
 </script>
 

@@ -38,11 +38,11 @@ export function getLiterature(literatureID) {
 }
 
 //获取相关文献
-export function getRelation(area) {
+export function getRelation(venue) {
   return request(baseURL, {
     url: "/getRelation",
     params: {
-      area
+      venue
     },
     method: "post"
   });
