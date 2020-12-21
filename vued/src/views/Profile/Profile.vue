@@ -115,21 +115,32 @@
 <!--        </div>-->
       </div>
     </m-hover>
-    <m-hover ref="changeHeadshot" @submit="uploadFile" @cancel="cancel">
-      <el-upload
-        class="avatar-uploader"
-        action="https://jsonplaceholder.typicode.com/posts/"
-        :show-file-list="false"
-        :on-success="handleAvatarSuccess"
-        :before-upload="beforeAvatarUpload">
-        <img v-if="imageUrl" :src="imageUrl" class="avatar">
-        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-      </el-upload>
+    <m-hover ref="changeHeadshot" @cancel="cancel">
+      <el-main>
+        <el-upload
+          :class="{ hide: hideUploadEdit }"
+          :action="uploadPath"
+          :multiple="false"
+          list-type="picture-card"
+          accept="image/jpg, image/jpeg, image/png"
+          :data="postData"
+          :file-list="fileList"
+          :before-upload="beforeUpload"
+          :on-success="handleSuccess"
+          :on-remove="handleRemove"
+          :on-exceed="handleExceed"
+          :limit="1"
+        >
+          <i class="el-icon-plus"></i>
+        </el-upload>
+      </el-main>
     </m-hover>
   </div>
 </template>
 
 <script>
+import { getToken } from "@/network/genToken";
+import random from "string-random";
 import yLiterature from '@/components/common/y-literature/y-literature'
 import Favor from "@/views/Profile/Favor";
 import {
@@ -180,15 +191,46 @@ export default {
       emailWarning: false,
       getRightEmail: false,
 
-      // 上传图片
-      dialogImageUrl: '',
-      imageUrl: '',
-      dialogVisible: false,
-      limitNum: 1,
-      form: {}
+      uploadPath: "https://upload-z1.qiniup.com", // 七牛云华北
+      imgPathPrefix: "http://qlotpwg5r.hb-bkt.clouddn.com/",
+      hideUploadEdit: false, // 是否隐藏上传按钮
+      postData: {
+        token: "",
+        key: ""
+      },
+      fileList: [],
+      imagePath: "" // 图片链接
     };
   },
   methods: {
+    beforeUpload(file) {
+      const checkFileType =
+        file.type === "image/jpeg" ||
+        file.type === "image/jpg" ||
+        file.type === "image/png";
+      const checkFileSize = file.size / 1024 / 1024 < 5;
+      if (!checkFileType) {
+        this.$notify.error("上传图片必须是 jpeg/jpg/png 格式！");
+      } else if (!checkFileSize) {
+        this.$notify.error("上传图片大小不能超过 5MB！");
+      }
+      if (checkFileType && checkFileSize) this.postData.key = random(16);
+      return checkFileType && checkFileSize;
+    },
+    handleSuccess(file, response, fileList) {
+      this.fileList = fileList;
+      this.imagePath = this.imgPathPrefix + this.fileList[0].response.key;
+      console.log(response, file, fileList);
+      this.$store.commit("setImagePath", this.imagePath)
+      console.log("imgPath = " + this.imagePath);
+      this.hideUploadEdit = true;
+    },
+    handleRemove() {
+      this.hideUploadEdit = false;
+    },
+    handleExceed() {
+      this.$message.warning("最多上传 1 张头像");
+    },
     retUserDegree() {
       if (this.userDegree == 0) return "高中生 (High school)";
       else if (this.userDegree == 1) return "本科生 (UnderGraduates)";
@@ -208,7 +250,6 @@ export default {
     openChangeHeadshot() {
       this.$refs.changeHeadshot.showHover({
         title: "修改头像",
-        submitBtn: "提交",
         cancelBtn: "取消"
       });
     },
@@ -247,55 +288,6 @@ export default {
           }
         }
       )
-    },
-    // 上传文件之前的钩子
-    handleBeforeUpload(file){
-      console.log('before')
-      if(!(file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/jpg' || file.type === 'image/jpeg')) {
-        this.$notify.warning({
-          title: '警告',
-          message: '请上传格式为image/png, image/gif, image/jpg, image/jpeg的图片'
-        })
-      }
-      let size = file.size / 1024 / 1024 / 2
-      if(size > 2) {
-        this.$notify.warning({
-          title: '警告',
-          message: '图片大小必须小于2M'
-        })
-      }
-    },
-    // 文件超出个数限制时的钩子
-    handleExceed(files, fileList) {
-      this.$notify.info("一次最多上传一张图片")
-    },
-    // 文件列表移除文件时的钩子
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    // 点击文件列表中已上传的文件时的钩子
-    handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
-    },
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!');
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!');
-      }
-      return isJPG && isLt2M;
-    },
-    uploadFile() {
-      this.$refs.upload.submit()
-      // console.log("url", this.newImageUrl)
     },
     requestCode() {
       emailVerification(this.newEmail)
@@ -405,6 +397,9 @@ export default {
     }
   },
   created() {
+    this.postData.token = getToken();
+    console.log("token = " + getToken());
+
     let userID = this.$route.query.userID;
 
     // 当前用户进入自己的主页
@@ -504,8 +499,8 @@ export default {
 
 .headshot-img {
   margin: 0 auto;
-  border-radius: 50%;
   max-width: 80%;
+  border-radius: 50%;
   border: 1px solid #dddddd;
 }
 

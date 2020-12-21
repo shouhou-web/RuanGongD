@@ -179,12 +179,13 @@ export function getAuthorInformation(authorID) {
 }
 
 // 上传图片
-export function uploadImage(imageUrl) {
+export function editUserImage(userID, imageUrl) {
   return request(
     baseURL,
     {
-      url: "/uploadImage",
+      url: "/editUserImage",
       params: {
+        userID: userID,
         imageUrl: imageUrl
       },
       method: "post"
