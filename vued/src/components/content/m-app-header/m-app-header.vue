@@ -29,7 +29,13 @@
             />
             <img v-else src="@/assets/icons/header/msg.png" alt="" />
           </div>
-          <div class="header__avator" @click="toProfile">
+          <div v-if="curType == 0" class="header__avator" @click="toProfile">
+            <img :src="$store.state.user.image" alt="" />
+          </div>
+          <div v-if="curType == 1" class="header__avator" @click="toIntro">
+            <img :src="$store.state.user.image" alt="" />
+          </div>
+          <div v-if="curType == 2" class="header__avator" @click="toRoot">
             <img :src="$store.state.user.image" alt="" />
           </div>
           <div @click="showAvator" class="header__down">
@@ -59,7 +65,7 @@
             </div>
           </div>
         </div>
-        <ul class="header__switch">
+        <ul v-else class="header__switch">
           <li
             :class="{ 'is-active': 2 == $store.state.appHeaderCurIndex }"
             @click="jump({ path: '/login' })"

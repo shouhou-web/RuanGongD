@@ -208,6 +208,7 @@ export default {
 
 .report-card {
   margin-bottom: 20px;
+  width: 99%;
 }
 
 .report-card:last-child {
