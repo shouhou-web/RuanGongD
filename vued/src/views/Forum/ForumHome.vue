@@ -14,7 +14,12 @@
       <div class="pageHeader">
         <div class="pageName">讨论区</div>
         <!-- 创建动态 -->
-        <div class="pageTool"><create-post></create-post></div>
+        <div class="pageTool">
+          <create-post v-if="logined"></create-post
+          ><v-btn disabled v-if="!logined">
+            <div>登录以发表动态</div>
+          </v-btn>
+        </div>
       </div>
     </div>
     <div id="forumHome">
@@ -96,10 +101,13 @@
                 我关注的人的动态
               </div>
             </div>
-            <div class="fContentEmpty" v-if="posts.length == 0">
+            <div class="fContentEmpty" v-if="posts.length == 0 && logined">
               无
             </div>
-            <div class="fContent">
+            <div class="fContentEmpty" v-if="posts.length == 0 && !logined">
+              登录以查看
+            </div>
+            <div class="fContent" v-if="posts.length > 0">
               <ul>
                 <li v-for="(item, index) in posts" :key="index">
                   <v-card class="postCard" elevation="1" tile flat>
@@ -328,10 +336,17 @@ export default {
   computed: {
     currentUser() {
       return this.$store.state.user.userID;
+    },
+    logined() {
+      console.log("logined");
+      console.log(this.$store.state.user != null);
+      console.log(typeof currentUser != undefined);
+      return this.$store.state.user != null && typeof currentUser != undefined;
     }
   },
   components: { MHeader, CreatePost, CreateConsultation },
   created() {
+    //this.$store.commit("login", { userID: "123" });
     getAllSectors()
       .then(res => {
         console.log("getAllSectors");
@@ -341,15 +356,19 @@ export default {
       .catch(err => {
         console.log(err);
       });
-    getFollowedPosts(this.currentUser)
-      .then(res => {
-        console.log("getFollowedPosts");
-        console.log(res);
-        this.sectors = res.data.sectors;
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    if (this.logined) {
+      getFollowedPosts(this.currentUser)
+        .then(res => {
+          console.log("getFollowedPosts");
+          console.log(res);
+          this.posts = res.data.posts;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    } else {
+      this.posts = [];
+    }
   }
 };
 </script>

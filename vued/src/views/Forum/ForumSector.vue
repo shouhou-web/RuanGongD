@@ -5,6 +5,12 @@
     <div class="pageHeaderBg">
       <div class="pageHeader">
         <div class="sectorName">{{ sectorName }}</div>
+        <div class="sectorCreatePost">
+          <create-post v-if="logined" :sectorId="sectorId"></create-post
+          ><v-btn disabled v-if="!logined">
+            <div>登录以发表动态</div>
+          </v-btn>
+        </div>
         <v-divider></v-divider>
         <div class="sectorTool">
           <el-row>
@@ -69,12 +75,15 @@
             <el-col :span="2">
               <v-btn
                 class="toolButton"
-                dark
                 small
                 elevation="1"
                 color="#4F6EF2"
                 @click="followSector()"
+                v-if="logined"
                 ><div>{{ followedText }}</div></v-btn
+              >
+              <v-btn class="toolButton" small disabled v-if="!logined"
+                ><div>关注</div></v-btn
               >
             </el-col>
           </el-row>
@@ -178,6 +187,7 @@ import {
   getPostNum
 } from "network/forum.js";
 import MHeader from "../../components/common/m-header/m-header.vue";
+import CreatePost from "./childCpn/create-post.vue";
 export default {
   name: "ForumSector",
   data() {
@@ -369,13 +379,20 @@ export default {
     followedText() {
       return this.followed == "0" ? "关注" : "已关注";
     },
+    logined() {
+      console.log("logined");
+      console.log(this.$store.state.user != null);
+      console.log(typeof currentUser != undefined);
+      return this.$store.state.user != null && typeof currentUser != undefined;
+    },
     currentUser() {
       //userId
       return this.$store.state.user.userID;
     }
   },
-  components: { MHeader },
+  components: { MHeader, CreatePost },
   created() {
+    //this.$store.commit("login", { userID: "123" });
     this.sectorId = this.$route.query.sectorId;
     this.page = this.$route.query.page || "1";
     this.sort = this.$route.query.sort || "0";
@@ -437,7 +454,7 @@ export default {
   margin-bottom: 1px;
   width: 900px;
   background-color: white;
-  height: 190px;
+  height: 240px;
   display: flex;
   flex-direction: column;
 }
@@ -447,9 +464,16 @@ export default {
   font-style: bold;
   height: 50px;
 }
+.sectorCreatePost {
+  height: 40px;
+  margin-top: 5px;
+  /*margin-left: 85.5%;*/
+  margin-left: 2%;
+  margin-bottom: 20px;
+}
 .sectorTool {
   height: 50px;
-  margin-top: 15px;
+  margin-top: 10px;
 }
 .postCard {
   margin: 1px auto;
@@ -458,6 +482,7 @@ export default {
 }
 .toolButton {
   margin-top: 4px;
+  color: white;
 }
 .menu {
   font-size: 10px;
