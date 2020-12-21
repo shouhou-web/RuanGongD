@@ -9,6 +9,7 @@
 <script>
 import ECharts from "vue-echarts";
 import VeLine from "v-charts/lib/line.common";
+import {getStats} from "network/literature"
 
 require("echarts/lib/chart/bar");
 require("echarts/lib/chart/line");
@@ -21,10 +22,6 @@ export default {
   name: "Stats",
   data() {
     return {
-      referTimes:[1,2,3,4,5,6,7,8,9,10,11,12],
-      collectTimes:[1,2,3,4,5,6,7,8,9,10,11,12],
-      readTimes:[1,2,3,4,5,6,7,8,9,10,11,12],
-      commentTimes:[1,2,3,4,5,6,7,8,9,10,11,12],
       option: {
         tooltip: {
           trigger: "axis",
@@ -33,7 +30,7 @@ export default {
           textStyle: {
             fontSize: 15,
           },
-          data: ["被引数", "收藏数", "阅读数", "评论数"],
+          data: ["收藏数", "阅读数", "评论数"],
         },
         grid: {
           left: "3%",
@@ -50,14 +47,18 @@ export default {
           type: "category",
           boundaryGap: false,
           data: [
-            "二月",
-            "二月",
-            "二月",
-            "二月",
-            "二月",
-            "二月",
-            "二月",
-            "二月",
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sept",
+            "Oct",
+            "Nov",
+            "Dec",
           ],
         },
         yAxis: {
@@ -65,16 +66,10 @@ export default {
         },
         series: [
           {
-            name: "被引数",
-            type: "line",
-            stack: "总量",
-            data: [120, 132, 101, 134, 90, 230, 210],
-          },
-          {
             name: "收藏数",
             type: "line",
             stack: "总量",
-            data: [220, 182, 191, 234, 290, 330, 310],
+            data : [1,2,3,4,5,6,7,8,9,10,11,12],
           },
           {
             name: "阅读数",
@@ -91,6 +86,15 @@ export default {
         ],
       },
     };
+  },
+  created(){
+    console.log(this.$route.query.literatureID);
+    getStats(this.$route.query.literatureID)
+    .then(res=>{
+      this.option.series[0].data = res.collectTimes;
+      this.option.series[1].data = res.readTimes;
+      this.option.series[2].data = res.commentTimes;
+    })
   },
   mounted() {},
   methods: {},

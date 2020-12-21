@@ -28,7 +28,7 @@ export function createLiterature(createLiForm) {
 
 //获取文献详情
 export function getLiterature(literatureID) {
-  return request({
+  return request(baseURL, {
     url: "/getLiterature",
     params: {
       literatureID
@@ -59,12 +59,84 @@ export function getRelatedAuthor(venue) {
   });
 }
 
+//获取文献数据
+export function getStats(literatureID) {
+  return request(baseURL, {
+    url: "/getStats",
+    params: {
+      literatureID
+    },
+    method: "post"
+  });
+}
+
+//收藏文献
+export function collect(userID, literatureID) {
+  return request(baseURL, {
+    url: "/collect",
+    params: {
+      userID,
+      literatureID
+    },
+    method: "post"
+  });
+}
+
+//根据authorid找user+author的信息
+export function getAuthorInformation(authorID) {
+  return request(baseURL, {
+    url: "/getAuthorInformation",
+    params: {
+      authorID
+    },
+    method: "post"
+  });
+}
+
 // 获取个人文献
 export function getMyLiterature(authorID) {
   return request(baseURL, {
     url: "/getMyLiterature",
     params: {
       authorID
+    },
+    method: "post"
+  });
+}
+
+//举报文献
+export function reportLiterature(userID, literatureID, title, Content) {
+  return request(baseURL, {
+    url: "/reportLiterature",
+    params: {
+      userID,
+      literatureID,
+      title,
+      Content
+    },
+    method: "post"
+  });
+}
+
+//获取文献的评论列表
+export function getComment(literatureID) {
+  return request(baseURL, {
+    url: "/getComment",
+    params: {
+      literatureID
+    },
+    method: "post"
+  });
+}
+
+//评论文献
+export function comment(userID, literatureID, content) {
+  return request(baseURL, {
+    url: "/comment",
+    params: {
+      userID,
+      literatureID,
+      content
     },
     method: "post"
   });
