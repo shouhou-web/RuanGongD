@@ -189,12 +189,13 @@ export default {
   created() {
     console.log(this.$route.query);
     let query = this.$route.query;
+    console.log(this.$store.state.searchRes)
     // 按相关度排序的lit
-    this.litList1 = this.$store.state.searchRes.litList1;
+    this.litList1 = this.$store.state.searchRes.literatureList1;
     // 按被引数排序的lit
-    this.litList2 = this.$store.state.searchRes.litList2;
+    this.litList2 = this.$store.state.searchRes.literatureList2;
     // 按发表时间排序的lit
-    this.litList3 = this.$store.state.searchRes.litList3;
+    this.litList3 = this.$store.state.searchRes.literatureList3;
     this.authorList = this.$store.state.searchRes.authorList;
     this.venueList = this.$store.state.searchRes.venueList;
     this.yearList = this.$store.state.searchRes.yearList;
