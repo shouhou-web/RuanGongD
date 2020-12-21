@@ -289,6 +289,8 @@ export default {
           if (res == 0) {
             this.$notify.success("用户名修改成功")
             this.$store.commit("setUserName", this.newNickName)
+            this.$refs.changeProfile.hideHover()
+            this.editOp = 0
           }
           else if (res == 1) this.$notify.warning("该用户名已被您或他人使用")
           else if (res == -1) this.$notify.error("修改异常，请检查网络")
@@ -315,6 +317,8 @@ export default {
               if (res == 0) {
                 this.$notify.success("用户邮箱修改成功")
                 this.$store.commit("setEmailAddress", this.newEmail)
+                this.$refs.changeProfile.hideHover()
+                this.editOp = 0
               }
               else if (res == 1) this.$notify.warning("邮箱已被使用")
               else if (res == -1) this.$notify.error("修改异常，请检查网络")
@@ -327,18 +331,14 @@ export default {
       }
       // others
       else if (this.editOp == 2) {
-        editProfile(
-          this.user.userID,
-          this.user.realName,
-          this.newDegree,
-          this.user.image,
-          this.user.organization,
-          this.newPhone)
+        editProfile(this.user.userID, this.user.realName, this.newDegree, this.user.image, this.user.organization, this.newPhone)
           .then((res) => {
             if (res == 0) {
               this.$notify.success("修改成功")
               this.$store.commit("setPhoneNumber", this.newPhone)
               this.$store.commit("setUserDegree", this.newDegree)
+              this.$refs.changeProfile.hideHover()
+              this.editOp = 0
             }
             else if (res == -1) this.$notify.error("修改异常，请检查网络")
           })
@@ -346,7 +346,6 @@ export default {
             this.$notify.error( { title: "网络错误", message: "请稍后重试~" } )
           })
       }
-      this.editOp = 0
     },
     submit() {
     },
