@@ -8,8 +8,7 @@
     </div>
     <div class="authors">
       <div v-for="(one_author, i) in authors" class="author-list">
-        <img :src="one_author.image" class="authorImg">
-        <div class="authorname" @click="gotoIntro(one_author.userID, one_author.authorID)">{{one_author.username}}</div>
+        <div class="authorname" @click="gotoIntro(one_author.userID, one_author.authorID)">{{one_author.realName}}</div>
       </div>
     </div>
     <div class="read-time">
@@ -35,11 +34,14 @@ export default {
   },
   methods: {
     gotoLiterature() {
+      this.$router.push({ path: "/literature", query: { literature: this.id } })
       this.$notify.success("跳转ing")
     },
     gotoIntro(userID, authorID) {
       this.$router.push({ path: "/intro", query: { userID: userID, authorID: authorID } })
     }
+  },
+  created() {
   }
 }
 </script>
@@ -47,7 +49,7 @@ export default {
 <style scoped>
 .one-follow-literature {
   width: 715px;
-  height: 170px;
+  height: auto;
   border: 1px solid #dddddd;
   background-color: white;
   padding: 30px 25px 27px 25px;
@@ -59,7 +61,7 @@ export default {
   color: black;
   font-weight: 700;
   width: fit-content;
-  height: 25px;
+  height: auto;
   line-height: 20px;
   padding-left: 5px;
   margin-bottom: 5px;
@@ -115,24 +117,15 @@ export default {
 }
 
 .authors {
-  width: 100%;
-  height: 25px;
-  margin-bottom: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  height: auto;
+  margin-bottom: 15px;
 }
 
 .author-list {
-  display: flex;
-  flex-direction: row;
-  margin: 0 auto;
-  align-items: center;
-}
-
-.authorImg {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  margin-top: 1.5px;
-  margin-left: 5px;
+  width: fit-content;
 }
 
 .authorname {
