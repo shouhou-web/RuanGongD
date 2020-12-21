@@ -50,6 +50,7 @@
                     <v-card-text>
                       <v-avatar>
                         <img
+                          v-if="item.postNum > 0"
                           class="avatar"
                           alt="Avatar"
                           :src="item.userAvatar"
@@ -59,7 +60,7 @@
                     </v-card-text>
                   </el-col>
                   <el-col :span="8">
-                    <v-card-text>
+                    <v-card-text v-if="item.postNum > 0">
                       <div class="post">
                         <div class="title" @click="goToPost(item.postId)">
                           {{ handleTitle(item.postName, 32) }}
@@ -71,8 +72,15 @@
                           <span class="userName" @click="goToUser(item.userId)">
                             {{ item.userName }}</span
                           >
-                          <span> {{ handleInfo(item.editTime) }}</span>
+                          <span class="editTime">
+                            {{ handleInfo(item.editTime) }}</span
+                          >
                         </div>
+                      </div>
+                    </v-card-text>
+                    <v-card-text>
+                      <div class="postEmpty" v-if="item.postNum == 0">
+                        该分区暂无动态
                       </div>
                     </v-card-text>
                   </el-col>
@@ -87,6 +95,9 @@
               <div class="fHeaderText">
                 我关注的人的动态
               </div>
+            </div>
+            <div class="fContentEmpty" v-if="posts.length == 0">
+              无
             </div>
             <div class="fContent">
               <ul>
@@ -154,7 +165,7 @@
 </template>
 
 <script>
-import { getAllSectors } from "network/forum.js";
+import { getAllSectors, getFollowedPosts } from "network/forum.js";
 import MHeader from "../../components/common/m-header/m-header.vue";
 import CreatePost from "./childCpn/create-post.vue";
 import CreateConsultation from "./childCpn/create-consultation.vue";
@@ -189,10 +200,22 @@ export default {
           userName: "测试用户",
           postId: "01",
           postName: "测试动态",
-          editTime: "MM月dd日 HH:mm"
+          editTime: "yyyy年MM月dd日"
+        },
+        {
+          sectorId: "03",
+          sectorName: "测试分区1",
+          postNum: "0",
+          userId: "",
+          userAvatar: "",
+          userName: "",
+          postId: "",
+          postName: "",
+          editTime: ""
         }
       ],
-      posts: [
+      posts: []
+      /*posts: [
         {
           postId: "01",
           postName:
@@ -253,7 +276,7 @@ export default {
           createTime: "yyyy-MM-dd",
           tags: ["测试标签1", "测试标签2", "测试标签3", "测试标签4"]
         }
-      ]
+      ]*/
     };
   },
   methods: {
@@ -273,18 +296,17 @@ export default {
       return str;
     },
     handleInfo(time) {
-      return " , 于 " + time;
+      return "回复于 " + time;
     },
     goToUser(id) {
-      //todo: 跳转到用户
-
+      //跳转到用户
       this.$router.push({
         path: "/profile",
         query: { userID: id }
       });
     },
     goToSector(id) {
-      //todo: 跳转到分区
+      //跳转到分区
       this.$router.push({
         path: "/forumSector",
         query: {
@@ -310,11 +332,18 @@ export default {
   },
   components: { MHeader, CreatePost, CreateConsultation },
   created() {
-    //CreatePost;
-    //todo: 获取分区信息
     getAllSectors()
       .then(res => {
         console.log("getAllSectors");
+        console.log(res);
+        this.sectors = res.data.sectors;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    getFollowedPosts(this.currentUser)
+      .then(res => {
+        console.log("getFollowedPosts");
         console.log(res);
         this.sectors = res.data.sectors;
       })
@@ -329,7 +358,6 @@ export default {
 #forumHome {
   margin: 20px auto;
   width: var(--width-main);
-  /*background-image: url();*/
 }
 .m-header {
   width: 100vw;
@@ -345,7 +373,6 @@ export default {
   margin-bottom: 1px;
   border-radius: 0px;
   width: 1120px;
-  /*background-color: white;*/
   height: 190px;
   display: flex;
   flex-direction: column;
@@ -368,6 +395,7 @@ export default {
   margin: -1px auto;
   border-radius: 0px;
   width: 900px;
+  /*min-height: 100px;*/
 }
 .sectorName {
   max-width: 50%;
@@ -406,17 +434,29 @@ export default {
   top: 50%;
   transform: translateY(-45%);
 }
+.postEmpty {
+  margin-left: -5px;
+  position: absolute;
+  top: 48%;
+  transform: translateY(-45%);
+  font-size: 20px;
+  /*color: grey;*/
+  color: white;
+}
 .title {
   cursor: pointer;
   font-size: 14px;
 }
-.info {
-  font-size: 10px;
-}
+/*.info {
+  
+}*/
 .userName {
+  font-size: 10px;
   cursor: pointer;
 }
-
+.editTime {
+  font-size: 8px;
+}
 .fPosts {
   /*overflow: auto;*/
   border: 1px solid #ddd;
@@ -433,6 +473,13 @@ export default {
   font-size: 17px;
   font-style: bold;
   color: gray;
+}
+.fContentEmpty {
+  font-size: 25px;
+  color: grey;
+  height: 50px;
+  margin-left: 20px;
+  margin-top: 20px;
 }
 .fContent {
   overflow: auto;

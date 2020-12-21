@@ -230,6 +230,21 @@ export default {
           editorAvatar: "https://i.loli.net/2020/08/11/Rqm3hEG6bnHLsd4.png",
           editTime: "MM月dd日 HH:mm",
           tags: ["测试标签1", "测试标签2", "测试标签3", "测试标签4"]
+        },
+        {
+          postId: "01",
+          postName:
+            "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十",
+          replyNum: "1023",
+          viewNum: "1002001",
+          creatorId: "01",
+          creatorName: "测试用户",
+          createTime: "MM月dd日 HH:mm",
+          editorId: "02",
+          editorName: "测测用户",
+          editorAvatar: "https://i.loli.net/2020/08/11/Rqm3hEG6bnHLsd4.png",
+          editTime: "MM月dd日 HH:mm",
+          tags: []
         }
       ]
     };
@@ -247,8 +262,7 @@ export default {
       return str;
     },
     goToUser(id) {
-      //todo: 跳转到用户
-
+      //跳转到用户
       this.$router.push({
         path: "/profile",
         query: { userID: id }
@@ -256,14 +270,13 @@ export default {
     },
     goToPost(id) {
       //跳转到动态
-
       this.$router.push({
         path: "/forumPost",
         query: { postId: id }
       });
     },
     followSector() {
-      //todo: (或解除)关注分区
+      //关注(或解除)分区
       let textString = this.followed == "0" ? "关注分区" : "取消关注分区";
       followSector(this.currentUser, this.sectorId)
         .then(res => {
@@ -306,16 +319,21 @@ export default {
       this.$router.go(0);
     },
     changeSort(val) {
-      this.$router.push({
-        path: "/forumSector",
-        query: {
-          sectorId: this.sectorId,
-          page: this.page,
-          sort: val,
-          keyword: this.keyword
-        }
-      });
-      this.$router.go(0);
+      if (val == this.sort) {
+        //console.log(val + " " + this.sort);
+        return;
+      } else {
+        this.$router.push({
+          path: "/forumSector",
+          query: {
+            sectorId: this.sectorId,
+            page: this.page,
+            sort: val,
+            keyword: this.keyword
+          }
+        });
+        this.$router.go(0);
+      }
     },
     changeKeyword() {
       this.$router.push({
@@ -352,7 +370,7 @@ export default {
       return this.followed == "0" ? "关注" : "已关注";
     },
     currentUser() {
-      //todo: userId
+      //userId
       return this.$store.state.user.userID;
     }
   },
