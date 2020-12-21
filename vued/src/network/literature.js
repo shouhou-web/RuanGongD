@@ -18,7 +18,7 @@ export function editLiterature(userID, Lid, url) {
 export function createLiterature(userID, createLiForm) {
   //console.log(createLiForm);
   return request(baseURL, {
-    url: "/createLiterature",
+    url: "/addLiterature",
     params: {
       userID,
       createLiForm
