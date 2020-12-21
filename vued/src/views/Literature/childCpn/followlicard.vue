@@ -1,6 +1,13 @@
 <template>
   <div class="one-follow-literature">
-    <div class="title" @click="toLiterature(refer.literatureID)">{{ refer.title }}</div>
+    <y-literatrue
+      :title="refer.title"
+      :id="refer.literatureID"
+      :authors="refer.authors"
+      :tags="refer.keyWord"
+    ></y-literatrue>
+
+    <!-- <div class="title" @click="toLiterature(refer.literatureID)">{{ refer.title }}</div>
     <div class="test1">
       <div class="authors">
         <div v-for="(item, index) in refer.authorList" class="author-list">
@@ -26,50 +33,42 @@
     </div>
     <div class="literature-ops">
       <div class="one-op"></div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
+import YLiterature from "@/components/common/y-literature/y-literature";
+
 export default {
   name: "Message",
   props: {
-    refer: {
-      literatureID: "",
-      title: "",
-      authorList: [
-        //作者列表
-        {
-          authorID: "",
-          realName: "",
-          image: "", //头像
-        },
-      ],
-      abstract: "", //摘要
-      keyWord: [],
-      year: "", //文献年份
-      readTimes: 0, //阅读次数
-    }, //文献
+    refer: Object
+  },
+  components: {
+    YLiterature
+  },
+  created() {
+    console.log(this.refer);
   },
   methods: {
     toAuthor(authorID) {
       this.$router.push({
         path: "/profile",
         query: {
-          userID: authorID,
-        },
+          userID: authorID
+        }
       });
     },
-    toLiterature(literatureID){
+    toLiterature(literatureID) {
       this.$router.push({
         path: "/literature",
         query: {
-          userID: literatureID,
-        },
+          userID: literatureID
+        }
       });
     }
-  },
-  components: {},
+  }
 };
 </script>
 
@@ -152,8 +151,8 @@ export default {
   border-bottom: 1px solid #000000;
 }
 
-.time{
-  align-self:flex-end;
+.time {
+  align-self: flex-end;
   margin-left: 40px;
   padding-bottom: 5px;
 }
@@ -188,13 +187,13 @@ export default {
   display: flex;
 }
 
-.keyWord{
+.keyWord {
   display: flex;
   font-size: 14px;
   color: #999999;
   margin-bottom: 8px;
 }
-.keyWord-list{
+.keyWord-list {
   margin-right: 10px;
   margin-left: 5px;
 }

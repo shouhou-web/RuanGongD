@@ -64,7 +64,11 @@
             <div class="line__action">引用</div>
           </div>
           <ul class="content__list">
-            <li v-for="(item, index) in splitList" :key="index">
+            <li
+              v-for="(item, index) in splitList"
+              @click="toLiterature(item)"
+              :key="index"
+            >
               <div class="content__secline--dark" v-if="index % 2 == 0">
                 <div class="line__title">
                   {{ item.title }}
@@ -166,41 +170,41 @@ export default {
       curPage: 1,
       answer: {
         num: "3,567",
-        query: "1884-2021: ((covid) WN ALL)",
+        query: "1884-2021: ((covid) WN ALL)"
       },
       authorList: [
         {
           key: "朱毅",
-          value: 1769,
+          value: 1769
         },
         {
           key: "赵红华",
-          value: 2,
+          value: 2
         },
         {
           key: "Other",
-          value: 1798,
-        },
+          value: 1798
+        }
       ],
       yearList: [
         {
           key: "Open Access",
-          value: 1769,
+          value: 1769
         },
         {
           key: "Other",
-          value: 1798,
-        },
+          value: 1798
+        }
       ],
       venueList: [
         {
           key: "Open Access",
-          value: 1769,
+          value: 1769
         },
         {
           key: "Other",
-          value: 1798,
-        },
+          value: 1798
+        }
       ],
       targetList: [],
       sourceList: [
@@ -209,215 +213,215 @@ export default {
           author: ["朱毅", "赵红华", "程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["赵红华", "程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["朱毅", "赵红华", "程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["赵红华", "程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["朱毅", "赵红华", "程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["赵红华", "程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["朱毅", "赵红华", "程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["赵红华", "程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "第二页面",
           author: ["朱毅", "赵红华", "程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["赵红华", "程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["朱毅", "赵红华", "程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["赵红华", "程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["朱毅", "赵红华", "程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["赵红华", "程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["朱毅", "赵红华", "程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["赵红华", "程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "第三页",
           author: ["朱毅", "赵红华", "程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["赵红华", "程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["朱毅", "赵红华", "程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["赵红华", "程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
+          ciation: 1024
         },
         {
           title: "A320/A330飞机起落架收放系统时序监控的可行性研究",
           author: ["程伟"],
           venue: "航空维修与工程",
           year: "2020-10-23",
-          ciation: 1024,
-        },
+          ciation: 1024
+        }
       ],
       authorFilter: [],
       venueFilter: [],
-      yearFilter: [],
+      yearFilter: []
     };
   },
   created() {
@@ -452,12 +456,25 @@ export default {
     },
     splitList() {
       return this.targetList.slice((this.curPage - 1) * 12, this.curPage * 12);
-    },
+    }
   },
   methods: {
+    onCopy() {
+      this.$message.success("复制成功！");
+      this.$ref.hover.hideHover();
+    },
+    onCopyError() {
+      this.$message.error("复制失败");
+    },
+    toLiterature(item) {
+      this.$router.push({
+        path: "/literature",
+        query: { literatureID: item.literatureID }
+      });
+    },
     openRef() {
       this.$refs.hover.showHover({
-        title: "引用",
+        title: "引用"
       });
     },
     changePage(item) {
@@ -508,7 +525,7 @@ export default {
     },
     assureFilter() {
       this.curPage = 1;
-      this.targetList = this.sourceList.filter((n) => {
+      this.targetList = this.sourceList.filter(n => {
         if (
           this._inAuthor(n.author) &&
           this._inVenue(n.venue) &&
@@ -521,7 +538,7 @@ export default {
       // 筛选作者
       if (this._otherAuthor(author)) return true;
       let check = false;
-      author.forEach((element) => {
+      author.forEach(element => {
         if (this._inList(element, this.authorFilter)) check = true;
       });
       if (check) return true;
@@ -531,7 +548,7 @@ export default {
       // 特判other
       if (this._inList("Other", this.authorFilter)) {
         let check = true;
-        this.authorList.forEach((n) => {
+        this.authorList.forEach(n => {
           if (author == n.key) check = false;
         });
         if (check) return true;
@@ -547,7 +564,7 @@ export default {
       // 特判其他
       if (this._inList("Other", this.venueFilter)) {
         let check = true;
-        this.venueList.forEach((n) => {
+        this.venueList.forEach(n => {
           if (venue == n.key) check = false;
         });
         if (check) return true;
@@ -563,7 +580,7 @@ export default {
       // 特判年份其他
       if (this._inList("Other", this.yearFilter)) {
         let check = true;
-        this.yearList.forEach((n) => {
+        this.yearList.forEach(n => {
           if (year == n.key) check = false;
         });
         if (check) return true;
@@ -573,18 +590,18 @@ export default {
     _inList(item, list) {
       let check = false;
       if (list.length == 0) return true;
-      list.forEach((n) => {
+      list.forEach(n => {
         if (item == n) check = true;
       });
       if (check) return true;
       return false;
-    },
+    }
   },
   components: {
     searchAdvance,
     searchDropdown,
-    MClickDropdown,
-  },
+    MClickDropdown
+  }
 };
 </script>
 

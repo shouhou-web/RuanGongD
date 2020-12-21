@@ -18,19 +18,29 @@
             </div>
           </div>
           <div class="auth-part2">
-        <div class="introduction" v-if="this.author.introduction != 0">
-          <span class="intro">个人简介：</span>
-          <span>{{ author.introduction }}</span>
-        </div>
-        <!-- 没有个人简介的情况 -->
-        <div class="introduction" v-if="this.author.introduction.length == 0">
-          <span class="intro">暂无个人简介</span>
-        </div>
-      </div>
-          <div class="auth-part3">
-        <l-button @click="followAuthor(author.userID)" v-if="!isFollowed">关注</l-button>
-        <l-button @click="followAuthor(author.userID)" v-if="isFollowed" class="isfollowed">已关注</l-button>
-      </div>
+            <div class="introduction" v-if="this.author.introduction != 0">
+              <span class="intro">个人简介：</span>
+              <span>{{ author.introduction }}</span>
+            </div>
+            <!-- 没有个人简介的情况 -->
+            <div
+              class="introduction"
+              v-if="this.author.introduction.length == 0"
+            >
+              <span class="intro">暂无个人简介</span>
+            </div>
+          </div>
+          <div class="auth-part3" v-if="isFollowed != null">
+            <l-button @click="followAuthor(author.userID)" v-if="!isFollowed"
+              >关注</l-button
+            >
+            <l-button
+              @click="followAuthor(author.userID)"
+              v-if="isFollowed"
+              class="isfollowed"
+              >已关注</l-button
+            >
+          </div>
         </div>
       </div>
 
@@ -42,69 +52,59 @@
 </template>
 
 <script>
-import { getIntroFollowStatus,follow} from "network/profile";
+import { getIntroFollowStatus, follow } from "network/profile";
 export default {
   name: "Author",
   props: {
-    author: {
-      authorID: "",
-      realName: "",
-      userID: "",
-      image: "",
-      organization: "",
-      introduction: "",
-    },
+    author: Object
   },
   data() {
     return {
-      isFollowed:true,
+      isFollowed: null
     };
   },
   methods: {
-        //关注和取消关注
+    //关注和取消关注
     followAuthor(userID) {
       console.log("test");
       //已关注，要取消关注
-      if(this.isFollowed){
-        follow(this.$route.query.userID,userID,0)//缺少authorid找userid的步骤
-        .then(res=>{
-          if(res == 0){
-            this.$notify.success("取消关注成功");
-          }
-          else if(res == -1){
-            this.$notify.error("取消关注失败，请重试");
-          }
-        })
+      if (this.isFollowed) {
+        follow(this.$route.query.userID, userID, 0) //缺少authorid找userid的步骤
+          .then(res => {
+            if (res == 0) {
+              this.$notify.success("取消关注成功");
+            } else if (res == -1) {
+              this.$notify.error("取消关注失败，请重试");
+            }
+          });
       }
       //未关注，要关注作者
-      else{
-        follow(this.$route.query.userID,userID,1)//缺少authorid找userid的步骤
-        .then(res=>{
-          if(res == 0){
-            this.$notify.success("关注成功");
-          }
-          else if(res == -1){
-            this.$notify.error("关注失败，请重试");
-          }
-        })
+      else {
+        follow(this.$route.query.userID, userID, 1) //缺少authorid找userid的步骤
+          .then(res => {
+            if (res == 0) {
+              this.$notify.success("关注成功");
+            } else if (res == -1) {
+              this.$notify.error("关注失败，请重试");
+            }
+          });
       }
       this.isFollowed = !this.isFollowed;
-    },
+    }
   },
-  created(){
-        getIntroFollowStatue(this.$route.query.userID,this.author.authorID)
-    .then(res=>{
-      //已关注
-      if(res == 1){
-        this.isFollowed = true;
-      }
-      //未关注
-      else if(res == 2){
-        this.isFollowed = false;
-      }
-    });
+  created() {
+    if (this.$store.state.user != null)
+      getIntroFollowStatus(
+        this.$store.state.user.userID,
+        this.author.authorID
+      ).then(res => {
+        //已关注
+        if (res == 1) this.isFollowed = true;
+        //未关注
+        else if (res == 2) this.isFollowed = false;
+      });
   },
-  components: {},
+  components: {}
 };
 </script>
 
@@ -214,8 +214,8 @@ export default {
   font-weight: 550;
 }
 
-.auth-part3 .isfollowed{
-  background:#c6e2ff;
+.auth-part3 .isfollowed {
+  background: #c6e2ff;
   color: #777;
 }
 

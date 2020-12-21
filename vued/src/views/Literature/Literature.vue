@@ -61,7 +61,7 @@
                 <i
                   :class="{
                     'el-icon-star-off': staroff,
-                    'el-icon-star-on': staron,
+                    'el-icon-star-on': staron
                   }"
                 ></i>
                 <span> 收藏</span>
@@ -113,7 +113,7 @@
             class="op-item"
             @click="toChild(index)"
             :class="[
-              currentIndex == index ? 'op-item--active' : 'op-item--inside',
+              currentIndex == index ? 'op-item--active' : 'op-item--inside'
             ]"
             v-for="(item, index) in navList"
             :key="index"
@@ -175,7 +175,10 @@
         </div>
       </m-hover>
     </div>
-    <router-view :venue="literature.venue"></router-view>
+    <router-view
+      v-if="literature != null"
+      :literature="literature"
+    ></router-view>
   </div>
 </template>
 
@@ -188,7 +191,7 @@ import {
   deletePost,
   reportComment,
   deleteComment,
-  commentPost,
+  commentPost
 } from "network/forum.js";
 import { search } from "network/search.js";
 
@@ -196,91 +199,98 @@ export default {
   name: "Literature",
   components: {
     LFollowlicard,
-    LAuthor,
+    LAuthor
   },
   data() {
     return {
-      literature: {
-        literatureID: "123",
-        title: "Saber我的",
-        authorList: [
-          {
-            autherID: "123",
-            realName: "阿尔托莉雅",
-            organization: "不列颠",
-            userID: "",
-            image:
-              "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=66747141,2601833110&fm=26&gp=0.jpg",
-            introduction:
-              "身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世.身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世",
-          },
-          {
-            authorID: "",
-            realName: "lw",
-            userID: "",
-            image: "test",
-            organization: "",
-            introduction: "",
-          },
-          {
-            authorID: "",
-            realName: "lw",
-            userID: "",
-            image: "test",
-            organization: "",
-            introduction: "",
-          },
-        ],
+      literature: null,
+      // literature: {
+      //   literatureID: "123",
+      //   title: "Saber我的",
+      //   authorList: [
+      //     {
+      //       autherID: "123",
+      //       realName: "阿尔托莉雅",
+      //       organization: "不列颠",
+      //       userID: "",
+      //       image:
+      //         "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=66747141,2601833110&fm=26&gp=0.jpg",
+      //       introduction:
+      //         "身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世.身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世"
+      //     },
+      //     {
+      //       authorID: "",
+      //       realName: "lw",
+      //       userID: "",
+      //       image: "test",
+      //       organization: "",
+      //       introduction: ""
+      //     },
+      //     {
+      //       authorID: "",
+      //       realName: "lw",
+      //       userID: "",
+      //       image: "test",
+      //       organization: "",
+      //       introduction: ""
+      //     }
+      //   ],
 
-        abstract:
-          "Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的",
-        keyWord: ["Saber我的", "Saber我的", "Saber我的"],
-        download: "",
-        MLAformat:
-          "[1]俞文雅,陶红武,曾顺,谭跃刚.四足机器人斜坡对角小跑运动控制研究[J].武汉科技大学学报,2021,44(01):60-67.",
-        APAformat: "qwertyuio",
-        venue: "xxxxxxxx",
-        doi: "123456",
-      }, //文献
+      //   abstract:
+      //     "Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的",
+      //   keyWord: ["Saber我的", "Saber我的", "Saber我的"],
+      //   download: "",
+      //   MLAformat:
+      //     "[1]俞文雅,陶红武,曾顺,谭跃刚.四足机器人斜坡对角小跑运动控制研究[J].武汉科技大学学报,2021,44(01):60-67.",
+      //   APAformat: "qwertyuio",
+      //   venue: "xxxxxxxx",
+      //   doi: "123456"
+      // }, //文献
 
       staroff: true,
       staron: false,
       navList: [
         {
           name: "相关文献",
-          router: "relation",
+          router: "relation"
         },
         {
           name: "数据统计",
-          router: "stats",
+          router: "stats"
         },
         {
           name: "文献评论",
-          router: "review",
-        },
+          router: "review"
+        }
       ],
       //举报相关
       reportDialog: false,
       reportForm: {
         reportContent: "",
-        reportCommentId: "",
+        reportCommentId: ""
       },
       reportRule: {
         reportContent: [
           {
             required: true,
             message: "请输入举报理由",
-            trigger: "blur",
+            trigger: "blur"
           },
           {
             min: 5,
             max: 800,
             message: "举报理由长度在 5-800 个字符之间",
-            trigger: "blur",
-          },
-        ],
-      },
+            trigger: "blur"
+          }
+        ]
+      }
     };
+  },
+  created() {
+    getLiterature(this.$route.query.literatureID).then(res => {
+      console.log(res.literature);
+      this.literature = res.literature;
+    });
   },
   methods: {
     collectLiterature() {
@@ -289,23 +299,21 @@ export default {
         this.$notify.warning("您还未登录");
       } else {
         (this.staroff = !this.staroff), (this.staron = !this.staron);
-        collect(this.$store.state.userID, literature.literatureID).then(
-          (res) => {
-            //收藏成功
-            if (res == 0) {
-              this.$notify.success("收藏成功");
-            }
-            //收藏失败
-            else if (res == -1) {
-              this.$notify.warning("收藏失败");
-            }
+        collect(this.$store.state.userID, literature.literatureID).then(res => {
+          //收藏成功
+          if (res == 0) {
+            this.$notify.success("收藏成功");
           }
-        );
+          //收藏失败
+          else if (res == -1) {
+            this.$notify.warning("收藏失败");
+          }
+        });
       }
     },
     referFormat() {
       this.$refs.hover.showHover({
-        title: "引用文献",
+        title: "引用文献"
       });
     },
 
@@ -315,7 +323,7 @@ export default {
     // 举报
     handleReport(formName) {
       let pass = false;
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
           pass = true;
         }
@@ -328,7 +336,7 @@ export default {
         this.literature.title,
         this.reportForm.reportContent
       )
-        .then((res) => {
+        .then(res => {
           console.log("report post");
           console.log(res);
           if (res == 0) {
@@ -337,7 +345,7 @@ export default {
             this.$notify.error("举报失败，请稍后再试。");
           }
         })
-        .catch((err) => {
+        .catch(err => {
           this.$notify.error("举报失败，请稍后再试。");
           console.log(err);
         });
@@ -351,8 +359,8 @@ export default {
         path: "/profile",
         query: {
           userID: userID,
-          autherID: authorID,
-        },
+          autherID: authorID
+        }
       });
     },
     searchKey(key) {
@@ -360,10 +368,10 @@ export default {
       let item = {
         legical: "NULL",
         type: "SU",
-        value: key,
+        value: key
       };
       search(item)
-        .then((res) => {
+        .then(res => {
           this.$router.push({
             path: "/search",
             query: {
@@ -373,23 +381,17 @@ export default {
               litList2: res.literatureList2,
               authorList: res.authorList,
               venueList: res.venueList,
-              yearList: res.yearList,
-            },
+              yearList: res.yearList
+            }
           });
         })
-        .catch((err) => {
+        .catch(err => {
           this.$notify.error({
             title: "错误",
-            message: "网络异常，请稍后重试",
+            message: "网络异常，请稍后重试"
           });
         });
-    },
-  },
-
-  created() {
-    getLiterature(this.$route.query.literatureID).then((res) => {
-      this.literature = res;
-    });
+    }
   },
   computed: {
     currentIndex() {
@@ -401,8 +403,8 @@ export default {
         case "/literature/review":
           return 2;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

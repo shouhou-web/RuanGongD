@@ -9,7 +9,7 @@
 <script>
 import ECharts from "vue-echarts";
 import VeLine from "v-charts/lib/line.common";
-import {getStats} from "network/literature"
+import { getStats } from "network/literature";
 
 require("echarts/lib/chart/bar");
 require("echarts/lib/chart/line");
@@ -20,28 +20,40 @@ require("echarts/lib/component/legend");
 
 export default {
   name: "Stats",
+  props: {
+    literature: Object
+  },
+  created() {
+    console.log(this.literature.literatureID);
+    getStats(this.literature.literatureID).then(res => {
+      console.log(res);
+      this.option.series[0].data = res.collectTimes;
+      this.option.series[1].data = res.readTimes;
+      this.option.series[2].data = res.commentTimes;
+    });
+  },
   data() {
     return {
       option: {
         tooltip: {
-          trigger: "axis",
+          trigger: "axis"
         },
         legend: {
           textStyle: {
-            fontSize: 15,
+            fontSize: 15
           },
-          data: ["收藏数", "阅读数", "评论数"],
+          data: ["收藏数", "阅读数", "评论数"]
         },
         grid: {
           left: "3%",
           right: "4%",
           bottom: "3%",
-          containLabel: true,
+          containLabel: true
         },
         toolbox: {
           feature: {
-            saveAsImage: {},
-          },
+            saveAsImage: {}
+          }
         },
         xAxis: {
           type: "category",
@@ -58,49 +70,41 @@ export default {
             "Sept",
             "Oct",
             "Nov",
-            "Dec",
-          ],
+            "Dec"
+          ]
         },
         yAxis: {
-          type: "value",
+          type: "value"
         },
         series: [
           {
             name: "收藏数",
             type: "line",
             stack: "总量",
-            data : [1,2,3,4,5,6,7,8,9,10,11,12],
+            data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
           },
           {
             name: "阅读数",
             type: "line",
             stack: "总量",
-            data: [150, 232, 201, 154, 190, 330, 410],
+            data: [150, 232, 201, 154, 190, 330, 410]
           },
           {
             name: "评论数",
             type: "line",
             stack: "总量",
-            data: [320, 332, 301, 334, 390, 330, 320],
-          },
-        ],
-      },
+            data: [320, 332, 301, 334, 390, 330, 320]
+          }
+        ]
+      }
     };
   },
-  created(){
-    console.log(this.$route.query.literatureID);
-    getStats(this.$route.query.literatureID)
-    .then(res=>{
-      this.option.series[0].data = res.collectTimes;
-      this.option.series[1].data = res.readTimes;
-      this.option.series[2].data = res.commentTimes;
-    })
-  },
+
   mounted() {},
   methods: {},
   components: {
-    "v-chart": ECharts,
-  },
+    "v-chart": ECharts
+  }
 };
 </script>
 
