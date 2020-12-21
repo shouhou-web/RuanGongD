@@ -115,27 +115,16 @@
 <!--        </div>-->
       </div>
     </m-hover>
-    <m-hover ref="changeHeadshot" @submit="submit" @cancel="cancel">
-      <el-upload action="#" list-type="picture-card" :auto-upload="false" class="img-upload">
-        <i slot="default" class="el-icon-plus"></i>
-        <div slot="file" slot-scope="{file}">
-          <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
-          <span class="el-upload-list__item-actions">
-        <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
-          <i class="el-icon-zoom-in"></i>
-        </span>
-        <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleDownload(file)">
-          <i class="el-icon-download"></i>
-        </span>
-        <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleRemove(file)">
-          <i class="el-icon-delete"></i>
-        </span>
-      </span>
-        </div>
+    <m-hover ref="changeHeadshot" @submit="uploadFile" @cancel="cancel">
+      <el-upload
+        class="avatar-uploader"
+        action="https://jsonplaceholder.typicode.com/posts/"
+        :show-file-list="false"
+        :on-success="handleAvatarSuccess"
+        :before-upload="beforeAvatarUpload">
+        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
-      <el-dialog :visible.sync="dialogVisible">
-        <img width="100%" :src="dialogImageUrl" alt="">
-      </el-dialog>
     </m-hover>
   </div>
 </template>
@@ -149,7 +138,8 @@ import {
   editProfile,
   editUserName,
   editUserEmailAddress,
-  emailVerification
+  emailVerification,
+  uploadImage
 } from "@/network/profile";
 
 export default {
@@ -183,15 +173,19 @@ export default {
       newPhone: "",
       newEmail: "",
       editCode: "",
+      newImageUrl: "",
       code: null,
-
-      dialogImageUrl: '',
-      dialogVisible: false,
-      disabled: false,
 
       editOp: 0,
       emailWarning: false,
-      getRightEmail: false
+      getRightEmail: false,
+
+      // 上传图片
+      dialogImageUrl: '',
+      imageUrl: '',
+      dialogVisible: false,
+      limitNum: 1,
+      form: {}
     };
   },
   methods: {
@@ -254,15 +248,54 @@ export default {
         }
       )
     },
-    handleRemove(file) {
-      console.log(file);
+    // 上传文件之前的钩子
+    handleBeforeUpload(file){
+      console.log('before')
+      if(!(file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/jpg' || file.type === 'image/jpeg')) {
+        this.$notify.warning({
+          title: '警告',
+          message: '请上传格式为image/png, image/gif, image/jpg, image/jpeg的图片'
+        })
+      }
+      let size = file.size / 1024 / 1024 / 2
+      if(size > 2) {
+        this.$notify.warning({
+          title: '警告',
+          message: '图片大小必须小于2M'
+        })
+      }
     },
+    // 文件超出个数限制时的钩子
+    handleExceed(files, fileList) {
+      this.$notify.info("一次最多上传一张图片")
+    },
+    // 文件列表移除文件时的钩子
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    // 点击文件列表中已上传的文件时的钩子
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     },
-    handleDownload(file) {
-      console.log(file);
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw);
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg';
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!');
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!');
+      }
+      return isJPG && isLt2M;
+    },
+    uploadFile() {
+      this.$refs.upload.submit()
+      // console.log("url", this.newImageUrl)
     },
     requestCode() {
       emailVerification(this.newEmail)
@@ -378,7 +411,7 @@ export default {
     if (userID == this.$store.state.user.userID) {
       this.user = this.$store.state.user;
 
-      console.log(this.user)
+      // console.log(this.user)
 
       this.newNickName = this.user.username
       this.userDegree = this.user.userDegree
@@ -386,7 +419,10 @@ export default {
 
       // 获取个人信息：我的关注 + 我的收藏
       getUserFollowingList(userID)
-        .then((follow) => { this.followUsers = follow, console.log("follow:", follow) } )
+        .then((follow) => {
+          this.followUsers = follow
+          // console.log("follow:", follow)
+        })
         .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
     }
     // 进入其他用户个人主页
@@ -395,11 +431,17 @@ export default {
 
       // 获取当前用户对象
       getUserInformation(userID)
-        .then((user) => { this.user = user, console.log("user", user) } )
+        .then((user) => {
+          this.user = user
+          // console.log("user", user)
+        })
         .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
 
       getUserIntro(this.user.authorID)
-        .then((userIntro) => { this.userIntro = userIntro, console.log("intro", userIntro)})
+        .then((userIntro) => {
+          this.userIntro = userIntro
+          // console.log("intro", userIntro)
+        })
     }
   },
   watch: {
@@ -1237,5 +1279,11 @@ select {
 .code-input:focus {
   border: 1px solid #4F6EF2;
   transition: ease-in-out 0.3s;
+}
+
+.upload_image {
+  padding-top: 20px;
+  /*border: 1px solid red;*/
+  margin: 0 auto;
 }
 </style>

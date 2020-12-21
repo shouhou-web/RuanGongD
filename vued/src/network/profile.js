@@ -177,3 +177,17 @@ export function getAuthorInformation(authorID) {
     }
   )
 }
+
+// 上传图片
+export function uploadImage(imageUrl) {
+  return request(
+    baseURL,
+    {
+      url: "/uploadImage",
+      params: {
+        imageUrl: imageUrl
+      },
+      method: "post"
+    }
+  )
+}
