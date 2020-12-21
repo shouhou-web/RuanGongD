@@ -1,6 +1,6 @@
 <template>
   <div data-app="true">
-    <v-dialog v-model="dialog" persistent max-width="800">
+    <v-dialog v-model="dialog" persistent max-width="900">
       <v-card elevation="3">
         <v-card-title class="card-title">发表动态</v-card-title>
 
@@ -90,7 +90,7 @@
 
             <div class="form-item">
               <div class="form-label">
-                引用文献
+                引用我的文献
               </div>
               <v-select
                 v-model="createPostForm.citeId"
@@ -101,6 +101,7 @@
                 persistent-hint
                 outlined
                 color="var(--color-main)"
+                clearable
               >
                 <v-btn>test</v-btn>
               </v-select>
@@ -360,10 +361,6 @@ export default {
   justify-content: flex-end;
 }
 
-.post-name {
-  /*font-weight: bold;*/
-}
-
 .form-item {
   display: flex;
   margin-bottom: 15px;
@@ -372,9 +369,9 @@ export default {
 .form-label {
   display: flex;
   height: 40px;
-  width: 80px;
+  width: 100px;
   align-items: center;
-  justify-content: end;
+  justify-content: flex-end;
   margin-left: auto;
   padding-right: 12px;
   color: rgb(96, 98, 102);

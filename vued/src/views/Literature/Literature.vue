@@ -13,8 +13,8 @@
             <ul class="author-ul">
               <li
                 class="author"
-                @click="toAuthor(item.authorID)"
                 v-for="(item, index) in literature.authorList"
+                @click="toAuthor(item.userID, item.authorID)"
                 :key="index"
               >
                 <l-author :author="item"></l-author>
@@ -38,10 +38,17 @@
             <el-link
               v-for="(item, index) in literature.keyWord"
               :key="index"
-              href="???"
+              href="javascript:void(0);"
             >
-              {{ item.str }}
+              <span @click="searchKey(item)">{{ item }}</span>
             </el-link>
+          </div>
+          <div class="doi content">
+            <div>
+              <span class="lable">DOI：</span>
+            </div>
+
+            <span>{{ literature.doi }}</span>
           </div>
           <div class="button">
             <div class="button-left">
@@ -49,7 +56,7 @@
                 size="small"
                 :round="true"
                 type="primary"
-                @click="star()"
+                @click="collectLiterature()"
               >
                 <i
                   :class="{
@@ -59,26 +66,32 @@
                 ></i>
                 <span> 收藏</span>
               </l-button>
-              <l-button size="small" :round="true" type="primary">
+              <l-button
+                size="small"
+                :round="true"
+                type="primary"
+                @click="referFormat()"
+              >
                 <i class="el-icon-edit"></i>
                 <span> 引用</span>
               </l-button>
-              <l-button size="small" :round="true" type="primary">
-                <i class="el-icon-edit"></i>
+              <!-- <l-button size="small" :round="true" type="primary">
+                <i class="el-icon-position"></i>
                 <span> 分享</span>
-              </l-button>
-              <l-button size="small" :round="true" type="primary">
-                <i class="el-icon-edit"></i>
-                <span> ？？？</span>
-              </l-button>
+              </l-button> -->
             </div>
             <div class="button-right">
-              <l-button size="medium" type="primary" class="report">
-                <i class="el-icon-edit"></i>
+              <l-button
+                size="medium"
+                type="primary"
+                class="report"
+                @click="reportLi()"
+              >
+                <i class="el-icon-warning-outline"></i>
                 <span> 举报文献 </span>
               </l-button>
               <l-button size="medium" type="primary" class="download">
-                <i class="el-icon-edit"></i>
+                <i class="el-icon-download"></i>
                 <span> 下载文献 </span>
               </l-button>
             </div>
@@ -90,7 +103,7 @@
             <div class="b1">
               <img src="./img/test.jpg" alt="" />
             </div>
-            <div class="b2">xxxxxxxxx期刊</div>
+            <div class="b2">{{ literature.venue }}</div>
           </div>
         </div>
       </div>
@@ -113,14 +126,71 @@
         </ul>
       </div>
     </div>
-    <router-view></router-view>
+
+    <div data-app="true">
+      <!-- 举报对话框  -->
+      <v-dialog v-model="reportDialog" max-width="600">
+        <v-card elevation="3">
+          <v-card-title>举报文献</v-card-title>
+          <v-card-text>
+            <el-form
+              :model="reportForm"
+              label-width="80px"
+              :rules="reportRule"
+              ref="reportForm"
+            >
+              <el-form-item label="举报理由" prop="reportContent">
+                <el-input
+                  class="report-content"
+                  type="textarea"
+                  v-model="reportForm.reportContent"
+                  placeholder="请输入举报理由"
+                  :autosize="{ minRows: 5, maxRows: 12 }"
+                  resize="none"
+                  maxlength="801"
+                ></el-input>
+              </el-form-item>
+            </el-form>
+          </v-card-text>
+          <v-card-actions>
+            <div class="footer">
+              <v-btn
+                color="var(--color-main)"
+                @click="handleReport('reportForm')"
+              >
+                <font color="white">举报</font>
+              </v-btn>
+              <v-btn @click="reportDialog = false">取消</v-btn>
+            </div>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <m-hover ref="hover">
+        <div class="hover-referformat1">
+          MLA格式引文：{{ literature.MLAformat }}
+        </div>
+        <el-divider></el-divider>
+        <div class="hover-referformat2">
+          APA格式引文：{{ literature.APAformat }}
+        </div>
+      </m-hover>
+    </div>
+    <router-view :venue="literature.venue"></router-view>
   </div>
 </template>
 
 <script>
 import LFollowlicard from "./childCpn/followlicard.vue";
 import LAuthor from "./childCpn/author.vue";
-import { getLiterature } from "network/literature";
+import { getLiterature, collect, reportLiterature } from "network/literature";
+import {
+  getPostInfo,
+  deletePost,
+  reportComment,
+  deleteComment,
+  commentPost,
+} from "network/forum.js";
+import { search } from "network/search.js";
 
 export default {
   name: "Literature",
@@ -138,15 +208,16 @@ export default {
             autherID: "123",
             realName: "阿尔托莉雅",
             organization: "不列颠",
-            work: "",
-            image: "test",
+            userID: "",
+            image:
+              "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=66747141,2601833110&fm=26&gp=0.jpg",
             introduction:
               "身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世.身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世",
           },
           {
             authorID: "",
             realName: "lw",
-            work: "",
+            userID: "",
             image: "test",
             organization: "",
             introduction: "",
@@ -154,7 +225,7 @@ export default {
           {
             authorID: "",
             realName: "lw",
-            work: "",
+            userID: "",
             image: "test",
             organization: "",
             introduction: "",
@@ -163,27 +234,18 @@ export default {
 
         abstract:
           "Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的",
-        keyWord: [
-          {
-            str: "Saber我的",
-          },
-          {
-            str: "Saber我的",
-          },
-          {
-            str: "Saber我的",
-          },
-        ],
+        keyWord: ["Saber我的", "Saber我的", "Saber我的"],
         download: "",
+        MLAformat:
+          "[1]俞文雅,陶红武,曾顺,谭跃刚.四足机器人斜坡对角小跑运动控制研究[J].武汉科技大学学报,2021,44(01):60-67.",
+        APAformat: "qwertyuio",
+        venue: "xxxxxxxx",
+        doi: "123456",
       }, //文献
 
       staroff: true,
       staron: false,
       navList: [
-        {
-          name: "参考文献",
-          router: "reference",
-        },
         {
           name: "相关文献",
           router: "relation",
@@ -197,42 +259,147 @@ export default {
           router: "review",
         },
       ],
+      //举报相关
+      reportDialog: false,
+      reportForm: {
+        reportContent: "",
+        reportCommentId: "",
+      },
+      reportRule: {
+        reportContent: [
+          {
+            required: true,
+            message: "请输入举报理由",
+            trigger: "blur",
+          },
+          {
+            min: 5,
+            max: 800,
+            message: "举报理由长度在 5-800 个字符之间",
+            trigger: "blur",
+          },
+        ],
+      },
     };
   },
   methods: {
-    star() {
-      (this.staroff = !this.staroff), (this.staron = !this.staron);
+    collectLiterature() {
+      //未登录用户无法收藏
+      if (this.$store.state.userID == null) {
+        this.$notify.warning("您还未登录");
+      } else {
+        (this.staroff = !this.staroff), (this.staron = !this.staron);
+        collect(this.$store.state.userID, literature.literatureID).then(
+          (res) => {
+            //收藏成功
+            if (res == 0) {
+              this.$notify.success("收藏成功");
+            }
+            //收藏失败
+            else if (res == -1) {
+              this.$notify.warning("收藏失败");
+            }
+          }
+        );
+      }
+    },
+    referFormat() {
+      this.$refs.hover.showHover({
+        title: "引用文献",
+      });
+    },
+
+    reportLi() {
+      this.reportDialog = true;
+    },
+    // 举报
+    handleReport(formName) {
+      let pass = false;
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          pass = true;
+        }
+      });
+      if (!pass) return;
+
+      reportLiterature(
+        this.userId,
+        this.literature.literatureID,
+        this.literature.title,
+        this.reportForm.reportContent
+      )
+        .then((res) => {
+          console.log("report post");
+          console.log(res);
+          if (res == 0) {
+            this.reportDialog = false;
+          } else {
+            this.$notify.error("举报失败，请稍后再试。");
+          }
+        })
+        .catch((err) => {
+          this.$notify.error("举报失败，请稍后再试。");
+          console.log(err);
+        });
     },
     toChild(index) {
       let target = this.navList[index].router;
       this.$router.push("/literature/" + target);
     },
-    toAuthor(authorID) {
+    toAuthor(userID, authorID) {
       this.$router.push({
         path: "/profile",
         query: {
-          userID: authorID,
+          userID: userID,
+          autherID: authorID,
         },
       });
     },
+    searchKey(key) {
+      console.log(key);
+      let item = {
+        legical: "NULL",
+        type: "SU",
+        value: key,
+      };
+      search(item)
+        .then((res) => {
+          this.$router.push({
+            path: "/search",
+            query: {
+              start: "",
+              end: "",
+              litList1: res.literatureList1,
+              litList2: res.literatureList2,
+              authorList: res.authorList,
+              venueList: res.venueList,
+              yearList: res.yearList,
+            },
+          });
+        })
+        .catch((err) => {
+          this.$notify.error({
+            title: "错误",
+            message: "网络异常，请稍后重试",
+          });
+        });
+    },
   },
-  create(){
-    getLiterature(this.$route.query.literatureID)
-    .then(res => {
-      this.literature = res; 
-    })
+
+  created() {
+    getLiterature(this.$route.query.literatureID).then((res) => {
+      this.literature = res;
+    });
   },
   computed: {
     currentIndex() {
       switch (this.$route.path) {
-        case "/literature/reference":
-          return 0;
         case "/literature/relation":
-          return 1;
+          return 0;
         case "/literature/stats":
-          return 2;
+          return 1;
         case "/literature/review":
-          return 3;
+          return 2;
       }
     },
   },
@@ -399,6 +566,7 @@ export default {
   margin-top: 15px;
   font-size: 14px;
   display: flex;
+  -webkit-user-select: text;
 }
 .el-link {
   margin-right: 8px;
@@ -418,5 +586,31 @@ export default {
 }
 .el-menu {
   background: #e2ebf0;
+}
+.report-content {
+  margin-top: 10px;
+}
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  margin: auto;
+  padding-bottom: 10px;
+  width: 80%;
+}
+.footer .v-btn {
+  margin-right: 20px;
+}
+.el-form-item {
+  margin-bottom: 0;
+}
+.hover-referformat1 {
+  font-size: 12px;
+  margin-top: 20px;
+  -webkit-user-select: text;
+}
+.hover-referformat2 {
+  font-size: 12px;
+  margin-bottom: 30px;
+  -webkit-user-select: text;
 }
 </style>

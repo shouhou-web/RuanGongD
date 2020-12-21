@@ -264,8 +264,8 @@ import {
   deleteComment,
   commentPost
 } from "@/network/forum";
-import getLiterature from "@/network/literature";
-import MHeader from "../../components/common/m-header/m-header.vue";
+import { getLiterature } from "@/network/literature";
+import MHeader from "@/components/common/m-header/m-header";
 
 export default {
   name: "FormPost",
@@ -391,12 +391,12 @@ export default {
       });
     },
 
-    jumpToLiterature(literatureId) {
-      console.log("jump to " + literatureId);
+    jumpToLiterature(literatureID) {
+      console.log("jump to " + literatureID);
       this.$router.push({
         path: "/literature",
         query: {
-          // TODO
+          literatureID: literatureID
         }
       });
     },
@@ -603,9 +603,9 @@ export default {
   components: {},
   created() {
     this.postId = this.$route.query.postId;
-    // this.userId = this.$store.state.user.userID; // TODO 等待统一
-    // this.userName = this.$store.state.user.userName;
-    // this.userAvatar = this.$store.state.user.imagePath;
+    this.userId = this.$store.state.user.userID; // TODO 等待统一
+    this.userName = this.$store.state.user.userName;
+    this.userAvatar = this.$store.state.user.imagePath;
     console.log("postId: " + this.postId + "\nuserId: " + this.userId);
 
     getPostInfo(this.userId, this.postId)
@@ -903,7 +903,7 @@ html {
   height: 40px;
   width: 80px;
   align-items: center;
-  justify-content: end;
+  justify-content: flex-end;
   margin-left: auto;
   padding-right: 12px;
   color: rgb(96, 98, 102);

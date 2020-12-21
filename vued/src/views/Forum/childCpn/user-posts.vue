@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import getUserPosts from "network/forum.js";
+import { getUserPosts } from "@/network/forum";
 export default {
   name: "UserPosts",
   props: { userId: "" },
@@ -48,7 +48,7 @@ export default {
           viewNum: "1002001",
           sectorName: "计蒜姬科学与技术",
           createTime: "10分钟前",
-          tags: ["软件工程"],
+          tags: ["软件工程"]
         },
         {
           postId: "3",
@@ -57,7 +57,7 @@ export default {
           viewNum: "12",
           sectorName: "人因工程",
           createTime: "源赖氏佐天",
-          tags: [], // empty tags
+          tags: [] // empty tags
         },
         {
           postId: "233",
@@ -66,31 +66,31 @@ export default {
           viewNum: "10021",
           sectorName: "软妹工程",
           createTime: "2020-02-02",
-          tags: ["原力系统", "沟通技巧"],
-        },
-      ],
+          tags: ["原力系统", "沟通技巧"]
+        }
+      ]
     };
   },
   methods: {
     gotoPost(postId) {
       this.$router.push({
         path: "/forumPost",
-        query: { postId: postId },
+        query: { postId: postId }
       });
-    },
+    }
   },
   created() {
     console.log("userId = " + this.userId);
     getUserPosts(this.userId)
-      .then((res) => {
+      .then(res => {
         console.log("getUserPosts");
         console.log(res);
         this.posts = res.data.posts;
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
-  },
+  }
 };
 </script>
 
