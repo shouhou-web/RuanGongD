@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     submit() {
-      this.onShow = false;
+      // this.onShow = false;
       this.$emit("submit", this.title);
     },
     cancel() {
