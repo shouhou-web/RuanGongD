@@ -6,7 +6,8 @@
       <div class="user-profile">
         <div class="profile-info">
           <div class="headshot">
-            <img :src="user.image" class="headshot-img">
+            <img :src="user.image" class="headshot-img" v-if="user.image != null">
+            <img src="../../assets/image/no-img.png" class="headshot-img" v-else>
             <a class="headshot__hide" title="修改头像" @click="openChangeHeadshot" v-if="isSelfProfile">
               <img src="../../assets/image/edit.png" class="headshot__inner--samll">
             </a>
@@ -25,9 +26,10 @@
               <p v-else-if="this.$store.state.user.userDegree == 2">研究生 (Graduate)</p>
               <p v-else-if="this.$store.state.user.userDegree == 3">博士生 (Doctor)</p>
               <p v-else-if="this.$store.state.user.userDegree == 4">博士后 (Post-Doctoral)</p>
+              <p v-else>当前用户暂无该信息</p>
             </div>
-            <div class="user-phone">{{ user.phoneNumber }}</div>
-            <div class="user-email">{{ user.emailAddress }}</div>
+            <div class="user-phone">{{ user.phoneNumber }}<p v-if="user.phoneNumber == null">暂无联系方式</p></div>
+            <div class="user-email">{{ user.emailAddress }}<p v-if="user.emailAddress == null">暂无邮箱</p></div>
           </div>
         </div>
         <div class="profile-op">
@@ -462,6 +464,7 @@ export default {
   margin: 0 auto;
   border-radius: 50%;
   max-width: 80%;
+  border: 1px solid #dddddd;
 }
 
 .headshot__hide {
