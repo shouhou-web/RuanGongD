@@ -16,11 +16,15 @@
               {{ user.username }}
               <img src="../../assets/icons/profile/edit.svg" class="profile-icon" @click="openChangeProfileHover">
             </div>
-            <div class="user-degree" v-if="isSelfProfile">
+            <div class="user-degree" v-if="!isSelfProfile">
               {{ retUserDegree() }}
             </div>
             <div class="user-degree" v-else>
-              {{ retUserDegree() }}
+              <p v-if="this.$store.state.user.userDegree == 0">高中生 (High school)</p>
+              <p v-else-if="this.$store.state.user.userDegree == 1">本科生 (UnderGraduates)</p>
+              <p v-else-if="this.$store.state.user.userDegree == 2">研究生 (Graduate)</p>
+              <p v-else-if="this.$store.state.user.userDegree == 3">博士生 (Doctor)</p>
+              <p v-else-if="this.$store.state.user.userDegree == 4">博士后 (Post-Doctoral)</p>
             </div>
             <div class="user-phone">{{ user.phoneNumber }}</div>
             <div class="user-email">{{ user.emailAddress }}</div>
@@ -75,12 +79,14 @@
         </div>
         <div class="edit-body">
           <div class="edit-username" v-if="editOp == 0">
+            <img src="../../assets/icons/profile/userName.svg" class="degree-icon">
             <input class="hover-input" v-model="newNickName"></input>
           </div>
           <div class="edit-email" v-else-if="editOp == 1">
             <div class="input-email">
+              <img src="../../assets/icons/profile/email.svg" class="degree-icon">
               <input class="hover-input" v-model="newEmail" @focusout="checkEmail"></input>
-              <div :class="{ 'warning': emailWarning && !getRightEmail, 'none': !emailWarning && !getRightEmail, 'really-none': getRightEmail }">请使用*.edu.cn后缀的邮箱申请</div>
+              <div :class="{ 'warning': emailWarning, 'none': !emailWarning }">邮箱格式不正确</div>
               <div v-if="getRightEmail" class="code">
                 <div class="code-request" @click="requestCode">获取验证码</div>
                 <input v-model="editCode" class="code-input"></input>
@@ -90,10 +96,12 @@
           </div>
           <div class="edit-other" v-else-if="editOp == 2">
             <div>
+              <img src="../../assets/icons/profile/degree.svg" class="degree-icon">
+              <img src="../../assets/icons/profile/phone.svg" class="phone-icon">
               <select v-model="newDegree" class="hover-input">
                 <option v-for="option in options" v-bind:value="option.value">
                   {{ option.text }}
-                </option>
+                 </option>
               </select>
             </div>
             <input class="hover-input" v-model="newPhone"></input>
@@ -173,7 +181,7 @@ export default {
       newPhone: "",
       newEmail: "",
       editCode: "",
-      code: "",
+      code: null,
 
       dialogImageUrl: '',
       dialogVisible: false,
@@ -186,11 +194,11 @@ export default {
   },
   methods: {
     retUserDegree() {
-      if (this.userDegree == 0) return "高中生(High school)";
-      else if (this.userDegree == 1) return "本科生(UnderGraduates)";
-      else if (this.userDegree == 2) return "研究生(Graduate)";
-      else if (this.userDegree == 3) return "博士生(Doctor)";
-      else if (this.userDegree == 4) return "博士后(Post-Doctoral)";
+      if (this.userDegree == 0) return "高中生 (High school)";
+      else if (this.userDegree == 1) return "本科生 (UnderGraduates)";
+      else if (this.userDegree == 2) return "研究生 (Graduate)";
+      else if (this.userDegree == 3) return "博士生 (Doctor)";
+      else if (this.userDegree == 4) return "博士后 (Post-Doctoral)";
       else return "";
     },
     openChangeProfileHover() {
@@ -259,7 +267,10 @@ export default {
       .then((code) => {
         console.log("code", code)
         if (code == null) this.$notify.warning("验证码出现异常，请重试")
-        else this.code = code
+        else {
+          this.code = code
+          this.$notify.success("获取验证码成功，请查看邮箱")
+        }
       })
       .catch((err) => {
         this.$notify.error(
@@ -275,8 +286,11 @@ export default {
       if (this.editOp == 0) {
         editUserName(this.user.userID, this.newNickName)
         .then((res) => {
-          if (res == 0) this.$notify.success("用户名修改成功")
-          else if (res == 1) this.$notify.warning("用户名已被使用")
+          if (res == 0) {
+            this.$notify.success("用户名修改成功")
+            this.$store.commit("setUserName", this.newNickName)
+          }
+          else if (res == 1) this.$notify.warning("该用户名已被您或他人使用")
           else if (res == -1) this.$notify.error("修改异常，请检查网络")
         })
         .catch((err) => {
@@ -286,20 +300,22 @@ export default {
       // email
       else if (this.editOp == 1) {
         // 对邮箱进行正则判断
-        var emailReg = /^\d{8}@(buaa.edu.cn)+$/;
+        var emailReg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
 
         if (!emailReg.test(this.newEmail)) {
           this.emailWarning = true
           this.$notify.warning("请检查邮箱")
         }
         else {
-          if (this.editCode != this.code) {
-            this.$notify.warning("验证码错误")
-          }
+          if (this.code == null) this.$notify.warning("请先获取验证码")
+          else if (this.editCode != this.code) this.$notify.warning("验证码错误")
           else {
             editUserEmailAddress(this.user.userID, this.newEmail)
             .then((res) => {
-              if (res == 0) this.$notify.success("用户邮箱修改成功")
+              if (res == 0) {
+                this.$notify.success("用户邮箱修改成功")
+                this.$store.commit("setEmailAddress", this.newEmail)
+              }
               else if (res == 1) this.$notify.warning("邮箱已被使用")
               else if (res == -1) this.$notify.error("修改异常，请检查网络")
             })
@@ -319,24 +335,30 @@ export default {
           this.user.organization,
           this.newPhone)
           .then((res) => {
-            if (res == 0) this.$notify.success("修改成功")
+            if (res == 0) {
+              this.$notify.success("修改成功")
+              this.$store.commit("setPhoneNumber", this.newPhone)
+              this.$store.commit("setUserDegree", this.newDegree)
+            }
             else if (res == -1) this.$notify.error("修改异常，请检查网络")
           })
           .catch((err) => {
             this.$notify.error( { title: "网络错误", message: "请稍后重试~" } )
           })
       }
+      this.editOp = 0
     },
     submit() {
     },
     cancel() {
+      this.editOp = 0
     },
     changeEditOp(opID) {
       this.editOp = opID
     },
     checkEmail() {
       // 对邮箱进行正则判断
-      var emailReg = /^\d{8}@(buaa.edu.cn)+$/;
+      var emailReg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
 
       if (!emailReg.test(this.newEmail)) {
         this.emailWarning = true
@@ -377,6 +399,18 @@ export default {
 
       getUserIntro(this.user.authorID)
         .then((userIntro) => { this.userIntro = userIntro, console.log("intro", userIntro)})
+    }
+  },
+  watch: {
+    newEmail() {
+      var emailReg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+      if (emailReg.test(this.newEmail)) {
+        this.emailWarning = false
+        this.getRightEmail = true
+      } else {
+        this.emailWarning = true
+        this.getRightEmail = false
+      }
     }
   },
   components: {
@@ -1092,6 +1126,20 @@ export default {
   transition: ease-in-out 0.5s;
 }
 
+.degree-icon {
+  width: 25px;
+  position: absolute;
+  left: 90px;
+  top: 180px;
+}
+
+.phone-icon {
+  width: 25px;
+  position: absolute;
+  left: 90px;
+  top: 230px;
+}
+
 .hover-select {
   width: 70%;
   padding-top: 10px;
@@ -1124,15 +1172,17 @@ select {
   letter-spacing: 2px;
   margin: 0 auto;
   margin-top: 8px;
-  margin-left: 17%;
+  margin-bottom: 5px;
+  margin-left: 17.5%;
 }
 
 .none {
-  color: #a7a7a7;
+  color: #ffffff;
   font-size: 0.800rem;
   letter-spacing: 2px;
   margin: 0 auto;
   margin-top: 8px;
+  margin-bottom: 5px;
   margin-left: 17%;
 }
 
