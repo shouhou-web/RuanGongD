@@ -3,7 +3,7 @@
     <div class="title" @click="gotoLiterature()">{{ title }}</div>
     <div class="tags">
       <div v-for="(a_tag, i) in tags">
-        <div class="leftpart-tags">{{a_tag}}</div>
+        <div class="leftpart-tags" v-if="i < 3">{{a_tag}}</div>
       </div>
     </div>
     <div class="authors">
