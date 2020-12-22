@@ -432,15 +432,17 @@ export default {
         console.log(err);
       });
     //isFollowed
-    isFollowed(this.currentUser, this.sectorId)
-      .then(res => {
-        console.log("getPosts");
-        console.log(res);
-        this.isFollowed = res.followed;
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    if (this.logined) {
+      isFollowed(this.currentUser, this.sectorId)
+        .then(res => {
+          console.log("getPosts");
+          console.log(res);
+          this.isFollowed = res.followed;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
     //getPostNum
     getPostNum(this.sectorId)
       .then(res => {
