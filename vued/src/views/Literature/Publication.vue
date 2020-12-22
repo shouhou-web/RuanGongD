@@ -7,143 +7,146 @@
         <div class="pageName">发布文献</div>
       </div>
     </div>
-    <div class="formContent">
-      <v-card>
-        <v-card-title class="card-title">请填写各项文献相关信息</v-card-title>
+    <div class="pageBody">
+      <div class="formContent">
+        <v-card>
+          <v-card-title class="card-title">请填写各项文献相关信息</v-card-title>
 
-        <v-card-text>
-          <el-form :model="createLiForm" ref="createLiForm" label-width="100px" :rules="liRule">
-            <el-form-item label="文献标题" prop="title">
-              <el-input
-                placeholder="请输入文献标题"
-                v-model="createLiForm.title"
-                clearable
-                maxlength="51"
-              >
-              </el-input>
-            </el-form-item>
+          <v-card-text>
+            <el-form :model="createLiForm" ref="createLiForm" label-width="100px" :rules="liRule">
+              <el-form-item label="文献标题" prop="title">
+                <el-input
+                  placeholder="请输入文献标题"
+                  v-model="createLiForm.title"
+                  clearable
+                  maxlength="51"
+                >
+                </el-input>
+              </el-form-item>
 
-            <el-form-item label="文献年份" prop="year">
-              <el-input
-                placeholder="请输入文献年份"
-                v-model="createLiForm.year"
-                clearable
-                maxlength="51"
-              >
-              </el-input>
-            </el-form-item>
+              <el-form-item label="文献年份" prop="year">
+                <el-input
+                  placeholder="请输入文献年份"
+                  v-model="createLiForm.year"
+                  clearable
+                  maxlength="51"
+                >
+                </el-input>
+              </el-form-item>
 
-            <el-form-item label="被引数" prop="citation">
-              <el-input
-                placeholder="请输入被引数"
-                v-model="createLiForm.citation"
-                clearable
-                maxlength="51"
-              >
-              </el-input>
-            </el-form-item>
+              <el-form-item label="被引数" prop="citation">
+                <el-input
+                  placeholder="请输入被引数"
+                  v-model="createLiForm.citation"
+                  clearable
+                  maxlength="51"
+                >
+                </el-input>
+              </el-form-item>
 
-            <el-form-item label="文献链接" prop="url">
-              <el-input
-                placeholder="请输入文献链接"
-                v-model="createLiForm.url"
-                clearable
-                maxlength="51"
-              >
-              </el-input>
-            </el-form-item>
+              <el-form-item label="文献链接" prop="url">
+                <el-input
+                  placeholder="请输入文献链接"
+                  v-model="createLiForm.url"
+                  clearable
+                  maxlength="51"
+                >
+                </el-input>
+              </el-form-item>
 
-            <el-form-item label="出版者" prop="publisher">
-              <el-input
-                placeholder="请输入文献出版者"
-                v-model="createLiForm.publisher"
-                clearable
-                maxlength="51"
-              >
-              </el-input>
-            </el-form-item>
+              <el-form-item label="出版者" prop="publisher">
+                <el-input
+                  placeholder="请输入文献出版者"
+                  v-model="createLiForm.publisher"
+                  clearable
+                  maxlength="51"
+                >
+                </el-input>
+              </el-form-item>
 
-            <el-form-item label="文献摘要" prop="abstract">
-              <el-input
-                class="form-content"
-                type="textarea"
-                v-model="createLiForm.abstract"
-                placeholder="请输入文献摘要"
-                :autosize="{ minRows: 10, maxRows: 20 }"
-                resize="none"
-                maxlength="1501"
-              ></el-input>
-            </el-form-item>
+              <el-form-item label="文献摘要" prop="abstract">
+                <el-input
+                  class="form-content"
+                  type="textarea"
+                  v-model="createLiForm.abstract"
+                  placeholder="请输入文献摘要"
+                  :autosize="{ minRows: 10, maxRows: 20 }"
+                  resize="none"
+                  maxlength="1501"
+                ></el-input>
+              </el-form-item>
 
-            <el-form-item label="文献关键词" prop="keywords">
-              <v-combobox
-                v-model="createLiForm.keywords"
-                persistent-hint
-                hint="请输入关键词,最多5个"
-                clearable
-                multiple
-                small-chips
-                outlined
-                dense
-                color="rgb(64, 158, 255)"
-              ></v-combobox>
-            </el-form-item>
+              <el-form-item label="文献关键词" prop="keywords">
+                <v-combobox
+                  v-model="createLiForm.keywords"
+                  persistent-hint
+                  hint="请输入关键词,最多5个"
+                  clearable
+                  multiple
+                  small-chips
+                  outlined
+                  dense
+                  color="rgb(64, 158, 255)"
+                ></v-combobox>
+              </el-form-item>
 
-            <el-form-item label="文献来源" prop="venue">
-              <el-input
-                placeholder="请输入文献来源"
-                v-model="createLiForm.venue"
-                clearable
-                maxlength="51"
-              >
-              </el-input>
-            </el-form-item>
+              <el-form-item label="文献来源" prop="venue">
+                <el-input
+                  placeholder="请输入文献来源"
+                  v-model="createLiForm.venue"
+                  clearable
+                  maxlength="51"
+                >
+                </el-input>
+              </el-form-item>
 
-            <el-form-item label="文献作者" prop="author">
-              <v-combobox
-                v-model="createLiForm.authors"
-                persistent-hint
-                hint="请输入作者"
-                clearable
-                multiple
-                small-chips
-                outlined
-                dense
-                color="rgb(64, 158, 255)"
-              ></v-combobox>
-              <el-autocomplete
-                v-model="state"
-                :fetch-suggestions="querySearchAsync"
-                placeholder="请输入内容"
-                @keyup.enter.native="handleInputConfirm"
-                @select="handleSelect"
-              ></el-autocomplete>
-            </el-form-item>
-          </el-form>
-        </v-card-text>
+              <el-form-item label="文献作者" prop="author">
+                <v-combobox
+                  v-model="createLiForm.authors"
+                  persistent-hint
+                  hint="请输入作者"
+                  clearable
+                  multiple
+                  small-chips
+                  outlined
+                  dense
+                  color="rgb(64, 158, 255)"
+                ></v-combobox>
+                <el-autocomplete
+                  v-model="state"
+                  :fetch-suggestions="querySearchAsync"
+                  placeholder="请输入内容"
+                  @keyup.enter.native="handleInputConfirm"
+                  @select="handleSelect"
+                ></el-autocomplete>
+              </el-form-item>
+            </el-form>
+          </v-card-text>
 
-        <v-card-actions>
-          <div class="footer">
-            <l-button @click="submit('createLiForm')" size="small">发表</l-button>
-            <l-button @click="dialog = false" type="info" size="small">取消</l-button>
+          <v-card-actions>
+            <div class="footer">
+              <l-button @click="submit('createLiForm')" size="small">发表</l-button>
+              <l-button @click="dialog = false" type="info" size="small">取消</l-button>
+            </div>
+          </v-card-actions>
+          <v-divider></v-divider>
+        </v-card>
+
+      </div>
+      <div class="alert">
+        <el-card>
+          <div class="alert-header" >
+            <span>提示</span>
           </div>
-        </v-card-actions>
-        <v-divider></v-divider>
-      </v-card>
+          <div class="alert-body">
+            <i class="el-icon-document" style="font-size: 150px;text-align: center"></i>
+            <br>
+            <span>请填写文献各项信息，完成并提交后等待发布申请结果</span>
+          </div>
+        </el-card>
+      </div>
+    </div>
 
-    </div>
-    <div class="alert">
-      <el-card>
-        <div class="alert-header" >
-          <span>提示</span>
-        </div>
-        <div class="alert-body">
-          <i class="el-icon-document" style="font-size: 150px;text-align: center"></i>
-          <br>
-          <span>请填写文献各项信息，完成并提交后等待发布申请结果</span>
-        </div>
-      </el-card>
-    </div>
     <!--
     <div id="publication">
       <CreateLiterature></CreateLiterature>
@@ -398,18 +401,21 @@ export default {
     font-style: bold;
     height: 50px;
   }
+  .pageBody{
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+  }
   .formContent {
     width: 1100px;
-    margin-top: 1%;
-    margin-left: 19%;
-    float: left;
+    align-items: center;
+
   }
   .alert {
     width: 200px;
-    margin-top: 1%;
-    margin-left: 1%;
-    margin-right: 1%;
-    float: left;
+    height: 250px;
+    margin-left: 10px;
   }
   .alert-header{
     font-size: 20px;
