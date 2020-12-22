@@ -70,7 +70,7 @@
                 </div>
               </div>
             </div>
-            <div class="post-tags">
+            <div class="post-tags" v-if="postInfo.postTags[0] != ''">
               <div class="tag-item" v-for="tag in postInfo.postTags" :key="tag">
                 <div class="tag-content">{{ tag }}</div>
               </div>
@@ -501,10 +501,10 @@ export default {
                 type: "success"
               });
               // TODO 返回（到哪？）
-              // this.$router.push({
-              //   path: "/",
-              //   query: {},
-              // });
+              this.$router.push({
+                path: "/forumHome",
+                query: {}
+              });
             } else {
               this.$notify.error({
                 title: "操作失败",
@@ -604,8 +604,8 @@ export default {
   created() {
     this.postId = this.$route.query.postId;
     this.userId = this.$store.state.user.userID; // TODO 等待统一
-    this.userName = this.$store.state.user.userName;
-    this.userAvatar = this.$store.state.user.imagePath;
+    this.userName = this.$store.state.user.username;
+    this.userAvatar = this.$store.state.user.image;
     console.log("postId: " + this.postId + "\nuserId: " + this.userId);
 
     getPostInfo(this.userId, this.postId)
@@ -617,24 +617,27 @@ export default {
         this.postInfo.replyNum = res.replyNum;
         this.postInfo.viewNum = res.viewNum;
         this.postInfo.creatorId = res.creatorId;
+        this.postInfo.creatorName = res.creatorName;
         this.postInfo.creatorAvatar = res.creatorAvatar;
         this.postInfo.createTime = res.createTime;
         this.postInfo.postTags = res.tags;
         this.postInfo.citeId = res.citeId;
         this.comments = res.comments;
 
-        getLiterature(this.postInfo.citeId)
-          .then(res => {
-            console.log(getLiterature);
-            console.log(res);
-            this.citedLiterature.literatureID = res.literatureID;
-            this.citedLiterature.title = res.title;
-            this.citedLiterature.abstract =
-              res.abstract.slice(0, 150) + "..."; // 摘要截断
-          })
-          .catch(err => {
-            console.log(err);
-          });
+        if (this.postInfo.citeId != "-1") {
+          getLiterature(this.postInfo.citeId)
+            .then(res => {
+              console.log(getLiterature);
+              console.log(res);
+              this.citedLiterature.literatureID = res.literature.literatureID;
+              this.citedLiterature.title = res.literature.title;
+              this.citedLiterature.abstract =
+                res.literature.abstract.slice(0, 150) + "..."; // 摘要截断
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        }
       })
       .catch(err => {
         console.log(err);
