@@ -1,7 +1,7 @@
 <template>
   <div id="authorcard" class="authorcard">
     <div class="auth-top">
-      <div class="auth-title">相关研究者</div>
+      <div class="auth-title" @click="test()">相关研究者</div>
     </div>
     <div class="auth-bottom">
       <div class="auth-part1">
@@ -76,12 +76,14 @@ export default {
     };
   },
   methods: {
+    test(){
+      console.log(this.autherID);
+    },
     //跳转到个人门户
-    toAuthor(userID, authorID) {
+    toAuthor(authorID) {
       this.$router.push({
-        path: "/profile",
+        path: "/intro",
         query: {
-          userID: userID,
           autherID: authorID
         }
       });
@@ -116,8 +118,9 @@ export default {
   },
   created() {
     if (this.$store.state.user != null)
-      getIntroFollowStatus(this.$store.state.userID, this.authorID).then(
+      getIntroFollowStatus(this.$store.state.user.userID, this.authorID).then(
         res => {
+          console.log("followStatus", res);
           //已关注
           if (res == 1) {
             this.isFollowed = true;
@@ -129,9 +132,11 @@ export default {
         }
       );
     getAuthorInformation(this.authorID).then(res => {
+      console.log("authorcard");
       console.log("author", res);
       this.author = res;
     });
+    console.log(this.author);
   },
   components: {}
 };
@@ -213,10 +218,11 @@ export default {
   line-height: 16px;
   margin-right: 25px;
   text-align: justify;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 8;
-  overflow: hidden;
+
+    line-height:1.4em;
+    /* 3 times the line-height to show 3 lines */
+    height:4.2em;
+    overflow:hidden;
 }
 
 .authorcard .auth-part3 {

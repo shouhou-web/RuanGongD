@@ -1,5 +1,5 @@
 import { request } from "@/network/request";
-let baseURL = "http://185.133.193.251:8084";
+let baseURL = "http://60.205.189.66:8084";
 
 // 获取评论信息
 export function getCommentMsg(userID) {

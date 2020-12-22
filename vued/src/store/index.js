@@ -37,7 +37,11 @@ const state = {
   ],
   isAdvance: false, // 是否为高级检索状态
   start: "", // 开始时间
-  end: "" // 结束时间
+  end: "", // 结束时间
+  searchRes: {},
+  isHome: false,
+  ciationList: [],
+  collectList: []
 };
 
 const store = new Vuex.Store({

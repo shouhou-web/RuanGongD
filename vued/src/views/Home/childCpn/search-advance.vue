@@ -117,7 +117,7 @@ export default {
       if (this.isAdvance && this.isShow) {
         let h = 51 * this.$store.state.searchList.length;
         h += (this.$store.state.searchList.length - 1) * 10;
-        h += 28;
+        h += 48;
         return h + "px";
       } else return "50px";
     }
@@ -174,16 +174,17 @@ export default {
         advance(this.$store.state.searchList, this.start, this.end)
           .then(res => {
             console.log("advance", res);
+            this.$store.commit("setSearchRes", res);
             this.$router.push({
               path: "/search",
               query: {
                 start: this.start,
-                end: this.end,
-                litList1: res.literatureList1,
-                litList2: res.literatureList2,
-                authorList: res.authorList,
-                venueList: res.venueList,
-                yearList: res.yearList
+                end: this.end
+                // litList1: res.literatureList1,
+                // litList2: res.literatureList2,
+                // authorList: res.authorList,
+                // venueList: res.venueList,
+                // yearList: res.yearList
               }
             });
           })
@@ -197,16 +198,17 @@ export default {
         search(this.$store.state.searchList[0])
           .then(res => {
             console.log("search", res);
+            this.$store.commit("setSearchRes", res);
             this.$router.push({
               path: "/search",
               query: {
                 start: this.start,
                 end: this.end,
-                litList1: res.literatureList1,
-                litList2: res.literatureList2,
-                authorList: res.authorList,
-                venueList: res.venueList,
-                yearList: res.yearList
+                // litList1: res.literatureList1,
+                // litList2: res.literatureList2,
+                // authorList: res.authorList,
+                // venueList: res.venueList,
+                // yearList: res.yearList
               }
             });
           })

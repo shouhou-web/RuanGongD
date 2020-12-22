@@ -5,7 +5,7 @@
     <m-app-header></m-app-header>
 
     <!-- 动态内容 -->
-    <div class="post-container">
+    <div class="post-container" v-if="displayAll">
       <div class="card">
         <div class="card-header">
           <div class="avatar">
@@ -18,7 +18,7 @@
           <div class="poster-name">
             {{ postInfo.creatorName }}
           </div>
-          <div class="post-action">
+          <div class="post-action" v-if="logined">
             <v-btn
               icon
               v-if="postInfo.creatorId == userId"
@@ -70,13 +70,13 @@
                 </div>
               </div>
             </div>
-            <div class="post-tags">
+            <div class="post-tags" v-if="postInfo.postTags != null && postInfo.postTags[0] != ''">
               <div class="tag-item" v-for="tag in postInfo.postTags" :key="tag">
                 <div class="tag-content">{{ tag }}</div>
               </div>
             </div>
             <div class="post-reply-button" @click="jumpToComment">
-              <v-btn color="var(--color-main)">
+              <v-btn color="var(--color-main)" v-if="logined">
                 <font color="white">评论动态</font>
               </v-btn>
             </div>
@@ -86,7 +86,7 @@
     </div>
 
     <!-- 评论区 -->
-    <div class="comment-container" v-if="comments.length >= 1">
+    <div class="comment-container" v-if="comments.length >= 1 && displayAll">
       <div class="card">
         <div
           class="child-card"
@@ -119,7 +119,7 @@
             <div class="comment-time">
               {{ comment.commentTime }}
             </div>
-            <div class="comment-action">
+            <div class="comment-action" v-if="logined">
               <v-btn
                 icon
                 v-if="comment.commenterId == userId"
@@ -147,7 +147,7 @@
       </div>
     </div>
 
-    <div class="input-container">
+    <div class="input-container" v-if="displayAll && logined">
       <div class="card">
         <div class="card-header">
           <div class="avatar">
@@ -271,6 +271,7 @@ export default {
   name: "FormPost",
   data() {
     return {
+      displayAll: true,
       isAuthor: false,
       userId: "1",
       userName: "Codevka",
@@ -300,74 +301,9 @@ export default {
           (v.length <= 600 && v.length >= 5) ||
           "举报内容长度在 5-600 个字符之间"
       ],
-      postInfo: {
-        creatorId: "1",
-        creatorName: "Codevka",
-        creatorAvatar: "https://i.loli.net/2020/11/26/soiOjIlZFpELuTW.png",
-        postName: "Lorem ipsum dolor sit amet, consectetur adipisicing elit",
-        postContent:
-          "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        createTime: "2020-11-26",
-        postTags: ["Lorem", "ipsum", "dolor"],
-        viewNum: "1926",
-        replyNum: "817",
-        citeId: "123"
-      },
-      comments: [
-        {
-          commentId: "1",
-          commenterId: "14",
-          commenterName: "BI",
-          commenterAvatar: "https://i.loli.net/2020/11/27/9fbGvYknV8KejFS.png",
-          floor: 2,
-          commentContent: "AI nb!",
-          commentTime: "今天 11:45"
-        },
-        {
-          commentId: "2",
-          commenterId: "13",
-          commenterName: "AI",
-          commenterAvatar: "https://i.loli.net/2020/11/27/3tz2XEraSwl8skK.png",
-          floor: 3,
-          commentContent: "BI nb!",
-          commentTime: "1926-08-17"
-        },
-        //   {
-        //     commentId: "4",
-        //     commenterId: "1234",
-        //     commenterName: "CI",
-        //     commenterAvatar: "https://i.loli.net/2020/11/27/3tz2XEraSwl8skK.png",
-        //     floor: 5,
-        //     commentContent: "DI nb!",
-        //     commentTime: "8 分钟前",
-        //   },
-        {
-          commentId: "3",
-          commenterId: "12",
-          commenterName: "Spam  Bot",
-          commenterAvatar: "https://i.loli.net/2020/11/30/jm2i7g9qL61SkE8.png",
-          floor: 4,
-          commentContent:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-          commentTime: "刚刚"
-        },
-        {
-          commentId: "1233",
-          commenterId: "1",
-          commenterName: "Codevka",
-          commenterAvatar: "https://i.loli.net/2020/11/26/soiOjIlZFpELuTW.png",
-          floor: 5,
-          commentContent: "No spam.",
-          commentTime: "刚刚"
-        }
-      ],
-      citedLiterature: {
-        literatureID: "123",
-        title: "Lorem ipsum dolor sit amet",
-        abstract:
-          "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, ..."
-        // 只显示摘要的前150行
-      }
+      postInfo: {},
+      comments: [],
+      citedLiterature: {}
     };
   },
   methods: {
@@ -422,7 +358,7 @@ export default {
           .then(res => {
             console.log("report post");
             console.log(res);
-            if (res.data.result == "true") {
+            if (res.result == "true") {
               this.reportDialog = false;
               this.$notify({
                 title: "操作成功",
@@ -452,7 +388,7 @@ export default {
           .then(res => {
             console.log("report comment");
             console.log(res);
-            if (res.data.result == "true") {
+            if (res.result == "true") {
               this.reportDialog = false;
               this.$notify({
                 title: "操作成功",
@@ -493,7 +429,7 @@ export default {
           .then(res => {
             console.log("delete post");
             console.log(res);
-            if (res.data.result == "true") {
+            if (res.result == "true") {
               this.deleteDialog = false;
               this.$notify({
                 title: "操作成功",
@@ -501,10 +437,10 @@ export default {
                 type: "success"
               });
               // TODO 返回（到哪？）
-              // this.$router.push({
-              //   path: "/",
-              //   query: {},
-              // });
+              this.$router.push({
+                path: "/forumHome",
+                query: {}
+              });
             } else {
               this.$notify.error({
                 title: "操作失败",
@@ -524,7 +460,7 @@ export default {
           .then(res => {
             console.log("delete comment");
             console.log(res);
-            if (res.data.result == "true") {
+            if (res.result == "true") {
               this.deleteDialog = false;
 
               for (var i = 0; i < this.comments.length; i++) {
@@ -566,7 +502,7 @@ export default {
         .then(res => {
           console.log("comment post");
           console.log(res);
-          if (res.data.result == "true") {
+          if (res.result == "true") {
             var len = this.comments.length;
             this.comments.push({
               commentId: "1",
@@ -601,43 +537,62 @@ export default {
     }
   },
   components: {},
+  computed: {
+    logined() {
+      return (
+        this.$store.state.user != null &&
+        typeof this.$store.state.user.userID != undefined
+      );
+    }
+  },
   created() {
     this.postId = this.$route.query.postId;
-    this.userId = this.$store.state.user.userID; // TODO 等待统一
-    this.userName = this.$store.state.user.userName;
-    this.userAvatar = this.$store.state.user.imagePath;
+    if (this.logined) {
+      this.userId = this.$store.state.user.userID; // TODO 等待统一
+      this.userName = this.$store.state.user.username;
+      this.userAvatar = this.$store.state.user.image;
+    }
     console.log("postId: " + this.postId + "\nuserId: " + this.userId);
 
     getPostInfo(this.userId, this.postId)
       .then(res => {
         console.log("getPostInfo");
         console.log(res);
-        this.postInfo.postName = res.data.postName;
-        this.postInfo.postContent = res.data.postContent;
-        this.postInfo.replyNum = res.data.replyNum;
-        this.postInfo.viewNum = res.data.viewNum;
-        this.postInfo.creatorId = res.data.creatorId;
-        this.postInfo.creatorAvatar = res.data.creatorAvatar;
-        this.postInfo.createTime = res.data.createTime;
-        this.postInfo.postTags = res.data.tags;
-        this.postInfo.citeId = res.data.citeId;
-        this.comments = res.data.comments;
+        this.postInfo.postName = res.postName;
+        this.postInfo.postContent = res.postContent;
+        this.postInfo.replyNum = res.replyNum;
+        this.postInfo.viewNum = res.viewNum;
+        this.postInfo.creatorId = res.creatorId;
+        // this.postInfo.creatorId = "4F146CCD";
+        this.postInfo.creatorName = res.creatorName;
+        this.postInfo.creatorAvatar = res.creatorAvatar;
+        this.postInfo.createTime = res.createTime;
+        this.postInfo.postTags = res.tags;
+        this.postInfo.citeId = res.citeId;
+        this.comments = res.comments;
 
-        getLiterature(this.postInfo.citeId)
-          .then(res => {
-            console.log(getLiterature);
-            console.log(res);
-            this.citedLiterature.literatureID = res.data.literatureID;
-            this.citedLiterature.title = res.data.title;
-            this.citedLiterature.abstract =
-              res.data.abstract.slice(0, 150) + "..."; // 摘要截断
-          })
-          .catch(err => {
-            console.log(err);
-          });
+        if (this.postInfo.citeId != "-1") {
+          getLiterature(this.postInfo.citeId)
+            .then(res => {
+              console.log(getLiterature);
+              console.log(res);
+              this.citedLiterature.literatureID = res.literature.literatureID;
+              this.citedLiterature.title = res.literature.title;
+              this.citedLiterature.abstract =
+                res.literature.abstract.slice(0, 150) + "..."; // 摘要截断
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        }
       })
       .catch(err => {
         console.log(err);
+        this.displayAll = false;
+        this.$notify.error({
+          title: "操作失败",
+          message: "动态不存在"
+        });
       });
 
     this.comments.sort(function(a, b) {

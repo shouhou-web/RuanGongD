@@ -49,7 +49,8 @@
 
             <div class="form-item">
               <div class="form-label">
-                <span class="required-star">*</span>分区
+                <span class="required-star" v-if="!this.sectorfixed">*</span
+                >分区
               </div>
               <v-select
                 v-model="createPostForm.sectorId"
@@ -63,6 +64,7 @@
                 color="var(--color-main)"
                 dense
                 :rules="rules.sectorIdRule"
+                :disabled="sectorfixed"
               >
               </v-select>
             </div>
@@ -144,7 +146,7 @@ import { createPost, getAllTags } from "@/network/forum";
 import { getMyLiterature } from "@/network/literature";
 export default {
   name: "CreatePost",
-  props: {},
+  props: { sectorId: { type: String, default: "" } },
   data() {
     return {
       dialog: false, // 是否展示悬浮窗
@@ -152,6 +154,7 @@ export default {
       search: "", // 搜索的 tag
       selectedLiterature: {},
       createPostFormValid: false,
+      sectorfixed: false,
       rules: {
         postNameRule: [
           v => !!v,
@@ -211,21 +214,21 @@ export default {
         citeId: "-1" // 引用的文献 ID
       },
       sectorList: [
-        {
-          sectorId: 1,
-          sectorName: "软妹工程",
-          sectorTags: ["软妹工程基础", "原力系统", "软妹分析与设计"]
-        },
-        {
-          sectorId: 2,
-          sectorName: "计蒜姬科学与技术",
-          sectorTags: ["计蒜姬组成原理", "计蒜姬科学方法论"]
-        },
-        {
-          sectorId: 123,
-          sectorName: "人工智障",
-          sectorTags: ["浅度学习", "学不动了", "炼丹术"]
-        }
+        // {
+        //   sectorId: "1",
+        //   sectorName: "软妹工程",
+        //   sectorTags: ["软妹工程基础", "原力系统", "软妹分析与设计"]
+        // },
+        // {
+        //   sectorId: "2",
+        //   sectorName: "计蒜姬科学与技术",
+        //   sectorTags: ["计蒜姬组成原理", "计蒜姬科学方法论"]
+        // },
+        // {
+        //   sectorId: "3",
+        //   sectorName: "人工智障",
+        //   sectorTags: ["浅度学习", "学不动了", "炼丹术"]
+        // }
       ], // 可选分区列表
       myLiteratureList: [] // 我的文献列表
     };
@@ -235,12 +238,12 @@ export default {
       // for test
       console.log(this.createPostForm);
       // for test
-
+      //this.createPostForm.sectorId = this.createPostForm.sectorId.toString();
       createPost(this.createPostForm)
         .then(res => {
           console.log("createPost");
           console.log(res);
-          if (res.data.result == "true") {
+          if (res.result == "true") {
             this.dialog = false;
             this.createPostForm = {
               userId: this.$store.state.user.userID,
@@ -257,7 +260,7 @@ export default {
             });
             this.$router.push({
               path: "/forumPost",
-              query: { postId: res.data.postId }
+              query: { postId: res.postId }
             });
           } else {
             /*this.$message.error({
@@ -307,18 +310,44 @@ export default {
           0,
           this.createPostForm.postTags.length
         );
+    },
+    sectorId(newVal) {
+      console.log("传入createPost的sectorId: " + newVal);
+      this.sectorId = newVal;
     }
   },
   created() {
     this.userId = this.$store.state.user.userID; // TODO 等待统一
     this.createPostForm.userId = this.userId;
     this.createPostForm.citeId = "-1";
+    if (this.sectorId != "") {
+      //this.createPostForm.sectorId = parseInt(this.sectorId);
+      this.createPostForm.sectorId = this.sectorId;
+      this.sectorfixed = true;
+    }
     // 获取所有分区，以及每个分区下的 tag
     getAllTags()
       .then(res => {
         console.log("getAllTags");
         console.log(res);
-        this.sectorList = res.data.sectorList;
+        var obj = {
+          sectorId: "",
+          sectorName: "",
+          sectorTags: []
+        };
+        for (var sector of res.sectors) {
+          obj.sectorId = sector.sectorId;
+          obj.sectorName = sector.sectorName;
+          obj.sectorTags = [];
+          for (var str of sector.sectorTags) {
+            var taglist = str.split(";");
+            for (var tag of taglist) {
+              obj.sectorTags.push(tag);
+              // console.log("tag = " + tag);
+            }
+          }
+          this.sectorList.push({ ...obj });
+        }
       })
       .catch(err => {
         console.log(err);
@@ -328,7 +357,7 @@ export default {
         console.log("getMyLiterature");
         console.log(res);
         var tmpLiterature = Object;
-        for (var literature of res.data.myLiteratureList) {
+        for (var literature of res) {
           // for (var literature of tmpList) {
           tmpLiterature.literatureID = literature.literatureID;
           tmpLiterature.title = literature.title;

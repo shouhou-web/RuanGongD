@@ -14,18 +14,24 @@
               {{ intro.organization }}
             </div>
           </div>
-          <div class="publish">
-            <create_literature v-if="isApplied && isSelfIntro"></create_literature>
+          <div :class="{'publish': !isSelfIntro, 'publish-n': isSelfIntro}">
+            <div v-if="isApplied && isSelfIntro" class="publish-button" @click="gotoPublish">发表文献</div>
             <div v-if="isApplied && !isSelfIntro && !isFollowing" class="publish-button">关注</div>
             <div v-if="isApplied && !isSelfIntro && isFollowing" class="publish-button-nice" @click="cancleFollowIntro">已关注</div>
             <div v-if="!isApplied" class="publish-button-apply" @click="applyIntro">申请认证当前门户</div>
+            <div v-if="!isSelfIntro" class="publish-button" @click="isSend = true" style="margin-top: 20px">私信</div>
+            <create-consultation
+              :display="isSend"
+              :senderID="this.$store.state.user.userID"
+              :receiverID="intro.authorID"
+              @closeDialog="closeSend"></create-consultation>
           </div>
         </div>
         <div class="profile-op">
           <div class="op-switch">
             <div class="op-all" @click="opSwitch(0)">个人文献</div>
-            <div class="op-all" @click="opSwitch(1)">个人动态</div>
-            <div class="op-all" @click="opSwitch(2)">收藏文献</div>
+            <div class="op-all" @click="opSwitch(1)" v-if="isApplied">个人动态</div>
+            <div class="op-all" @click="opSwitch(2)" v-if="isApplied">收藏文献</div>
           </div>
           <div :class="{ 'bar': opID == 0, 'bar-change-1': opID == 1, 'bar-change-2': opID == 2 }"></div>
         </div>
@@ -34,9 +40,9 @@
     <div class="intro-content">
       <div class="content-left">
 <!--        <my-literatures :userID="intro.userID" v-if="opID == 0"></my-literatures>-->
-        <manage :userID="intro.userID" v-if="opID == 0"></manage>
-        <user-posts :userId="intro.userID" v-if="opID == 1"></user-posts>
-        <favor :userID="intro.userID" v-if="opID == 2"></favor>
+        <manage :userID="intro.authorID" v-if="opID == 0"></manage>
+        <user-posts :userId="intro.userID" v-if="opID == 1 && isApplied"></user-posts>
+        <favor :userID="intro.userID" v-if="opID == 2 && isApplied"></favor>
       </div>
       <div class="content-right">
         <div class="chart-part">
@@ -72,6 +78,7 @@ import create_literature from "@/views/Literature/childCpn/create_literature";
 import Favor from "@/views/Profile/Favor";
 import Manage from "@/views/Literature/Manage";
 import { getIntroFollowStatus, getPublishState, getAuthorInformation, follow } from "@/network/profile";
+import CreateConsultation from "@/views/Forum/childCpn/create-consultation";
 
 require('echarts/lib/chart/bar')
 require('echarts/lib/chart/line')
@@ -126,11 +133,22 @@ export default {
           },
         ]
       },
+
+      isSend: false
     }
   },
   methods: {
     opSwitch(opID) {
       this.opID = opID
+    },
+    gotoPublish() {
+      this.$router.push(
+        {
+          path: "/publication",
+          query: {
+            authorID: this.intro.authorID
+          }
+      })
     },
     cancleFollowIntro() {
       follow(this.$route.query.userID, this.intro.authorID, 0)
@@ -147,16 +165,18 @@ export default {
         {
           path: "/applyIntro",
           query: {
-            userID: this.$route.query.userID,
             authorID: this.intro.authorID
           }
         })
+    },
+    closeSend() {
+      this.isSend = false
     }
   },
   created() {
     // 进入个人门户
     let authorID = this.$route.query.authorID
-    let userID = this.$route.query.userID
+    let authorUserID = this.$route.query.userID
     let see = this.$route.query.see
 
     if (see == null) this.opID = 0
@@ -165,10 +185,11 @@ export default {
     // 获取intro
     getAuthorInformation(authorID)
     .then((intro) => {
+      console.log("intro: ", intro)
       this.intro = intro
 
       // 该门户是否被认领
-      if (intro.userID = null) this.isApplied = false
+      if (intro.userID == null) this.isApplied = false
       else this.isApplied = true
     })
     .catch((err) => {
@@ -181,7 +202,7 @@ export default {
     })
 
     // 判断当前门户状态
-    getIntroFollowStatus(userID, authorID)
+    getIntroFollowStatus(this.$store.state.user.userID, authorID)
     .then((res) => {
       if (res == 0) this.isSelfIntro = true
       else if (res == 1) this.isFollowing = true
@@ -190,7 +211,7 @@ export default {
         this.isFollowing = false
       }
       else if (res == -1) this.$notify.error("获取当前门户信息出错，请重试")
-      else this.$notify.error("出现其他异常，请联系管理人员")
+      else this.isApplied = false
     })
     .catch((err) => {
       this.$notify.error(
@@ -217,6 +238,7 @@ export default {
     })
   },
   components: {
+    CreateConsultation,
     Favor,
     create_literature,
     UserPosts,
@@ -261,7 +283,6 @@ export default {
 .intro-headshot {
   width: 130px;
   height: 100%;
-  /*border: 1px solid red;*/
   display: flex;
   align-items: center;
 }
@@ -270,6 +291,7 @@ export default {
   margin: 0 auto;
   border-radius: 50%;
   max-width: 80%;
+  border: 1px solid #dddddd;
 }
 
 .introName {
@@ -299,6 +321,16 @@ export default {
 }
 
 .publish {
+  width: calc(100% - 130px - 665px);
+  height: 100%;
+  /*border: 1px solid red;*/
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.publish-n {
   width: calc(100% - 130px - 665px);
   height: 100%;
   /*border: 1px solid red;*/

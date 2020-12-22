@@ -155,6 +155,10 @@ export default {
   margin-left: 10px;
   line-height: 1em;
   flex: 1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-break: break-all;
 }
 
 .main__value {

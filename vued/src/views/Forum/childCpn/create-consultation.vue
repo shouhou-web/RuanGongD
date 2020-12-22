@@ -97,7 +97,7 @@ export default {
       )
         .then(res => {
           console.log("createConsultation");
-          if (res.data.result == "true") {
+          if (res.result == "true") {
             this.$notify({
               title: "操作成功",
               message: "咨询消息发送成功",
@@ -125,66 +125,9 @@ export default {
   },
   components: {},
   computed: {
-    getSectorTags: function() {
-      let sectorId = this.createConsultationForm.sectorId;
-      for (let i = 0; i < this.sectorList.length; i++) {
-        // console.log(this.sectorList[i]);
-        if (this.sectorList[i].sectorId == sectorId)
-          return this.sectorList[i].sectorTags;
-      }
-      return [];
-    }
-  },
-  watch: {
-    "createConsultationForm.postTags"(val) {
-      if (val.length > 5) {
-        // 限制最多可选 5 个标签
-        this.$nextTick(() => this.createConsultationForm.postTags.pop());
-      }
-    },
-    "createConsultationForm.sectorId"(val, oldVal) {
-      // 切换分区清空已选标签
-      if (val != oldVal)
-        this.createConsultationForm.postTags.splice(
-          0,
-          this.createConsultationForm.postTags.length
-        );
-    }
   },
   created() {
-    this.userId = this.$store.state.user.userID; // TODO 等待统一
-    this.createConsultationForm.userId = this.userId;
-    this.createConsultationForm.citeId = "-1";
-    // 获取所有分区，以及每个分区下的 tag
-    getAllTags()
-      .then(res => {
-        console.log("getAllTags");
-        console.log(res);
-        this.sectorList = res.data.sectorList;
-      })
-      .catch(err => {
-        console.log(err);
-      });
-    getMyLiterature(this.userId)
-      .then(res => {
-        console.log("getMyLiterature");
-        console.log(res);
-        var tmpLiterature = Object;
-        for (var literature of res.data.myLiteratureList) {
-          // for (var literature of tmpList) {
-          tmpLiterature.literatureID = literature.literatureID;
-          tmpLiterature.title = literature.title;
-          tmpLiterature.authors = [];
-          for (var author of literature.authors) {
-            tmpLiterature.authors.push(author.userName);
-          }
-          this.myLiteratureList.push({ ...tmpLiterature });
-        }
-        console.log(this.myLiteratureList);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    
   }
 };
 </script>

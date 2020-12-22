@@ -63,10 +63,22 @@ const mutations = {
     state.user.emailAddress = emailAddress;
   },
   setPhoneNumber(state, phone) {
-    state.user.phoneNumber = phone
+    state.user.phoneNumber = phone;
   },
   setUserDegree(state, degree) {
-    state.user.userDegree = degree
+    state.user.userDegree = degree;
+  },
+  setSearchRes(state, res) {
+    console.log(res);
+    state.searchRes = res;
+  },
+  setHomeCollect(state, collect) {
+    state.isHome = true;
+    state.collectList = collect;
+  },
+  setHomeCiation(state, ciation) {
+    state.isHome = true;
+    state.ciationList = ciation;
   }
 };
 

@@ -1,18 +1,18 @@
 <template>
   <div class="one-follow-literature">
-    <y-literature
+    <!-- <y-literature
       :title="refer.title"
       :id="refer.literatureID"
       :authors="refer.authors"
       :tags="refer.keyWord"
       :read_time="refer.year"
-    ></y-literature>
+    ></y-literature> -->
 
-    <!-- <div class="title" @click="toLiterature(refer.literatureID)">{{ refer.title }}</div>
+    <div class="title" @click="toLiterature(refer.literatureID)">{{ refer.title }}</div>
     <div class="test1">
       <div class="authors">
-        <div v-for="(item, index) in refer.authorList" class="author-list">
-          <img :src="item.image" class="authorImg" />
+        <div v-for="(item, index) in refer.authors" class="author-list" v-if="index<3">
+          <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=249589786,2941481629&fm=26&gp=0.jpg" class="authorImg" />
           <div class="authorname" @click="toAuthor(item.autherID)">{{ item.realName }}</div>
         </div>
       </div>
@@ -25,16 +25,16 @@
       {{ refer.abstract }}
     </div>
     <div class="keyWord">
-      <div v-for="(item, index) in refer.keyWord" class="keyWord-list">
+      <div v-for="(item, index) in refer.keyWord" class="keyWord-list" v-if="index<3">
           <div class="key">{{ item}}</div>
         </div>
     </div>
-    <div class="read-time">
+    <!-- <div class="read-time">
       <div class="read-time-content">{{ refer.readTimes }} Reads</div>
-    </div>
+    </div> -->
     <div class="literature-ops">
       <div class="one-op"></div>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -50,12 +50,12 @@ export default {
     YLiterature
   },
   created() {
-    console.log(this.refer);
+    console.log("followingcard"+this.refer);
   },
   methods: {
     toAuthor(authorID) {
       this.$router.push({
-        path: "/profile",
+        path: "/intro",
         query: {
           userID: authorID
         }
@@ -65,9 +65,10 @@ export default {
       this.$router.push({
         path: "/literature",
         query: {
-          userID: literatureID
+          literatureID: literatureID
         }
       });
+      this.$router.go(0);
     }
   }
 };
@@ -134,8 +135,8 @@ export default {
 }
 
 .authorImg {
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
   border-radius: 50%;
   margin-top: 1.5px;
   margin-left: 5px;
@@ -155,10 +156,10 @@ export default {
 .time {
   align-self: flex-end;
   margin-left: 40px;
-  padding-bottom: 5px;
+  padding-bottom: 10px;
 }
 
-.read-time {
+/* .read-time {
   width: 100%;
   height: 25px;
   font-size: 0.8rem;
@@ -169,7 +170,7 @@ export default {
 .read-time-content {
   height: 100%;
   margin-top: 3px;
-}
+} */
 
 .brief {
   font-size: 14px;

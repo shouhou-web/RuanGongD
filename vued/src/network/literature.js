@@ -1,5 +1,5 @@
 import { request } from "@/network/request";
-let baseURL = "http://185.133.193.251:8081";
+let baseURL = "http://60.205.189.66:8081";
 
 // 修改文献链接
 export function editLiterature(userID, Lid, url) {
@@ -84,12 +84,16 @@ export function getStats(literatureID) {
 }
 
 //收藏文献
-export function collect(userID, literatureID) {
+export function collect(userID, literatureID,year,venue, title, option) {
   return request(baseURL, {
     url: "/collect",
     params: {
       userID,
-      literatureID
+      literatureID,
+      year,
+      venue,
+      title,
+      option
     },
     method: "post"
   });
@@ -118,14 +122,14 @@ export function getMyLiterature(authorID) {
 }
 
 //举报文献
-export function reportLiterature(userID, literatureID, title, Content) {
+export function reportLiterature(userID, literatureID, title, content) {
   return request(baseURL, {
     url: "/reportLiterature",
     params: {
       userID,
       literatureID,
       title,
-      Content
+      content
     },
     method: "post"
   });
@@ -150,6 +154,19 @@ export function comment(userID, literatureID, content) {
       userID,
       literatureID,
       content
+    },
+    method: "post"
+  });
+}
+
+
+//获取收藏状态
+export function getcollect(userID, literatureID) {
+  return request(baseURL, {
+    url: "/getcollect",
+    params: {
+      userID,
+      literatureID,
     },
     method: "post"
   });

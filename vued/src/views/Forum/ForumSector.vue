@@ -5,6 +5,12 @@
     <div class="pageHeaderBg">
       <div class="pageHeader">
         <div class="sectorName">{{ sectorName }}</div>
+        <div class="sectorCreatePost">
+          <create-post v-if="logined" :sectorId="sectorId"></create-post
+          ><v-btn disabled v-if="!logined">
+            <div>登录以发表动态</div>
+          </v-btn>
+        </div>
         <v-divider></v-divider>
         <div class="sectorTool">
           <el-row>
@@ -69,12 +75,15 @@
             <el-col :span="2">
               <v-btn
                 class="toolButton"
-                dark
                 small
                 elevation="1"
                 color="#4F6EF2"
                 @click="followSector()"
+                v-if="logined"
                 ><div>{{ followedText }}</div></v-btn
+              >
+              <v-btn class="toolButton" small disabled v-if="!logined"
+                ><div>关注</div></v-btn
               >
             </el-col>
           </el-row>
@@ -83,6 +92,9 @@
     </div>
     <div id="forumSector" data-app>
       <div>
+        <div class="postCard" v-if="posts.length == 0">
+          <div class="postsEmpty">無</div>
+        </div>
         <ul>
           <li v-for="(item, index) in posts" :key="index">
             <v-card class="postCard" elevation="1" tile>
@@ -178,6 +190,7 @@ import {
   getPostNum
 } from "network/forum.js";
 import MHeader from "../../components/common/m-header/m-header.vue";
+import CreatePost from "./childCpn/create-post.vue";
 export default {
   name: "ForumSector",
   data() {
@@ -193,15 +206,15 @@ export default {
       editStr0: "由 ",
       editStr1: "最后编辑于 ",
       pageSize: 0,
-      totalPosts: "50",
+      totalPosts: "0",
       sortType: [
         { name: "最近更新", type: "0" },
         { name: "开始日期", type: "1" },
         { name: "标题", type: "2" },
         { name: "最多回复", type: "3" }
       ],
-      //posts: [],
-      posts: [
+      posts: []
+      /*posts: [
         {
           postId: "01",
           postName: "测试动态1",
@@ -246,7 +259,7 @@ export default {
           editTime: "MM月dd日 HH:mm",
           tags: []
         }
-      ]
+      ]*/
     };
   },
   methods: {
@@ -282,7 +295,7 @@ export default {
         .then(res => {
           console.log("followSector");
           console.log(res);
-          if (res.data.result == "true") {
+          if (res.result == "true") {
             // alartSuccess
             this.$notify({
               title: "操作成功",
@@ -351,31 +364,38 @@ export default {
   computed: {
     total() {
       //return parseInt(this.totalPosts);
-      getPostNum(this.sectorId)
+      /*getPostNum(this.sectorId)
         .then(res => {
           console.log(res);
-          if (res.data.total) {
-            this.totalPosts = res.data.total;
+          if (res.total) {
+            this.totalPosts = res.total;
           }
         })
         .catch(err => {
           console.log(err);
-        });
+        });*/
       return parseInt(this.totalPosts);
     },
     currentPage() {
       return parseInt(this.page);
     },
     followedText() {
-      return this.followed == "0" ? "关注" : "已关注";
+      return this.followed === "0" ? "关注" : "已关注";
+    },
+    logined() {
+      console.log("logined");
+      console.log(this.$store.state.user != null);
+      console.log(typeof currentUser != undefined);
+      return this.$store.state.user != null && typeof currentUser != undefined;
     },
     currentUser() {
       //userId
       return this.$store.state.user.userID;
     }
   },
-  components: { MHeader },
+  components: { MHeader, CreatePost },
   created() {
+    //this.$store.commit("login", { userID: "123" });
     this.sectorId = this.$route.query.sectorId;
     this.page = this.$route.query.page || "1";
     this.sort = this.$route.query.sort || "0";
@@ -396,22 +416,41 @@ export default {
     );
     let start = ((parseInt(this.page) - 1) * this.pageSize).toString();
     //getPosts
-    getPosts(this.sectorId, start, this.pageSize, this.sort, this.keyword)
+    getPosts(
+      this.sectorId,
+      start,
+      this.pageSize.toString(),
+      this.sort,
+      this.keyword
+    )
       .then(res => {
         console.log("getPosts");
         console.log(res);
-        this.posts = res.data.posts;
-        this.followed = res.data.followed;
+        this.posts = res.posts;
       })
       .catch(err => {
         console.log(err);
       });
     //isFollowed
-    isFollowed(this.currentUser, this.sectorId)
+    if (this.logined) {
+      isFollowed(this.currentUser, this.sectorId)
+        .then(res => {
+          console.log("getPosts");
+          console.log(res);
+          this.isFollowed = res.followed;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+    //getPostNum
+    getPostNum(this.sectorId)
       .then(res => {
-        console.log("getPosts");
+        console.log("getPostNum");
         console.log(res);
-        this.isFollowed = res.data.followed;
+        if (res.total) {
+          this.totalPosts = res.total;
+        }
       })
       .catch(err => {
         console.log(err);
@@ -437,7 +476,7 @@ export default {
   margin-bottom: 1px;
   width: 900px;
   background-color: white;
-  height: 190px;
+  height: 240px;
   display: flex;
   flex-direction: column;
 }
@@ -447,9 +486,23 @@ export default {
   font-style: bold;
   height: 50px;
 }
+.sectorCreatePost {
+  height: 40px;
+  margin-top: 5px;
+  /*margin-left: 85.5%;*/
+  margin-left: 2%;
+  margin-bottom: 20px;
+}
 .sectorTool {
   height: 50px;
-  margin-top: 15px;
+  margin-top: 10px;
+}
+.postsEmpty {
+  color: grey;
+  font-family: "FangSong";
+  font-size: 100px;
+  margin-left: 400px;
+  margin-top: 100px;
 }
 .postCard {
   margin: 1px auto;
@@ -458,6 +511,7 @@ export default {
 }
 .toolButton {
   margin-top: 4px;
+  color: white;
 }
 .menu {
   font-size: 10px;
