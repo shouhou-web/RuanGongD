@@ -13,7 +13,7 @@
             <ul class="author-ul">
               <li
                 class="author"
-                v-for="(item, index) in literature.authorList"
+                v-for="(item, index) in literature.authors"
                 @click="toAuthor(item.userID, item.authorID)"
                 :key="index"
               >
@@ -38,6 +38,7 @@
             <el-link
               v-for="(item, index) in literature.keyWord"
               :key="index"
+              v-if="index<3"
               href="javascript:void(0);"
             >
               <span @click="searchKey(item)">{{ item }}</span>
@@ -194,6 +195,7 @@ import {
   commentPost
 } from "network/forum.js";
 import { search } from "network/search.js";
+import { getAuthorInformation } from '../../network/literature';
 
 export default {
   name: "Literature",
@@ -238,7 +240,7 @@ export default {
 
       //   abstract:
       //     "Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的Saber我的",
-      //   keyWord: ["Saber我的", "Saber我的", "Saber我的"],
+      //   keyWord: ["Saber我的", "Saber我的", "Saber我的", "Saber我的", "Saber我的", "Saber我的"],
       //   download: "",
       //   MLAformat:
       //     "[1]俞文雅,陶红武,曾顺,谭跃刚.四足机器人斜坡对角小跑运动控制研究[J].武汉科技大学学报,2021,44(01):60-67.",
@@ -246,7 +248,7 @@ export default {
       //   venue: "xxxxxxxx",
       //   doi: "123456"
       // }, //文献
-
+      authorList:[],
       staroff: true,
       staron: false,
       navList: [
@@ -291,10 +293,18 @@ export default {
       console.log(res.literature);
       this.literature = res.literature;
     });
+    for(let i=0; i<this.literature.authors;i++){
+      getAuthorInformation(literature.authors[i])
+      .then(res=>{
+        this.authorList[i] = res[i];
+      })
+    }
+    
   },
   methods: {
     collectLiterature() {
       //未登录用户无法收藏
+      console.log(this.literature);
       if (this.$store.state.user == null) {
         this.$notify.warning("您还未登录");
       } else {
@@ -302,6 +312,8 @@ export default {
         collect(
           this.$store.state.user.userID,
           this.literature.literatureID,
+          this.literature.year,
+          this.literature.venue,
           this.literature.title,
           option
         ).then(res => {
@@ -339,7 +351,7 @@ export default {
       if (!pass) return;
 
       reportLiterature(
-        this.userId,
+        this.$store.state.user.userID,
         this.literature.literatureID,
         this.literature.title,
         this.reportForm.reportContent
@@ -349,6 +361,7 @@ export default {
           console.log(res);
           if (res == 0) {
             this.reportDialog = false;
+            this.$notify.success("举报成功");
           } else {
             this.$notify.error("举报失败，请稍后再试。");
           }
@@ -356,6 +369,7 @@ export default {
         .catch(err => {
           this.$notify.error("举报失败，请稍后再试。");
           console.log(err);
+          console.log("test");
         });
     },
     toChild(index) {
@@ -563,9 +577,12 @@ export default {
   margin-bottom: 25px;
 }
 .abstract {
-  display: flex;
   text-align: left;
   letter-spacing: 0.5px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
 }
 .lable {
   display: inline-block;

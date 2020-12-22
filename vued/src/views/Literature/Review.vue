@@ -1,5 +1,6 @@
 <template>
   <div id="Review">
+    <div class="main">
     <!-- 评论区 -->
     <div class="comment-container" v-if="comments.length >= 1">
       <div class="card">
@@ -31,7 +32,7 @@
             <div class="comment-action">
               <v-btn
                 icon
-                v-if="comment.commenterId == userId"
+                v-if="comment.commenterId == $store.state.user.userID"
                 @click="showDelete(comment.commentId)"
               >
                 <!-- 是作者：可以删除评论 -->
@@ -51,16 +52,22 @@
         </div>
       </div>
     </div>
+    <div v-else class="nocomment">
+      <div class="nocomment-content">
+文章暂无评论
+      </div>
+      
+    </div>
     <div class="input-container">
       <div class="card">
         <div class="card-header">
           <div class="avatar">
             <v-avatar size="48px">
-              <img :src="userAvatar" />
+              <img :src="$store.state.user.image" />
             </v-avatar>
           </div>
           <div class="poster-name">
-            {{ userName }}
+            {{ $store.state.user.username }}
           </div>
         </div>
         <div class="card-item">
@@ -140,6 +147,8 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    </div>
+
   </div>
 </template>
 
@@ -166,7 +175,6 @@ export default {
         else this.comments = res;
       })
       .then(
-        // this.userId = this.$store.state.userID; // TODO 等待统一
         // TODO 获取 userName, userAvatar
         this.comments.sort(function(a, b) {
           return a.floor - b.floor;
@@ -175,10 +183,6 @@ export default {
   },
   data() {
     return {
-      userId: "123",
-      userName: "Codevka",
-      userAvatar: "https://i.loli.net/2020/11/26/soiOjIlZFpELuTW.png",
-
       commentContent: "",
       commentFormValid: false,
       commentRule: [
@@ -238,7 +242,7 @@ export default {
     },
     handleReport() {
       reportComment(
-        this.userId,
+        this.$store.state.user.userID,
         this.reportForm.reportCommentId,
         this.reportForm.reportContent
       )
@@ -269,7 +273,7 @@ export default {
     },
 
     handleDelete() {
-      deleteComment(this.userId, this.deleteCommentId)
+      deleteComment(this.$store.state.user.userID, this.deleteCommentId)
         .then(res => {
           console.log("delete comment");
           console.log(res);
@@ -310,7 +314,7 @@ export default {
     },
 
     handleComment() {
-      comment(this.userId, this.literature.literatureID, this.commentContent)
+      comment(this.$store.state.user.userID, this.literature.literatureID, this.commentContent)
         .then(res => {
           console.log("comment post");
           console.log(res);
@@ -318,9 +322,9 @@ export default {
             var len = this.comments.length;
             this.comments.push({
               commentId: "1",
-              commenterId: this.userId,
-              commenterName: this.userName,
-              commenterAvatar: this.userAvatar,
+              commenterId: $store.state.user.userID,
+              commenterName: $store.state.user.username,
+              commenterAvatar: $store.state.user.image,
               floor: len + 2,
               commentContent: this.commentContent,
               commentTime: "刚刚"
@@ -349,6 +353,12 @@ export default {
 
   margin-top: 20px;
 
+  flex-direction: column;
+}
+
+.main{
+  width: 700px;
+  display: flex;
   flex-direction: column;
 }
 
@@ -461,5 +471,19 @@ export default {
 }
 .report-content {
   margin-top: 10px;
+}
+.nocomment{
+  width: 100%;
+  height:65px;
+  background: white;
+  border: 1px solid #ddd;
+  display: flex;
+  /* justify-content:center; */
+  align-items:center;
+}
+
+.nocomment-content{
+  margin-left: 25px;
+  font-size: 16px;
 }
 </style>
