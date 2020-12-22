@@ -80,11 +80,10 @@ export default {
       console.log(this.autherID);
     },
     //跳转到个人门户
-    toAuthor(userID, authorID) {
+    toAuthor(authorID) {
       this.$router.push({
-        path: "/profile",
+        path: "/intro",
         query: {
-          userID: userID,
           autherID: authorID
         }
       });
