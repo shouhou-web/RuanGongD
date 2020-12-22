@@ -167,7 +167,7 @@ export function getPublishState(authorID) {
 // 获取作者相关信息
 export function getAuthorInformation(authorID) {
   return request(
-    "60.205.189.66:8081",
+    "http://60.205.189.66:8081",
     {
       url: "/getAuthorInformation",
       params: {
