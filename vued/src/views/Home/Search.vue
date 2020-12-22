@@ -80,7 +80,13 @@
                     </a>
                   </span>
                 </div>
-                <div class="line__venue">
+                <div
+                  class="line__venue--follow"
+                  :style="{
+                    'align-items':
+                      item.venue.length > 18 ? 'flex-start' : 'center'
+                  }"
+                >
                   {{ item.venue }}
                 </div>
                 <div class="line__year">
@@ -112,7 +118,13 @@
                     </a>
                   </span>
                 </div>
-                <div class="line__venue">
+                <div
+                  class="line__venue--follow"
+                  :style="{
+                    'align-items':
+                      item.venue.length > 18 ? 'flex-start' : 'center'
+                  }"
+                >
                   {{ item.venue }}
                 </div>
                 <div class="line__year">
@@ -246,7 +258,24 @@ export default {
     this.sourceList = this.litList3;
     this.targetList = this.sourceList;
   },
+  watch: {
+    searchRes(newVal) {
+      this.litList1 = newVal.literatureList1.reverse();
+      this.litList2 = newVal.literatureList2.reverse();
+      this.litList3 = newVal.literatureList3.reverse();
+      this.authorList = newVal.authorList;
+      this.venueList = newVal.venueList;
+      this.yearList = newVal.yearList;
+      this.answer.num = newVal.answer.num;
+      this.answer.query = newVal.answer.query;
+      this.sourceList = this.litList3;
+      this.targetList = this.sourceList;
+    }
+  },
   computed: {
+    searchRes() {
+      return this.$store.state.searchRes;
+    },
     // 是否展示筛选框
     canFilter() {
       // return (
@@ -547,6 +576,11 @@ export default {
 
 .line__title span {
   cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .line__author {
@@ -564,6 +598,14 @@ export default {
 }
 
 .line__venue {
+  width: 13%;
+}
+
+.line__venue--follow {
+  display: flex;
+  height: 42px;
+  margin: 10px 5px;
+  overflow: hidden;
   width: 13%;
 }
 

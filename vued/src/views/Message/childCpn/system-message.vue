@@ -53,38 +53,48 @@ export default {
   computed: {
     messageType() {
       switch (this.message.type) {
-        case 3:
-          return "申请通过";
+        case 1:
+          return "管理员消息";
         case 4:
-          return "申请失败";
+          return "举报成功";
         case 5:
-          return "邀请成功";
+          return "举报失败";
         case 6:
-          return "邀请失败";
+          return "申请成功";
         case 7:
-          return "退出团队";
+          return "申请失败";
         case 8:
-          return "踢出团队";
-        case 11:
-          return "文档删除";
+          return "评论被举报";
+        case 9:
+          return "动态被举报";
+        case 10:
+          return "门户被举报";
       }
     },
     content() {
       switch (this.message.type) {
-        case 3:
-          return "恭喜！您已成功加入团队" + this.message.content + "！";
+        case 1:
+          return this.message.content;
         case 4:
-          return "很遗憾，" + this.message.content + "团队拒绝了你的申请";
+          return (
+            "您举报的" +
+            this.message.content +
+            "已被管理员处理，感谢您对网站学术氛围的维护。"
+          );
         case 5:
-          return this.message.content + "同意了你的邀请，已经加入团队了~";
+          return "您的举报已被管理员驳回，理由是：" + this.message.content + "";
         case 6:
-          return this.message.content + "拒绝了你的团队邀请";
+          return "恭喜，您对" + this.message.content + "的门户申请已成功";
         case 7:
-          return this.message.content + "退出了你的团队";
+          return (
+            "很遗憾，您的申请已被管理员驳回，理由是：" + this.message.content
+          );
         case 8:
-          return "管理员已将你踢出团队" + this.message.content;
-        case 11:
-          return "管理员删除了你的文档" + this.message.content;
+          return "您的评论" + this.message.content + "被举报，现已被管理员删除";
+        case 9:
+          return "您的动态" + this.message.content + "被举报，现已被管理员删除";
+        case 10:
+          return "您的门户被举报冒领，现已撤回您与该门户的绑定关系";
       }
     }
   },
@@ -125,8 +135,7 @@ export default {
 .message {
   align-items: center;
   background-color: #fff;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px 0 rgba(121, 146, 185, 0.54);
+  border-bottom: 1px solid #ebebeb;
   display: flex;
   margin-bottom: 10px;
   padding: 24px 16px;
