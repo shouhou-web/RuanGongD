@@ -92,7 +92,7 @@
     </div>
     <div id="forumSector" data-app>
       <div>
-        <div v-if="posts.length == 0">
+        <div class="postCard" v-if="posts.length == 0">
           <div class="postsEmpty">無</div>
         </div>
         <ul>
@@ -364,7 +364,7 @@ export default {
   computed: {
     total() {
       //return parseInt(this.totalPosts);
-      getPostNum(this.sectorId)
+      /*getPostNum(this.sectorId)
         .then(res => {
           console.log(res);
           if (res.total) {
@@ -373,7 +373,7 @@ export default {
         })
         .catch(err => {
           console.log(err);
-        });
+        });*/
       return parseInt(this.totalPosts);
     },
     currentPage() {
@@ -416,7 +416,13 @@ export default {
     );
     let start = ((parseInt(this.page) - 1) * this.pageSize).toString();
     //getPosts
-    getPosts(this.sectorId, start, this.pageSize, this.sort, this.keyword)
+    getPosts(
+      this.sectorId,
+      start,
+      this.pageSize.toString(),
+      this.sort,
+      this.keyword
+    )
       .then(res => {
         console.log("getPosts");
         console.log(res);
@@ -430,7 +436,19 @@ export default {
       .then(res => {
         console.log("getPosts");
         console.log(res);
-        this.followed = res.followed;
+        this.isFollowed = res.followed;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    //getPostNum
+    getPostNum(this.sectorId)
+      .then(res => {
+        console.log("getPostNum");
+        console.log(res);
+        if (res.total) {
+          this.totalPosts = res.total;
+        }
       })
       .catch(err => {
         console.log(err);
@@ -481,7 +499,7 @@ export default {
   color: grey;
   font-family: "FangSong";
   font-size: 100px;
-  margin-left: 600px;
+  margin-left: 400px;
   margin-top: 100px;
 }
 .postCard {
