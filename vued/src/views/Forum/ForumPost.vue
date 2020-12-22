@@ -70,7 +70,10 @@
                 </div>
               </div>
             </div>
-            <div class="post-tags" v-if="postInfo.postTags != null && postInfo.postTags[0] != ''">
+            <div
+              class="post-tags"
+              v-if="postInfo.postTags != null && postInfo.postTags[0] != ''"
+            >
               <div class="tag-item" v-for="tag in postInfo.postTags" :key="tag">
                 <div class="tag-content">{{ tag }}</div>
               </div>
@@ -545,10 +548,22 @@ export default {
       );
     }
   },
+  watch: {
+    "reportForm.reportContent"(val) {
+      if (val.length >= 600)
+        this.$nextTick(
+          () => (this.reportForm.reportContent = val.slice(0, 600))
+        );
+    },
+    commentContent(val) {
+      if (val.length >= 800)
+        this.$nextTick(() => (this.commentContent = val.slice(0, 800)));
+    }
+  },
   created() {
     this.postId = this.$route.query.postId;
     if (this.logined) {
-      this.userId = this.$store.state.user.userID; // TODO 等待统一
+      this.userId = this.$store.state.user.userID;
       this.userName = this.$store.state.user.username;
       this.userAvatar = this.$store.state.user.image;
     }
@@ -606,6 +621,7 @@ export default {
 body,
 html {
   scroll-behavior: smooth;
+  user-select: unset !important;
 }
 
 .post-container {

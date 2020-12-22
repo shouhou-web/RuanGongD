@@ -80,7 +80,12 @@
                             {{ editStr }}
                           </span>
                           <span class="userName" @click="goToUser(item.userId)">
-                            {{ item.userName }}</span
+                            {{
+                              handleTitle(
+                                item.userName,
+                                handleInfo(item.editTime).length == 16 ? 5 : 6
+                              )
+                            }}</span
                           >
                           <span class="editTime">
                             {{ handleInfo(item.editTime) }}</span
@@ -129,7 +134,7 @@
                         class="creatorName"
                         @click="goToUser(item.creatorId)"
                       >
-                        {{ item.creatorName }}
+                        {{ handleTitle(item.creatorName, 18) }}
                       </div>
                       <div class="fPostName" @click="goToPost(item.postId)">
                         {{ handleTitle(item.postName, 34) }}
@@ -155,15 +160,16 @@
                         </div>
                       </div>
                       <div class="fPostTags">
-                        <v-chip
-                          label
-                          class="fPostTag"
-                          x-small
-                          v-for="(tag, index) in item.tags"
-                          :key="index"
-                        >
-                          {{ tag }}
-                        </v-chip>
+                        <div v-for="(tag, index) in item.tags" :key="index">
+                          <v-chip
+                            label
+                            class="fPostTag"
+                            x-small
+                            v-if="tag !== ''"
+                          >
+                            {{ tag }}
+                          </v-chip>
+                        </div>
                       </div>
                     </v-card-subtitle>
                   </v-card>
@@ -197,7 +203,7 @@ export default {
           postNum: "1022",
           userId: "01",
           userAvatar: "https://i.loli.net/2020/08/11/8u6PdLt9vyCaUcX.png",
-          userName: "测试用户",
+          userName: "测试用户户",
           postId: "01",
           postName:
             "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十",
@@ -210,7 +216,7 @@ export default {
           postNum: "24",
           userId: "01",
           userAvatar: "https://i.loli.net/2020/08/11/Rqm3hEG6bnHLsd4.png",
-          userName: "测试用户",
+          userName: "测试用户一二",
           postId: "01",
           postName: "测试动态",
           editTime: "yyyy年MM月dd日"
@@ -243,12 +249,12 @@ export default {
         },
         {
           postId: "01",
-          postName:
-            "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十",
+          postName: "一二三四五六七八九十一二三四五六七八九十一二三四五六",
           replyNum: "1023",
           viewNum: "1002001",
           creatorId: "01",
-          creatorName: "测试用户",
+          creatorName:
+            "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十",
           creatorAvatar: "https://i.loli.net/2020/08/11/Rqm3hEG6bnHLsd4.png",
           createTime: "yyyy-MM-dd",
           tags: ["测试标签1", "测试标签2", "测试标签3", "测试标签4"]
@@ -287,7 +293,7 @@ export default {
           creatorName: "测试用户",
           creatorAvatar: "https://i.loli.net/2020/08/11/Rqm3hEG6bnHLsd4.png",
           createTime: "yyyy-MM-dd",
-          tags: ["测试标签1", "测试标签2", "测试标签3", "测试标签4"]
+          tags: [""]
         }
       ]*/
     };
@@ -351,6 +357,7 @@ export default {
   },
   components: { MHeader, CreatePost, CreateConsultation },
   created() {
+    //return;
     //this.$store.commit("login", { userID: "123" });
     getAllSectors()
       .then(res => {
@@ -361,6 +368,7 @@ export default {
       .catch(err => {
         console.log(err);
       });
+    //return;
     if (this.logined) {
       getFollowedPosts(this.currentUser)
         .then(res => {
@@ -542,7 +550,7 @@ export default {
 .creatorName {
   display: flex;
   align-items: center;
-  font-size: 15px;
+  font-size: 13px;
   margin-left: 10px;
   cursor: pointer;
 }
@@ -565,6 +573,8 @@ export default {
 .fPostTags {
   margin-top: 6px;
   font-size: 10px;
+  display: flex;
+  flex-flow: row wrap;
 }
 .fPostTag {
   margin-right: 3px;

@@ -112,20 +112,16 @@
                         <span
                           class="creatorName"
                           @click="goToUser(item.creatorId)"
-                          >{{ item.creatorName }}</span
+                          >{{ handleTitle(item.creatorName, 18) }}</span
                         >
                         <span>{{ createStr1 + item.createTime }}</span>
                       </div>
                       <div class="tags">
-                        <v-chip
-                          label
-                          class="tag"
-                          small
-                          v-for="(tag, index) in item.tags"
-                          :key="index"
-                        >
-                          {{ tag }}
-                        </v-chip>
+                        <div v-for="(tag, index) in item.tags" :key="index">
+                          <v-chip label class="tag" small v-if="tag !== ''">
+                            {{ tag }}
+                          </v-chip>
+                        </div>
                       </div>
                     </v-card-subtitle>
                   </div>
@@ -161,7 +157,7 @@
                       <span>{{ editStr0 }}</span>
                       <span class="editorName" @click="goToUser(item.editorId)">
                         <span>
-                          {{ item.editorName }}
+                          {{ handleTitle(item.editorName, 15) }}
                         </span>
                       </span>
                       <div class="editTime">
@@ -236,10 +232,10 @@ export default {
           replyNum: "1023",
           viewNum: "1002001",
           creatorId: "01",
-          creatorName: "测试用户",
+          creatorName: "一二三四五六七八九十一二三四五六七八九十",
           createTime: "MM月dd日 HH:mm",
           editorId: "02",
-          editorName: "测测用户",
+          editorName: "一二三四五六七八九十一二三四五六七八九十",
           editorAvatar: "https://i.loli.net/2020/08/11/Rqm3hEG6bnHLsd4.png",
           editTime: "MM月dd日 HH:mm",
           tags: ["测试标签1", "测试标签2", "测试标签3", "测试标签4"]
@@ -536,6 +532,7 @@ export default {
 }
 .tags {
   margin-top: 10px;
+  display: flex;
 }
 .tag {
   margin-right: 3px;
