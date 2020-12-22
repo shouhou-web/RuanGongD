@@ -433,7 +433,7 @@ export default {
         .then(res => {
           console.log("getPosts");
           console.log(res);
-          this.isFollowed = res.followed;
+          this.followed = res.followed;
         })
         .catch(err => {
           console.log(err);
