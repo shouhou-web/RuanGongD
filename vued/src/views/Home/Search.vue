@@ -64,18 +64,20 @@
             <div class="line__action">引用</div>
           </div>
           <ul class="content__list">
-            <li
-              v-for="(item, index) in splitList"
-              @click="toLiterature(item)"
-              :key="index"
-            >
+            <li v-for="(item, index) in splitList" :key="index">
               <div class="content__secline--dark" v-if="index % 2 == 0">
-                <div class="line__title">
+                <div @click="toLiterature(item)" class="line__title">
                   {{ item.title }}
                 </div>
                 <div class="line__author">
                   <span v-for="(itemA, indexA) in item.authors" :key="indexA">
-                    {{ itemA.realName }};
+                    <a
+                      @click="toAuthor(itemA)"
+                      v-if="indexA < 2"
+                      href="javascript:void(0);"
+                    >
+                      {{ itemA.realName }};
+                    </a>
                   </span>
                 </div>
                 <div class="line__venue">
@@ -89,19 +91,25 @@
                 </div>
                 <div class="line__action">
                   <img
-                    @click="openRef"
+                    @click.stop="openRef(item)"
                     src="@/assets/icons/search/ref.png"
                     alt=""
                   />
                 </div>
               </div>
               <div class="content__secline" v-else>
-                <div class="line__title">
+                <div @click="toLiterature(item)" class="line__title">
                   {{ item.title }}
                 </div>
                 <div class="line__author">
                   <span v-for="(itemA, indexA) in item.authors" :key="indexA">
-                    {{ itemA.realName }};
+                    <a
+                      @click="toAuthor(itemA)"
+                      v-if="indexA < 2"
+                      href="javascript:void(0);"
+                    >
+                      {{ itemA.realName }};
+                    </a>
                   </span>
                 </div>
                 <div class="line__venue">
@@ -115,7 +123,7 @@
                 </div>
                 <div class="line__action">
                   <img
-                    @click="openRef"
+                    @click.stop="openRef(item)"
                     src="@/assets/icons/search/ref.png"
                     alt=""
                   />
@@ -148,14 +156,42 @@
     </div>
     <!-- 引文链接 -->
     <m-hover ref="hover">
-      <input type="text" id="input" :value="order" readonly="" />
-      <span
-        v-clipboard:copy="order"
-        v-clipboard:success="onCopy"
-        v-clipboard:error="onCopyError"
-      >
-        复制
-      </span>
+      <div class="sh-wrapper">
+        <div class="share--first">
+          <span
+            class="btn-share"
+            v-clipboard:copy="refAPA"
+            v-clipboard:success="onCopy"
+            v-clipboard:error="onCopyError"
+          >
+            复制APA格式引文
+          </span>
+          <input
+            class="input-share"
+            type="text"
+            id="input"
+            :value="refAPA"
+            readonly=""
+          />
+        </div>
+        <div class="share">
+          <span
+            class="btn-share"
+            v-clipboard:copy="refMLA"
+            v-clipboard:success="onCopy"
+            v-clipboard:error="onCopyError"
+          >
+            复制MLA格式引文
+          </span>
+          <input
+            class="input-share"
+            type="text"
+            id="input"
+            :value="refMLA"
+            readonly=""
+          />
+        </div>
+      </div>
     </m-hover>
   </div>
 </template>
@@ -169,13 +205,16 @@ export default {
   data() {
     return {
       isShow: false,
-      order: "ciation",
+      order: "relation",
       curPageList: [1, 2, 3, 4, 5],
       curPage: 1,
       answer: {
         num: "3,567",
         query: "1884-2021: ((covid) WN ALL)"
       },
+      litList1: [],
+      litList2: [],
+      litList3: [],
       authorList: [],
       yearList: [],
       venueList: [],
@@ -183,23 +222,28 @@ export default {
       sourceList: [],
       authorFilter: [],
       venueFilter: [],
-      yearFilter: []
+      yearFilter: [],
+      refAPA: "",
+      refMLA: ""
     };
   },
   created() {
     console.log(this.$route.query);
     let query = this.$route.query;
-    console.log(this.$store.state.searchRes)
-    // 按相关度排序的lit
-    this.litList1 = this.$store.state.searchRes.literatureList1;
+    console.log(this.$store.state.searchRes);
     // 按被引数排序的lit
-    this.litList2 = this.$store.state.searchRes.literatureList2;
+    this.litList1 = this.$store.state.searchRes.literatureList1.reverse();
     // 按发表时间排序的lit
-    this.litList3 = this.$store.state.searchRes.literatureList3;
+    this.litList2 = this.$store.state.searchRes.literatureList2.reverse();
+    // 按相关度排序的lit
+    this.litList3 = this.$store.state.searchRes.literatureList3.reverse();
+
     this.authorList = this.$store.state.searchRes.authorList;
     this.venueList = this.$store.state.searchRes.venueList;
     this.yearList = this.$store.state.searchRes.yearList;
-    this.sourceList = this.litList1;
+    this.answer.num = this.$store.state.searchRes.answer.num;
+    this.answer.query = this.$store.state.searchRes.answer.query;
+    this.sourceList = this.litList3;
     this.targetList = this.sourceList;
   },
   computed: {
@@ -217,19 +261,26 @@ export default {
     },
     // 分页
     totalPage() {
-      return parseInt(this.targetList.length / 12) + 1;
+      return parseInt(this.targetList.length / 10) + 1;
     },
     splitList() {
-      return this.targetList.slice((this.curPage - 1) * 12, this.curPage * 12);
+      return this.targetList.slice((this.curPage - 1) * 10, this.curPage * 10);
     }
   },
   methods: {
     onCopy() {
       this.$message.success("复制成功！");
-      this.$ref.hover.hideHover();
+      this.$refs.hover.hideHover();
     },
     onCopyError() {
       this.$message.error("复制失败");
+    },
+    toAuthor(item) {
+      console.log(item);
+      this.$router.push({
+        path: "/intro",
+        query: { authorID: item.authorID, userID: null }
+      });
     },
     toLiterature(item) {
       this.$router.push({
@@ -237,7 +288,9 @@ export default {
         query: { literatureID: item.literatureID }
       });
     },
-    openRef() {
+    openRef(item) {
+      this.refAPA = item.APAformat;
+      this.refMLA = item.MLAformat;
       this.$refs.hover.showHover({
         title: "引用"
       });
@@ -259,6 +312,7 @@ export default {
       console.log(e);
       this.order = e;
       if (e == "ciation") this.sourceList = this.litList1;
+      else if (e == "relation") this.sourceList = this.litList3;
       else this.sourceList = this.litList2;
       this.assureFilter();
     },
@@ -292,7 +346,7 @@ export default {
       this.curPage = 1;
       this.targetList = this.sourceList.filter(n => {
         if (
-          this._inAuthor(n.author) &&
+          this._inAuthor(n.authors) &&
           this._inVenue(n.venue) &&
           this._inYear(n.year)
         )
@@ -301,17 +355,21 @@ export default {
     },
     _inAuthor(author) {
       // 筛选作者
-      if (this._otherAuthor(author)) return true;
       let check = false;
       author.forEach(element => {
-        if (this._inList(element, this.authorFilter)) check = true;
+        // console.log(element);
+        if (
+          this._otherAuthor(element.realName) ||
+          this._inList(element.realName, this.authorFilter)
+        )
+          check = true;
       });
       if (check) return true;
       return false;
     },
     _otherAuthor(author) {
       // 特判other
-      if (this._inList("Other", this.authorFilter)) {
+      if (this._inList("others", this.authorFilter)) {
         let check = true;
         this.authorList.forEach(n => {
           if (author == n.key) check = false;
@@ -327,7 +385,7 @@ export default {
     },
     _otherVenue(venue) {
       // 特判其他
-      if (this._inList("Other", this.venueFilter)) {
+      if (this._inList("others", this.venueFilter)) {
         let check = true;
         this.venueList.forEach(n => {
           if (venue == n.key) check = false;
@@ -343,7 +401,7 @@ export default {
     },
     _otherYear(year) {
       // 特判年份其他
-      if (this._inList("Other", this.yearFilter)) {
+      if (this._inList("others", this.yearFilter)) {
         let check = true;
         this.yearList.forEach(n => {
           if (year == n.key) check = false;
@@ -377,7 +435,7 @@ export default {
   color: #505050;
   margin: 20px auto;
   width: var(--width-main);
-  height: 100vh;
+  height: 110vh;
 }
 
 .answer__header {
@@ -475,12 +533,28 @@ export default {
   max-height: 60px;
 }
 
+.line__title:hover,
+.line__author span a:hover {
+  color: var(--color-tint);
+}
+
 .line__title {
   flex: 1;
+  cursor: pointer;
 }
 
 .line__author {
-  width: 15%;
+  display: flex;
+  flex-wrap: wrap;
+  width: 20%;
+}
+
+.line__author span a {
+  cursor: pointer;
+  height: 21px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .line__venue {
@@ -497,6 +571,7 @@ export default {
 
 .line__action {
   align-items: center;
+  cursor: pointer;
   display: flex;
   width: 7%;
 }
@@ -552,7 +627,7 @@ export default {
   align-items: center;
   display: flex;
   justify-content: center;
-  padding-top: 30px;
+  padding: 15px;
   width: 100%;
   white-space: nowrap;
 }
@@ -580,5 +655,42 @@ export default {
 .content__page .cur {
   color: #fff;
   background-color: var(--color-tint);
+}
+
+.sh-wrapper {
+  padding: 10px 0;
+}
+
+.share,
+.share--first {
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+}
+
+.share--first {
+  border-bottom: 1px dashed #ddd;
+}
+
+.input-share {
+  padding: 10px;
+  width: 580px;
+}
+
+.btn-share {
+  border: 1px solid #ebebeb;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 15px;
+  text-align: center;
+  padding: 10px;
+  width: 180px;
+}
+
+.btn-share:hover {
+  background-color: var(--color-tint);
+  color: #ffffff;
+  transition: 0.3s;
 }
 </style>

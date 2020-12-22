@@ -69,6 +69,7 @@ const mutations = {
     state.user.userDegree = degree;
   },
   setSearchRes(state, res) {
+    console.log(res)
     state.searchRes = res;
   }
 };

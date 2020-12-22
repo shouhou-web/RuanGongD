@@ -117,7 +117,7 @@ export default {
       if (this.isAdvance && this.isShow) {
         let h = 51 * this.$store.state.searchList.length;
         h += (this.$store.state.searchList.length - 1) * 10;
-        h += 28;
+        h += 48;
         return h + "px";
       } else return "50px";
     }
