@@ -47,7 +47,7 @@ import { getHighCollect, getHighCitation } from "network/home.js";
 export default {
   name: "Home",
   created() {
-    // if (!this.$store.state.isHome) {
+    if (!this.$store.state.isHome) {
       getHighCollect().then(res => {
         console.log("highCollect", res);
         this.$store.commit("setHomeCollect", res);
@@ -56,7 +56,7 @@ export default {
         console.log("highCitation", res);
         this.$store.commit("setHomeCiation", res.citationList);
       });
-    // }
+    }
   },
   data() {
     return {
