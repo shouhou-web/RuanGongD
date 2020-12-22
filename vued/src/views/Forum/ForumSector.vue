@@ -92,7 +92,7 @@
     </div>
     <div id="forumSector" data-app>
       <div>
-        <div v-if="posts.length==0"> 
+        <div v-if="posts.length == 0">
           <div class="postsEmpty">無</div>
         </div>
         <ul>
@@ -213,7 +213,7 @@ export default {
         { name: "标题", type: "2" },
         { name: "最多回复", type: "3" }
       ],
-      posts: [],
+      posts: []
       /*posts: [
         {
           postId: "01",
@@ -380,7 +380,7 @@ export default {
       return parseInt(this.page);
     },
     followedText() {
-      return this.followed == "0" ? "关注" : "已关注";
+      return this.followed === "0" ? "关注" : "已关注";
     },
     logined() {
       console.log("logined");
@@ -421,7 +421,6 @@ export default {
         console.log("getPosts");
         console.log(res);
         this.posts = res.posts;
-        this.followed = res.followed;
       })
       .catch(err => {
         console.log(err);
@@ -431,7 +430,7 @@ export default {
       .then(res => {
         console.log("getPosts");
         console.log(res);
-        this.isFollowed = res.followed;
+        this.followed = res.followed;
       })
       .catch(err => {
         console.log(err);
