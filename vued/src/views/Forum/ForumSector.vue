@@ -292,7 +292,7 @@ export default {
         .then(res => {
           console.log("followSector");
           console.log(res);
-          if (res.data.result == "true") {
+          if (res.result == "true") {
             // alartSuccess
             this.$notify({
               title: "操作成功",
@@ -364,8 +364,8 @@ export default {
       getPostNum(this.sectorId)
         .then(res => {
           console.log(res);
-          if (res.data.total) {
-            this.totalPosts = res.data.total;
+          if (res.total) {
+            this.totalPosts = res.total;
           }
         })
         .catch(err => {
@@ -417,8 +417,8 @@ export default {
       .then(res => {
         console.log("getPosts");
         console.log(res);
-        this.posts = res.data.posts;
-        this.followed = res.data.followed;
+        this.posts = res.posts;
+        this.followed = res.followed;
       })
       .catch(err => {
         console.log(err);
@@ -428,7 +428,7 @@ export default {
       .then(res => {
         console.log("getPosts");
         console.log(res);
-        this.isFollowed = res.data.followed;
+        this.isFollowed = res.followed;
       })
       .catch(err => {
         console.log(err);

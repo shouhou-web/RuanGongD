@@ -242,7 +242,7 @@ export default {
         .then(res => {
           console.log("createPost");
           console.log(res);
-          if (res.data.result == "true") {
+          if (res.result == "true") {
             this.dialog = false;
             this.createPostForm = {
               userId: this.$store.state.user.userID,
@@ -259,7 +259,7 @@ export default {
             });
             this.$router.push({
               path: "/forumPost",
-              query: { postId: res.data.postId }
+              query: { postId: res.postId }
             });
           } else {
             /*this.$message.error({
@@ -329,7 +329,7 @@ export default {
       .then(res => {
         console.log("getAllTags");
         console.log(res);
-        this.sectorList = res.data.sectorList;
+        this.sectorList = res.sectorList;
       })
       .catch(err => {
         console.log(err);
@@ -339,7 +339,7 @@ export default {
         console.log("getMyLiterature");
         console.log(res);
         var tmpLiterature = Object;
-        for (var literature of res.data.myLiteratureList) {
+        for (var literature of res.myLiteratureList) {
           // for (var literature of tmpList) {
           tmpLiterature.literatureID = literature.literatureID;
           tmpLiterature.title = literature.title;

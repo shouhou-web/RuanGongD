@@ -351,7 +351,7 @@ export default {
       .then(res => {
         console.log("getAllSectors");
         console.log(res);
-        this.sectors = res.data.sectors;
+        this.sectors = res.sectors;
       })
       .catch(err => {
         console.log(err);
@@ -361,7 +361,7 @@ export default {
         .then(res => {
           console.log("getFollowedPosts");
           console.log(res);
-          this.posts = res.data.posts;
+          this.posts = res.posts;
         })
         .catch(err => {
           console.log(err);
