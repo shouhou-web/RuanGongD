@@ -1,6 +1,11 @@
 <template>
   <div data-app="true">
-    <v-dialog v-model="display" persistent max-width="900">
+    <v-dialog
+      class="consultationDialog"
+      v-model="display"
+      persistent
+      max-width="800"
+    >
       <v-card elevation="3">
         <v-card-title class="card-title">发送咨询消息</v-card-title>
         <v-card-text>
@@ -80,6 +85,13 @@ export default {
     receiverId(newVal) {
       console.log("receiverId: " + newVal);
       this.receiverId = newVal;
+    },
+    "createConsultationForm.text"(val) {
+      let len = 500;
+      if (val.length >= len)
+        this.$nextTick(
+          () => (this.createConsultationForm.text = val.slice(0, len))
+        );
     }
   },
   methods: {
@@ -139,6 +151,9 @@ export default {
 </script>
 
 <style>
+/*.consultationDialog {
+  
+}*/
 .footer {
   display: flex;
   justify-content: space-between;
