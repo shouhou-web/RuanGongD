@@ -25,7 +25,7 @@ let baseURL = "http://60.205.189.66:8083";
 export function getAllSectors() {
   return request(baseURL, {
     url: "/getAllSectors",
-    params: {},
+    data: {},
     method: "post"
   });
 }
@@ -40,7 +40,7 @@ export function getAllSectors() {
 export function getAllTags() {
   return request(baseURL, {
     url: "/getAllTags",
-    params: {},
+    data: {},
     method: "post"
   });
 }
@@ -62,8 +62,8 @@ export function getAllTags() {
 export function createPost(createPostForm) {
   return request(baseURL, {
     url: "/createPost",
-    params: {
-      createPostForm
+    data: {
+      createPostForm: createPostForm
     },
     method: "post"
   });
@@ -97,10 +97,7 @@ export function createPost(createPostForm) {
 export function getPostInfo(userId, postId) {
   return request(baseURL, {
     url: "/getPostInfo",
-    params: {
-      userId,
-      postId
-    },
+    data: { userId, postId },
     method: "post"
   });
 }
@@ -131,7 +128,7 @@ export function getPostInfo(userId, postId) {
 export function getPosts(sectorId, start, num, sort, keyword) {
   return request(baseURL, {
     url: "/getPosts",
-    params: { sectorId, start, num, sort, keyword },
+    data: { sectorId, start, num, sort, keyword },
     method: "post"
   });
 }
@@ -147,7 +144,7 @@ export function getPosts(sectorId, start, num, sort, keyword) {
 export function isFollowed(userId, sectorId) {
   return request(baseURL, {
     url: "/isFollowed",
-    params: { userId, sectorId },
+    datat: { userId, sectorId },
     method: "post"
   });
 }
@@ -164,7 +161,7 @@ export function isFollowed(userId, sectorId) {
 export function followSector(userId, sectorId) {
   return request(baseURL, {
     url: "/followSector",
-    params: { userId, sectorId },
+    data: { userId, sectorId },
     method: "post"
   });
 }
@@ -181,7 +178,7 @@ export function followSector(userId, sectorId) {
 export function reportPost(userId, postId, reportContent) {
   return request(baseURL, {
     url: "/reportPost",
-    params: { userId, postId, reportContent },
+    data: { userId, postId, reportContent },
     method: "post"
   });
 }
@@ -197,7 +194,7 @@ export function reportPost(userId, postId, reportContent) {
 export function deletePost(userId, postId) {
   return request(baseURL, {
     url: "/deletePost",
-    params: { userId, postId },
+    data: { userId, postId },
     method: "post"
   });
 }
@@ -214,7 +211,7 @@ export function deletePost(userId, postId) {
 export function commentPost(userId, postId, commentContent) {
   return request(baseURL, {
     url: "/commentPost",
-    params: { userId, postId, commentContent },
+    data: { userId, postId, commentContent },
     method: "post"
   });
 }
@@ -231,7 +228,7 @@ export function commentPost(userId, postId, commentContent) {
 export function reportComment(userId, reportCommentId, reportContent) {
   return request(baseURL, {
     url: "/reportComment",
-    params: { userId, reportCommentId, reportContent },
+    data: { userId, reportCommentId, reportContent },
     method: "post"
   });
 }
@@ -247,7 +244,7 @@ export function reportComment(userId, reportCommentId, reportContent) {
 export function deleteComment(userId, deleteCommentId) {
   return request(baseURL, {
     url: "/deleteComment",
-    params: { userId, deleteCommentId },
+    data: { userId, deleteCommentId },
     method: "post"
   });
 }
@@ -264,6 +261,7 @@ export function deleteComment(userId, deleteCommentId) {
 export function createConsultation(senderId, receiverId, text) {
   return request(baseURL, {
     url: "/createConsultation",
+    // TODO 对接响应后端？
     params: { senderId, receiverId, text },
     method: "post"
   });
@@ -279,7 +277,7 @@ export function createConsultation(senderId, receiverId, text) {
 export function getPostNum(sectorId) {
   return request(baseURL, {
     url: "/getPostNum",
-    params: { sectorId },
+    data: { sectorId },
     method: "post"
   });
 }
@@ -301,7 +299,7 @@ export function getPostNum(sectorId) {
 export function getUserPosts(userId) {
   return request(baseURL, {
     url: "/getUserPosts",
-    params: { userId },
+    data: { userId },
     method: "post"
   });
 }
@@ -326,7 +324,7 @@ export function getUserPosts(userId) {
 export function getFollowedPosts(userId) {
   return request(baseURL, {
     url: "/getFollowedPosts",
-    params: { userId },
+    data: { userId },
     method: "post"
   });
 }
