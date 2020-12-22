@@ -1,6 +1,9 @@
 <template>
   <div class="one-follow-literature">
-    <div class="title" @click="gotoLiterature()">{{ title }}</div>
+    <div class="yCard">
+      <div class="title" @click="gotoLiterature()">{{ title }}</div>
+      <div class="change-button" v-if="display" @click="clickChange">修改</div>
+    </div>
     <div class="tags">
       <div v-for="(a_tag, i) in tags">
         <div class="leftpart-tags" v-if="i < 3">{{a_tag}}</div>
@@ -11,11 +14,11 @@
         <div class="authorname" @click="gotoIntro(one_author.userID, one_author.authorID)">{{one_author.realName}}</div>
       </div>
     </div>
-    <div class="read-time">
-      <div class="read-time-content">
-        {{read_time}} Reads
-      </div>
-    </div>
+<!--    <div class="read-time">-->
+<!--      <div class="read-time-content">-->
+<!--        {{read_time}} Reads-->
+<!--      </div>-->
+<!--    </div>-->
   </div>
 </template>
 
@@ -27,10 +30,14 @@ export default {
     id: String,
     authors: Array,
     tags: Array,
-    read_time: {
-      type: Number,
-      default: 0
+    display: {
+      Boolean,
+      default: false
     }
+    // read_time: {
+    //   type: Number,
+    //   default: 0
+    // }
   },
   methods: {
     gotoLiterature() {
@@ -39,6 +46,9 @@ export default {
     },
     gotoIntro(userID, authorID) {
       this.$router.push({ path: "/intro", query: { userID: userID, authorID: authorID } })
+    },
+    clickChange() {
+      this.$emit("change", this.id)
     }
   },
   created() {
@@ -152,4 +162,27 @@ export default {
   margin-top: 3px;
 }
 
+.yCard {
+  display: flex;
+  flex-direction: row;
+}
+
+.change-button {
+  border-radius: 2px;
+  padding: 3px;
+  margin-left: 80px;
+  font-size: 1rem;
+  border: 1px solid #4F6EF2;
+  background-color: white;
+  color: #4F6EF2;
+  transition: ease-in-out 0.5s;
+}
+
+.change-button:hover {
+  border: 1px solid #4F6EF2;
+  background-color: #4F6EF2;
+  color: white;
+  transition: ease-in-out 0.5s;
+  cursor: pointer;
+}
 </style>

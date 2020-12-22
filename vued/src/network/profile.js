@@ -1,7 +1,7 @@
 import { request } from "@/network/request";
 
 // 个人信息系统
-let baseURL = "http://60.205.189.66:8082";
+let baseURL = "http://60.205.189.66:8082/";
 
 // 获取用户收藏列表
 export function getFavorLiteratures(userID) {
@@ -153,13 +153,13 @@ export function getIntroFollowStatus(userID, authorID) {
 // 获取门户近一年的发布文献数量
 export function getPublishState(authorID) {
   return request(
-    "60.205.189.66:8081",
+    "http://60.205.189.66:8081",
     {
       url: "/getPublishState",
       params: {
         authorID: authorID
       },
-      method: "get"
+      method: "post"
     }
   )
 }

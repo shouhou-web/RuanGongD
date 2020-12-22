@@ -1,6 +1,7 @@
 <template>
   <div>
     <y-literature v-for="(personalLiterature, i) in myLiteratures"
+                  :key="personalLiterature.literatureID"
                   :id="personalLiterature.literatureID"
                   :title="personalLiterature.title"
                   :authors="personalLiterature.authors"

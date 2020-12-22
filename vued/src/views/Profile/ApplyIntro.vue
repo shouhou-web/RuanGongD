@@ -8,8 +8,7 @@
         </div>
         <div class="intro-intro">
           <div>
-            <img :src="intro.image" class="intro-img" v-if="intro.image.length > 0">
-            <img src="../../assets/image/no-img.png" class="intro-img" v-else>
+            <img :src="intro.image" class="intro-img" >
           </div>
           <div class="intro-name">{{ intro.realName }}</div>
         </div>
@@ -75,7 +74,7 @@ export default {
   methods: {
     submit() {
       let authorID = this.$route.query.authorID
-      let userID = this.$route.query.userID
+      let userID = this.$store.state.user.userID
 
       // 对邮箱进行正则判断
       var emailReg = /^\d{8}@(buaa.edu.cn)+$/;
@@ -89,12 +88,16 @@ export default {
       else {
         apply(userID, authorID, this.intro.realName, this.email, this.application)
         .then((res) => {
-          if (res == 0) this.$notify.success("申请认证成功")
+          if (res == 0) {
+            this.$notify.success("申请认证成功")
+            this.$router.go(-1);
+          }
           else if (res == 1) {
             this.$notify.info("已经发送过待认证的申请")
             this.$router.go(-1)
           }
           else {
+            console.log("res", res)
             this.$notify.warning("申请发送失败，请重试")
           }
         })
@@ -118,7 +121,10 @@ export default {
         emailVerification(this.email)
         .then((code) => {
           if (code == null) this.$notify.warning("验证码出现异常，请重试")
-          else this.code = code
+          else {
+            this.code = code
+            console.log("code", code)
+          }
         })
         .catch((err) => {
           this.$notify.error(
