@@ -112,20 +112,16 @@
                         <span
                           class="creatorName"
                           @click="goToUser(item.creatorId)"
-                          >{{ handleTitle(item.creatorName,18) }}</span
+                          >{{ handleTitle(item.creatorName, 18) }}</span
                         >
                         <span>{{ createStr1 + item.createTime }}</span>
                       </div>
                       <div class="tags">
-                        <v-chip
-                          label
-                          class="tag"
-                          small
-                          v-for="(tag, index) in item.tags"
-                          :key="index"
-                        >
-                          {{ tag }}
-                        </v-chip>
+                        <div v-for="(tag, index) in item.tags" :key="index">
+                          <v-chip label class="tag" small v-if="tag !== ''">
+                            {{ tag }}
+                          </v-chip>
+                        </div>
                       </div>
                     </v-card-subtitle>
                   </div>
@@ -161,7 +157,7 @@
                       <span>{{ editStr0 }}</span>
                       <span class="editorName" @click="goToUser(item.editorId)">
                         <span>
-                          {{ handleTitle(item.editorName,15) }}
+                          {{ handleTitle(item.editorName, 15) }}
                         </span>
                       </span>
                       <div class="editTime">
@@ -536,6 +532,7 @@ export default {
 }
 .tags {
   margin-top: 10px;
+  display: flex;
 }
 .tag {
   margin-right: 3px;

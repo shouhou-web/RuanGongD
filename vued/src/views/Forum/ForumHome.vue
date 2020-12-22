@@ -160,15 +160,16 @@
                         </div>
                       </div>
                       <div class="fPostTags">
-                        <v-chip
-                          label
-                          class="fPostTag"
-                          x-small
-                          v-for="(tag, index) in item.tags"
-                          :key="index"
-                        >
-                          {{ tag }}
-                        </v-chip>
+                        <div v-for="(tag, index) in item.tags" :key="index">
+                          <v-chip
+                            label
+                            class="fPostTag"
+                            x-small
+                            v-if="tag !== ''"
+                          >
+                            {{ tag }}
+                          </v-chip>
+                        </div>
                       </div>
                     </v-card-subtitle>
                   </v-card>
@@ -252,7 +253,8 @@ export default {
           replyNum: "1023",
           viewNum: "1002001",
           creatorId: "01",
-          creatorName: "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十",
+          creatorName:
+            "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十",
           creatorAvatar: "https://i.loli.net/2020/08/11/Rqm3hEG6bnHLsd4.png",
           createTime: "yyyy-MM-dd",
           tags: ["测试标签1", "测试标签2", "测试标签3", "测试标签4"]
@@ -291,7 +293,7 @@ export default {
           creatorName: "测试用户",
           creatorAvatar: "https://i.loli.net/2020/08/11/Rqm3hEG6bnHLsd4.png",
           createTime: "yyyy-MM-dd",
-          tags: ["测试标签1", "测试标签2", "测试标签3", "测试标签4"]
+          tags: [""]
         }
       ]*/
     };
@@ -366,6 +368,7 @@ export default {
       .catch(err => {
         console.log(err);
       });
+    //return;
     if (this.logined) {
       getFollowedPosts(this.currentUser)
         .then(res => {
@@ -570,6 +573,8 @@ export default {
 .fPostTags {
   margin-top: 6px;
   font-size: 10px;
+  display: flex;
+  flex-flow: row wrap;
 }
 .fPostTag {
   margin-right: 3px;
