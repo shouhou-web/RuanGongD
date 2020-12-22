@@ -18,7 +18,7 @@
           <div class="poster-name">
             {{ postInfo.creatorName }}
           </div>
-          <div class="post-action">
+          <div class="post-action" v-if="logined">
             <v-btn
               icon
               v-if="postInfo.creatorId == userId"
@@ -76,7 +76,7 @@
               </div>
             </div>
             <div class="post-reply-button" @click="jumpToComment">
-              <v-btn color="var(--color-main)">
+              <v-btn color="var(--color-main)" v-if="logined">
                 <font color="white">评论动态</font>
               </v-btn>
             </div>
@@ -119,7 +119,7 @@
             <div class="comment-time">
               {{ comment.commentTime }}
             </div>
-            <div class="comment-action">
+            <div class="comment-action" v-if="logined">
               <v-btn
                 icon
                 v-if="comment.commenterId == userId"
