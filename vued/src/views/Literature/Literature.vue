@@ -10,10 +10,10 @@
           </div>
           <div class="authorname content">
             <span class="lable">作者：</span>
-            <ul class="author-ul">
+            <ul v-if="authorList.length > 0" class="author-ul">
               <li
                 class="author"
-                v-for="(item, index) in literature.authors"
+                v-for="(item, index) in authorList"
                 @click="toAuthor(item.userID, item.authorID)"
                 :key="index"
               >
@@ -38,7 +38,7 @@
             <el-link
               v-for="(item, index) in literature.keyWord"
               :key="index"
-              v-if="index<3"
+              v-if="index < 3"
               href="javascript:void(0);"
             >
               <span @click="searchKey(item)">{{ item }}</span>
@@ -61,8 +61,8 @@
               >
                 <i
                   :class="{
-                    'el-icon-star-off': staroff,
-                    'el-icon-star-on': staron
+                    'el-icon-star-off': !iscollect,
+                    'el-icon-star-on': iscollect,
                   }"
                 ></i>
                 <span> 收藏</span>
@@ -114,7 +114,7 @@
             class="op-item"
             @click="toChild(index)"
             :class="[
-              currentIndex == index ? 'op-item--active' : 'op-item--inside'
+              currentIndex == index ? 'op-item--active' : 'op-item--inside',
             ]"
             v-for="(item, index) in navList"
             :key="index"
@@ -186,22 +186,27 @@
 <script>
 import LFollowlicard from "./childCpn/followlicard.vue";
 import LAuthor from "./childCpn/author.vue";
-import { getLiterature, collect, reportLiterature } from "network/literature";
+import {
+  getLiterature,
+  collect,
+  reportLiterature,
+  getcollect,
+  getAuthorInformation,
+} from "network/literature";
 import {
   getPostInfo,
   deletePost,
   reportComment,
   deleteComment,
-  commentPost
+  commentPost,
 } from "network/forum.js";
 import { search } from "network/search.js";
-import { getAuthorInformation } from '../../network/literature';
 
 export default {
   name: "Literature",
   components: {
     LFollowlicard,
-    LAuthor
+    LAuthor,
   },
   data() {
     return {
@@ -248,67 +253,78 @@ export default {
       //   venue: "xxxxxxxx",
       //   doi: "123456"
       // }, //文献
-      authorList:[],
-      staroff: true,
-      staron: false,
+      authorList: [],
+      iscollect: false,
       navList: [
         {
           name: "相关文献",
-          router: "relation"
+          router: "relation",
         },
         {
           name: "数据统计",
-          router: "stats"
+          router: "stats",
         },
         {
           name: "文献评论",
-          router: "review"
-        }
+          router: "review",
+        },
       ],
       //举报相关
       reportDialog: false,
       reportForm: {
         reportContent: "",
-        reportCommentId: ""
+        reportCommentId: "",
       },
       reportRule: {
         reportContent: [
           {
             required: true,
             message: "请输入举报理由",
-            trigger: "blur"
+            trigger: "blur",
           },
           {
             min: 5,
             max: 800,
             message: "举报理由长度在 5-800 个字符之间",
-            trigger: "blur"
-          }
-        ]
-      }
+            trigger: "blur",
+          },
+        ],
+      },
     };
   },
   created() {
-    getLiterature(this.$route.query.literatureID).then(res => {
+    getLiterature(this.$route.query.literatureID).then((res) => {
+      let that = this;
       console.log(res.literature);
       this.literature = res.literature;
+      for (let i = 0; i < this.literature.authors.length && i < 3; i++) {
+        getAuthorInformation(this.literature.authors[i]).then((res) => {
+          console.log(res);
+          that.authorList[i] = res;
+        });
+      }
+      getcollect(
+        this.$store.state.user.userID,
+        this.literature.literatureID
+      ).then((res) => {
+        if (res == 0) {
+          this.iscollect = false;
+        } else if (res == 1) {
+          this.iscollect = true;
+        } else if (res == -1) {
+          this.iscollect = false;
+        }
+      });
     });
-    for(let i=0; i<this.literature.authors;i++){
-      getAuthorInformation(literature.authors[i])
-      .then(res=>{
-        this.authorList[i] = res[i];
-      })
-    }
-    
+    // if(this.literature != null)
   },
   methods: {
     collectLiterature() {
       //未登录用户无法收藏
-      console.log(this.literature);
       if (this.$store.state.user == null) {
         this.$notify.warning("您还未登录");
       } else {
-        let option = this.staroff == true ? 1 : 0;
+        let option = this.iscollect == true ? 0 : 1;
         collect(
           this.$store.state.user.userID,
           this.literature.literatureID,
@@ -316,12 +332,11 @@ export default {
           this.literature.venue,
           this.literature.title,
           option
-        ).then(res => {
+        ).then((res) => {
           console.log("collect", res);
           //收藏成功
           if (res == 0) {
-            this.staroff = !this.staroff;
-            this.staron = !this.staron;
+            this.iscollect = !this.iscollect;
             this.$notify.success("操作成功");
           }
           //收藏失败
@@ -332,8 +347,15 @@ export default {
       }
     },
     referFormat() {
+      //   for(let i=0; i<this.literature.authors.length;i++){
+      //   getAuthorInformation(this.literature.authors[i])
+      //   .then(res=>{
+      //     this.authorList[i] = res;
+      //   })
+      // }
+      console.log(this.authorList);
       this.$refs.hover.showHover({
-        title: "引用文献"
+        title: "引用文献",
       });
     },
 
@@ -343,7 +365,7 @@ export default {
     // 举报
     handleReport(formName) {
       let pass = false;
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           pass = true;
         }
@@ -356,7 +378,7 @@ export default {
         this.literature.title,
         this.reportForm.reportContent
       )
-        .then(res => {
+        .then((res) => {
           console.log("report post");
           console.log(res);
           if (res == 0) {
@@ -366,7 +388,7 @@ export default {
             this.$notify.error("举报失败，请稍后再试。");
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.$notify.error("举报失败，请稍后再试。");
           console.log(err);
           console.log("test");
@@ -374,15 +396,20 @@ export default {
     },
     toChild(index) {
       let target = this.navList[index].router;
-      this.$router.push("/literature/" + target);
+      this.$router.push({
+        path: "/literature/" + target,
+        query: {
+          literatureID: this.literature.literatureID,
+        },
+      });
     },
     toAuthor(userID, authorID) {
       this.$router.push({
         path: "/profile",
         query: {
           userID: userID,
-          autherID: authorID
-        }
+          authorID: authorID,
+        },
       });
     },
     searchKey(key) {
@@ -390,10 +417,10 @@ export default {
       let item = {
         legical: "NULL",
         type: "SU",
-        value: key
+        value: key,
       };
       search(item)
-        .then(res => {
+        .then((res) => {
           this.$router.push({
             path: "/search",
             query: {
@@ -403,17 +430,17 @@ export default {
               litList2: res.literatureList2,
               authorList: res.authorList,
               venueList: res.venueList,
-              yearList: res.yearList
-            }
+              yearList: res.yearList,
+            },
           });
         })
-        .catch(err => {
+        .catch((err) => {
           this.$notify.error({
             title: "错误",
-            message: "网络异常，请稍后重试"
+            message: "网络异常，请稍后重试",
           });
         });
-    }
+    },
   },
   computed: {
     currentIndex() {
@@ -425,8 +452,8 @@ export default {
         case "/literature/review":
           return 2;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

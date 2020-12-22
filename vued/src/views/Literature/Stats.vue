@@ -25,11 +25,12 @@ export default {
   },
   created() {
     console.log(this.literature.literatureID);
+    console.log("stats");
     getStats(this.literature.literatureID).then(res => {
       console.log(res);
+      console.log("test");
       this.option.series[0].data = res.collectTimes;
-      this.option.series[1].data = res.readTimes;
-      this.option.series[2].data = res.commentTimes;
+      this.option.series[1].data = res.commentTimes;
     });
   },
   data() {
@@ -42,7 +43,7 @@ export default {
           textStyle: {
             fontSize: 15
           },
-          data: ["收藏数", "阅读数", "评论数"]
+          data: ["收藏数", "评论数"]
         },
         grid: {
           left: "3%",
@@ -82,12 +83,6 @@ export default {
             type: "line",
             stack: "总量",
             data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-          },
-          {
-            name: "阅读数",
-            type: "line",
-            stack: "总量",
-            data: [150, 232, 201, 154, 190, 330, 410]
           },
           {
             name: "评论数",
