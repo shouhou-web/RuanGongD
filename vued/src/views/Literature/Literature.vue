@@ -41,7 +41,7 @@
               v-if="index < 3"
               href="javascript:void(0);"
             >
-              <span @click="searchKey(item)">{{ item }}</span>
+              <span @click="searchKey(item)" class="keywordcontent">{{ item }}</span>
             </el-link>
           </div>
           <div class="doi content">
@@ -91,7 +91,7 @@
                 <i class="el-icon-warning-outline"></i>
                 <span> 举报文献 </span>
               </l-button>
-              <l-button size="medium" type="primary" class="download">
+              <l-button size="medium" type="primary" class="download" @click="download()">
                 <i class="el-icon-download"></i>
                 <span> 下载文献 </span>
               </l-button>
@@ -294,13 +294,12 @@ export default {
   },
   created() {
     getLiterature(this.$route.query.literatureID).then((res) => {
-      let that = this;
       console.log(res.literature);
       this.literature = res.literature;
       for (let i = 0; i < this.literature.authors.length && i < 3; i++) {
         getAuthorInformation(this.literature.authors[i]).then((res) => {
           console.log(res);
-          that.authorList[i] = res;
+          this.authorList.push(res) ;
         });
       }
       getcollect(
@@ -319,6 +318,9 @@ export default {
     // if(this.literature != null)
   },
   methods: {
+    download(){
+      window.open(this.literature.download);
+    },
     collectLiterature() {
       //未登录用户无法收藏
       if (this.$store.state.user == null) {
@@ -347,13 +349,6 @@ export default {
       }
     },
     referFormat() {
-      //   for(let i=0; i<this.literature.authors.length;i++){
-      //   getAuthorInformation(this.literature.authors[i])
-      //   .then(res=>{
-      //     this.authorList[i] = res;
-      //   })
-      // }
-      console.log(this.authorList);
       this.$refs.hover.showHover({
         title: "引用文献",
       });
@@ -667,4 +662,7 @@ export default {
   margin-bottom: 30px;
   -webkit-user-select: text;
 }
+/* .keywordcontent{
+  padding-right: 15px;
+} */
 </style>
