@@ -2,14 +2,14 @@
   <!-- 讨论区主界面 -->
   <div>
     <m-app-header></m-app-header>
-    <v-btn @click="display = true">发送消息</v-btn>
+    <!--<v-btn @click="display = true">发送消息</v-btn>
     <create-consultation
       :senderId="'0001'"
       :receiverId="'0002'"
       :display="display"
       @closeDialog="closeDg()"
     >
-    </create-consultation>
+    </create-consultation>-->
     <div class="pageHeaderBg">
       <div class="pageHeader">
         <div class="pageName">讨论区</div>
