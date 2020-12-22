@@ -144,7 +144,7 @@ export function getPosts(sectorId, start, num, sort, keyword) {
 export function isFollowed(userId, sectorId) {
   return request(baseURL, {
     url: "/isFollowed",
-    datat: { userId, sectorId },
+    data: { userId, sectorId },
     method: "post"
   });
 }
