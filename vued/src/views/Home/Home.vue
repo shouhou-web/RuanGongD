@@ -43,190 +43,24 @@
 <script>
 import searchAdvance from "./childCpn/search-advance";
 import homeLiterature from "./childCpn/home-literature";
-import { getHighCollect, getHighCiation } from "network/home.js";
+import { getHighCollect, getHighCitation } from "network/home.js";
 export default {
   name: "Home",
   created() {
-    if (!this.$store.state.isHome) {
+    // if (!this.$store.state.isHome) {
       getHighCollect().then(res => {
         console.log("highCollect", res);
-        this.collectList = res;
         this.$store.commit("setHomeCollect", res);
       });
-      getHighCiation().then(res => {
-        console.log("highCiation", res);
-        this.ciationList = res;
-        this.$store.commit("setHomeCiation", res);
+      getHighCitation().then(res => {
+        console.log("highCitation", res);
+        this.$store.commit("setHomeCiation", res.citationList);
       });
-    }
+    // }
   },
   data() {
     return {
       showList: [],
-      ciationList: [
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        }
-      ],
-      collectList: [
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        }
-      ],
       start: "",
       end: "",
       openTitle: "",
@@ -240,13 +74,13 @@ export default {
         this.openCollect = false;
         this.openCiation = !this.openCiation;
         this.openTitle = "高被引论文";
-        if (this.openCiation) this.showList = this.ciationList;
+        if (this.openCiation) this.showList = this.$store.state.ciationList;
         else this.showList = [];
       } else if (e == 1) {
         this.openTitle = "热门论文";
         this.openCiation = false;
         this.openCollect = !this.openCollect;
-        if (this.openCollect) this.showList = this.collectList;
+        if (this.openCollect) this.showList = this.$store.state.collectList;
         else this.showList = [];
       }
     },

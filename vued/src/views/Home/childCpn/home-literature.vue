@@ -19,7 +19,7 @@
               {{ item.title }}
             </div>
             <div class="ciation__content__main__detail">
-              {{ item.author }}; {{ item.venue }}; {{ item.year }}
+              {{ item.authors[0].realName }}; {{ item.venue }}; {{ item.year }}
             </div>
           </div>
           <div class="ciation__content__num">
@@ -87,6 +87,11 @@ export default {
 .ciation__content__main {
   flex: 1;
   margin-left: 20px;
+}
+
+.ciation__content__main__title:hover {
+  cursor: pointer;
+  color: var(--color-tint);
 }
 
 .ciation__content__main__title {
