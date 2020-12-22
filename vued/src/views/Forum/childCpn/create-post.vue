@@ -425,4 +425,8 @@ export default {
   color: rgb(245, 108, 108);
   padding-right: 3px;
 }
+
+.v-select {
+  width: 700px !important;
+}
 </style>
