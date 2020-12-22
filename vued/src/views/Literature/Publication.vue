@@ -373,7 +373,7 @@ export default {
     },
   },
   created() {
-    this.data().userId = this.$store.state.user.userID;
+    this.userId = this.$store.state.user.userID;
   },
   components: { MHeader, CreateLiterature },
 };
