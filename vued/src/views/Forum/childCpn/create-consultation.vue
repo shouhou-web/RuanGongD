@@ -7,7 +7,7 @@
           <v-form v-model="createConsultationFormValid">
             <div class="form-item">
               <div class="form-label">
-                动态内容
+                消息内容
               </div>
               <v-textarea
                 class="textarea"
@@ -89,6 +89,15 @@ export default {
       console.log("接收人: " + this.receiverId);
       //console.log("回复的消息: " + this.messageId);
       console.log("消息内容: " + this.createConsultationForm.text);
+      if (
+        !this.senderId ||
+        !this.receiverId ||
+        this.senderId === "" ||
+        this.receiverId === ""
+      ) {
+        console.log("咨询消息: senderId 或 receiverId 不合法");
+        return;
+      }
       createConsultation(
         this.senderId,
         this.receiverId,
@@ -124,11 +133,8 @@ export default {
     }
   },
   components: {},
-  computed: {
-  },
-  created() {
-    
-  }
+  computed: {},
+  created() {}
 };
 </script>
 
