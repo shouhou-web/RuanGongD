@@ -15,7 +15,7 @@
             </div>
           </div>
           <div class="publish">
-            <create_literature v-if="isApplied && isSelfIntro"></create_literature>
+            <div v-if="isApplied && isSelfIntro" class="publish-button" @click="gotoPublish">发表文献</div>
             <div v-if="isApplied && !isSelfIntro && !isFollowing" class="publish-button">关注</div>
             <div v-if="isApplied && !isSelfIntro && isFollowing" class="publish-button-nice" @click="cancleFollowIntro">已关注</div>
             <div v-if="!isApplied" class="publish-button-apply" @click="applyIntro">申请认证当前门户</div>
@@ -131,6 +131,15 @@ export default {
   methods: {
     opSwitch(opID) {
       this.opID = opID
+    },
+    gotoPublish() {
+      this.$router.push(
+        {
+          path: "/publication",
+          query: {
+            authorID: this.intro.authorID
+          }
+      })
     },
     cancleFollowIntro() {
       follow(this.$route.query.userID, this.intro.authorID, 0)

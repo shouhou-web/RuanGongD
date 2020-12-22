@@ -92,6 +92,9 @@
     </div>
     <div id="forumSector" data-app>
       <div>
+        <div v-if="posts.length == 0">
+          <div class="postsEmpty">無</div>
+        </div>
         <ul>
           <li v-for="(item, index) in posts" :key="index">
             <v-card class="postCard" elevation="1" tile>
@@ -203,15 +206,15 @@ export default {
       editStr0: "由 ",
       editStr1: "最后编辑于 ",
       pageSize: 0,
-      totalPosts: "50",
+      totalPosts: "0",
       sortType: [
         { name: "最近更新", type: "0" },
         { name: "开始日期", type: "1" },
         { name: "标题", type: "2" },
         { name: "最多回复", type: "3" }
       ],
-      //posts: [],
-      posts: [
+      posts: []
+      /*posts: [
         {
           postId: "01",
           postName: "测试动态1",
@@ -256,7 +259,7 @@ export default {
           editTime: "MM月dd日 HH:mm",
           tags: []
         }
-      ]
+      ]*/
     };
   },
   methods: {
@@ -377,7 +380,7 @@ export default {
       return parseInt(this.page);
     },
     followedText() {
-      return this.followed == "0" ? "关注" : "已关注";
+      return this.followed === "0" ? "关注" : "已关注";
     },
     logined() {
       console.log("logined");
@@ -418,7 +421,6 @@ export default {
         console.log("getPosts");
         console.log(res);
         this.posts = res.posts;
-        this.followed = res.followed;
       })
       .catch(err => {
         console.log(err);
@@ -428,7 +430,7 @@ export default {
       .then(res => {
         console.log("getPosts");
         console.log(res);
-        this.isFollowed = res.followed;
+        this.followed = res.followed;
       })
       .catch(err => {
         console.log(err);
@@ -474,6 +476,13 @@ export default {
 .sectorTool {
   height: 50px;
   margin-top: 10px;
+}
+.postsEmpty {
+  color: grey;
+  font-family: "FangSong";
+  font-size: 100px;
+  margin-left: 600px;
+  margin-top: 100px;
 }
 .postCard {
   margin: 1px auto;

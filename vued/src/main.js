@@ -9,6 +9,8 @@ import Vuetify from "vuetify";
 import vuetify from "@/plugins/vuetify";
 import "material-design-icons-iconfont/dist/material-design-icons.css";
 
+import VueClipboard from "vue-clipboard2";
+
 import MHeader from "components/common/m-header/m-header";
 import LButton from "components/common/l-button/l-button";
 import MHover from "components/common/m-hover/m-hover";
@@ -19,6 +21,7 @@ Vue.config.productionTip = false;
 Vue.use(ElementUI);
 
 Vue.use(Vuetify);
+Vue.use(VueClipboard);
 
 // commen
 Vue.component("m-header", MHeader); // 全局导航栏

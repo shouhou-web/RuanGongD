@@ -26,6 +26,11 @@
       <el-row>
         <el-col :span="16">
           <ul>
+            <li v-if="sectors.length == 0">
+              <div class="sectorEmpty">
+                <div class="sectorEmptyText">無</div>
+              </div>
+            </li>
             <li v-for="(item, index) in sectors" :key="index">
               <v-card class="sectorCard" elevation="1" tile flat>
                 <el-row>
@@ -184,10 +189,10 @@ export default {
     return {
       display: false,
       editStr: "由 ",
-      //sectors: []
-      sectors: [
+      sectors: [],
+      /*sectors: [
         {
-          sectorId: "01",
+          sectorId: "1",
           sectorName: "测试分区1",
           postNum: "1022",
           userId: "01",
@@ -221,7 +226,7 @@ export default {
           postName: "",
           editTime: ""
         }
-      ],
+      ],*/
       posts: []
       /*posts: [
         {
@@ -408,6 +413,17 @@ export default {
   /*margin-left: 85.5%;*/
   margin-left: 2%;
   margin-bottom: 20px;
+}
+.sectorEmpty {
+  border-radius: 0px;
+  width: 900px;
+}
+.sectorEmptyText {
+  color: grey;
+  font-family: "FangSong";
+  font-size: 100px;
+  margin-left: 350px;
+  margin-top: 100px;
 }
 .sectorCard {
   border: 1px solid #ddd;

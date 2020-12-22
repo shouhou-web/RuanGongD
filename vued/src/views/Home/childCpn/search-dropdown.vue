@@ -20,11 +20,7 @@
     </div>
     <div v-if="show">
       <ul class="sd__main">
-        <li
-          class="main__line"
-          v-for="(item, index) in infList"
-          :key="index"
-        >
+        <li class="main__line" v-for="(item, index) in infList" :key="index">
           <input
             type="checkbox"
             name="item.key"
@@ -33,9 +29,9 @@
             @change="changeItem(index, $event)"
           />
           <div class="main__name">
-            {{ index }}
+            {{ item.key }}
           </div>
-          <div class="main__value">({{ item }})</div>
+          <div class="main__value">({{ item.value }})</div>
         </li>
       </ul>
     </div>
@@ -159,6 +155,10 @@ export default {
   margin-left: 10px;
   line-height: 1em;
   flex: 1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-break: break-all;
 }
 
 .main__value {

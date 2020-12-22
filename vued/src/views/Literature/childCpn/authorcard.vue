@@ -214,10 +214,11 @@ export default {
   line-height: 16px;
   margin-right: 25px;
   text-align: justify;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 8;
-  overflow: hidden;
+
+    line-height:1.4em;
+    /* 3 times the line-height to show 3 lines */
+    height:4.2em;
+    overflow:hidden;
 }
 
 .authorcard .auth-part3 {

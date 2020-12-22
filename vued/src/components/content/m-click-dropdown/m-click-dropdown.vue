@@ -97,6 +97,10 @@ export default {
       ],
       searchList: [
         {
+          key: "relation",
+          value: "相关度"
+        },
+        {
           key: "ciation",
           value: "被引数"
         },

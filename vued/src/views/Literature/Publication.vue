@@ -53,17 +53,6 @@
               </el-input>
             </el-form-item>
 
-            <el-form-item label="文献类型" prop="type">
-              <el-select v-model="createLiForm.type" placeholder="请选择文献类型">
-                <el-option
-                  v-for="type in typeList"
-                  :key="type.typeId"
-                  :label="type.typeName"
-                  :value="type.typeId"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-
             <el-form-item label="出版者" prop="publisher">
               <el-input
                 placeholder="请输入文献出版者"
@@ -98,16 +87,6 @@
                 dense
                 color="rgb(64, 158, 255)"
               ></v-combobox>
-            </el-form-item>
-
-            <el-form-item label="领域" prop="area">
-              <el-input
-                placeholder="请输入文献领域"
-                v-model="createLiForm.area"
-                clearable
-                maxlength="51"
-              >
-              </el-input>
             </el-form-item>
 
             <el-form-item label="文献来源" prop="venue">
@@ -153,6 +132,18 @@
       </v-card>
 
     </div>
+    <div class="alert">
+      <el-card>
+        <div class="alert-header" >
+          <span>提示</span>
+        </div>
+        <div class="alert-body">
+          <i class="el-icon-document" style="font-size: 200px;text-align: center"></i>
+          <br>
+          <span>请填写文献各项信息，完成并提交后等待发布申请结果</span>
+        </div>
+      </el-card>
+    </div>
     <!--
     <div id="publication">
       <CreateLiterature></CreateLiterature>
@@ -167,6 +158,7 @@
   import {createLiterature, getAuthors} from "../../network/literature";
 export default {
   name: "Publication",
+  props: {authorId: ""},
   data() {
     return {
       userId: "",
@@ -268,40 +260,13 @@ export default {
         year: "",  //文献年份
         citation: "", //被引数
         url: "", // 文献链接
-        type: "", // 文献类别
         publisher: "", //出版者
         abstract: "", // 文献内容
         keywords: [], // 文献关键词
-        area: "", // 文献领域
         venue: "", //文献来源
         authors: [], // 文献作者
-
       },
-      authorList: [
-        {
-          name: "lhx"
-        },
-        {
-          name: "lyc"
-        },
-        {
-          name: "mhy"
-        },
-      ],
-      typeList: [
-        {
-          typeId: 1,
-          typeName: "论文",
-        },
-        {
-          typeId: 2,
-          typeName: "会议",
-        },
-        {
-          typeId: 3,
-          typeName: "期刊",
-        },
-      ], // 可选分区列表
+      authorList: [],
     };
   },
   methods: {
@@ -319,7 +284,7 @@ export default {
       console.log(this.createLiForm);
       // for test
 
-      createLiterature(this.userId, this.createLiForm)
+      createLiterature(this.authorId, this.createLiForm)
         .then((res) => {
           console.log("createPost");
           console.log(res);
@@ -422,7 +387,7 @@ export default {
     border-radius: 0px;
     width: 900px;
     /*background-color: white;*/
-    height: 190px;
+    height: 100px;
     display: flex;
     flex-direction: column;
   }
@@ -434,7 +399,23 @@ export default {
   }
   .formContent {
     width: 1100px;
-    margin:0 auto;
+    margin-top: 1%;
+    margin-left: 22%;
+    float: left;
+  }
+  .alert {
+    width: 300px;
+    margin-top: 1%;
+    margin-left: 2%;
+    float: left;
+  }
+  .alert-header{
+    font-size: 20px;
+    text-align: center
+  }
+  .alert-body{
+    font-size: 15px;
+    text-align: center
   }
   .footer {
     display: flex;

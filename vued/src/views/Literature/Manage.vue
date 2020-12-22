@@ -36,13 +36,14 @@
 
 <script>
   import YLiterature from "@/components/common/y-literature/y-literature";
-  import { getMyLiterature } from "@/network/literature";
+  import { getMyLiterature , editLiterature } from "@/network/literature";
 export default {
   name: "Manage",
-  props: { userID : '' },
+  props: {  },
   components: { YLiterature },
   data() {
     return {
+      userID : '',
       myLiteratureList: [
         {
           literatureID: 0,
@@ -120,11 +121,33 @@ export default {
       });
     },
     sendEdit(doc,value){
+      editLiterature(this.userID, doc.literatureID, value)
+        .then((res) => {
+          console.log(res);
+          if (res.data.result == 0) {
+            this.$message({
+              type: "success",
+              message: "文献修改请求成功！",
+            });
+          } else {
+            this.$message.error({
+              message: "文献修改请求失败，请重试",
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          this.$message.error({
+            message: "文献修改请求失败，请重试",
+          });
+        });
+
       //修改文章申请，将跳转到发布页面
     },
 
   },
   created() {
+    this.userID = this.$store.state.user.userID;
     getMyLiterature(this.userID)
       .then(res => {
         console.log("getMyList");
@@ -162,11 +185,13 @@ export default {
     line-height: 20px;
     padding-left: 5px;
     margin-bottom: 5px;
+    transition: ease-in-out 0.3s;
   }
 
   .title:hover {
+    color: #4F6EF2;
+    transition: ease-in-out 0.3s;
     cursor: pointer;
-    border-bottom: 1px solid black;
   }
 
   .edit-button {
@@ -209,10 +234,15 @@ export default {
     border: 1px solid #4F6EF2;
     background-color: white;
     color: #4F6EF2;
+    transition: ease-in-out 0.5s;
   }
 
   .leftpart-tags:hover {
     cursor: pointer;
+    border: 1px solid white;
+    background-color: #4F6EF2;
+    color: white;
+    transition: ease-in-out 0.5s;
   }
 
   .authors {
@@ -239,12 +269,12 @@ export default {
   .authorname {
     font-size: 0.8rem;
     color: #000000;
-    margin-left: 2px;
+    margin-left: 5px;
+    margin-top: 5px;
   }
 
   .authorname:hover {
     cursor: pointer;
-    border-bottom: 1px solid #000000;
   }
 
   .read-time {
@@ -256,9 +286,8 @@ export default {
   }
 
   .read-time-content {
-    width: 100%;
     height: 100%;
-    margin-top: 10px;
+    margin-top: 3px;
   }
 
 </style>
