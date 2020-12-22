@@ -104,7 +104,7 @@ export default {
   background-color: #fff;
   min-height: 100vh;
   max-height: 100vh;
-  overflow: auto;
+  overflow-y: scroll;
 }
 
 .logo {
