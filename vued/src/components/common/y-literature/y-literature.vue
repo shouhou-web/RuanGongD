@@ -11,11 +11,11 @@
         <div class="authorname" @click="gotoIntro(one_author.userID, one_author.authorID)">{{one_author.realName}}</div>
       </div>
     </div>
-    <div class="read-time">
-      <div class="read-time-content">
-        {{read_time}} Reads
-      </div>
-    </div>
+<!--    <div class="read-time">-->
+<!--      <div class="read-time-content">-->
+<!--        {{read_time}} Reads-->
+<!--      </div>-->
+<!--    </div>-->
   </div>
 </template>
 
@@ -27,10 +27,10 @@ export default {
     id: String,
     authors: Array,
     tags: Array,
-    read_time: {
-      type: Number,
-      default: 0
-    }
+    // read_time: {
+    //   type: Number,
+    //   default: 0
+    // }
   },
   methods: {
     gotoLiterature() {
