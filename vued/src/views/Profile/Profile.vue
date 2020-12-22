@@ -46,7 +46,7 @@
         <div class="user-intro" v-if="isSelfProfile">
           <div class="user-application">
             <!-- todo -->
-            <div class="application" @click="gotoIntro(user.userID, user.authorID)">当前还未认证门户</div>
+            <div class="application">当前还未认证门户</div>
           </div>
         </div>
         <div class="user-follow">
@@ -62,7 +62,7 @@
                   <div class="name-style">{{ onefollowingUser.username }}</div>
                   <div class="intro-style" @click="gotoIntro(onefollowingUser.userID, onefollowingUser.authorID)">{{ onefollowingUser.realName }}</div>
                 </div>
-                <div class="following-op" @click="cancleFollow(this.$store.state.user.userID, onefollowingUser.authorID)">unfollow</div>
+                <div class="following-op" @click="cancleFollow(this.$store.state.user.userID, onefollowingUser.authorID)" v-if="isSelfProfile">unfollow</div>
               </div>
             </div>
           </div>
@@ -150,7 +150,7 @@ import {
   editUserName,
   editUserEmailAddress,
   emailVerification,
-  uploadImage
+  editUserImage
 } from "@/network/profile";
 
 export default {
@@ -210,9 +210,9 @@ export default {
         file.type === "image/png";
       const checkFileSize = file.size / 1024 / 1024 < 5;
       if (!checkFileType) {
-        this.$notify.error("上传图片必须是 jpeg/jpg/png 格式！");
+        this.$notify.info("上传图片必须是 jpeg/jpg/png 格式！");
       } else if (!checkFileSize) {
-        this.$notify.error("上传图片大小不能超过 5MB！");
+        this.$notify.info("上传图片大小不能超过 5MB！");
       }
       if (checkFileType && checkFileSize) this.postData.key = random(16);
       return checkFileType && checkFileSize;
@@ -222,14 +222,26 @@ export default {
       this.imagePath = this.imgPathPrefix + this.fileList[0].response.key;
       console.log(response, file, fileList);
       this.$store.commit("setImagePath", this.imagePath)
-      console.log("imgPath = " + this.imagePath);
       this.hideUploadEdit = true;
+
+      editUserImage(this.$store.state.user.userID, this.imagePath)
+      .then((res) => {
+        if (res == 0) this.$notify.success("头像修改成功")
+        else if (res == -1) this.$notify.warning("头像修改失败")
+      })
+      .catch((err) => {
+        this.$notify.error(
+          {
+            title: "网络错误",
+            message: "请稍后重试~"
+          })
+      })
     },
     handleRemove() {
       this.hideUploadEdit = false;
     },
     handleExceed() {
-      this.$message.warning("最多上传 1 张头像");
+      this.$notify.info("最多上传 1 张头像");
     },
     retUserDegree() {
       if (this.userDegree == 0) return "高中生 (High school)";
@@ -263,7 +275,12 @@ export default {
           this.$notify.warning("取消关注失败，请刷新重试")
         else {
           this.$notify.success("取消关注成功")
-          // todo 再次调用一次关注成员列表获取
+
+          getUserFollowingList(followerID)
+            .then((follow) => {
+              this.followUsers = follow
+            })
+            .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
         }
       })
       .catch((err) => {
@@ -808,10 +825,6 @@ export default {
   text-align: center;
   font-size: 0.800rem;
   letter-spacing: 2px;
-}
-
-.application:hover {
-  cursor: pointer;
 }
 
 .user-intro-change {
