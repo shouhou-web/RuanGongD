@@ -261,8 +261,7 @@ export function deleteComment(userId, deleteCommentId) {
 export function createConsultation(senderId, receiverId, text) {
   return request(baseURL, {
     url: "/createConsultation",
-    // TODO 对接响应后端？
-    params: { senderId, receiverId, text },
+    data: { senderId, receiverId, text },
     method: "post"
   });
 }

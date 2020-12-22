@@ -69,8 +69,16 @@ const mutations = {
     state.user.userDegree = degree;
   },
   setSearchRes(state, res) {
-    console.log(res)
+    console.log(res);
     state.searchRes = res;
+  },
+  setHomeCollect(state, collect) {
+    state.isHome = true;
+    state.collectList = collect;
+  },
+  setHomeCiation(state, ciation) {
+    state.isHome = true;
+    state.ciationList = ciation;
   }
 };
 

@@ -158,3 +158,16 @@ export function comment(userID, literatureID, content) {
     method: "post"
   });
 }
+
+
+//获取收藏状态
+export function getcollect(userID, literatureID) {
+  return request(baseURL, {
+    url: "/getcollect",
+    params: {
+      userID,
+      literatureID,
+    },
+    method: "post"
+  });
+}

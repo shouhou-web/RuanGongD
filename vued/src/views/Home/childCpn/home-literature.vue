@@ -23,7 +23,7 @@
             </div>
           </div>
           <div class="ciation__content__num">
-            {{ item.ciation }}
+            {{ item.citation }}
           </div>
         </li>
       </ul>

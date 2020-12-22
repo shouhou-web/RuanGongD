@@ -47,14 +47,18 @@ import { getHighCollect, getHighCiation } from "network/home.js";
 export default {
   name: "Home",
   created() {
-    getHighCollect().then(res => {
-      console.log("highCollect", res);
-      this.collectList = res;
-    });
-    // getHighCiation().then(res => {
-    //   console.log("highCiation", res);
-    //   this.ciationList = res;
-    // });
+    if (!this.$store.state.isHome) {
+      getHighCollect().then(res => {
+        console.log("highCollect", res);
+        this.collectList = res;
+        this.$store.commit("setHomeCollect", res);
+      });
+      getHighCiation().then(res => {
+        console.log("highCiation", res);
+        this.ciationList = res;
+        this.$store.commit("setHomeCiation", res);
+      });
+    }
   },
   data() {
     return {
@@ -319,7 +323,7 @@ export default {
 }
 
 .footer {
-  display: flex;
+  /* display: flex; */
   justify-content: space-between;
   /* width: var(--width-main); */
   width: 875px;

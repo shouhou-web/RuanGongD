@@ -1,7 +1,7 @@
 <template>
   <div id="authorcard" class="authorcard">
     <div class="auth-top">
-      <div class="auth-title">相关研究者</div>
+      <div class="auth-title" @click="test()">相关研究者</div>
     </div>
     <div class="auth-bottom">
       <div class="auth-part1">
@@ -76,6 +76,9 @@ export default {
     };
   },
   methods: {
+    test(){
+      console.log(this.autherID);
+    },
     //跳转到个人门户
     toAuthor(userID, authorID) {
       this.$router.push({
@@ -130,9 +133,11 @@ export default {
         }
       );
     getAuthorInformation(this.authorID).then(res => {
+      console.log("authorcard");
       console.log("author", res);
       this.author = res;
     });
+    console.log(this.author);
   },
   components: {}
 };
