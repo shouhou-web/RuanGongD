@@ -85,7 +85,7 @@ export default {
       .then(res => {
         console.log("getUserPosts");
         console.log(res);
-        this.posts = res.data.posts;
+        this.posts = res.posts;
       })
       .catch(err => {
         console.log(err);

@@ -97,7 +97,7 @@ export default {
       )
         .then(res => {
           console.log("createConsultation");
-          if (res.data.result == "true") {
+          if (res.result == "true") {
             this.$notify({
               title: "操作成功",
               message: "咨询消息发送成功",
@@ -160,7 +160,7 @@ export default {
       .then(res => {
         console.log("getAllTags");
         console.log(res);
-        this.sectorList = res.data.sectorList;
+        this.sectorList = res.sectorList;
       })
       .catch(err => {
         console.log(err);
@@ -170,7 +170,7 @@ export default {
         console.log("getMyLiterature");
         console.log(res);
         var tmpLiterature = Object;
-        for (var literature of res.data.myLiteratureList) {
+        for (var literature of res.myLiteratureList) {
           // for (var literature of tmpList) {
           tmpLiterature.literatureID = literature.literatureID;
           tmpLiterature.title = literature.title;

@@ -422,7 +422,7 @@ export default {
           .then(res => {
             console.log("report post");
             console.log(res);
-            if (res.data.result == "true") {
+            if (res.result == "true") {
               this.reportDialog = false;
               this.$notify({
                 title: "操作成功",
@@ -452,7 +452,7 @@ export default {
           .then(res => {
             console.log("report comment");
             console.log(res);
-            if (res.data.result == "true") {
+            if (res.result == "true") {
               this.reportDialog = false;
               this.$notify({
                 title: "操作成功",
@@ -493,7 +493,7 @@ export default {
           .then(res => {
             console.log("delete post");
             console.log(res);
-            if (res.data.result == "true") {
+            if (res.result == "true") {
               this.deleteDialog = false;
               this.$notify({
                 title: "操作成功",
@@ -524,7 +524,7 @@ export default {
           .then(res => {
             console.log("delete comment");
             console.log(res);
-            if (res.data.result == "true") {
+            if (res.result == "true") {
               this.deleteDialog = false;
 
               for (var i = 0; i < this.comments.length; i++) {
@@ -566,7 +566,7 @@ export default {
         .then(res => {
           console.log("comment post");
           console.log(res);
-          if (res.data.result == "true") {
+          if (res.result == "true") {
             var len = this.comments.length;
             this.comments.push({
               commentId: "1",
@@ -612,25 +612,25 @@ export default {
       .then(res => {
         console.log("getPostInfo");
         console.log(res);
-        this.postInfo.postName = res.data.postName;
-        this.postInfo.postContent = res.data.postContent;
-        this.postInfo.replyNum = res.data.replyNum;
-        this.postInfo.viewNum = res.data.viewNum;
-        this.postInfo.creatorId = res.data.creatorId;
-        this.postInfo.creatorAvatar = res.data.creatorAvatar;
-        this.postInfo.createTime = res.data.createTime;
-        this.postInfo.postTags = res.data.tags;
-        this.postInfo.citeId = res.data.citeId;
-        this.comments = res.data.comments;
+        this.postInfo.postName = res.postName;
+        this.postInfo.postContent = res.postContent;
+        this.postInfo.replyNum = res.replyNum;
+        this.postInfo.viewNum = res.viewNum;
+        this.postInfo.creatorId = res.creatorId;
+        this.postInfo.creatorAvatar = res.creatorAvatar;
+        this.postInfo.createTime = res.createTime;
+        this.postInfo.postTags = res.tags;
+        this.postInfo.citeId = res.citeId;
+        this.comments = res.comments;
 
         getLiterature(this.postInfo.citeId)
           .then(res => {
             console.log(getLiterature);
             console.log(res);
-            this.citedLiterature.literatureID = res.data.literatureID;
-            this.citedLiterature.title = res.data.title;
+            this.citedLiterature.literatureID = res.literatureID;
+            this.citedLiterature.title = res.title;
             this.citedLiterature.abstract =
-              res.data.abstract.slice(0, 150) + "..."; // 摘要截断
+              res.abstract.slice(0, 150) + "..."; // 摘要截断
           })
           .catch(err => {
             console.log(err);
