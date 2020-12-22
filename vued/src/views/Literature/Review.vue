@@ -380,9 +380,9 @@ export default {
   display: flex;
   flex-direction: column;
   max-width: 100%;
-  margin-bottom: 30px;
+  /* margin-bottom: 30px; */
   border: 1px solid #ddd;
-  box-shadow: 0 0px 2px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.12);
+  /* box-shadow: 0 0px 2px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.12); */
   padding: 20px 30px 20px 30px;
   background: white;
 }
@@ -474,9 +474,10 @@ export default {
 }
 .nocomment{
   width: 100%;
-  height:65px;
+  height:60px;
   background: white;
   border: 1px solid #ddd;
+  border-bottom: 0;
   display: flex;
   /* justify-content:center; */
   align-items:center;

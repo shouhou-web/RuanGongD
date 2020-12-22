@@ -84,12 +84,13 @@ export function getStats(literatureID) {
 }
 
 //收藏文献
-export function collect(userID, literatureID,year,venue, title, option) {
+export function collect(userID, literatureID,realName,year,venue, title, option) {
   return request(baseURL, {
     url: "/collect",
     params: {
       userID,
       literatureID,
+      realName,
       year,
       venue,
       title,

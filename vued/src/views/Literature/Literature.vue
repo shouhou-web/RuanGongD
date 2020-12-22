@@ -30,7 +30,7 @@
               <span class="lable">摘要：</span>
             </div>
 
-            <span>{{ literature.abstract }}</span>
+            <span class="abstracthide">{{ literature.abstract }}</span>
           </div>
           <div class="keyword content">
             <span class="lable">关键词：</span>
@@ -41,7 +41,9 @@
               v-if="index < 3"
               href="javascript:void(0);"
             >
-              <span @click="searchKey(item)" class="keywordcontent">{{ item }}</span>
+              <span @click="searchKey(item)" class="keywordcontent">{{
+                item
+              }}</span>
             </el-link>
           </div>
           <div class="doi content">
@@ -91,7 +93,12 @@
                 <i class="el-icon-warning-outline"></i>
                 <span> 举报文献 </span>
               </l-button>
-              <l-button size="medium" type="primary" class="download" @click="download()">
+              <l-button
+                size="medium"
+                type="primary"
+                class="download"
+                @click="download()"
+              >
                 <i class="el-icon-download"></i>
                 <span> 下载文献 </span>
               </l-button>
@@ -299,7 +306,7 @@ export default {
       for (let i = 0; i < this.literature.authors.length && i < 3; i++) {
         getAuthorInformation(this.literature.authors[i]).then((res) => {
           console.log(res);
-          this.authorList.push(res) ;
+          this.authorList.push(res);
         });
       }
       getcollect(
@@ -318,7 +325,7 @@ export default {
     // if(this.literature != null)
   },
   methods: {
-    download(){
+    download() {
       window.open(this.literature.download);
     },
     collectLiterature() {
@@ -330,6 +337,7 @@ export default {
         collect(
           this.$store.state.user.userID,
           this.literature.literatureID,
+          this.authorList[0].realName,
           this.literature.year,
           this.literature.venue,
           this.literature.title,
@@ -408,12 +416,14 @@ export default {
       });
     },
     searchKey(key) {
+      console.log("从文献关键词过来查");
       console.log(key);
       let item = {
         legical: "NULL",
         type: "SU",
         value: key,
       };
+      this.$store.commit("setSearchList", item);
       search(item)
         .then((res) => {
           this.$router.push({
@@ -474,6 +484,7 @@ export default {
   width: 100%;
   background: white;
   /* padding-bottom: 10px; */
+  border-bottom: 1px solid #ddd;
 }
 .info-top {
   justify-content: space-between;
@@ -492,7 +503,7 @@ export default {
   display: flex;
 }
 .top-right {
-  width: 250px;
+  width: 290px;
   margin-top: 30px;
 }
 .top-right > .a1 {
@@ -601,10 +612,6 @@ export default {
 .abstract {
   text-align: left;
   letter-spacing: 0.5px;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 5;
-  overflow: hidden;
 }
 .lable {
   display: inline-block;
@@ -616,6 +623,12 @@ export default {
   font-size: 14px;
   display: flex;
   -webkit-user-select: text;
+}
+.abstracthide {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
 }
 .el-link {
   margin-right: 8px;

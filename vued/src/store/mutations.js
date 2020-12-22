@@ -52,6 +52,10 @@ const mutations = {
   inputSearchList(state, change) {
     state.searchList[change.index].value = change.value;
   },
+  setSearchList(state,item) {
+    state.searchList = []
+    state.searchList.push(item)
+  },
   // profile相关修改
   setImagePath(state, image) {
     state.user.image = image;
