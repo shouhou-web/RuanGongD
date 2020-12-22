@@ -49,7 +49,7 @@
 
             <div class="form-item">
               <div class="form-label">
-                <span class="required-star">*</span>分区
+                <span class="required-star" v-if="!this.sectorfixed">*</span>分区
               </div>
               <v-select
                 v-model="createPostForm.sectorId"
@@ -63,6 +63,7 @@
                 color="var(--color-main)"
                 dense
                 :rules="rules.sectorIdRule"
+                :disabled="sectorfixed"
               >
               </v-select>
             </div>
@@ -144,7 +145,7 @@ import { createPost, getAllTags } from "@/network/forum";
 import { getMyLiterature } from "@/network/literature";
 export default {
   name: "CreatePost",
-  props: {},
+  props: { sectorId: { type: String, default: "" } },
   data() {
     return {
       dialog: false, // 是否展示悬浮窗
@@ -152,6 +153,7 @@ export default {
       search: "", // 搜索的 tag
       selectedLiterature: {},
       createPostFormValid: false,
+      sectorfixed: false,
       rules: {
         postNameRule: [
           v => !!v,
@@ -212,17 +214,17 @@ export default {
       },
       sectorList: [
         {
-          sectorId: 1,
+          sectorId: "01",
           sectorName: "软妹工程",
           sectorTags: ["软妹工程基础", "原力系统", "软妹分析与设计"]
         },
         {
-          sectorId: 2,
+          sectorId: "2",
           sectorName: "计蒜姬科学与技术",
           sectorTags: ["计蒜姬组成原理", "计蒜姬科学方法论"]
         },
         {
-          sectorId: 123,
+          sectorId: "123",
           sectorName: "人工智障",
           sectorTags: ["浅度学习", "学不动了", "炼丹术"]
         }
@@ -235,7 +237,7 @@ export default {
       // for test
       console.log(this.createPostForm);
       // for test
-
+      //this.createPostForm.sectorId = this.createPostForm.sectorId.toString();
       createPost(this.createPostForm)
         .then(res => {
           console.log("createPost");
@@ -307,12 +309,21 @@ export default {
           0,
           this.createPostForm.postTags.length
         );
-    }
+    },
+    sectorId(newVal) {
+      console.log("传入createPost的sectorId: " + newVal);
+      this.sectorId = newVal;
+    },
   },
   created() {
     this.userId = this.$store.state.user.userID; // TODO 等待统一
     this.createPostForm.userId = this.userId;
     this.createPostForm.citeId = "-1";
+    if (this.sectorId != "") {
+      //this.createPostForm.sectorId = parseInt(this.sectorId);
+      this.createPostForm.sectorId = this.sectorId;
+      this.sectorfixed = true;
+    }
     // 获取所有分区，以及每个分区下的 tag
     getAllTags()
       .then(res => {
