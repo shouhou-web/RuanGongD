@@ -67,7 +67,7 @@
             <li v-for="(item, index) in splitList" :key="index">
               <div class="content__secline--dark" v-if="index % 2 == 0">
                 <div @click="toLiterature(item)" class="line__title">
-                  {{ item.title }}
+                  <span> {{ item.title }}</span>
                 </div>
                 <div class="line__author">
                   <span v-for="(itemA, indexA) in item.authors" :key="indexA">
@@ -99,7 +99,7 @@
               </div>
               <div class="content__secline" v-else>
                 <div @click="toLiterature(item)" class="line__title">
-                  {{ item.title }}
+                  <span> {{ item.title }}</span>
                 </div>
                 <div class="line__author">
                   <span v-for="(itemA, indexA) in item.authors" :key="indexA">
@@ -261,7 +261,10 @@ export default {
     },
     // 分页
     totalPage() {
-      return parseInt(this.targetList.length / 10) + 1;
+      return parseInt(this.targetList.length / 10) ==
+        this.targetList.length / 10
+        ? parseInt(this.targetList.length / 10)
+        : parseInt(this.targetList.length / 10) + 1;
     },
     splitList() {
       return this.targetList.slice((this.curPage - 1) * 10, this.curPage * 10);
@@ -533,13 +536,16 @@ export default {
   max-height: 60px;
 }
 
-.line__title:hover,
+.line__title span:hover,
 .line__author span a:hover {
   color: var(--color-tint);
 }
 
 .line__title {
   flex: 1;
+}
+
+.line__title span {
   cursor: pointer;
 }
 
