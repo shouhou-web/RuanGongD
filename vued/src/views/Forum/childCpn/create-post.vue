@@ -49,7 +49,8 @@
 
             <div class="form-item">
               <div class="form-label">
-                <span class="required-star" v-if="!this.sectorfixed">*</span>分区
+                <span class="required-star" v-if="!this.sectorfixed">*</span
+                >分区
               </div>
               <v-select
                 v-model="createPostForm.sectorId"
@@ -213,21 +214,21 @@ export default {
         citeId: "-1" // 引用的文献 ID
       },
       sectorList: [
-        {
-          sectorId: "01",
-          sectorName: "软妹工程",
-          sectorTags: ["软妹工程基础", "原力系统", "软妹分析与设计"]
-        },
-        {
-          sectorId: "2",
-          sectorName: "计蒜姬科学与技术",
-          sectorTags: ["计蒜姬组成原理", "计蒜姬科学方法论"]
-        },
-        {
-          sectorId: "123",
-          sectorName: "人工智障",
-          sectorTags: ["浅度学习", "学不动了", "炼丹术"]
-        }
+        // {
+        //   sectorId: "1",
+        //   sectorName: "软妹工程",
+        //   sectorTags: ["软妹工程基础", "原力系统", "软妹分析与设计"]
+        // },
+        // {
+        //   sectorId: "2",
+        //   sectorName: "计蒜姬科学与技术",
+        //   sectorTags: ["计蒜姬组成原理", "计蒜姬科学方法论"]
+        // },
+        // {
+        //   sectorId: "3",
+        //   sectorName: "人工智障",
+        //   sectorTags: ["浅度学习", "学不动了", "炼丹术"]
+        // }
       ], // 可选分区列表
       myLiteratureList: [] // 我的文献列表
     };
@@ -313,7 +314,7 @@ export default {
     sectorId(newVal) {
       console.log("传入createPost的sectorId: " + newVal);
       this.sectorId = newVal;
-    },
+    }
   },
   created() {
     this.userId = this.$store.state.user.userID; // TODO 等待统一
@@ -329,7 +330,24 @@ export default {
       .then(res => {
         console.log("getAllTags");
         console.log(res);
-        this.sectorList = res.sectorList;
+        var obj = {
+          sectorId: "",
+          sectorName: "",
+          sectorTags: []
+        };
+        for (var sector of res.sectors) {
+          obj.sectorId = sector.sectorId;
+          obj.sectorName = sector.sectorName;
+          obj.sectorTags = [];
+          for (var str of sector.sectorTags) {
+            var taglist = str.split(";");
+            for (var tag of taglist) {
+              obj.sectorTags.push(tag);
+              // console.log("tag = " + tag);
+            }
+          }
+          this.sectorList.push({ ...obj });
+        }
       })
       .catch(err => {
         console.log(err);
@@ -339,7 +357,7 @@ export default {
         console.log("getMyLiterature");
         console.log(res);
         var tmpLiterature = Object;
-        for (var literature of res.myLiteratureList) {
+        for (var literature of res) {
           // for (var literature of tmpList) {
           tmpLiterature.literatureID = literature.literatureID;
           tmpLiterature.title = literature.title;
