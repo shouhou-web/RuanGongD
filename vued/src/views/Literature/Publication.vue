@@ -138,7 +138,7 @@
           <span>提示</span>
         </div>
         <div class="alert-body">
-          <i class="el-icon-document" style="font-size: 200px;text-align: center"></i>
+          <i class="el-icon-document" style="font-size: 150px;text-align: center"></i>
           <br>
           <span>请填写文献各项信息，完成并提交后等待发布申请结果</span>
         </div>
@@ -315,6 +315,7 @@ export default {
         for(let i of response.data){
           i.value = i.name;  //将想要展示的数据作为value
         }
+        console(response.data);
         this.authorList = response.data;
         callback(this.authorList);
       }).catch((error)=>{
@@ -400,13 +401,14 @@ export default {
   .formContent {
     width: 1100px;
     margin-top: 1%;
-    margin-left: 22%;
+    margin-left: 19%;
     float: left;
   }
   .alert {
-    width: 300px;
+    width: 200px;
     margin-top: 1%;
-    margin-left: 2%;
+    margin-left: 1%;
+    margin-right: 1%;
     float: left;
   }
   .alert-header{
