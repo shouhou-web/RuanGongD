@@ -11,9 +11,13 @@
       <div class="formContent">
         <v-card>
           <v-card-title class="card-title">请填写各项文献相关信息</v-card-title>
-
           <v-card-text>
-            <el-form :model="createLiForm" ref="createLiForm" label-width="100px" :rules="liRule">
+            <el-form
+              :model="createLiForm"
+              ref="createLiForm"
+              label-width="100px"
+              :rules="liRule"
+            >
               <el-form-item label="文献标题" prop="title">
                 <el-input
                   placeholder="请输入文献标题"
@@ -125,25 +129,30 @@
 
           <v-card-actions>
             <div class="footer">
-              <l-button @click="submit('createLiForm')" size="small">发表</l-button>
-              <l-button @click="dialog = false" type="info" size="small">取消</l-button>
+              <l-button @click="submit('createLiForm')" size="small"
+                >发表</l-button
+              >
+              <l-button @click="dialog = false" type="info" size="small"
+                >取消</l-button
+              >
             </div>
           </v-card-actions>
           <v-divider></v-divider>
         </v-card>
-
       </div>
       <div class="alert">
-        <el-card>
-          <div class="alert-header" >
-            <span>提示</span>
-          </div>
-          <div class="alert-body">
-            <i class="el-icon-document" style="font-size: 150px;text-align: center"></i>
-            <br>
-            <span>请填写文献各项信息，完成并提交后等待发布申请结果</span>
-          </div>
-        </el-card>
+        <div class="alert-header">
+          <!-- <span>提示</span> -->
+        </div>
+        <div class="alert-body">
+          <img
+            src="https://c5.rgstatic.net/m/4444781797691/images/icons/svgicons/doi.svg"
+            alt=""
+          />
+        </div>
+        <div class="alert-footer">
+          请填写文献各项信息，完成并提交后等待发布申请结果。
+        </div>
       </div>
     </div>
 
@@ -380,56 +389,73 @@ export default {
 </script>
 
 <style scoped>
-  .pageHeaderBg {
-    width: 100vw;
-    background-color: white;
-    box-shadow: 0px 1px 0px 0px rgba(225, 225, 225, 1);
-  }
-  .pageHeader {
-    margin: 1px auto;
-    margin-bottom: 1px;
-    border-radius: 0px;
-    width: 900px;
-    /*background-color: white;*/
-    height: 100px;
-    display: flex;
-    flex-direction: column;
-  }
-  .pageName {
-    margin: 40px 20px;
-    font-size: 35px;
-    font-style: bold;
-    height: 50px;
-  }
-  .pageBody{
-    margin-top: 10px;
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: center;
-  }
-  .formContent {
-    width: 1100px;
-    align-items: center;
+.pageHeaderBg {
+  width: 100vw;
+  background-color: white;
+  box-shadow: 0px 1px 0px 0px rgba(225, 225, 225, 1);
+  margin-bottom: 20px;
+}
 
-  }
-  .alert {
-    width: 200px;
-    height: 250px;
-    margin-left: 10px;
-  }
-  .alert-header{
-    font-size: 20px;
-    text-align: center
-  }
-  .alert-body{
-    font-size: 15px;
-    text-align: center
-  }
-  .footer {
-    display: flex;
-    justify-content: space-between;
-    margin: auto;
-    padding-bottom: 10px;
-    width: 30%;
-  }
+.pageHeader {
+  margin: 1px auto;
+  margin-bottom: 1px;
+  border-radius: 0px;
+  width: 900px;
+  /*background-color: white;*/
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+}
+
+.pageName {
+  margin: 40px 20px;
+  font-size: 35px;
+  font-style: bold;
+  height: 50px;
+}
+
+.pageBody {
+  margin: 0 auto 150px;
+  display: flex;
+  justify-content: space-around;
+  width: var(--width-main);
+}
+
+.formContent {
+  width: 750px;
+  align-items: center;
+}
+
+.alert {
+  background-color: #fff;
+  width: 200px;
+  height: 250px;
+  margin-left: 10px;
+  padding: 40px;
+}
+
+.alert-header {
+  font-size: 20px;
+  text-align: center;
+}
+
+.alert-body {
+  font-size: 15px;
+  text-align: center;
+}
+
+.alert-footer {
+  color: #111;
+  text-indent: 1em;
+  margin-top: 20px;
+  font-weight: 400;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  margin: auto;
+  padding-bottom: 10px;
+  width: 30%;
+}
 </style>
