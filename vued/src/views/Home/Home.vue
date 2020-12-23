@@ -108,12 +108,12 @@ export default {
 .logo {
   display: flex;
   justify-content: center;
-  margin: 90px 0 50px;
+  margin: 90px 0 40px;
 }
 
 .logo img {
   /* width: 124px; */
-  width: 400px;
+  width: 500px;
 }
 
 .open {
