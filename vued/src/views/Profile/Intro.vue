@@ -316,13 +316,16 @@ export default {
       })
     },
     followIntro() {
-      follow(this.$route.query.userID, this.intro.authorID, 1)
+      follow(this.$store.state.user.userID, this.intro.authorID, 1)
       .then((res) => {
         if (res == -1) this.$notify.warning("关注失败，请重试")
         else {
           this.$notify.success("关注成功")
           this.isFollowing = true
         }
+      })
+      .catch((err) => {
+        this.$notify.error( { title: "网络错误", message: "请稍后重试~" } )
       })
     },
     cancleFollowIntro() {
