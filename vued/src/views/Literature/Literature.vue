@@ -357,11 +357,11 @@ export default {
   },
   methods: {
     onCopy() {
-      this.$message.success("复制成功！");
+      this.$notify.success("复制成功！");
       this.$refs.hover.hideHover();
     },
     onCopyError() {
-      this.$message.error("复制失败");
+      this.$notify.error("复制失败");
     },
      openRef(APAformat,MLAformat) {
       this.refAPA = this.literature.APAformat;

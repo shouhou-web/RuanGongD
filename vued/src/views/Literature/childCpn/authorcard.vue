@@ -16,7 +16,7 @@
             :src="author.image"
             alt=""
             class="l-root-card--reporter-pic"
-            @click="toAuthor(author.userID, authorID)"
+            @click="toAuthor(authorID)"
           />
         </div>
       </div>
@@ -41,7 +41,7 @@
         >
           已关注
         </l-button>
-        <l-button @click="toAuthor(author.userID, authorID)">个人门户</l-button>
+        <l-button @click="toAuthor(authorID)">个人门户</l-button>
       </div>
     </div>
   </div>
@@ -62,7 +62,7 @@ export default {
   data() {
     return {
       author: {
-        autherID: "123",
+        authorID: "123",
         realName: "阿尔托莉雅",
         organization: "不列颠",
         userID: "",
@@ -77,14 +77,14 @@ export default {
   },
   methods: {
     test(){
-      console.log(this.autherID);
+      console.log(this.authorID);
     },
     //跳转到个人门户
     toAuthor(authorID) {
       this.$router.push({
         path: "/intro",
         query: {
-          autherID: authorID
+          authorID: authorID
         }
       });
     },
