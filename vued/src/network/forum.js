@@ -341,3 +341,17 @@ export function isFollowedAll(userId) {
     method: "post"
   });
 }
+
+/**
+ * 用户是否是认证用户，以及返回authorID
+ * @returns {userIdentity, authorID}
+ *  都是字符串
+ *  没有 authorID 也返回个空的
+ */
+export function getUserIdentity(userId) {
+  return request(baseURL, {
+    url: "/getUserIdentity",
+    data: {userId},
+    method: "post"
+  })
+}
