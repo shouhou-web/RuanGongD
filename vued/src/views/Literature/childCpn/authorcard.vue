@@ -220,10 +220,10 @@ export default {
   margin-right: 25px;
   text-align: justify;
 
-    line-height:1.4em;
-    /* 3 times the line-height to show 3 lines */
-    height:4.2em;
-    overflow:hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
 }
 
 .authorcard .auth-part3 {

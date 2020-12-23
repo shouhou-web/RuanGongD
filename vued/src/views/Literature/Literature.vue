@@ -14,7 +14,7 @@
               <li
                 class="author"
                 v-for="(item, index) in authorList"
-                @click="toAuthor(item.userID, item.authorID)"
+                @click.stop="toAuthor(item.authorID)"
                 :key="index"
               >
                 <l-author :author="item"></l-author>
@@ -174,44 +174,44 @@
         </v-card>
       </v-dialog>
       <!-- 引文链接 -->
-    <m-hover ref="hover">
-      <div class="sh-wrapper">
-        <div class="share--first">
-          <span
-            class="btn-share"
-            v-clipboard:copy="refAPA"
-            v-clipboard:success="onCopy"
-            v-clipboard:error="onCopyError"
-          >
-            复制APA格式引文
-          </span>
-          <input
-            class="input-share"
-            type="text"
-            id="input"
-            :value="refAPA"
-            readonly=""
-          />
+      <m-hover ref="hover">
+        <div class="sh-wrapper">
+          <div class="share--first">
+            <span
+              class="btn-share"
+              v-clipboard:copy="refAPA"
+              v-clipboard:success="onCopy"
+              v-clipboard:error="onCopyError"
+            >
+              复制APA格式引文
+            </span>
+            <input
+              class="input-share"
+              type="text"
+              id="input"
+              :value="refAPA"
+              readonly=""
+            />
+          </div>
+          <div class="share">
+            <span
+              class="btn-share"
+              v-clipboard:copy="refMLA"
+              v-clipboard:success="onCopy"
+              v-clipboard:error="onCopyError"
+            >
+              复制MLA格式引文
+            </span>
+            <input
+              class="input-share"
+              type="text"
+              id="input"
+              :value="refMLA"
+              readonly=""
+            />
+          </div>
         </div>
-        <div class="share">
-          <span
-            class="btn-share"
-            v-clipboard:copy="refMLA"
-            v-clipboard:success="onCopy"
-            v-clipboard:error="onCopyError"
-          >
-            复制MLA格式引文
-          </span>
-          <input
-            class="input-share"
-            type="text"
-            id="input"
-            :value="refMLA"
-            readonly=""
-          />
-        </div>
-      </div>
-    </m-hover>
+      </m-hover>
     </div>
     <router-view
       v-if="literature != null"
@@ -253,7 +253,7 @@ export default {
       //   title: "Saber我的",
       //   authorList: [
       //     {
-      //       autherID: "123",
+      //       authorID: "123",
       //       realName: "阿尔托莉雅",
       //       organization: "不列颠",
       //       userID: "",
@@ -327,19 +327,23 @@ export default {
           },
         ],
       },
-      refAPA:"",
-      refMLA:"",
+      refAPA: "",
+      refMLA: "",
     };
-    
   },
   created() {
     getLiterature(this.$route.query.literatureID).then((res) => {
       this.literature = res.literature;
+      console.log(this.literature.authors);
       for (let i = 0; i < this.literature.authors.length && i < 3; i++) {
         getAuthorInformation(this.literature.authors[i]).then((res) => {
           this.authorList.push(res);
+          console.log(res);
         });
+        console.log("getAutherInfor");
       }
+      console.log("作者列表" + this.authorList);
+      console.log(this.authorList.length);
       getcollect(
         this.$store.state.user.userID,
         this.literature.literatureID
@@ -353,6 +357,7 @@ export default {
         }
       });
     });
+
     // if(this.literature != null)
   },
   methods: {
@@ -363,11 +368,11 @@ export default {
     onCopyError() {
       this.$notify.error("复制失败");
     },
-     openRef(APAformat,MLAformat) {
+    openRef(APAformat, MLAformat) {
       this.refAPA = this.literature.APAformat;
       this.refMLA = this.literature.MLAformat;
       this.$refs.hover.showHover({
-        title: "引用"
+        title: "引用",
       });
     },
     download() {
@@ -451,11 +456,11 @@ export default {
         },
       });
     },
-    toAuthor(userID, authorID) {
+    toAuthor(authorID) {
+      console.log(authorID);
       this.$router.push({
-        path: "/profile",
+        path: "/intro",
         query: {
-          userID: userID,
           authorID: authorID,
         },
       });
