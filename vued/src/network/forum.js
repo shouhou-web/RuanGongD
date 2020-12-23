@@ -327,3 +327,17 @@ export function getFollowedPosts(userId) {
     method: "post"
   });
 }
+
+/**
+ * 获取用户对所有分区的关注情况
+ * @returns {sectors[{sectorId, followed}]}
+ *  sectorId: 分区 id
+ *  followed: 用户关注了该分区返回 "1", 否则返回 "0"
+ */
+export function isFollowedAll(userId) {
+  return request(baseURL, {
+    url: "/isFollowedAll",
+    data: {userId},
+    method: "post"
+  });
+}
