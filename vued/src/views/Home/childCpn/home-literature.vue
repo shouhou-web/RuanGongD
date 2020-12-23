@@ -62,7 +62,7 @@ export default {
 <style scoped>
 #ciation {
   /* height: 350px; */
-  width: 830px;
+  width: 890px;
   margin: 0 auto;
 }
 
@@ -100,8 +100,9 @@ export default {
 }
 
 .ciation__content__main {
-  flex: 1;
+  width: 310px;
   margin-left: 20px;
+  margin-right: 30px;
 }
 
 .ciation__content__main__title:hover {
