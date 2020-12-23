@@ -337,6 +337,7 @@ export default {
           path: "/forumSector",
           query: {
             sectorId: this.sectorId,
+            sectorName: this.sectorName,
             page: this.page,
             sort: val,
             keyword: this.keyword
@@ -350,6 +351,7 @@ export default {
         path: "/forumSector",
         query: {
           sectorId: this.sectorId,
+          sectorName: this.sectorName,
           page: this.page,
           sort: this.sort,
           keyword: this.keyword
