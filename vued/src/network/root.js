@@ -70,3 +70,45 @@ export function getPostReports() {
     method: "post"
   });
 }
+
+// 获取所有的申请
+export function getAllGateApplication() {
+  return request(baseURL, {
+    url: "getAllGateApplication",
+    params: {},
+    method: "post"
+  })
+}
+
+//通过申请
+export function approveApplication(applicationID) {
+  return request(baseURL, {
+    url: "approveApplication",
+    params: {
+      applicationID
+    },
+    method: "post"
+  })
+}
+
+//驳回申请
+export function rejectApplication(applicationID) {
+  return request(baseURL, {
+    url: "rejectApplication",
+    params: {
+      applicationID
+    },
+    method: "post"
+  })
+}
+
+//发送系统消息
+export function sendSysMsg(content) {
+  return request(baseURL, {
+    url: "/sendSysMsg",
+    params: {
+      content
+    },
+    method: "post"
+  });
+}

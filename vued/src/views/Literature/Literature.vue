@@ -30,7 +30,7 @@
               <span class="lable">摘要：</span>
             </div>
 
-            <span>{{ literature.abstract }}</span>
+            <span class="abstracthide">{{ literature.abstract }}</span>
           </div>
           <div class="keyword content">
             <span class="lable">关键词：</span>
@@ -41,7 +41,9 @@
               v-if="index < 3"
               href="javascript:void(0);"
             >
-              <span @click="searchKey(item)" class="keywordcontent">{{ item }}</span>
+              <span @click="searchKey(item)" class="keywordcontent">{{
+                item
+              }}</span>
             </el-link>
           </div>
           <div class="doi content">
@@ -71,7 +73,7 @@
                 size="small"
                 :round="true"
                 type="primary"
-                @click="referFormat()"
+                @click="openRef()"
               >
                 <i class="el-icon-edit"></i>
                 <span> 引用</span>
@@ -91,7 +93,12 @@
                 <i class="el-icon-warning-outline"></i>
                 <span> 举报文献 </span>
               </l-button>
-              <l-button size="medium" type="primary" class="download" @click="download()">
+              <l-button
+                size="medium"
+                type="primary"
+                class="download"
+                @click="download()"
+              >
                 <i class="el-icon-download"></i>
                 <span> 下载文献 </span>
               </l-button>
@@ -166,15 +173,45 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <m-hover ref="hover">
-        <div class="hover-referformat1">
-          MLA格式引文：{{ literature.MLAformat }}
+      <!-- 引文链接 -->
+    <m-hover ref="hover">
+      <div class="sh-wrapper">
+        <div class="share--first">
+          <span
+            class="btn-share"
+            v-clipboard:copy="refAPA"
+            v-clipboard:success="onCopy"
+            v-clipboard:error="onCopyError"
+          >
+            复制APA格式引文
+          </span>
+          <input
+            class="input-share"
+            type="text"
+            id="input"
+            :value="refAPA"
+            readonly=""
+          />
         </div>
-        <el-divider></el-divider>
-        <div class="hover-referformat2">
-          APA格式引文：{{ literature.APAformat }}
+        <div class="share">
+          <span
+            class="btn-share"
+            v-clipboard:copy="refMLA"
+            v-clipboard:success="onCopy"
+            v-clipboard:error="onCopyError"
+          >
+            复制MLA格式引文
+          </span>
+          <input
+            class="input-share"
+            type="text"
+            id="input"
+            :value="refMLA"
+            readonly=""
+          />
         </div>
-      </m-hover>
+      </div>
+    </m-hover>
     </div>
     <router-view
       v-if="literature != null"
@@ -290,16 +327,17 @@ export default {
           },
         ],
       },
+      refAPA:"",
+      refMLA:"",
     };
+    
   },
   created() {
     getLiterature(this.$route.query.literatureID).then((res) => {
-      console.log(res.literature);
       this.literature = res.literature;
       for (let i = 0; i < this.literature.authors.length && i < 3; i++) {
         getAuthorInformation(this.literature.authors[i]).then((res) => {
-          console.log(res);
-          this.authorList.push(res) ;
+          this.authorList.push(res);
         });
       }
       getcollect(
@@ -318,7 +356,21 @@ export default {
     // if(this.literature != null)
   },
   methods: {
-    download(){
+    onCopy() {
+      this.$message.success("复制成功！");
+      this.$refs.hover.hideHover();
+    },
+    onCopyError() {
+      this.$message.error("复制失败");
+    },
+     openRef(APAformat,MLAformat) {
+      this.refAPA = this.literature.APAformat;
+      this.refMLA = this.literature.MLAformat;
+      this.$refs.hover.showHover({
+        title: "引用"
+      });
+    },
+    download() {
       window.open(this.literature.download);
     },
     collectLiterature() {
@@ -330,6 +382,7 @@ export default {
         collect(
           this.$store.state.user.userID,
           this.literature.literatureID,
+          this.authorList[0].realName,
           this.literature.year,
           this.literature.venue,
           this.literature.title,
@@ -408,12 +461,14 @@ export default {
       });
     },
     searchKey(key) {
+      console.log("从文献关键词过来查");
       console.log(key);
       let item = {
         legical: "NULL",
         type: "SU",
         value: key,
       };
+      this.$store.commit("setSearchList", item);
       search(item)
         .then((res) => {
           this.$router.push({
@@ -474,6 +529,7 @@ export default {
   width: 100%;
   background: white;
   /* padding-bottom: 10px; */
+  border-bottom: 1px solid #ddd;
 }
 .info-top {
   justify-content: space-between;
@@ -492,7 +548,7 @@ export default {
   display: flex;
 }
 .top-right {
-  width: 250px;
+  width: 290px;
   margin-top: 30px;
 }
 .top-right > .a1 {
@@ -601,10 +657,6 @@ export default {
 .abstract {
   text-align: left;
   letter-spacing: 0.5px;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 5;
-  overflow: hidden;
 }
 .lable {
   display: inline-block;
@@ -616,6 +668,12 @@ export default {
   font-size: 14px;
   display: flex;
   -webkit-user-select: text;
+}
+.abstracthide {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
 }
 .el-link {
   margin-right: 8px;
@@ -665,4 +723,40 @@ export default {
 /* .keywordcontent{
   padding-right: 15px;
 } */
+.sh-wrapper {
+  padding: 10px 0;
+}
+
+.share,
+.share--first {
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+}
+
+.share--first {
+  border-bottom: 1px dashed #ddd;
+}
+
+.input-share {
+  padding: 10px;
+  width: 580px;
+}
+
+.btn-share {
+  border: 1px solid #ebebeb;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 15px;
+  text-align: center;
+  padding: 10px;
+  width: 180px;
+}
+
+.btn-share:hover {
+  background-color: var(--color-tint);
+  color: #ffffff;
+  transition: 0.3s;
+}
 </style>

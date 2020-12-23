@@ -41,11 +41,11 @@ export default {
         {
           name: "处理申请",
           route: "apply"
+        },
+        {
+          name: "发送系统消息",
+          route: "sysmsg"
         }
-        // {
-        //   name: "发送系统消息",
-        //   route: "sysmsg"
-        // }
       ]
     };
   },
@@ -70,9 +70,27 @@ export default {
           return 0;
         case "/root/apply":
           return 1;
-        // case "/root/sysmsg":
-        //   return 2;
+        case "/root/sysmsg":
+          return 2;
       }
+    }
+  },
+  created() {
+    if (this.$store.state.user == null) {
+      this.$router.push("/login");
+      this.$notify.error({
+        title: "尚未登录",
+        message: "来登录！"
+      });
+      return;
+    }
+    if (this.$store.state.user.userIdentity != 2) {
+      this.$store.state.user = "";
+      this.$router.push("/login");
+      this.$notify.error({
+        title: "爪巴",
+        message: "别瞎看哦"
+      });
     }
   }
 };

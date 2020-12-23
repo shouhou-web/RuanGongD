@@ -19,6 +19,13 @@
           ><v-btn disabled v-if="!logined">
             <div>登录以发表动态</div>
           </v-btn>
+          <el-switch
+            class="showF"
+            v-if="logined"
+            v-model="showFollowed"
+            active-text="显示已关注的分区"
+          >
+          </el-switch>
         </div>
       </div>
     </div>
@@ -26,19 +33,27 @@
       <el-row>
         <el-col :span="16">
           <ul>
-            <li v-if="sectors.length == 0">
+            <li
+              v-if="sectors.length == 0 || (showFollowed && followedCount == 0)"
+            >
               <div class="sectorEmpty">
                 <div class="sectorEmptyText">無</div>
               </div>
             </li>
             <li v-for="(item, index) in sectors" :key="index">
-              <v-card class="sectorCard" elevation="1" tile flat>
+              <v-card
+                class="sectorCard"
+                elevation="1"
+                tile
+                flat
+                v-if="!showFollowed || item.followed == '1'"
+              >
                 <el-row>
                   <el-col :span="12">
                     <v-card-title>
                       <div
                         class="sectorName"
-                        @click="goToSector(item.sectorId)"
+                        @click="goToSector(item.sectorId, item.sectorName)"
                       >
                         {{ handleTitle(item.sectorName, 42) }}
                       </div>
@@ -184,7 +199,11 @@
 </template>
 
 <script>
-import { getAllSectors, getFollowedPosts } from "network/forum.js";
+import {
+  getAllSectors,
+  getFollowedPosts,
+  isFollowedAll
+} from "network/forum.js";
 import MHeader from "../../components/common/m-header/m-header.vue";
 import CreatePost from "./childCpn/create-post.vue";
 import CreateConsultation from "./childCpn/create-consultation.vue";
@@ -195,11 +214,14 @@ export default {
     return {
       display: false,
       editStr: "由 ",
+      showFollowed: false,
+      followedCount: 0,
       sectors: [],
       /*sectors: [
         {
           sectorId: "1",
           sectorName: "测试分区1",
+          followed: "1",
           postNum: "1022",
           userId: "01",
           userAvatar: "https://i.loli.net/2020/08/11/8u6PdLt9vyCaUcX.png",
@@ -213,6 +235,7 @@ export default {
           sectorId: "02",
           sectorName:
             "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十",
+          followed: "0",
           postNum: "24",
           userId: "01",
           userAvatar: "https://i.loli.net/2020/08/11/Rqm3hEG6bnHLsd4.png",
@@ -224,6 +247,7 @@ export default {
         {
           sectorId: "03",
           sectorName: "测试分区1",
+          //followed: "1",
           postNum: "0",
           userId: "",
           userAvatar: "",
@@ -298,6 +322,7 @@ export default {
       ]*/
     };
   },
+  watch: {},
   methods: {
     closeDg() {
       this.display = false;
@@ -324,12 +349,13 @@ export default {
         query: { userID: id }
       });
     },
-    goToSector(id) {
+    goToSector(id, name) {
       //跳转到分区
       this.$router.push({
         path: "/forumSector",
         query: {
           sectorId: id,
+          sectorName: name,
           page: "1",
           sort: "0",
           keyword: ""
@@ -342,6 +368,20 @@ export default {
         path: "/forumPost",
         query: { postId: id }
       });
+    },
+    handleFollowed() {
+      let i;
+      console.log("handleFollowed:sectors");
+      console.log(this.sectors);
+      for (i = 0; i < this.sectors.length; i++) {
+        isFollowed(this.currentUser, this.sectors[i].sectorId).then(res => {
+          //console.log("sectori:"+i+" "+sectors[i]);
+          this.sectors[i].followed = res.followed;
+          console.log("res: " + res);
+          if (res.followed == "1") this.followedCount++;
+        });
+      }
+      console.log("followedCount: " + this.followedCount);
     }
   },
   computed: {
@@ -359,11 +399,30 @@ export default {
   created() {
     //return;
     //this.$store.commit("login", { userID: "123" });
+    //this.sectors[2].followed="1"
     getAllSectors()
       .then(res => {
         console.log("getAllSectors");
         console.log(res);
         this.sectors = res.sectors;
+        if (this.logined) {
+          isFollowedAll(this.currentUser).then(res => {
+            console.log("isFollowedAll");
+            console.log(res);
+            let followedAll = res.sectors;
+            for (let i = 0; i < this.sectors.length; i++) {
+              let temp = "0";
+              for (let j = 0; j < followedAll.length; j++) {
+                if (followedAll[i].sectorId === this.sectors[i].sectorId) {
+                  temp = followedAll[i].followed;
+                  break;
+                }
+              }
+              if (temp === "1") this.followedCount++;
+              this.sectors[i].followed = temp;
+            }
+          });
+        }
       })
       .catch(err => {
         console.log(err);
@@ -416,11 +475,16 @@ export default {
   height: 50px;
 }
 .pageTool {
+  display: flex;
   height: 50px;
   margin-top: 5px;
   /*margin-left: 85.5%;*/
   margin-left: 2%;
   margin-bottom: 20px;
+}
+.showF {
+  margin-left: 20px;
+  margin-top: 8px;
 }
 .sectorEmpty {
   border-radius: 0px;

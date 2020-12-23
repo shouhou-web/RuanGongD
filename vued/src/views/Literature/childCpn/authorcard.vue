@@ -133,7 +133,8 @@ export default {
       );
     getAuthorInformation(this.authorID).then(res => {
       console.log("authorcard");
-      console.log("author", res);
+      console.log(res);
+      console.log(this.authorID);
       this.author = res;
     });
     console.log(this.author);

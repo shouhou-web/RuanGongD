@@ -311,7 +311,7 @@ export default {
       console.log(item);
       this.$router.push({
         path: "/intro",
-        query: { authorID: item.authorID, userID: null }
+        query: { authorID: item.authorID }
       });
     },
     toLiterature(item) {

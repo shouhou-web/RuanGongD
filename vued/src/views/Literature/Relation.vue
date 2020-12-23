@@ -2,13 +2,13 @@
   <div id="reference" class="info-bottom">
     <div class="liter">
       <ul>
-        <li v-for="(item, index) in referList" :key="index">
+        <li v-for="(item, index) in referList" :key="index" v-if="item.literatureID!=literature.literatureID">
           <l-followlicard class="litercard" :refer="item"></l-followlicard>
         </li>
       </ul>
     </div>
 
-    <l-authorcard v-if="literature.authors[0] != null" :authorID="literature.authors[0]"></l-authorcard>
+    <l-authorcard v-if="authorIDs[0] != null" :authorID="authorIDs[0]"></l-authorcard>
   </div>
 </template>
 
@@ -29,8 +29,10 @@ export default {
       this.referList = res.relationList;
     });
     getRelatedAuthor(this.literature.venue).then(res => {
-      console.log("relate author", res);
-      this.authorID = res;
+      console.log("relate author");
+      this.authorIDs = res;
+      console.log(this.authorIDs);
+      console.log(this.authorIDs[0]);
     });
   },
   data() {
@@ -107,7 +109,7 @@ export default {
       //   } //文献
       // ],
       referList: null,
-      authorID: ""
+      authorIDs: [],
     };
   },
   methods: {},

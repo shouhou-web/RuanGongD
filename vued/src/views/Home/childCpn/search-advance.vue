@@ -150,34 +150,42 @@ export default {
       // this.searchList.splice(index, 1);
       this.$store.commit("deleteSearchList", index);
     },
+    _checkSearch() {
+      if (this.$store.state.isAdvance) {
+        this.$store.state.searchList.forEach(item => {
+          if (item.value == "") {
+            this.$notify.error({
+              title: "错误",
+              message: "请填写所有必填项"
+            });
+            return false;
+          }
+        });
+      } else if (this.$store.state.searchList[0].value == "") {
+        this.$notify.error({
+          title: "错误",
+          message: "请填写所有必填项"
+        });
+        return false;
+      }
+      return true;
+    },
     search() {
       // 搜索
-      console.log(this.start, this.end);
-      // this.$router.push({
-      //   path: "/search",
-      //   query: {
-      //     start: this.start,
-      //     end: this.end,
-      //   },
-      // });
-      if (this.$store.state.isAdvance)
-        advance(this.$store.state.searchList, this.start, this.end)
+      if (!this._checkSearch()) return;
+      if (this.$store.state.isAdvance) {
+        let start = this.$store.state.start;
+        let end = this.$store.state.end;
+        if (start == "" || end == "") {
+          start = "1800";
+          end = "2021";
+        }
+        advance(this.$store.state.searchList, start, end)
           .then(res => {
             console.log("advance", res);
             this.$store.commit("setSearchRes", res);
-            this.$store.commit("setStart", this.start);
-            this.$store.commit("setEnd", this.end);
             this.$router.push({
-              path: "/search",
-              query: {
-                start: this.start,
-                end: this.end
-                // litList1: res.literatureList1,
-                // litList2: res.literatureList2,
-                // authorList: res.authorList,
-                // venueList: res.venueList,
-                // yearList: res.yearList
-              }
+              path: "/search"
             });
           })
           .catch(err => {
@@ -186,13 +194,11 @@ export default {
               message: "网络异常，请稍后重试"
             });
           });
-      else
+      } else
         search(this.$store.state.searchList[0])
           .then(res => {
             console.log("search", res);
             this.$store.commit("setSearchRes", res);
-            this.$store.commit("setStart", this.start);
-            this.$store.commit("setEnd", this.end);
             this.$router.push({
               path: "/search"
             });
