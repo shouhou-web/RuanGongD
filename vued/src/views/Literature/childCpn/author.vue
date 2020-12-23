@@ -66,7 +66,7 @@ export default {
   methods: {
     //关注和取消关注
     followAuthor(userID) {
-      console.log("test");
+      // console.log("test");
       //已关注，要取消关注
       if (this.isFollowed) {
         follow(this.$route.query.userID, userID, 0) //缺少authorid找userid的步骤
@@ -93,7 +93,7 @@ export default {
     },
   },
   created() {
-    console.log("author-item", this.author);
+    // console.log("author-item", this.author);
     if (this.$store.state.user != null)
       getIntroFollowStatus(
         this.$store.state.user.userID,

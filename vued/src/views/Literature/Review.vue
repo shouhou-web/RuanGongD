@@ -42,7 +42,7 @@
                 <!-- 是作者：可以删除评论 -->
                 <v-icon> mdi-delete </v-icon>
               </v-btn>
-              <v-btn icon v-else @click="showReport(comment.userID)">
+              <v-btn icon v-else @click="showReport(comment.postCommentID)">
                 <!-- 不是作者：可以举报评论 -->
                 <v-icon> mdi-alert-octagon </v-icon>
               </v-btn>
@@ -185,6 +185,7 @@ export default {
       //   }) // 对 comments 按楼层升序排序
       // );
       console.log("文献评论长度"+this.comments.length);
+      console.log(this.comment);
   },
   data() {
     return {
@@ -226,20 +227,19 @@ export default {
       });
     },
     showDelete(commentId) {
-      console.log(123)
-      console.log(commentId.toString())
       this.deleteDialog = true;
       if (commentId == -1) {
         this.deletePost = true;
       } else {
         this.deletePost = false;
         this.deleteCommentId = commentId.toString();
+        console.log(this.deleteCommentId);
       }
     },
     showReport(commentId) {
       this.reportDialog = true;
       this.reportForm.reportContent = "";
-      this.reportForm.reportCommentId = commentId;
+      this.reportForm.reportCommentId = commentId.toString();
     },
     handleReport() {
       console.log(this.$store.state.user.userID,
@@ -253,7 +253,7 @@ export default {
         .then(res => {
           console.log("report comment");
           console.log(res);
-          if (res.data.result == "true") {
+          if (res.result == "true") {
             this.reportDialog = false;
             this.$notify({
               title: "操作成功",
@@ -277,15 +277,16 @@ export default {
     },
 
     handleDelete() {
+      console.log(this.deleteCommentId);
       deleteComment(this.$store.state.user.userID, this.deleteCommentId)
         .then(res => {
           console.log("delete comment");
           console.log(res);
-          if (res.data.result == "true") {
+          if (res.result == "true") {
             this.deleteDialog = false;
 
             for (var i = 0; i < this.comments.length; i++) {
-              if (this.deleteCommentId == this.comments[i].userId)
+              if (this.deleteCommentId == this.comments[i].postCommentID)
                 this.comments.splice(i, 1);
             }
             // if (this.comments[0] && this.comments[0].floor == 3)
