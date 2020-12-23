@@ -52,6 +52,10 @@ const mutations = {
   inputSearchList(state, change) {
     state.searchList[change.index].value = change.value;
   },
+  setSearchList(state,item) {
+    state.searchList = []
+    state.searchList.push(item)
+  },
   // profile相关修改
   setImagePath(state, image) {
     state.user.image = image;
@@ -69,8 +73,22 @@ const mutations = {
     state.user.userDegree = degree;
   },
   setSearchRes(state, res) {
-    console.log(res)
+    console.log(res);
     state.searchRes = res;
+  },
+  setHomeCollect(state, collect) {
+    state.isHome = true;
+    state.collectList = collect;
+  },
+  setHomeCiation(state, ciation) {
+    state.isHome = true;
+    state.ciationList = ciation;
+  },
+  setStart(state, start) {
+    state.start = start;
+  },
+  setEnd(state, end) {
+    state.end = end;
   }
 };
 

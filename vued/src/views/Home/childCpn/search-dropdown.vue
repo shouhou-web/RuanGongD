@@ -60,14 +60,23 @@ export default {
   data() {
     return {
       show: true,
-      tri: 0
+      tri: 0,
+      infList: []
     };
   },
-  created() {
-    this.infList = this.typeList.map(n => {
-      n.checked = false;
-      return n;
-    });
+  computed: {
+    typeList() {
+      return this.typeList;
+    }
+  },
+  watch: {
+    typeList(val) {
+      this.infList = val.map(n => {
+        n.checked = false;
+        return n;
+      });
+      console.log("typeList", this.infList);
+    }
   },
   computed: {},
   methods: {

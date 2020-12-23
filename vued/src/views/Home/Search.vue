@@ -311,7 +311,7 @@ export default {
       console.log(item);
       this.$router.push({
         path: "/intro",
-        query: { authorID: item.authorID, userID: null }
+        query: { authorID: item.authorID }
       });
     },
     toLiterature(item) {
@@ -467,7 +467,7 @@ export default {
   color: #505050;
   margin: 20px auto;
   width: var(--width-main);
-  height: 110vh;
+  height: 800px;
 }
 
 .answer__header {

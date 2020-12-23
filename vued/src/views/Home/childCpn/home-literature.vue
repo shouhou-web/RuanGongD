@@ -1,11 +1,15 @@
 <template>
   <div id="ciation">
-    <div class="ciation__title">
+    <!-- <div class="ciation__title">
       {{ title }}
-    </div>
+    </div> -->
     <div class="ciation__content">
       <ul>
-        <li v-for="(item, index) in list" :key="index">
+        <li
+          @click="toLiterature(item)"
+          v-for="(item, index) in list"
+          :key="index"
+        >
           <div class="ciation__content__id">
             <i v-if="index == 0" class="icon--one">{{ index + 1 }}</i>
             <i v-else-if="index == 1" class="icon--two">{{ index + 1 }}</i>
@@ -19,11 +23,11 @@
               {{ item.title }}
             </div>
             <div class="ciation__content__main__detail">
-              {{ item.author }}; {{ item.venue }}; {{ item.year }}
+              {{ item.authors[0].realName }}; {{ item.venue }}; {{ item.year }}
             </div>
           </div>
           <div class="ciation__content__num">
-            {{ item.ciation }}
+            {{ item.citation }}
           </div>
         </li>
       </ul>
@@ -41,13 +45,25 @@ export default {
   data() {
     return {};
   },
-  methods: {}
+  methods: {
+    toLiterature(item) {
+      console.log(item);
+      this.$router.push({
+        path: "/literature",
+        query: {
+          literatureID: item.literatureID
+        }
+      });
+    }
+  }
 };
 </script>
 
 <style scoped>
 #ciation {
-  height: 350px;
+  /* height: 350px; */
+  width: 830px;
+  margin: 0 auto;
 }
 
 .ciation__title {
@@ -57,7 +73,6 @@ export default {
 }
 
 .ciation__content {
-  height: 320px;
   margin-top: 30px;
 }
 
@@ -87,6 +102,11 @@ export default {
 .ciation__content__main {
   flex: 1;
   margin-left: 20px;
+}
+
+.ciation__content__main__title:hover {
+  cursor: pointer;
+  color: var(--color-tint);
 }
 
 .ciation__content__main__title {

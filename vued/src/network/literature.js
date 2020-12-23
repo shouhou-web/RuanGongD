@@ -15,13 +15,13 @@ export function editLiterature(userID, Lid, url) {
 }
 
 //发布文献
-export function createLiterature(userID, createLiForm) {
+export function createLiterature(authorID, createLiForm) {
   //console.log(createLiForm);
   return request(baseURL, {
     url: "/addLiterature",
+    data: createLiForm,
     params: {
-      userID,
-      createLiForm
+      authorID
     },
     method: "post"
   });
@@ -84,12 +84,21 @@ export function getStats(literatureID) {
 }
 
 //收藏文献
-export function collect(userID, literatureID,year,venue, title, option) {
+export function collect(
+  userID,
+  literatureID,
+  realName,
+  year,
+  venue,
+  title,
+  option
+) {
   return request(baseURL, {
     url: "/collect",
     params: {
       userID,
       literatureID,
+      realName,
       year,
       venue,
       title,
@@ -154,6 +163,18 @@ export function comment(userID, literatureID, content) {
       userID,
       literatureID,
       content
+    },
+    method: "post"
+  });
+}
+
+//获取收藏状态
+export function getcollect(userID, literatureID) {
+  return request(baseURL, {
+    url: "/getcollect",
+    params: {
+      userID,
+      literatureID
     },
     method: "post"
   });

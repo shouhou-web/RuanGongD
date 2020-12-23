@@ -6,8 +6,7 @@
       <div class="user-profile">
         <div class="profile-info">
           <div class="headshot">
-            <img :src="user.image" class="headshot-img" v-if="user.image != null">
-            <img src="../../assets/image/no-img.png" class="headshot-img" v-else>
+            <img :src="user.image" class="headshot-img">
             <a class="headshot__hide" title="修改头像" @click="openChangeHeadshot" v-if="isSelfProfile">
               <img src="../../assets/image/edit.png" class="headshot__inner--samll">
             </a>
@@ -40,7 +39,7 @@
     </div>
     <div class="profile-content">
       <div class="content-left">
-        <favor :userID="user.userID"></favor>
+        <favor :userID="userIDParam"></favor>
       </div>
       <div class="content-right">
         <div class="user-intro" v-if="isSelfProfile">
@@ -116,7 +115,7 @@
       </div>
     </m-hover>
     <m-hover ref="changeHeadshot" @cancel="cancel">
-      <el-main>
+      <el-main class="img-upload">
         <el-upload
           :class="{ hide: hideUploadEdit }"
           :action="uploadPath"
@@ -150,7 +149,7 @@ import {
   editUserName,
   editUserEmailAddress,
   emailVerification,
-  editUserImage
+  editUserImage,
 } from "@/network/profile";
 
 export default {
@@ -170,6 +169,8 @@ export default {
 
       // user关注用户集合
       followUsers: [],
+
+      userIDParam: "",
 
       options: [
         { text: '高中生 (High school)', value: '0' },
@@ -418,6 +419,7 @@ export default {
     console.log("token = " + getToken());
 
     let userID = this.$route.query.userID;
+    this.userIDParam = this.$route.query.userID;
 
     // 当前用户进入自己的主页
     if (userID == this.$store.state.user.userID) {
@@ -448,12 +450,11 @@ export default {
           // console.log("user", user)
         })
         .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
-
-      getUserIntro(this.user.authorID)
-        .then((userIntro) => {
-          this.userIntro = userIntro
-          // console.log("intro", userIntro)
-        })
+    }
+  },
+  computed:{
+    userIDIN() {
+      return this.$route.query.userID;
     }
   },
   watch: {
@@ -466,6 +467,23 @@ export default {
         this.emailWarning = true
         this.getRightEmail = false
       }
+    },
+    userIDIN(newVal) {
+      this.user = this.$store.state.user;
+
+      // console.log(this.user)
+
+      this.newNickName = this.user.username
+      this.userDegree = this.user.userDegree
+      this.newPhone = this.user.phoneNumber
+
+      // 获取个人信息：我的关注 + 我的收藏
+      getUserFollowingList(newVal)
+        .then((follow) => {
+          this.followUsers = follow
+          // console.log("follow:", follow)
+        })
+        .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
     }
   },
   components: {
@@ -477,7 +495,6 @@ export default {
 
 <style scoped>
 .profile {
-  font-family: Consolas;
   /*letter-spacing: 2px;*/
 }
 
@@ -1214,8 +1231,7 @@ select {
 }
 
 .img-upload {
-  margin: 0 auto;
-  margin-top: 10px;
+  margin-left: 60px;
 }
 
 .warning {

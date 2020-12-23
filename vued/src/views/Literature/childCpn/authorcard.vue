@@ -1,7 +1,7 @@
 <template>
   <div id="authorcard" class="authorcard">
     <div class="auth-top">
-      <div class="auth-title">相关研究者</div>
+      <div class="auth-title" @click="test()">相关研究者</div>
     </div>
     <div class="auth-bottom">
       <div class="auth-part1">
@@ -76,12 +76,14 @@ export default {
     };
   },
   methods: {
+    test(){
+      console.log(this.autherID);
+    },
     //跳转到个人门户
-    toAuthor(userID, authorID) {
+    toAuthor(authorID) {
       this.$router.push({
-        path: "/profile",
+        path: "/intro",
         query: {
-          userID: userID,
           autherID: authorID
         }
       });
@@ -130,9 +132,12 @@ export default {
         }
       );
     getAuthorInformation(this.authorID).then(res => {
-      console.log("author", res);
+      console.log("authorcard");
+      console.log(res);
+      console.log(this.authorID);
       this.author = res;
     });
+    console.log(this.author);
   },
   components: {}
 };

@@ -35,13 +35,31 @@ export default {
       end: ""
     };
   },
+  created() {
+    this.start = this.$store.state.start;
+    this.end = this.$store.state.end;
+  },
   watch: {
     start(val, oldVal) {
+      if (val > "2020") {
+        this.$notify.info({
+          title: "提醒",
+          message: "不能查看未来的文献"
+        });
+        this.start = 2020;
+      }
       if (val > this.end) this.end = this._dateAddDays(this.start, 1);
       this._changeTime();
       // console.log(this.start, this.end);
     },
     end(val, oldVal) {
+      if (val > "2020") {
+        this.$notify.info({
+          title: "提醒",
+          message: "不能查看未来的文献"
+        });
+        this.end = 2020;
+      }
       if (val < this.start) this.start = this._dateAddDays(this.end, -1);
       this._changeTime();
       // console.log(this.start, this.end);
@@ -140,5 +158,9 @@ input[type="date"]::-webkit-datetime-edit {
 
 .el-input {
   width: 100px;
+}
+
+/deep/.el-input__inner {
+  border: 1px solid var(--color-tint) !important;
 }
 </style>

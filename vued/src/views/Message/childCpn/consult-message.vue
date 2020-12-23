@@ -112,6 +112,7 @@ export default {
               message: "回复成功~",
               type: "success"
             });
+            this.$refs.hover.hideHover();
           } else throw new console.error();
         })
         .catch(err => {
@@ -119,6 +120,7 @@ export default {
             title: "错误",
             message: "网络错误，请稍后再试~"
           });
+          this.$refs.hover.hideHover();
         });
     },
     assureDelete() {
@@ -246,12 +248,6 @@ export default {
   width: calc(100% - 44px);
 }
 
-.hover-content {
-  margin-bottom: 5px;
-  padding: 7px;
-  width: 500px;
-}
-
 .message__open {
   align-items: center;
   display: flex;
@@ -311,5 +307,11 @@ export default {
   height: 64px;
   outline: none;
   width: 70px;
+}
+
+.hover-content {
+  text-indent: 1em;
+  letter-spacing: 0.01em;
+  padding: 20px 0 0;
 }
 </style>

@@ -4,6 +4,9 @@
     <m-header>
       <div slot="left">
         <ul class="header__switch">
+          <!-- <div class="header__logo">
+            <img src="@/assets/image/home/header.png" alt="" />
+          </div> -->
           <li
             :class="{ 'is-active': index == $store.state.appHeaderCurIndex }"
             v-for="(item, index) in switchList"
@@ -32,7 +35,7 @@
           <div v-if="curType == 0" class="header__avator" @click="toProfile">
             <img :src="$store.state.user.image" alt="" />
           </div>
-          <div v-if="curType == 1" class="header__avator" @click="toIntro">
+          <div v-if="curType == 1" class="header__avator" @click="toIntro(0)">
             <img :src="$store.state.user.image" alt="" />
           </div>
           <div v-if="curType == 2" class="header__avator" @click="toRoot">
@@ -97,45 +100,45 @@ export default {
         {
           name: "主页",
           path: "/",
-          check: true,
+          check: true
         },
         {
           name: "论坛",
           path: "/forumHome",
-          check: false,
-        },
+          check: false
+        }
       ],
       avatorList: [
         {
           type: 0,
           name: "个人空间",
-          path: "/profile",
+          path: "/profile"
         },
         {
           type: 1,
           name: "个人门户",
-          path: "/intro",
+          path: "/intro"
         },
         {
           type: 1,
           name: "个人动态",
-          path: "/intro/1",
+          path: "/intro/1"
         },
         {
           type: 2,
           name: "后台管理",
-          path: "/root",
-        },
+          path: "/root"
+        }
       ],
       isColor: false,
-      isHeaderDown: false,
+      isHeaderDown: false
     };
   },
   methods: {
     jump(e) {
       console.log(e);
       this.$router.push({
-        path: e.path,
+        path: e.path
       });
     },
     color() {
@@ -147,7 +150,7 @@ export default {
     toProfile() {
       this.$router.push({
         path: "/profile",
-        query: { userID: this.$store.state.user.userID },
+        query: { userID: this.$store.state.user.userID }
       });
     },
     toIntro(e) {
@@ -156,14 +159,14 @@ export default {
         query: {
           userID: this.$store.state.user.userID,
           authorID: this.$store.state.user.authorID,
-          see: e,
-        },
+          see: e
+        }
       });
     },
     toRoot() {
       this.$router.push({
         path: "/root",
-        query: { userID: this.$store.state.user.userID },
+        query: { userID: this.$store.state.user.userID }
       });
     },
     showAvator() {
@@ -191,9 +194,9 @@ export default {
     logOut() {
       this.$store.commit("logout");
       this.$router.push({
-        path: "/",
+        path: "/"
       });
-    },
+    }
   },
   computed: {
     isLogin() {
@@ -202,12 +205,12 @@ export default {
     curType() {
       // return 2;
       return this.$store.state.user.userIdentity;
-    },
+    }
   },
   created() {
     // console.log(this.$store.state.user);
   },
-  components: {},
+  components: {}
 };
 </script>
 
@@ -215,6 +218,17 @@ export default {
 #header {
   border-bottom: 1px solid #ddd;
 }
+
+.header__logo {
+  height: 56px;
+  width: 56px;
+}
+
+.header__logo img {
+  width: 100%;
+  height: 100%;
+}
+
 .header__switch {
   display: flex;
 }

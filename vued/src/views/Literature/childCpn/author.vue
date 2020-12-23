@@ -56,11 +56,11 @@ import { getIntroFollowStatus, follow } from "network/profile";
 export default {
   name: "Author",
   props: {
-    author: Object
+    author: Object,
   },
   data() {
     return {
-      isFollowed: null
+      isFollowed: null,
     };
   },
   methods: {
@@ -70,7 +70,7 @@ export default {
       //已关注，要取消关注
       if (this.isFollowed) {
         follow(this.$route.query.userID, userID, 0) //缺少authorid找userid的步骤
-          .then(res => {
+          .then((res) => {
             if (res == 0) {
               this.$notify.success("取消关注成功");
             } else if (res == -1) {
@@ -81,7 +81,7 @@ export default {
       //未关注，要关注作者
       else {
         follow(this.$route.query.userID, userID, 1) //缺少authorid找userid的步骤
-          .then(res => {
+          .then((res) => {
             if (res == 0) {
               this.$notify.success("关注成功");
             } else if (res == -1) {
@@ -90,21 +90,22 @@ export default {
           });
       }
       this.isFollowed = !this.isFollowed;
-    }
+    },
   },
   created() {
+    console.log("author-item", this.author);
     if (this.$store.state.user != null)
       getIntroFollowStatus(
         this.$store.state.user.userID,
         this.author.authorID
-      ).then(res => {
+      ).then((res) => {
         //已关注
         if (res == 1) this.isFollowed = true;
         //未关注
         else if (res == 2) this.isFollowed = false;
       });
   },
-  components: {}
+  components: {},
 };
 </script>
 
@@ -116,7 +117,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 325px;
+  width: 360px;
   border: 1px solid #95a5a6;
   background: white;
 }
@@ -124,7 +125,7 @@ export default {
 .auth-bottom {
   display: flex;
   flex-direction: column;
-  width: 80%;
+  width: 85%;
   align-self: center;
   align-items: center;
 }

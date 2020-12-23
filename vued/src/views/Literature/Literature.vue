@@ -10,10 +10,10 @@
           </div>
           <div class="authorname content">
             <span class="lable">作者：</span>
-            <ul class="author-ul">
+            <ul v-if="authorList.length > 0" class="author-ul">
               <li
                 class="author"
-                v-for="(item, index) in literature.authors"
+                v-for="(item, index) in authorList"
                 @click="toAuthor(item.userID, item.authorID)"
                 :key="index"
               >
@@ -30,7 +30,7 @@
               <span class="lable">摘要：</span>
             </div>
 
-            <span>{{ literature.abstract }}</span>
+            <span class="abstracthide">{{ literature.abstract }}</span>
           </div>
           <div class="keyword content">
             <span class="lable">关键词：</span>
@@ -38,10 +38,12 @@
             <el-link
               v-for="(item, index) in literature.keyWord"
               :key="index"
-              v-if="index<3"
+              v-if="index < 3"
               href="javascript:void(0);"
             >
-              <span @click="searchKey(item)">{{ item }}</span>
+              <span @click="searchKey(item)" class="keywordcontent">{{
+                item
+              }}</span>
             </el-link>
           </div>
           <div class="doi content">
@@ -61,8 +63,8 @@
               >
                 <i
                   :class="{
-                    'el-icon-star-off': staroff,
-                    'el-icon-star-on': staron
+                    'el-icon-star-off': !iscollect,
+                    'el-icon-star-on': iscollect,
                   }"
                 ></i>
                 <span> 收藏</span>
@@ -71,7 +73,7 @@
                 size="small"
                 :round="true"
                 type="primary"
-                @click="referFormat()"
+                @click="openRef()"
               >
                 <i class="el-icon-edit"></i>
                 <span> 引用</span>
@@ -91,7 +93,12 @@
                 <i class="el-icon-warning-outline"></i>
                 <span> 举报文献 </span>
               </l-button>
-              <l-button size="medium" type="primary" class="download">
+              <l-button
+                size="medium"
+                type="primary"
+                class="download"
+                @click="download()"
+              >
                 <i class="el-icon-download"></i>
                 <span> 下载文献 </span>
               </l-button>
@@ -114,7 +121,7 @@
             class="op-item"
             @click="toChild(index)"
             :class="[
-              currentIndex == index ? 'op-item--active' : 'op-item--inside'
+              currentIndex == index ? 'op-item--active' : 'op-item--inside',
             ]"
             v-for="(item, index) in navList"
             :key="index"
@@ -166,15 +173,45 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <m-hover ref="hover">
-        <div class="hover-referformat1">
-          MLA格式引文：{{ literature.MLAformat }}
+      <!-- 引文链接 -->
+    <m-hover ref="hover">
+      <div class="sh-wrapper">
+        <div class="share--first">
+          <span
+            class="btn-share"
+            v-clipboard:copy="refAPA"
+            v-clipboard:success="onCopy"
+            v-clipboard:error="onCopyError"
+          >
+            复制APA格式引文
+          </span>
+          <input
+            class="input-share"
+            type="text"
+            id="input"
+            :value="refAPA"
+            readonly=""
+          />
         </div>
-        <el-divider></el-divider>
-        <div class="hover-referformat2">
-          APA格式引文：{{ literature.APAformat }}
+        <div class="share">
+          <span
+            class="btn-share"
+            v-clipboard:copy="refMLA"
+            v-clipboard:success="onCopy"
+            v-clipboard:error="onCopyError"
+          >
+            复制MLA格式引文
+          </span>
+          <input
+            class="input-share"
+            type="text"
+            id="input"
+            :value="refMLA"
+            readonly=""
+          />
         </div>
-      </m-hover>
+      </div>
+    </m-hover>
     </div>
     <router-view
       v-if="literature != null"
@@ -186,22 +223,27 @@
 <script>
 import LFollowlicard from "./childCpn/followlicard.vue";
 import LAuthor from "./childCpn/author.vue";
-import { getLiterature, collect, reportLiterature } from "network/literature";
+import {
+  getLiterature,
+  collect,
+  reportLiterature,
+  getcollect,
+  getAuthorInformation,
+} from "network/literature";
 import {
   getPostInfo,
   deletePost,
   reportComment,
   deleteComment,
-  commentPost
+  commentPost,
 } from "network/forum.js";
 import { search } from "network/search.js";
-import { getAuthorInformation } from '../../network/literature';
 
 export default {
   name: "Literature",
   components: {
     LFollowlicard,
-    LAuthor
+    LAuthor,
   },
   data() {
     return {
@@ -248,80 +290,108 @@ export default {
       //   venue: "xxxxxxxx",
       //   doi: "123456"
       // }, //文献
-      authorList:[],
-      staroff: true,
-      staron: false,
+      authorList: [],
+      iscollect: false,
       navList: [
         {
           name: "相关文献",
-          router: "relation"
+          router: "relation",
         },
         {
           name: "数据统计",
-          router: "stats"
+          router: "stats",
         },
         {
           name: "文献评论",
-          router: "review"
-        }
+          router: "review",
+        },
       ],
       //举报相关
       reportDialog: false,
       reportForm: {
         reportContent: "",
-        reportCommentId: ""
+        reportCommentId: "",
       },
       reportRule: {
         reportContent: [
           {
             required: true,
             message: "请输入举报理由",
-            trigger: "blur"
+            trigger: "blur",
           },
           {
             min: 5,
             max: 800,
             message: "举报理由长度在 5-800 个字符之间",
-            trigger: "blur"
-          }
-        ]
-      }
+            trigger: "blur",
+          },
+        ],
+      },
+      refAPA:"",
+      refMLA:"",
     };
-  },
-  created() {
-    getLiterature(this.$route.query.literatureID).then(res => {
-      console.log(res.literature);
-      this.literature = res.literature;
-    });
-    for(let i=0; i<this.literature.authors;i++){
-      getAuthorInformation(literature.authors[i])
-      .then(res=>{
-        this.authorList[i] = res[i];
-      })
-    }
     
   },
+  created() {
+    getLiterature(this.$route.query.literatureID).then((res) => {
+      this.literature = res.literature;
+      for (let i = 0; i < this.literature.authors.length && i < 3; i++) {
+        getAuthorInformation(this.literature.authors[i]).then((res) => {
+          this.authorList.push(res);
+        });
+      }
+      getcollect(
+        this.$store.state.user.userID,
+        this.literature.literatureID
+      ).then((res) => {
+        if (res == 0) {
+          this.iscollect = false;
+        } else if (res == 1) {
+          this.iscollect = true;
+        } else if (res == -1) {
+          this.iscollect = false;
+        }
+      });
+    });
+    // if(this.literature != null)
+  },
   methods: {
+    onCopy() {
+      this.$message.success("复制成功！");
+      this.$refs.hover.hideHover();
+    },
+    onCopyError() {
+      this.$message.error("复制失败");
+    },
+     openRef(APAformat,MLAformat) {
+      this.refAPA = this.literature.APAformat;
+      this.refMLA = this.literature.MLAformat;
+      this.$refs.hover.showHover({
+        title: "引用"
+      });
+    },
+    download() {
+      window.open(this.literature.download);
+    },
     collectLiterature() {
       //未登录用户无法收藏
-      console.log(this.literature);
       if (this.$store.state.user == null) {
         this.$notify.warning("您还未登录");
       } else {
-        let option = this.staroff == true ? 1 : 0;
+        let option = this.iscollect == true ? 0 : 1;
         collect(
           this.$store.state.user.userID,
           this.literature.literatureID,
+          this.authorList[0].realName,
           this.literature.year,
           this.literature.venue,
           this.literature.title,
           option
-        ).then(res => {
+        ).then((res) => {
           console.log("collect", res);
           //收藏成功
           if (res == 0) {
-            this.staroff = !this.staroff;
-            this.staron = !this.staron;
+            this.iscollect = !this.iscollect;
             this.$notify.success("操作成功");
           }
           //收藏失败
@@ -333,7 +403,7 @@ export default {
     },
     referFormat() {
       this.$refs.hover.showHover({
-        title: "引用文献"
+        title: "引用文献",
       });
     },
 
@@ -343,7 +413,7 @@ export default {
     // 举报
     handleReport(formName) {
       let pass = false;
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           pass = true;
         }
@@ -356,7 +426,7 @@ export default {
         this.literature.title,
         this.reportForm.reportContent
       )
-        .then(res => {
+        .then((res) => {
           console.log("report post");
           console.log(res);
           if (res == 0) {
@@ -366,7 +436,7 @@ export default {
             this.$notify.error("举报失败，请稍后再试。");
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.$notify.error("举报失败，请稍后再试。");
           console.log(err);
           console.log("test");
@@ -374,26 +444,33 @@ export default {
     },
     toChild(index) {
       let target = this.navList[index].router;
-      this.$router.push("/literature/" + target);
+      this.$router.push({
+        path: "/literature/" + target,
+        query: {
+          literatureID: this.literature.literatureID,
+        },
+      });
     },
     toAuthor(userID, authorID) {
       this.$router.push({
         path: "/profile",
         query: {
           userID: userID,
-          autherID: authorID
-        }
+          authorID: authorID,
+        },
       });
     },
     searchKey(key) {
+      console.log("从文献关键词过来查");
       console.log(key);
       let item = {
         legical: "NULL",
         type: "SU",
-        value: key
+        value: key,
       };
+      this.$store.commit("setSearchList", item);
       search(item)
-        .then(res => {
+        .then((res) => {
           this.$router.push({
             path: "/search",
             query: {
@@ -403,17 +480,17 @@ export default {
               litList2: res.literatureList2,
               authorList: res.authorList,
               venueList: res.venueList,
-              yearList: res.yearList
-            }
+              yearList: res.yearList,
+            },
           });
         })
-        .catch(err => {
+        .catch((err) => {
           this.$notify.error({
             title: "错误",
-            message: "网络异常，请稍后重试"
+            message: "网络异常，请稍后重试",
           });
         });
-    }
+    },
   },
   computed: {
     currentIndex() {
@@ -425,8 +502,8 @@ export default {
         case "/literature/review":
           return 2;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -452,6 +529,7 @@ export default {
   width: 100%;
   background: white;
   /* padding-bottom: 10px; */
+  border-bottom: 1px solid #ddd;
 }
 .info-top {
   justify-content: space-between;
@@ -470,7 +548,7 @@ export default {
   display: flex;
 }
 .top-right {
-  width: 250px;
+  width: 290px;
   margin-top: 30px;
 }
 .top-right > .a1 {
@@ -579,10 +657,6 @@ export default {
 .abstract {
   text-align: left;
   letter-spacing: 0.5px;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 5;
-  overflow: hidden;
 }
 .lable {
   display: inline-block;
@@ -594,6 +668,12 @@ export default {
   font-size: 14px;
   display: flex;
   -webkit-user-select: text;
+}
+.abstracthide {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
 }
 .el-link {
   margin-right: 8px;
@@ -639,5 +719,44 @@ export default {
   font-size: 12px;
   margin-bottom: 30px;
   -webkit-user-select: text;
+}
+/* .keywordcontent{
+  padding-right: 15px;
+} */
+.sh-wrapper {
+  padding: 10px 0;
+}
+
+.share,
+.share--first {
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+}
+
+.share--first {
+  border-bottom: 1px dashed #ddd;
+}
+
+.input-share {
+  padding: 10px;
+  width: 580px;
+}
+
+.btn-share {
+  border: 1px solid #ebebeb;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 15px;
+  text-align: center;
+  padding: 10px;
+  width: 180px;
+}
+
+.btn-share:hover {
+  background-color: var(--color-tint);
+  color: #ffffff;
+  transition: 0.3s;
 }
 </style>

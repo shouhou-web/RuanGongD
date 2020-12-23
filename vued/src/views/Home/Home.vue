@@ -27,15 +27,13 @@
         热门论文
       </div>
     </div>
+    <home-literature
+      v-if="showList.length > 0"
+      :list="showList"
+      :title="openTitle"
+    ></home-literature>
     <div class="footer">
-      <home-literature
-        v-if="showList.length > 0"
-        :list="showList"
-        :title="openTitle"
-      ></home-literature>
-      <div class="footer--describe">
-        DDL学术让你更强大
-      </div>
+      DDL学术让你更强大
     </div>
   </div>
 </template>
@@ -43,186 +41,24 @@
 <script>
 import searchAdvance from "./childCpn/search-advance";
 import homeLiterature from "./childCpn/home-literature";
-import { getHighCollect, getHighCiation } from "network/home.js";
+import { getHighCollect, getHighCitation } from "network/home.js";
 export default {
   name: "Home",
   created() {
-    getHighCollect().then(res => {
-      console.log("highCollect", res);
-      this.collectList = res;
-    });
-    // getHighCiation().then(res => {
-    //   console.log("highCiation", res);
-    //   this.ciationList = res;
-    // });
+    if (!this.$store.state.isHome) {
+      getHighCollect().then(res => {
+        console.log("highCollect", res);
+        this.$store.commit("setHomeCollect", res);
+      });
+      getHighCitation().then(res => {
+        console.log("highCitation", res);
+        this.$store.commit("setHomeCiation", res.citationList);
+      });
+    }
   },
   data() {
     return {
       showList: [],
-      ciationList: [
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        }
-      ],
-      collectList: [
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        },
-        {
-          id: "123",
-          title: "论中国民族民间舞的风格与规格",
-          author: "国华",
-          venue: "人民音乐",
-          year: "1984",
-          ciation: 158
-        }
-      ],
       start: "",
       end: "",
       openTitle: "",
@@ -236,13 +72,13 @@ export default {
         this.openCollect = false;
         this.openCiation = !this.openCiation;
         this.openTitle = "高被引论文";
-        if (this.openCiation) this.showList = this.ciationList;
+        if (this.openCiation) this.showList = this.$store.state.ciationList;
         else this.showList = [];
       } else if (e == 1) {
         this.openTitle = "热门论文";
         this.openCiation = false;
         this.openCollect = !this.openCollect;
-        if (this.openCollect) this.showList = this.collectList;
+        if (this.openCollect) this.showList = this.$store.state.collectList;
         else this.showList = [];
       }
     },
@@ -266,24 +102,24 @@ export default {
   background-color: #fff;
   min-height: 100vh;
   max-height: 100vh;
-  overflow: auto;
+  overflow-y: scroll;
 }
 
 .logo {
   display: flex;
   justify-content: center;
-  margin: 30px 0;
+  margin: 90px 0 50px;
 }
 
 .logo img {
-  width: 114px;
+  width: 124px;
 }
 
 .open {
   display: flex;
   justify-content: space-around;
-  width: 400px;
-  margin: 20px auto;
+  width: 300px;
+  margin: 30px auto;
 }
 
 .open__left,
@@ -291,16 +127,17 @@ export default {
   align-items: center;
   display: flex;
   justify-content: center;
-  margin: 11px 4px;
+  /* margin: 11px 4px; */
   padding: 0 16px;
   line-height: 27px;
   height: 36px;
-  width: 154px;
   cursor: pointer;
 
-  border: 2px solid #ebebeb;
+  border: 1px solid var(--color-tint);
   border-radius: 8px;
-  color: #6b757b;
+  /* color: #6b757b; */
+  color: var(--color-tint);
+  width: 121px;
   font-size: 17px;
   transition: 0.3s;
 }
@@ -313,24 +150,18 @@ export default {
   border: 1px solid #dadce0;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
   color: #202124; */
-  border-color: #6b757b;
+  color: #fff;
+  background-color: var(--color-main);
   /* color: #ffffff; */
   transition: 0.3s;
 }
 
 .footer {
-  display: flex;
-  justify-content: space-between;
-  /* width: var(--width-main); */
-  width: 875px;
-  margin: 30px auto;
-}
-
-.footer--describe {
-  color: #006621;
+  color: #202124;
   font-weight: normal;
-  font-size: 18px;
+  font-size: small;
   text-align: center;
-  margin: 0 auto;
+  line-height: 16px;
+  margin: 15px auto 20px;
 }
 </style>

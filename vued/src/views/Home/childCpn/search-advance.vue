@@ -51,6 +51,7 @@
             />
             <!-- 输入框 -->
             <input
+              @keyup.enter="search"
               @input="changeValue($event, index)"
               :value="$store.state.searchList[index].value"
               type="text"
@@ -90,18 +91,8 @@ export default {
       dafault: true
     }
   },
-  created() {
-    console.log(this.initSearch);
-    if (this.initSearch) {
-      this.start = this.initSearch.start;
-      this.end = this.initSearch.end;
-    }
-  },
   data() {
-    return {
-      start: "",
-      end: ""
-    };
+    return {};
   },
   watch: {
     searchList(val, oldVal) {
@@ -150,8 +141,8 @@ export default {
     },
     changeTime(e) {
       console.log(e.start, e.end);
-      this.start = e.start;
-      this.end = e.end;
+      this.$store.commit("setStart", e.start);
+      this.$store.commit("setEnd", e.end);
     },
     addItem() {
       this.$store.commit("addSearchList");
@@ -160,32 +151,44 @@ export default {
       // this.searchList.splice(index, 1);
       this.$store.commit("deleteSearchList", index);
     },
+    _checkSearch() {
+      let check = false;
+      if (this.$store.state.isAdvance) {
+        this.$store.state.searchList.forEach(item => {
+          if (item.value == "") {
+            this.$notify.error({
+              title: "错误",
+              message: "请填写所有必填项"
+            });
+            check = true;
+          }
+        });
+      } else if (this.$store.state.searchList[0].value == "") {
+        this.$notify.error({
+          title: "错误",
+          message: "请填写所有必填项"
+        });
+        check = true;
+      }
+      if (check) return false;
+      else return true;
+    },
     search() {
       // 搜索
-      console.log(this.start, this.end);
-      // this.$router.push({
-      //   path: "/search",
-      //   query: {
-      //     start: this.start,
-      //     end: this.end,
-      //   },
-      // });
-      if (this.$store.state.isAdvance)
-        advance(this.$store.state.searchList, this.start, this.end)
+      if (!this._checkSearch()) return;
+      if (this.$store.state.isAdvance) {
+        let start = this.$store.state.start;
+        let end = this.$store.state.end;
+        if (start == "" || end == "") {
+          start = "1800";
+          end = "2021";
+        }
+        advance(this.$store.state.searchList, start, end)
           .then(res => {
             console.log("advance", res);
             this.$store.commit("setSearchRes", res);
             this.$router.push({
-              path: "/search",
-              query: {
-                start: this.start,
-                end: this.end
-                // litList1: res.literatureList1,
-                // litList2: res.literatureList2,
-                // authorList: res.authorList,
-                // venueList: res.venueList,
-                // yearList: res.yearList
-              }
+              path: "/search"
             });
           })
           .catch(err => {
@@ -194,22 +197,13 @@ export default {
               message: "网络异常，请稍后重试"
             });
           });
-      else
+      } else
         search(this.$store.state.searchList[0])
           .then(res => {
             console.log("search", res);
             this.$store.commit("setSearchRes", res);
             this.$router.push({
-              path: "/search",
-              query: {
-                start: this.start,
-                end: this.end,
-                // litList1: res.literatureList1,
-                // litList2: res.literatureList2,
-                // authorList: res.authorList,
-                // venueList: res.venueList,
-                // yearList: res.yearList
-              }
+              path: "/search"
             });
           })
           .catch(err => {
@@ -243,13 +237,15 @@ export default {
 
 .search__main,
 .search__main--second {
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.12);
+  /* box-shadow: 0 0 2px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.12); */
+  /* box-shadow: 0 0 2px rgba(30, 35, 70, 0.18), 0 1px 3px rgba(73, 61, 124, 0.12); */
+  border: 1px solid var(--color-tint);
+  border-radius: 2px;
   display: flex;
   padding: 14px 14px 14px 0;
 }
 
 .search__main {
-  border-right: #fff;
   width: 710px;
 }
 
@@ -259,7 +255,8 @@ export default {
 
 .advance,
 .advance--nop {
-  border-right: 1px solid grey;
+  /* border-right: 1px solid grey; */
+  border-right: 1px solid var(--color-tint);
   cursor: pointer;
   text-align: center;
 }
