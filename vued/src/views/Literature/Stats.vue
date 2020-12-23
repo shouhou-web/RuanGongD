@@ -108,7 +108,7 @@ export default {
 .charts {
   background: white;
   border: 1px #ddd solid;
-  width: 100%;
+  width:90%;
   height: 400px;
   margin-top: 20px;
   margin-bottom: 20px;

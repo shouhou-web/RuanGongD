@@ -9,7 +9,6 @@
               <div class="auth-workunit">{{ author.organization }}</div>
             </div>
             <div class="auth-part1-right">
-              <!-- <img src="../img/test.jpg" alt="" class="l-root-card--reporter-pic" /> -->
               <img
                 :src="author.image"
                 alt=""
@@ -44,7 +43,7 @@
         </div>
       </div>
 
-      <el-link href="?" target="_blank" slot="reference">{{
+      <el-link href="javascript:void(0);" slot="reference">{{
         author.realName
       }}</el-link>
     </el-popover>
@@ -140,7 +139,7 @@ export default {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   font-size: 15px;
   margin-top: 10px;
   margin-left: 7px;
@@ -156,6 +155,7 @@ export default {
 }
 
 .authercard .auth-workunit {
+  margin-top: 10px;
   color: #777;
 }
 
