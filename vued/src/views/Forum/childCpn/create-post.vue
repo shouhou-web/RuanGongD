@@ -298,8 +298,12 @@ export default {
   },
   watch: {
     "createPostForm.postTags"(val) {
-      if (val.length > 5) {
+      if (
+        val.length > 5 ||
+        (val.length >= 1 && val[val.length - 1].match(/^\s*$/))
+      ) {
         // 限制最多可选 5 个标签
+        // 不能为空格串或空串
         this.$nextTick(() => this.createPostForm.postTags.pop());
       }
     },
