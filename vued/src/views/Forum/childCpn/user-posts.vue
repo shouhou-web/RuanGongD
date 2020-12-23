@@ -24,7 +24,7 @@
         </div>
         <div class="post-time">发布于 {{ post.createTime }}</div>
       </div>
-      <div class="tags">
+      <div class="tags" v-if="post.tags.length >= 1 && post.tags[0] != ''">
         <div class="tag" v-for="tag in post.tags" :key="tag">
           {{ tag }}
         </div>
