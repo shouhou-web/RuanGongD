@@ -15,10 +15,10 @@
             <div class="introName-top">
               <div class="intro-name-header">
                 <div class="edit-head">
-                  <div class="user-name" v-if="isApplied">{{ user.username }} <font class="intro-name">({{ intro.realName }})</font></div>
+                  <div class="user-name" v-if="isApplied">{{ intro.username }} <font class="intro-name">({{ intro.realName }})</font></div>
                   <div class="user-name" v-else>{{ intro.realName }}</div>
                   <img src="../../assets/icons/profile/edit.svg" class="profile-icon" @click="openChangeProfileHover" v-if="isSelfIntro && isApplied">
-                  <img src="../../assets/icons/profile/report.svg" class="profile-icon" @click="openReportIntro">
+                  <img src="../../assets/icons/profile/report.svg" class="profile-icon" @click="openReportIntro" v-if="!isSelfIntro && isApplied">
                 </div>
               </div>
             </div>
@@ -34,8 +34,8 @@
             <div v-if="!isSelfIntro && isApplied" class="publish-button" @click="isSend = true" style="margin-top: 20px">私信</div>
             <create-consultation
               :display="isSend"
-              :senderID="user.userID"
-              :receiverID="intro.authorID"
+              :senderId="user.userID"
+              :receiverId="intro.authorID"
               @closeDialog="closeSend"></create-consultation>
           </div>
         </div>
@@ -143,8 +143,8 @@
     </m-hover>
 
     <m-hover ref="report" @submit="reportIntro" @cancel="cancel">
-      <div>
-
+      <div class="report-body">
+        <textarea class="report-text" placeholder="请输入举报理由" v-model="reportContents"></textarea>
       </div>
     </m-hover>
   </div>
@@ -167,7 +167,8 @@ import {
   editUserEmailAddress,
   editProfile,
   emailVerification,
-  editIntroRealName
+  editIntroRealName,
+  reportGate
 } from "@/network/profile";
 import CreateConsultation from "@/views/Forum/childCpn/create-consultation";
 import random from "string-random";
@@ -252,6 +253,8 @@ export default {
       editOp: 0,
       emailWarning: false,
       getRightEmail: false,
+
+      reportContents: ""
     }
   },
   methods: {
@@ -428,7 +431,32 @@ export default {
       }
     },
     reportIntro() {
+      if (this.reportContents.length < 50) {
+        this.$notify.info("举报理由不得少于50字")
+      } else {
+        let authorID = this.$route.query.authorID
+        let reporterID = this.$store.state.user.userID
 
+        console.log("author:", authorID)
+        console.log("reporter:", reporterID)
+
+        if (authorID != null) {
+          reportGate(reporterID, this.reportContents, authorID)
+          .then((res) => {
+            console.log(res)
+            if (res == 0) this.$notify.success("举报成功")
+            else this.$notify.warning("举报失败，请重试")
+          })
+          .catch((err) => {
+            this.$notify.error(
+              {
+                title: "网络错误",
+                message: "请稍后重试~"
+              }
+            )
+          })
+        }
+      }
     },
     changeEditOp(opID) {
       this.editOp = opID
@@ -681,6 +709,7 @@ export default {
   color: white;
   font-size: 0.800rem;
   letter-spacing: 2px;
+  border: 1px solid #4F6EF2;
   transition: ease-in-out 0.3s;
 }
 
@@ -1231,5 +1260,21 @@ select {
 
 .img-load {
   margin-left: 60px;
+}
+
+.report-body {
+  margin-top: 10px;
+}
+
+.report-text {
+  width: 100%;
+  height: 100px;
+}
+
+textarea {
+  padding: 5px;
+  border: 1px solid #dddddd;
+  resize: none;
+  outline: none;
 }
 </style>
