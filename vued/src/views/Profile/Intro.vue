@@ -368,6 +368,7 @@ export default {
   height: 100%;
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 .headshot-img {
@@ -692,7 +693,7 @@ export default {
   transition: ease-in-out 0.3s;
 }
 
-.headshot:hover .headshot__hide {
+.intro-headshot:hover .headshot__hide {
   opacity: 1;
   cursor: pointer;
   transition: ease-in-out 0.3s;
