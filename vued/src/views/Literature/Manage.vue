@@ -25,11 +25,10 @@
   import { getMyLiterature , editLiterature } from "@/network/literature";
 export default {
   name: "Manage",
-  props: { authorID: String },
+  props: { authorID : String},
   components: { 'y-literature': YLiterature, },
   data() {
     return {
-      userID : '',
       showbutton: true,
       myLiteratureList: [ ],
 
@@ -95,7 +94,7 @@ export default {
 
   },
   created() {
-    this.userID = this.$store.state.user.userID;
+    console.log(this.authorID)
     getMyLiterature(this.authorID)
       .then(res => {
         console.log("getMyList");
