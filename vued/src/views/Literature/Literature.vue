@@ -334,16 +334,11 @@ export default {
   created() {
     getLiterature(this.$route.query.literatureID).then((res) => {
       this.literature = res.literature;
-      console.log(this.literature.authors);
       for (let i = 0; i < this.literature.authors.length && i < 3; i++) {
         getAuthorInformation(this.literature.authors[i]).then((res) => {
           this.authorList.push(res);
-          console.log(res);
         });
-        console.log("getAutherInfor");
       }
-      console.log("作者列表" + this.authorList);
-      console.log(this.authorList.length);
       getcollect(
         this.$store.state.user.userID,
         this.literature.literatureID
