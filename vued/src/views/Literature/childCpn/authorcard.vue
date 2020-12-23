@@ -1,7 +1,7 @@
 <template>
   <div id="authorcard" class="authorcard">
     <div class="auth-top">
-      <div class="auth-title" @click="test()">相关研究者</div>
+      <div class="auth-title">相关研究者</div>
     </div>
     <div class="auth-bottom">
       <div class="auth-part1">
@@ -51,50 +51,47 @@
 import {
   getIntroFollowStatus,
   follow,
-  getAuthorInformation
+  getAuthorInformation,
 } from "network/profile";
 
 export default {
   name: "Authorcard",
   props: {
-    authorID: String
+    authorID: String,
   },
   data() {
     return {
-      author: {
-        authorID: "123",
-        realName: "阿尔托莉雅",
-        organization: "不列颠",
-        userID: "",
-        image:
-          "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=66747141,2601833110&fm=26&gp=0.jpg",
-        introduction:
-          "身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世。"
-      },
+      author: {},
+      // author: {
+      //   authorID: "123",
+      //   realName: "阿尔托莉雅",
+      //   organization: "不列颠",
+      //   userID: "",
+      //   image:
+      //     "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=66747141,2601833110&fm=26&gp=0.jpg",
+      //   introduction:
+      //     "身份为古不列颠传说中的亚瑟王。性格忠诚正直，谦逊有礼，个性认真。因有圣剑Excalibur的传承，在第四、五次圣杯战争中一直以“Saber”职阶被召唤到现世。"
+      // },
       // author: {},
-      isFollowed: null
+      isFollowed: null,
     };
   },
   methods: {
-    test(){
-      console.log(this.authorID);
-    },
     //跳转到个人门户
     toAuthor(authorID) {
       this.$router.push({
         path: "/intro",
         query: {
-          authorID: authorID
-        }
+          authorID: authorID,
+        },
       });
     },
     //关注和取消关注
     followAuthor(userID) {
-      console.log("test");
       //已关注，要取消关注
       if (this.isFollowed) {
         follow(this.$route.query.userID, userID, 0) //缺少authorid找userid的步骤
-          .then(res => {
+          .then((res) => {
             if (res == 0) {
               this.$notify.success("取消关注成功");
             } else if (res == -1) {
@@ -105,7 +102,7 @@ export default {
       //未关注，要关注作者
       else {
         follow(this.$route.query.userID, userID, 1) //缺少authorid找userid的步骤
-          .then(res => {
+          .then((res) => {
             if (res == 0) {
               this.$notify.success("关注成功");
             } else if (res == -1) {
@@ -114,12 +111,12 @@ export default {
           });
       }
       this.isFollowed = !this.isFollowed;
-    }
+    },
   },
   created() {
     if (this.$store.state.user != null)
       getIntroFollowStatus(this.$store.state.user.userID, this.authorID).then(
-        res => {
+        (res) => {
           console.log("followStatus", res);
           //已关注
           if (res == 1) {
@@ -131,15 +128,15 @@ export default {
           }
         }
       );
-    getAuthorInformation(this.authorID).then(res => {
-      console.log("authorcard");
-      console.log(res);
-      console.log(this.authorID);
+    getAuthorInformation(this.authorID).then((res) => {
       this.author = res;
+      console.log(this.authorID);
+      console.log("作者card");
+      console.log(this.author);
+      console.log(res);
     });
-    console.log(this.author);
   },
-  components: {}
+  components: {},
 };
 </script>
 
@@ -149,7 +146,7 @@ export default {
   flex-direction: column;
   align-items: center;
   width: 325px;
-  height: 350px;
+  height: fit-content;
   border: 1px solid #dddddd;
   margin-top: 20px;
   margin-right: 20px;
@@ -173,26 +170,20 @@ export default {
 .auth-bottom {
   display: flex;
   flex-direction: column;
-  width: 80%;
   align-self: center;
   align-items: center;
+  padding: 0 10% 20px;
 }
 
 .authorcard .auth-part1 {
   display: flex;
   width: 100%;
+  align-items: center;
   /* background: rgb(243, 230, 230); */
 }
 
 .authorcard .auth-part1-left {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   font-size: 15px;
-  margin-top: 10px;
-  margin-left: 10px;
-  /* background: #000; */
 }
 
 .authorcard .auth-name {
@@ -212,7 +203,6 @@ export default {
 }
 
 .authorcard .auth-part2 {
-  height: 126px;
   margin-top: 10px;
   font-size: 13px;
   letter-spacing: 0.5px;
@@ -227,16 +217,14 @@ export default {
 }
 
 .authorcard .auth-part3 {
-  margin-top: 15px;
-  margin-left: 30px;
-  width: 100%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-around;
+  margin-top: 20px;
+  width: 90%;
 }
 
 .authorcard .auth-part3 .l-button {
-  margin-right: 30px;
-  width: 90px;
+  width: 100px;
 }
 
 .authorcard .auth-part3 .isfollowed {
