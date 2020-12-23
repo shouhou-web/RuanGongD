@@ -129,12 +129,12 @@
 
           <v-card-actions>
             <div class="footer">
-              <l-button @click="submit('createLiForm')" size="small"
-                >发表</l-button
-              >
-              <l-button @click="dialog = false" type="info" size="small"
+              <l-button class="footer__btn" @click="submit('createLiForm')" type="info">
+                发布文献
+              </l-button>
+              <!-- <l-button @click="dialog = false" type="info" size="small"
                 >取消</l-button
-              >
+              > -->
             </div>
           </v-card-actions>
           <v-divider></v-divider>
@@ -391,24 +391,19 @@ export default {
 <style scoped>
 .pageHeaderBg {
   width: 100vw;
-  background-color: white;
+  background-color: #fff;
   box-shadow: 0px 1px 0px 0px rgba(225, 225, 225, 1);
   margin-bottom: 20px;
+  padding: 40px 20px;
 }
 
 .pageHeader {
   margin: 1px auto;
-  margin-bottom: 1px;
-  border-radius: 0px;
-  width: 900px;
-  /*background-color: white;*/
-  height: 100px;
-  display: flex;
-  flex-direction: column;
+  width: 1120px;
 }
 
 .pageName {
-  margin: 40px 20px;
+  /* margin: 40px 20px; */
   font-size: 35px;
   font-style: bold;
   height: 50px;
@@ -417,7 +412,7 @@ export default {
 .pageBody {
   margin: 0 auto 150px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   width: var(--width-main);
 }
 
@@ -428,10 +423,10 @@ export default {
 
 .alert {
   background-color: #fff;
-  width: 200px;
-  height: 250px;
+  width: 260px;
+  height: 310px;
   margin-left: 10px;
-  padding: 40px;
+  padding: 60px 30px;
 }
 
 .alert-header {
@@ -447,15 +442,23 @@ export default {
 .alert-footer {
   color: #111;
   text-indent: 1em;
-  margin-top: 20px;
+  margin-top: 35px;
   font-weight: 400;
+  letter-spacing: 0.1em;
+  font-size: 15px;
+  line-height: 20px;
 }
 
 .footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   margin: auto;
   padding-bottom: 10px;
   width: 30%;
+}
+
+.footer__btn {
+  border-radius: 2px;
+  padding: 10px;
 }
 </style>

@@ -35,6 +35,10 @@ export default {
       end: ""
     };
   },
+  created() {
+    this.start = this.$store.state.start;
+    this.end = this.$store.state.end;
+  },
   watch: {
     start(val, oldVal) {
       if (val > this.end) this.end = this._dateAddDays(this.start, 1);
@@ -140,5 +144,9 @@ input[type="date"]::-webkit-datetime-edit {
 
 .el-input {
   width: 100px;
+}
+
+/deep/.el-input__inner {
+  border: 1px solid var(--color-tint) !important;
 }
 </style>

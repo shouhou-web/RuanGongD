@@ -27,15 +27,13 @@
         热门论文
       </div>
     </div>
+    <home-literature
+      v-if="showList.length > 0"
+      :list="showList"
+      :title="openTitle"
+    ></home-literature>
     <div class="footer">
-      <home-literature
-        v-if="showList.length > 0"
-        :list="showList"
-        :title="openTitle"
-      ></home-literature>
-      <div class="footer--describe">
-        DDL学术让你更强大
-      </div>
+      DDL学术让你更强大
     </div>
   </div>
 </template>
@@ -110,18 +108,18 @@ export default {
 .logo {
   display: flex;
   justify-content: center;
-  margin: 30px 0;
+  margin: 90px 0 50px;
 }
 
 .logo img {
-  width: 114px;
+  width: 124px;
 }
 
 .open {
   display: flex;
   justify-content: space-around;
-  width: 400px;
-  margin: 20px auto;
+  width: 250px;
+  margin: 30px auto 15px;
 }
 
 .open__left,
@@ -129,16 +127,16 @@ export default {
   align-items: center;
   display: flex;
   justify-content: center;
-  margin: 11px 4px;
+  /* margin: 11px 4px; */
   padding: 0 16px;
   line-height: 27px;
   height: 36px;
-  width: 154px;
   cursor: pointer;
 
-  border: 2px solid #ebebeb;
+  /* border: 2px solid #ebebeb; */
   border-radius: 8px;
-  color: #6b757b;
+  /* color: #6b757b; */
+  color: var(--color-tint);
   font-size: 17px;
   transition: 0.3s;
 }
@@ -151,24 +149,18 @@ export default {
   border: 1px solid #dadce0;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
   color: #202124; */
-  border-color: #6b757b;
+  color: #fff;
+  background-color: var(--color-main);
   /* color: #ffffff; */
   transition: 0.3s;
 }
 
 .footer {
-  /* display: flex; */
-  justify-content: space-between;
-  /* width: var(--width-main); */
-  width: 875px;
-  margin: 30px auto;
-}
-
-.footer--describe {
   color: #006621;
   font-weight: normal;
-  font-size: 18px;
+  font-size: 14px;
   text-align: center;
-  margin: 0 auto;
+  line-height: 16px;
+  margin: 0px auto;
 }
 </style>
