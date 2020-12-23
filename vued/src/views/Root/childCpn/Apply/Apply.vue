@@ -30,7 +30,7 @@
           <template v-slot:apllyerProfile>
             <div class="apply-profile">
               <span class="apply-name">{{ item.userName }}</span>
-              <span class="apply-job">{{ item.userDegree }}</span>
+              <span class="apply-job">{{ options[item.userDegree] }}</span>
             </div>
           </template>
           <template v-slot:applyee>
@@ -62,6 +62,8 @@
 
 <script>
 import LApplyCard from "./childCpn/l-apply-card.vue";
+import { getAllGateApplication } from "network/root";
+import { approveApplication, rejectApplication} from "network/root";
 
 export default {
   name: "Doc",
@@ -69,87 +71,13 @@ export default {
     return {
       temp_index: -1,
       msgContent: "",
-      applicationList: [
-        {
-          realName: "Tonyliujie",
-          authorID: "",
-          isTrimmed: true,
-          trimmedContent:
-            "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a veryonylyc is a very handsome bot, his name....",
-          content:
-            "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          applicationID: "",
-          userID: "",
-          userName: "Tonylyc",
-          userIdentity: 2,
-          imgPath: "lyc",
-          userDegree: "本科生",
-          emailAddress: "2290549567@qq.com"
-        },
-        {
-          realName: "Tonyliujie",
-          authorID: "",
-          isTrimmed: true,
-          trimmedContent:
-            "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a veryonylyc is a very handsome bot, his name....",
-          content:
-            "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          applicationID: "",
-          userID: "",
-          userName: "Tonylyc",
-          userIdentity: 2,
-          imgPath: "lyc",
-          userDegree: "本科生",
-          emailAddress: "2290549567@qq.com"
-        },
-        {
-          realName: "Tonyliujie",
-          authorID: "",
-          isTrimmed: true,
-          trimmedContent:
-            "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a veryonylyc is a very handsome bot, his name....",
-          content:
-            "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          applicationID: "",
-          userID: "",
-          userName: "Tonylyc",
-          userIdentity: 2,
-          imgPath: "lyc",
-          userDegree: "本科生",
-          emailAddress: "2290549567@qq.com"
-        },
-        {
-          realName: "Tonyliujie",
-          authorID: "",
-          isTrimmed: true,
-          trimmedContent:
-            "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a veryonylyc is a very handsome bot, his name....",
-          content:
-            "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          applicationID: "",
-          userID: "",
-          userName: "Tonylyc",
-          userIdentity: 2,
-          imgPath: "lyc",
-          userDegree: "本科生",
-          emailAddress: "2290549567@qq.com"
-        },
-        {
-          realName: "Tonyliujie",
-          authorID: "",
-          isTrimmed: true,
-          trimmedContent:
-            "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a veryonylyc is a very handsome bot, his name....",
-          content:
-            "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          applicationID: "",
-          userID: "",
-          userName: "Tonylyc",
-          userIdentity: 2,
-          imgPath: "lyc",
-          userDegree: "本科生",
-          emailAddress: "2290549567@qq.com"
-        }
+      applicationList: [],
+      options: [
+        "高中生",
+        "本科生",
+        "研究生",
+        "博士生",
+        "博士后"
       ]
     };
   },
@@ -159,7 +87,18 @@ export default {
         .isTrimmed;
     },
     toApprove(e, index) {
-      console.log(index);
+      approveApplication(this.applicationList[index].applicationID).then(res => {
+        if(!res) {
+          this.$notify.error({
+            title: "通过失败",
+            message: "再试一次"
+          });
+          return;
+        } else {
+          this.$notify.success("通过成功");
+          this.applicationList.splice(index, 1);
+        }
+      })
     },
     toReject(e, index) {
       this.temp_index = index;
@@ -170,9 +109,50 @@ export default {
       });
     },
     doReject() {
-      console.log(this.temp_index);
-      console.log(this.msgContent);
+      if (!this.msgContent || this.msgContent.length == 0) {
+        this.$notify.error({
+          title: "驳回失败",
+          message: "请输入驳回原因！"
+        });
+      } else {
+        rejectApplication(
+          this.applicationList[this.temp_index].applicationID,
+          this.msgContent
+        ).then(res => {
+          if (res == 0) {
+            this.$notify.error({
+              title: "驳回失败",
+              message: "再试一次"
+            });
+          } else {
+            this.$refs.hover.hideHover();
+            this.$notify.success("驳回成功");
+            this.applicationList.splice(this.temp_index, 1);
+            this.msgContent = "";
+          }
+        });
+      }
     }
+  },
+  created() {
+    getAllGateApplication()
+    .then(res => {
+      if(!res || res.length == 0) {
+          this.$notify.info({
+            title: "空列表",
+            message: "可以摸了"
+          });
+          return;
+      } else {
+        this.applicationList = res;
+      }
+    })
+    .catch(err => {
+      this.$notify.error({
+        title: "网络错误",
+        message: "请稍后重试~"
+      });
+    });
   },
   components: { LApplyCard }
 };
@@ -257,6 +237,10 @@ export default {
   cursor: pointer;
   font-size: 15px;
   margin-bottom: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 70px;
 }
 
 .apply-name:hover {

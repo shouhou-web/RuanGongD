@@ -41,11 +41,11 @@ export default {
         {
           name: "处理申请",
           route: "apply"
+        },
+        {
+          name: "发送系统消息",
+          route: "sysmsg"
         }
-        // {
-        //   name: "发送系统消息",
-        //   route: "sysmsg"
-        // }
       ]
     };
   },
@@ -70,8 +70,8 @@ export default {
           return 0;
         case "/root/apply":
           return 1;
-        // case "/root/sysmsg":
-        //   return 2;
+        case "/root/sysmsg":
+          return 2;
       }
     }
   }

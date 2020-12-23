@@ -5,7 +5,7 @@
         <div class="l-root-card--content-info">
           <img
             class="l-root-card--reporter-pic"
-            :src="require('@/assets/image/root/' + imgPath + '.jpg')"
+            :src="imgPath"
           />
           <slot name="apllyerProfile"></slot>
           <div class="l-root-card--content-connect">

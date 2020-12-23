@@ -32,7 +32,7 @@ export default {
     return {
       navList: [
         {
-          name: "文档相关",
+          name: "文献相关",
           route: "doc"
         },
         {

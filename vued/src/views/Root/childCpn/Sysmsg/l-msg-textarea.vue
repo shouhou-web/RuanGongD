@@ -1,6 +1,6 @@
 <template>
   <div class="msg-input--all">
-    <textarea class="msg-input" @input="handleInput"></textarea>
+    <textarea class="msg-input" @input="handleInput" :value="value"></textarea>
     <span class="msg-input--notice">{{ notice }}</span>
   </div>
 </template>
@@ -12,6 +12,10 @@ export default {
     notice: {
       type: String,
       default: "message"
+    },
+    value: {
+      type: String,
+      default: "",
     }
   },
   data() {
@@ -40,7 +44,7 @@ export default {
   border-radius: 8px;
   color: #6b757b;
   font-size: 17.5px;
-  height: 500px;
+  height: 400px;
   outline: none;
   padding: 20px;
   resize: none;
@@ -98,9 +102,9 @@ export default {
   color: #6b757b;
   font-size: 13px;
   left: 16px;
-  top: -8px;
   padding: 0px 5px;
   position: absolute;
+  top: -8px;
   transition: 0.5s;
 }
 

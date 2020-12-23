@@ -67,7 +67,7 @@ export default {
             return;
           }
           console.log(res);
-          this.$notify.success("登陆成功");
+          this.$notify.success("登录成功");
           this.$store.commit("login", res);
           this.$router.push("/");
         })

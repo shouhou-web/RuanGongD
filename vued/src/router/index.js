@@ -41,7 +41,7 @@ const ApplyIntro = () => import("views/Profile/ApplyIntro.vue");
 const Root = () => import("views/Root/Root.vue");
 const Report = () => import("views/Root/childCpn/Report/Report.vue");
 const Apply = () => import("views/Root/childCpn/Apply/Apply.vue");
-// const Sysmsg = () => import("views/Root/childCpn/Sysmsg/Sysmsg.vue");
+const Sysmsg = () => import("views/Root/childCpn/Sysmsg/Sysmsg.vue");
 const Doc = () => import("views/Root/childCpn/Report/childCpn/Doc.vue");
 const Gate = () => import("views/Root/childCpn/Report/childCpn/Gate.vue");
 const Creport = () => import("views/Root/childCpn/Report/childCpn/Comment.vue");
@@ -178,11 +178,11 @@ const routes = [
         name: "Apply",
         component: Apply,
       },
-      // {
-      //   path: "/root/sysmsg",
-      //   name: "Sysmsg",
-      //   component: Sysmsg
-      // }
+      {
+        path: "/root/sysmsg",
+        name: "Sysmsg",
+        component: Sysmsg
+      }
     ]
   },
   {
