@@ -90,18 +90,8 @@ export default {
       dafault: true
     }
   },
-  created() {
-    console.log(this.initSearch);
-    if (this.initSearch) {
-      this.start = this.initSearch.start;
-      this.end = this.initSearch.end;
-    }
-  },
   data() {
-    return {
-      start: "",
-      end: ""
-    };
+    return {};
   },
   watch: {
     searchList(val, oldVal) {
@@ -150,8 +140,8 @@ export default {
     },
     changeTime(e) {
       console.log(e.start, e.end);
-      this.start = e.start;
-      this.end = e.end;
+      this.$store.commit("setStart", e.start);
+      this.$store.commit("setEnd", e.end);
     },
     addItem() {
       this.$store.commit("addSearchList");
@@ -175,6 +165,8 @@ export default {
           .then(res => {
             console.log("advance", res);
             this.$store.commit("setSearchRes", res);
+            this.$store.commit("setStart", this.start);
+            this.$store.commit("setEnd", this.end);
             this.$router.push({
               path: "/search",
               query: {
@@ -199,17 +191,10 @@ export default {
           .then(res => {
             console.log("search", res);
             this.$store.commit("setSearchRes", res);
+            this.$store.commit("setStart", this.start);
+            this.$store.commit("setEnd", this.end);
             this.$router.push({
-              path: "/search",
-              query: {
-                start: this.start,
-                end: this.end,
-                // litList1: res.literatureList1,
-                // litList2: res.literatureList2,
-                // authorList: res.authorList,
-                // venueList: res.venueList,
-                // yearList: res.yearList
-              }
+              path: "/search"
             });
           })
           .catch(err => {
@@ -243,13 +228,15 @@ export default {
 
 .search__main,
 .search__main--second {
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.12);
+  /* box-shadow: 0 0 2px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.12); */
+  /* box-shadow: 0 0 2px rgba(30, 35, 70, 0.18), 0 1px 3px rgba(73, 61, 124, 0.12); */
+  border: 1px solid var(--color-tint);
+  border-radius: 2px;
   display: flex;
   padding: 14px 14px 14px 0;
 }
 
 .search__main {
-  border-right: #fff;
   width: 710px;
 }
 
@@ -259,7 +246,8 @@ export default {
 
 .advance,
 .advance--nop {
-  border-right: 1px solid grey;
+  /* border-right: 1px solid grey; */
+  border-right: 1px solid var(--color-tint);
   cursor: pointer;
   text-align: center;
 }

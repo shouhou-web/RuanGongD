@@ -79,6 +79,12 @@ const mutations = {
   setHomeCiation(state, ciation) {
     state.isHome = true;
     state.ciationList = ciation;
+  },
+  setStart(state, start) {
+    state.start = start;
+  },
+  setEnd(state, end) {
+    state.end = end;
   }
 };
 

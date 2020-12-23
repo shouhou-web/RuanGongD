@@ -5,7 +5,11 @@
     </div>
     <div class="ciation__content">
       <ul>
-        <li v-for="(item, index) in list" :key="index">
+        <li
+          @click="toLiterature(item)"
+          v-for="(item, index) in list"
+          :key="index"
+        >
           <div class="ciation__content__id">
             <i v-if="index == 0" class="icon--one">{{ index + 1 }}</i>
             <i v-else-if="index == 1" class="icon--two">{{ index + 1 }}</i>
@@ -41,7 +45,17 @@ export default {
   data() {
     return {};
   },
-  methods: {}
+  methods: {
+    toLiterature(item) {
+      console.log(item);
+      this.$router.push({
+        path: "/literature",
+        query: {
+          literatureID: item.literatureID
+        }
+      });
+    }
+  }
 };
 </script>
 

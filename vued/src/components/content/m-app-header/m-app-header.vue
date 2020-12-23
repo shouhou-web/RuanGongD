@@ -35,7 +35,7 @@
           <div v-if="curType == 0" class="header__avator" @click="toProfile">
             <img :src="$store.state.user.image" alt="" />
           </div>
-          <div v-if="curType == 1" class="header__avator" @click="toIntro">
+          <div v-if="curType == 1" class="header__avator" @click="toIntro(0)">
             <img :src="$store.state.user.image" alt="" />
           </div>
           <div v-if="curType == 2" class="header__avator" @click="toRoot">

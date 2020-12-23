@@ -314,6 +314,16 @@ export default {
     sectorId(newVal) {
       console.log("传入createPost的sectorId: " + newVal);
       this.sectorId = newVal;
+    },
+    "createPostForm.postName"(val) {
+      if (val.length >= 40)
+        this.$nextTick(() => (this.createPostForm.postName = val.slice(0, 40)));
+    },
+    "createPostForm.postContent"(val) {
+      if (val.length >= 1500)
+        this.$nextTick(
+          () => (this.createPostForm.postContent = val.slice(0, 1500))
+        );
     }
   },
   created() {
@@ -414,5 +424,9 @@ export default {
 .required-star {
   color: rgb(245, 108, 108);
   padding-right: 3px;
+}
+
+.v-select {
+  width: 700px !important;
 }
 </style>

@@ -1,13 +1,18 @@
 <template>
   <div data-app="true">
-    <v-dialog v-model="display" persistent max-width="900">
+    <v-dialog
+      class="consultationDialog"
+      v-model="display"
+      persistent
+      max-width="800"
+    >
       <v-card elevation="3">
         <v-card-title class="card-title">发送咨询消息</v-card-title>
         <v-card-text>
           <v-form v-model="createConsultationFormValid">
             <div class="form-item">
               <div class="form-label">
-                动态内容
+                消息内容
               </div>
               <v-textarea
                 class="textarea"
@@ -80,6 +85,13 @@ export default {
     receiverId(newVal) {
       console.log("receiverId: " + newVal);
       this.receiverId = newVal;
+    },
+    "createConsultationForm.text"(val) {
+      let len = 500;
+      if (val.length >= len)
+        this.$nextTick(
+          () => (this.createConsultationForm.text = val.slice(0, len))
+        );
     }
   },
   methods: {
@@ -89,6 +101,15 @@ export default {
       console.log("接收人: " + this.receiverId);
       //console.log("回复的消息: " + this.messageId);
       console.log("消息内容: " + this.createConsultationForm.text);
+      if (
+        !this.senderId ||
+        !this.receiverId ||
+        this.senderId === "" ||
+        this.receiverId === ""
+      ) {
+        console.log("咨询消息: senderId 或 receiverId 不合法");
+        return;
+      }
       createConsultation(
         this.senderId,
         this.receiverId,
@@ -124,15 +145,15 @@ export default {
     }
   },
   components: {},
-  computed: {
-  },
-  created() {
-    
-  }
+  computed: {},
+  created() {}
 };
 </script>
 
 <style>
+/*.consultationDialog {
+  
+}*/
 .footer {
   display: flex;
   justify-content: space-between;
