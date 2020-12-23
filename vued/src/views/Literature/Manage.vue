@@ -25,11 +25,11 @@
   import { getMyLiterature , editLiterature } from "@/network/literature";
 export default {
   name: "Manage",
-  props: { authorID: String },
+  props: { authorID : String},
   components: { 'y-literature': YLiterature, },
   data() {
     return {
-      userID : '',
+      userID: "",
       showbutton: true,
       myLiteratureList: [ ],
 
@@ -56,10 +56,6 @@ export default {
         },
         inputErrorMessage: '链接格式不正确'
       }).then(({value}) => {
-        this.$message({
-          type: 'success',
-          message: '修改成功!'
-        });
         this.sendEdit(doc,value);
       }).catch(() => {
         this.$message({
@@ -71,8 +67,7 @@ export default {
     sendEdit(doc,value){
       editLiterature(this.userID, doc.literatureID, value)
         .then((res) => {
-          console.log(res);
-          if (res.data.result == 0) {
+          if (res == true) {
             this.$message({
               type: "success",
               message: "文献修改请求成功！",
@@ -96,11 +91,12 @@ export default {
   },
   created() {
     this.userID = this.$store.state.user.userID;
+    console.log(this.userID)
     getMyLiterature(this.authorID)
       .then(res => {
         console.log("getMyList");
         console.log(res);
-        this.myLiteratureList = res.data.myLiteratureList;
+        this.myLiteratureList = res;
       })
       .catch(err => {
         console.log(err);
