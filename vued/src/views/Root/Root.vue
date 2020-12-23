@@ -74,6 +74,24 @@ export default {
           return 2;
       }
     }
+  },
+  created() {
+    if (this.$store.state.user == null) {
+      this.$router.push("/login");
+      this.$notify.error({
+        title: "尚未登录",
+        message: "来登录！"
+      });
+      return;
+    }
+    if (this.$store.state.user.userIdentity != 2) {
+      this.$store.state.user = "";
+      this.$router.push("/login");
+      this.$notify.error({
+        title: "爪巴",
+        message: "别瞎看哦"
+      });
+    }
   }
 };
 </script>
