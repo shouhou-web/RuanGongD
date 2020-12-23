@@ -320,6 +320,7 @@ export default {
         path: "/forumSector",
         query: {
           sectorId: this.sectorId,
+          sectorName: this.sectorName,
           page: val.toString(),
           sort: this.sort,
           keyword: this.keyword
@@ -336,6 +337,7 @@ export default {
           path: "/forumSector",
           query: {
             sectorId: this.sectorId,
+            sectorName: this.sectorName,
             page: this.page,
             sort: val,
             keyword: this.keyword
@@ -349,6 +351,7 @@ export default {
         path: "/forumSector",
         query: {
           sectorId: this.sectorId,
+          sectorName: this.sectorName,
           page: this.page,
           sort: this.sort,
           keyword: this.keyword
@@ -393,6 +396,7 @@ export default {
   created() {
     //this.$store.commit("login", { userID: "123" });
     this.sectorId = this.$route.query.sectorId;
+    this.sectorName = this.$route.query.sectorName;
     this.page = this.$route.query.page || "1";
     this.sort = this.$route.query.sort || "0";
     this.keyword = this.$route.query.keyword || "";
