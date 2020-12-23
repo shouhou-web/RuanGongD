@@ -23,7 +23,7 @@
             class="showF"
             v-if="logined"
             v-model="showFollowed"
-            active-text="显示已关注的分区"
+            active-text="只显示已关注的分区"
           >
           </el-switch>
         </div>

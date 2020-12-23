@@ -108,6 +108,10 @@ export default {
         this.receiverId === ""
       ) {
         console.log("咨询消息: senderId 或 receiverId 不合法");
+        this.$notify.error({
+          title: "操作失败",
+          message: "咨询消息发送失败。"
+        });
         return;
       }
       createConsultation(

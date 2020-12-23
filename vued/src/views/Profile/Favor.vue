@@ -6,7 +6,7 @@
       :title="onefollowingLiterature.title"
       :authors="onefollowingLiterature.authors"
       :tags="onefollowingLiterature.tags"
-      :read_time="onefollowingLiterature.read_time"
+      :year="onefollowingLiterature.year"
       :key="i"
     ></y-literature>
     <div v-if="favorLiteratures.length == 0" class="none">
@@ -33,6 +33,12 @@ export default {
     getFavorLiteratures(this.userID)
       .then(favor => {
         this.favorLiteratures = favor;
+        this.favorLiteratures.map(item => {
+          let tags = [];
+          tags.push(item.venue);
+          item.tags = tags;
+          return item;
+        });
         console.log("favor", favor);
       })
       .catch(err => {

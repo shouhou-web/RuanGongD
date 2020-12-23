@@ -618,31 +618,31 @@ export default {
 }
 
 .intro-headshot {
-  border-radius:50%;
-  width:100px;
-  height:100px;
-  display:flex;
-  align-items:center;
-  position:relative;
-  overflow:hidden;
-  margin-top:15px;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  margin-top: 15px;
 }
 
 .headshot-img {
-  margin:0 auto;
-  width:170%;
-  left:-35%;
-  border:1px solid #dddddd;
-  position:absolute;
+  margin: 0 auto;
+    width: 170%;
+    left: -35%;
+    border: 1px solid #dddddd;
+    position: absolute;
 }
 
 .introName {
-  margin-top: -20px;
   width: 665px;
   height: 100%;
   /*border: 1px solid red;*/
   display: flex;
   flex-direction: column;
+  padding: 20px 15px;
 }
 
 .introName-top {
@@ -662,9 +662,9 @@ export default {
 }
 
 .user-name {
-  margin-left: 12px;
+  /* margin-left: 12px;
   margin-top: 40px;
-  margin-bottom: 5px;
+  margin-bottom: 5px; */
 }
 
 .intro-name {
@@ -675,8 +675,7 @@ export default {
 
 .intro-pos {
   max-width: fit-content;
-  margin-left: 2%;
-  margin-top: 1%;
+  margin-top: 7px;
   line-height: 1.2;
   color: #555;
   font-size: 0.875rem;
@@ -1108,8 +1107,8 @@ export default {
 }
 
 .profile-icon {
-  margin-left: 20px;
-  margin-top: 30px;
+  /* margin-left: 20px;
+  margin-top: 30px; */
   width: 15px;
 }
 

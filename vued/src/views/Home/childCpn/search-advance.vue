@@ -51,6 +51,7 @@
             />
             <!-- 输入框 -->
             <input
+              @keyup.enter="search"
               @input="changeValue($event, index)"
               :value="$store.state.searchList[index].value"
               type="text"
@@ -151,6 +152,7 @@ export default {
       this.$store.commit("deleteSearchList", index);
     },
     _checkSearch() {
+      let check = false;
       if (this.$store.state.isAdvance) {
         this.$store.state.searchList.forEach(item => {
           if (item.value == "") {
@@ -158,7 +160,7 @@ export default {
               title: "错误",
               message: "请填写所有必填项"
             });
-            return false;
+            check = true;
           }
         });
       } else if (this.$store.state.searchList[0].value == "") {
@@ -166,9 +168,10 @@ export default {
           title: "错误",
           message: "请填写所有必填项"
         });
-        return false;
+        check = true;
       }
-      return true;
+      if (check) return false;
+      else return true;
     },
     search() {
       // 搜索

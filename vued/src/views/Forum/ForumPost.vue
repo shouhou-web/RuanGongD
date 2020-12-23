@@ -741,6 +741,7 @@ html {
   font-size: 1rem;
   margin-top: 10px;
   margin-bottom: 20px;
+  white-space: pre-wrap;
 }
 
 .post-cite {

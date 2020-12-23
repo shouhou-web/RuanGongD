@@ -4,7 +4,7 @@
     <m-app-header></m-app-header>
     <!-- 主页面 -->
     <div class="logo">
-      <img src="@/assets/image/home/logo.png" alt="" />
+      <img src="@/assets/image/home/logo2.png" alt="" />
     </div>
     <search-advance
       @change-list="changeList"
@@ -108,11 +108,12 @@ export default {
 .logo {
   display: flex;
   justify-content: center;
-  margin: 90px 0 50px;
+  margin: 90px 0 40px;
 }
 
 .logo img {
-  width: 124px;
+  /* width: 124px; */
+  width: 500px;
 }
 
 .open {
@@ -158,10 +159,11 @@ export default {
 
 .footer {
   color: #202124;
+  display: flex;
   font-weight: normal;
   font-size: small;
-  text-align: center;
   line-height: 16px;
   margin: 15px auto 20px;
+  justify-content: center;
 }
 </style>

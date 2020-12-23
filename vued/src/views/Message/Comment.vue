@@ -44,19 +44,7 @@ export default {
   },
   data() {
     return {
-      messageList: [
-        {
-          messageID: "123465",
-          senderID: "123456", // 回复人ID
-          senderUserName: "守候123", // 回复人姓名
-          image:
-            "https://assets.smcdn.cn/static/unmd5/default-avatar-moke.2.png", // 回复人头像
-          sendTime: "21小时前", // 回复时间
-          originalContent: "源评论", // 回复的评论内容或者回复的文献名称
-          replyContent: "回复的", // 回复的内容
-          viewd: false
-        }
-      ] // 消息列表
+      messageList: [] // 消息列表
     };
   },
   components: {

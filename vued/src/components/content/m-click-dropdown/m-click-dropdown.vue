@@ -1,12 +1,12 @@
 <template>
   <!-- 点击下拉导航栏 -->
-  <div @mouseleave="closeClick" class="m-click">
+  <div class="m-click">
     <div @click="showClick" class="m-click--show">
       <span>{{ curValue }}</span>
       <span class="tri"></span>
     </div>
     <!-- 隐藏层 -->
-    <div v-if="isOpen" class="m-click--hide">
+    <div @mouseleave="closeClick" v-if="isOpen" class="m-click--hide">
       <ul>
         <li
           @click="chooseThis(index)"
@@ -75,10 +75,6 @@ export default {
         {
           key: "LY",
           value: "文献来源"
-        },
-        {
-          key: "RF",
-          value: "参考文献"
         }
       ],
       logicalList: [

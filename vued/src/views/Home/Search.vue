@@ -467,7 +467,7 @@ export default {
   color: #505050;
   margin: 20px auto;
   width: var(--width-main);
-  height: 110vh;
+  height: 800px;
 }
 
 .answer__header {
