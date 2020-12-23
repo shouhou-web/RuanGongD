@@ -38,7 +38,7 @@
                     <v-card-title>
                       <div
                         class="sectorName"
-                        @click="goToSector(item.sectorId)"
+                        @click="goToSector(item.sectorId,item.sectorName)"
                       >
                         {{ handleTitle(item.sectorName, 42) }}
                       </div>
@@ -324,12 +324,13 @@ export default {
         query: { userID: id }
       });
     },
-    goToSector(id) {
+    goToSector(id,name) {
       //跳转到分区
       this.$router.push({
         path: "/forumSector",
         query: {
           sectorId: id,
+          sectorName: name,
           page: "1",
           sort: "0",
           keyword: ""
