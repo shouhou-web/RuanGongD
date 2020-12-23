@@ -19,9 +19,9 @@ export function createLiterature(userID, createLiForm) {
   //console.log(createLiForm);
   return request(baseURL, {
     url: "/addLiterature",
+    data: createLiForm,
     params: {
-      userID,
-      createLiForm
+      userID
     },
     method: "post"
   });
@@ -84,7 +84,15 @@ export function getStats(literatureID) {
 }
 
 //收藏文献
-export function collect(userID, literatureID,realName,year,venue, title, option) {
+export function collect(
+  userID,
+  literatureID,
+  realName,
+  year,
+  venue,
+  title,
+  option
+) {
   return request(baseURL, {
     url: "/collect",
     params: {
@@ -160,14 +168,13 @@ export function comment(userID, literatureID, content) {
   });
 }
 
-
 //获取收藏状态
 export function getcollect(userID, literatureID) {
   return request(baseURL, {
     url: "/getcollect",
     params: {
       userID,
-      literatureID,
+      literatureID
     },
     method: "post"
   });
