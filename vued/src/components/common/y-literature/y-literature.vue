@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     gotoLiterature() {
-      this.$router.push({ path: "/literature", query: { literature: this.id } })
+      this.$router.push({ path: "/literature", query: { literatureID: this.id } })
       this.$notify.success("跳转ing")
     },
     gotoIntro(userID, authorID) {
@@ -169,9 +169,11 @@ export default {
 
 .change-button {
   border-radius: 2px;
+  min-width: fit-content;
+  height: 22px;
   padding: 3px;
   margin-left: 80px;
-  font-size: 1rem;
+  font-size: 0.8rem;
   border: 1px solid #4F6EF2;
   background-color: white;
   color: #4F6EF2;
