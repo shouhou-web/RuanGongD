@@ -516,13 +516,13 @@ export default {
               commentContent: this.commentContent,
               commentTime: "刚刚"
             });
-            // FIXME: 跳到其他页面，再使用浏览器的返回时，无法持久存放修改后的数据
             this.$notify({
               title: "操作成功",
               message: "评论发表成功！",
               type: "success"
             });
             this.commentContent = "";
+            this.$router.go(0);
           } else {
             this.$notify.error({
               title: "操作失败",
@@ -595,6 +595,7 @@ export default {
               this.citedLiterature.title = res.literature.title;
               this.citedLiterature.abstract =
                 res.literature.abstract.slice(0, 150) + "..."; // 摘要截断
+              this.$forceUpdate(); // 强制重新渲染，问题在于速度会比较慢
             })
             .catch(err => {
               console.log(err);
