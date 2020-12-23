@@ -104,6 +104,7 @@
                 </el-input>
               </el-form-item>
 
+              <!--
               <el-form-item label="文献作者" prop="author">
                 <v-combobox
                   v-model="createLiForm.authors"
@@ -124,6 +125,7 @@
                   @select="handleSelect"
                 ></el-autocomplete>
               </el-form-item>
+              -->
             </el-form>
           </v-card-text>
 
@@ -225,13 +227,13 @@ export default {
             trigger: "blur",
           },
         ], //出版者
-        authors: [
+        /*authors: [
           {
             required: true,
             message: "请输入文献作者",
             trigger: "blur",
           },
-        ],
+        ],*/
         abstract: [
           {
             required: true,
@@ -276,7 +278,7 @@ export default {
         abstract: "", // 文献内容
         keywords: [], // 文献关键词
         venue: "", //文献来源
-        authors: [], // 文献作者
+        //authors: [], // 文献作者
       },
       authorList: [],
     };
@@ -296,11 +298,11 @@ export default {
       console.log(this.createLiForm);
       // for test
 
-      createLiterature(this.authorId, this.createLiForm)
+      createLiterature(this.userId, this.createLiForm)
         .then((res) => {
           console.log("createPost");
           console.log(res);
-          if (res.data.result == "true") {
+          if (res == 0) {
             this.dialog = false;
             this.$message({
               type: "success",
@@ -321,29 +323,19 @@ export default {
     },
 
     querySearchAsync(queryString, callback) {
+      console.log(12);
       var list = [{}];
       getAuthors(queryString).then((response)=>{
         //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
-        for(let i of response.data){
+        for(let i of response){
           i.value = i.name;  //将想要展示的数据作为value
         }
-        console(response.data);
+        console(response);
         this.authorList = response.data;
         callback(this.authorList);
       }).catch((error)=>{
         console.log(this.authorList);
       });
-      /*
-      for(let i of this.authorList){
-        i.value = i.name;  //将想要展示的数据作为value
-      }
-      list = this.authorList;
-      list = queryString
-        ? list.filter(this.createFilter(queryString))
-        : list;
-      callback(list);
-      */
-
       /* var list = [{}];
       //调用的后台接口
       let url = 后台接口地址 + queryString;
