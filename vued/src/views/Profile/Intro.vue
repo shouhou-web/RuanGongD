@@ -13,8 +13,13 @@
           </div>
           <div class="introName">
             <div class="introName-top">
-              <div class="intro-name">{{ intro.realName }}</div>
-              <img src="../../assets/icons/profile/edit.svg" class="profile-icon" @click="openChangeProfileHover" v-if="isSelfIntro && isApplied">
+              <div class="intro-name-header">
+                <div class="edit-head">
+                  <div class="user-name" v-if="isApplied">{{ user.username }} <font class="intro-name">({{ intro.realName }})</font></div>
+                  <div class="user-name" v-else>{{ intro.realName }}</div>
+                  <img src="../../assets/icons/profile/edit.svg" class="profile-icon" @click="openChangeProfileHover" v-if="isSelfIntro && isApplied">
+                </div>
+              </div>
             </div>
             <div class="intro-pos">{{ intro.organization }}</div>
             <div class="intro-pos">{{ intro.phoneNumber }}</div>
@@ -75,7 +80,7 @@
     <m-hover ref="changeProfile" @submit="submitEdit" @cancel="cancel">
       <div class="edit">
         <div class="edit-header">
-          <div :class="{'edit-button': editOp != 0, 'edit-button-chosen': editOp == 0}" @click="changeEditOp(0)">修改用户名</div>
+          <div :class="{'edit-button': editOp != 0, 'edit-button-chosen': editOp == 0}" @click="changeEditOp(0)">修改门户名</div>
           <div :class="{'edit-button': editOp != 1, 'edit-button-chosen': editOp == 1}" @click="changeEditOp(1)">修改邮箱</div>
           <div :class="{'edit-button': editOp != 2, 'edit-button-chosen': editOp == 2}" @click="changeEditOp(2)">修改其他信息</div>
         </div>
@@ -151,10 +156,15 @@ import {
   getAuthorInformation,
   follow,
   editUserImage,
-  editUserName, editUserEmailAddress, editProfile, emailVerification
+  editUserName,
+  editUserEmailAddress,
+  editProfile,
+  emailVerification,
+  editIntroRealName
 } from "@/network/profile";
 import CreateConsultation from "@/views/Forum/childCpn/create-consultation";
 import random from "string-random";
+import { getToken } from "@/network/genToken";
 
 require('echarts/lib/chart/bar')
 require('echarts/lib/chart/line')
@@ -261,7 +271,11 @@ export default {
 
       editUserImage(this.$store.state.user.userID, this.imagePath)
         .then((res) => {
-          if (res == 0) this.$notify.success("头像修改成功")
+          console.log("img-res", res)
+          if (res == 0) {
+            this.$notify.success("头像修改成功")
+            this.$store.commit("setImagePath", this.imagePath)
+          }
           else if (res == -1) this.$notify.warning("头像修改失败")
         })
         .catch((err) => {
@@ -443,6 +457,8 @@ export default {
     },
   },
   created() {
+    this.postData.token = getToken();
+    console.log("token = " + getToken());
     console.log("Idn", this.$store.state.user.userIdentity)
 
     this.user = this.$store.state.user
@@ -581,12 +597,27 @@ export default {
   flex-direction: row;
 }
 
+.intro-name-header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-head {
+  display: flex;
+  flex-direction: row;
+}
+
+.user-name {
+  margin-left: 12px;
+  margin-top: 40px;
+  margin-bottom: 5px;
+}
+
 .intro-name {
-  margin-left: 2%;
-  margin-top: 7%;
   line-height: 1.2;
-  color: #111;
-  font-size: 1.375rem;
+  color: #888888;
+  font-size: 0.8rem;
 }
 
 .intro-pos {
@@ -1028,7 +1059,7 @@ export default {
 
 .profile-icon {
   margin-left: 20px;
-  margin-top: 50px;
+  margin-top: 30px;
   width: 15px;
 }
 
