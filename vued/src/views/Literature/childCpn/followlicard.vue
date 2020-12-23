@@ -13,7 +13,7 @@
       <div class="authors">
         <div v-for="(item, index) in refer.authors" class="author-list" v-if="index<3">
           <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=249589786,2941481629&fm=26&gp=0.jpg" class="authorImg" />
-          <div class="authorname" @click="toAuthor(item.autherID)">{{ item.realName }}</div>
+          <div class="authorname" @click="toAuthor(item.authorID)">{{ item.realName }}</div>
         </div>
       </div>
       <div class="time">
@@ -57,7 +57,7 @@ export default {
       this.$router.push({
         path: "/intro",
         query: {
-          userID: authorID
+          authorID: authorID
         }
       });
     },
