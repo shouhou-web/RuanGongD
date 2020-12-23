@@ -115,7 +115,7 @@
       </div>
     </m-hover>
     <m-hover ref="changeHeadshot" @cancel="cancel">
-      <el-main>
+      <el-main class="img-upload">
         <el-upload
           :class="{ hide: hideUploadEdit }"
           :action="uploadPath"
@@ -495,7 +495,6 @@ export default {
 
 <style scoped>
 .profile {
-  font-family: Consolas;
   /*letter-spacing: 2px;*/
 }
 
@@ -1232,8 +1231,7 @@ select {
 }
 
 .img-upload {
-  margin: 0 auto;
-  margin-top: 10px;
+  margin-left: 60px;
 }
 
 .warning {

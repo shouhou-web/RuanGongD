@@ -22,7 +22,7 @@
             <div class="form-header">邮箱</div>
             <div class="emails">
               <input class="email-input" v-model="email" @focus="emailWarning = false"></input>
-              <div :class="{ 'warning': emailWarning, 'none': !emailWarning }">请使用*.edu.cn后缀的邮箱申请</div>
+              <div :class="{ 'warning': emailWarning, 'none': !emailWarning }">请使用buaa.edu.cn后缀的邮箱申请</div>
             </div>
           </div>
           <div class="code">
@@ -85,7 +85,7 @@ export default {
         this.$notify.warning("验证码错误")
       }
       else if (this.application.length > 50) this.$notify.warning("申请理由不可超过50字")
-      else {
+      else if (this.codeInput == this.code && this.code != null && this.application.length <= 50){
         apply(userID, authorID, this.intro.realName, this.email, this.application)
         .then((res) => {
           if (res == 0) {
