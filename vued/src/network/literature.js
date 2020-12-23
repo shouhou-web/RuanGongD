@@ -15,13 +15,13 @@ export function editLiterature(userID, Lid, url) {
 }
 
 //发布文献
-export function createLiterature(userID, createLiForm) {
+export function createLiterature(authorID, createLiForm) {
   //console.log(createLiForm);
   return request(baseURL, {
     url: "/addLiterature",
     data: createLiForm,
     params: {
-      userID
+      authorID
     },
     method: "post"
   });
