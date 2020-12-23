@@ -60,6 +60,7 @@
                 :round="true"
                 type="primary"
                 @click="collectLiterature()"
+                :disabled="this.$store.state.user==null"
               >
                 <i
                   :class="{
@@ -89,6 +90,7 @@
                 type="primary"
                 class="report"
                 @click="reportLi()"
+                :disabled="this.$store.state.user==null"
               >
                 <i class="el-icon-warning-outline"></i>
                 <span> 举报文献 </span>
@@ -98,6 +100,7 @@
                 type="primary"
                 class="download"
                 @click="download()"
+                :disabled="this.$store.state.user==null"
               >
                 <i class="el-icon-download"></i>
                 <span> 下载文献 </span>
@@ -339,6 +342,7 @@ export default {
           this.authorList.push(res);
         });
       }
+      if(this.$store.state.user != null)
       getcollect(
         this.$store.state.user.userID,
         this.literature.literatureID
@@ -657,6 +661,7 @@ export default {
 .abstract {
   text-align: left;
   letter-spacing: 0.5px;
+  line-height: 1.4em;
 }
 .lable {
   display: inline-block;

@@ -95,7 +95,7 @@ export default {
 
 .one-follow-literature > .test1 {
   display: flex;
-  /* align-items: center; */
+  align-items: center;
 }
 
 .time {
@@ -121,8 +121,6 @@ export default {
 }
 
 .authors {
-  height: 25px;
-  margin-bottom: 5px;
   display: flex;
   justify-self: start;
 }
@@ -154,9 +152,7 @@ export default {
 }
 
 .time {
-  align-self: flex-end;
   margin-left: 40px;
-  padding-bottom: 10px;
 }
 
 /* .read-time {
@@ -180,6 +176,7 @@ export default {
   overflow: hidden;
   margin-top: 10px;
   margin-bottom: 10px;
+  line-height: 1.4em;
 }
 
 .literature-ops {
