@@ -99,7 +99,7 @@ export default {
       .then(res => {
         console.log("getMyList");
         console.log(res);
-        this.myLiteratureList = res.data.myLiteratureList;
+        this.myLiteratureList = res;
       })
       .catch(err => {
         console.log(err);
