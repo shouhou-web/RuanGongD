@@ -15,7 +15,8 @@
             <div class="introName-top">
               <div class="intro-name-header">
                 <div class="edit-head">
-                  <div class="user-name">{{ user.username }} <font class="intro-name">({{ intro.realName }})</font></div>
+                  <div class="user-name" v-if="isApplied">{{ user.username }} <font class="intro-name">({{ intro.realName }})</font></div>
+                  <div class="user-name" v-else>{{ intro.realName }}</div>
                   <img src="../../assets/icons/profile/edit.svg" class="profile-icon" @click="openChangeProfileHover" v-if="isSelfIntro && isApplied">
                 </div>
               </div>
