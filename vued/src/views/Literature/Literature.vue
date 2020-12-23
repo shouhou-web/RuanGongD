@@ -73,7 +73,7 @@
                 size="small"
                 :round="true"
                 type="primary"
-                @click="referFormat()"
+                @click="openRef()"
               >
                 <i class="el-icon-edit"></i>
                 <span> 引用</span>
@@ -173,15 +173,45 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <m-hover ref="hover">
-        <div class="hover-referformat1">
-          MLA格式引文：{{ literature.MLAformat }}
+      <!-- 引文链接 -->
+    <m-hover ref="hover">
+      <div class="sh-wrapper">
+        <div class="share--first">
+          <span
+            class="btn-share"
+            v-clipboard:copy="refAPA"
+            v-clipboard:success="onCopy"
+            v-clipboard:error="onCopyError"
+          >
+            复制APA格式引文
+          </span>
+          <input
+            class="input-share"
+            type="text"
+            id="input"
+            :value="refAPA"
+            readonly=""
+          />
         </div>
-        <el-divider></el-divider>
-        <div class="hover-referformat2">
-          APA格式引文：{{ literature.APAformat }}
+        <div class="share">
+          <span
+            class="btn-share"
+            v-clipboard:copy="refMLA"
+            v-clipboard:success="onCopy"
+            v-clipboard:error="onCopyError"
+          >
+            复制MLA格式引文
+          </span>
+          <input
+            class="input-share"
+            type="text"
+            id="input"
+            :value="refMLA"
+            readonly=""
+          />
         </div>
-      </m-hover>
+      </div>
+    </m-hover>
     </div>
     <router-view
       v-if="literature != null"
@@ -297,15 +327,16 @@ export default {
           },
         ],
       },
+      refAPA:"",
+      refMLA:"",
     };
+    
   },
   created() {
     getLiterature(this.$route.query.literatureID).then((res) => {
-      console.log(res.literature);
       this.literature = res.literature;
       for (let i = 0; i < this.literature.authors.length && i < 3; i++) {
         getAuthorInformation(this.literature.authors[i]).then((res) => {
-          console.log(res);
           this.authorList.push(res);
         });
       }
@@ -325,6 +356,20 @@ export default {
     // if(this.literature != null)
   },
   methods: {
+    onCopy() {
+      this.$message.success("复制成功！");
+      this.$refs.hover.hideHover();
+    },
+    onCopyError() {
+      this.$message.error("复制失败");
+    },
+     openRef(APAformat,MLAformat) {
+      this.refAPA = this.literature.APAformat;
+      this.refMLA = this.literature.MLAformat;
+      this.$refs.hover.showHover({
+        title: "引用"
+      });
+    },
     download() {
       window.open(this.literature.download);
     },
@@ -678,4 +723,40 @@ export default {
 /* .keywordcontent{
   padding-right: 15px;
 } */
+.sh-wrapper {
+  padding: 10px 0;
+}
+
+.share,
+.share--first {
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+}
+
+.share--first {
+  border-bottom: 1px dashed #ddd;
+}
+
+.input-share {
+  padding: 10px;
+  width: 580px;
+}
+
+.btn-share {
+  border: 1px solid #ebebeb;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 15px;
+  text-align: center;
+  padding: 10px;
+  width: 180px;
+}
+
+.btn-share:hover {
+  background-color: var(--color-tint);
+  color: #ffffff;
+  transition: 0.3s;
+}
 </style>
