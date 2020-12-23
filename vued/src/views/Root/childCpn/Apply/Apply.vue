@@ -263,7 +263,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   transition: 0.5s;
-  width: 300px;
+  width: 250px;
   white-space: nowrap;
 }
 
