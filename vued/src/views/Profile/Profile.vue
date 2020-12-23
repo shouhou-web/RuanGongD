@@ -6,8 +6,7 @@
       <div class="user-profile">
         <div class="profile-info">
           <div class="headshot">
-            <img :src="user.image" class="headshot-img" v-if="user.image != null">
-            <img src="../../assets/image/no-img.png" class="headshot-img" v-else>
+            <img :src="user.image" class="headshot-img">
             <a class="headshot__hide" title="修改头像" @click="openChangeHeadshot" v-if="isSelfProfile">
               <img src="../../assets/image/edit.png" class="headshot__inner--samll">
             </a>

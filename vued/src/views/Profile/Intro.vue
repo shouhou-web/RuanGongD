@@ -7,9 +7,15 @@
         <div class="intro-profile-info">
           <div class="intro-headshot">
             <img :src="intro.image" class="headshot-img">
+            <a class="headshot__hide" title="修改头像" @click="openChangeHeadshot" v-if="isSelfIntro">
+              <img src="../../assets/image/edit.png" class="headshot__inner--samll">
+            </a>
           </div>
           <div class="introName">
-            <div class="intro-name">{{ intro.realName }}</div>
+            <div class="introName-top">
+              <div class="intro-name">{{ intro.realName }}</div>
+
+            </div>
             <div class="intro-pos">
               {{ intro.organization }}
             </div>
@@ -39,8 +45,7 @@
     </div>
     <div class="intro-content">
       <div class="content-left">
-<!--        <my-literatures :userID="intro.userID" v-if="opID == 0"></my-literatures>-->
-        <manage :userID="intro.authorID" v-if="opID == 0"></manage>
+        <manage :authorID="this.$route.query.authorID" v-if="opID == 0"></manage>
         <user-posts :userId="intro.userID" v-if="opID == 1 && isApplied"></user-posts>
         <favor :userID="intro.userID" v-if="opID == 2 && isApplied"></favor>
       </div>
@@ -67,6 +72,26 @@
         </div>
       </div>
     </div>
+    <m-hover ref="changeHeadshot" @cancel="cancel">
+      <el-main>
+        <el-upload
+          :class="{ hide: hideUploadEdit }"
+          :action="uploadPath"
+          :multiple="false"
+          list-type="picture-card"
+          accept="image/jpg, image/jpeg, image/png"
+          :data="postData"
+          :file-list="fileList"
+          :before-upload="beforeUpload"
+          :on-success="handleSuccess"
+          :on-remove="handleRemove"
+          :on-exceed="handleExceed"
+          :limit="1"
+        >
+          <i class="el-icon-plus"></i>
+        </el-upload>
+      </el-main>
+    </m-hover>
   </div>
 </template>
 
@@ -77,8 +102,9 @@ import UserPosts from "@/views/Forum/childCpn/user-posts";
 import create_literature from "@/views/Literature/childCpn/create_literature";
 import Favor from "@/views/Profile/Favor";
 import Manage from "@/views/Literature/Manage";
-import { getIntroFollowStatus, getPublishState, getAuthorInformation, follow } from "@/network/profile";
+import {getIntroFollowStatus, getPublishState, getAuthorInformation, follow, editUserImage} from "@/network/profile";
 import CreateConsultation from "@/views/Forum/childCpn/create-consultation";
+import random from "string-random";
 
 require('echarts/lib/chart/bar')
 require('echarts/lib/chart/line')
@@ -134,10 +160,60 @@ export default {
         ]
       },
 
-      isSend: false
+      isSend: false,
+
+      uploadPath: "https://upload-z1.qiniup.com", // 七牛云华北
+      imgPathPrefix: "http://qlotpwg5r.hb-bkt.clouddn.com/",
+      hideUploadEdit: false, // 是否隐藏上传按钮
+      postData: {
+        token: "",
+        key: ""
+      },
+      fileList: [],
+      imagePath: "" // 图片链接
     }
   },
   methods: {
+    beforeUpload(file) {
+      const checkFileType =
+        file.type === "image/jpeg" ||
+        file.type === "image/jpg" ||
+        file.type === "image/png";
+      const checkFileSize = file.size / 1024 / 1024 < 5;
+      if (!checkFileType) {
+        this.$notify.info("上传图片必须是 jpeg/jpg/png 格式！");
+      } else if (!checkFileSize) {
+        this.$notify.info("上传图片大小不能超过 5MB！");
+      }
+      if (checkFileType && checkFileSize) this.postData.key = random(16);
+      return checkFileType && checkFileSize;
+    },
+    handleSuccess(file, response, fileList) {
+      this.fileList = fileList;
+      this.imagePath = this.imgPathPrefix + this.fileList[0].response.key;
+      console.log(response, file, fileList);
+      this.$store.commit("setImagePath", this.imagePath)
+      this.hideUploadEdit = true;
+
+      editUserImage(this.$store.state.user.userID, this.imagePath)
+        .then((res) => {
+          if (res == 0) this.$notify.success("头像修改成功")
+          else if (res == -1) this.$notify.warning("头像修改失败")
+        })
+        .catch((err) => {
+          this.$notify.error(
+            {
+              title: "网络错误",
+              message: "请稍后重试~"
+            })
+        })
+    },
+    handleRemove() {
+      this.hideUploadEdit = false;
+    },
+    handleExceed() {
+      this.$notify.info("最多上传 1 张头像");
+    },
     opSwitch(opID) {
       this.opID = opID
     },
@@ -171,7 +247,14 @@ export default {
     },
     closeSend() {
       this.isSend = false
-    }
+    },
+    openChangeHeadshot() {
+      this.$refs.changeHeadshot.showHover({
+        title: "修改头像",
+        cancelBtn: "取消"
+      });
+    },
+    cancel() {}
   },
   created() {
     // 进入个人门户
@@ -300,6 +383,11 @@ export default {
   /*border: 1px solid red;*/
   display: flex;
   flex-direction: column;
+}
+
+.introName-top {
+  display: flex;
+  flex-direction: row;
 }
 
 .intro-name {
@@ -585,5 +673,34 @@ export default {
   font-weight: 700;
   color: white;
   margin-left: 45%;
+}
+
+.headshot__hide {
+  width: 104px;
+  height: 104px;
+  align-items: center;
+  border-radius: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  opacity: 0;
+  position: absolute;
+  left: 13px;
+  top: 20px;
+  right: 0;
+  bottom: 0;
+  transition: ease-in-out 0.3s;
+}
+
+.headshot:hover .headshot__hide {
+  opacity: 1;
+  cursor: pointer;
+  transition: ease-in-out 0.3s;
+}
+
+.headshot__inner--samll {
+  border-radius: 50%;
+  height: 40%;
+  width: 40%;
 }
 </style>
