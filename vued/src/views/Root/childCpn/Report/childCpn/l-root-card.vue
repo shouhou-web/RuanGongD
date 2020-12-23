@@ -5,7 +5,7 @@
         <div class="l-root-card--content-info">
           <img
             class="l-root-card--reporter-pic"
-            :src="require('@/assets/image/root/' + imgPath1 + '.jpg')"
+            :src="imgPath1"
           />
           <slot name="reporterProfile"></slot>
           <div v-if="type == 1" class="l-root-card--content-connect">
@@ -20,7 +20,6 @@
           <div v-else-if="type == 4" class="l-root-card--content-connect">
             举报了动态
           </div>
-          <a class="l-root-card--notice" title="待处理" v-if="!hasRead">!</a>
           <img
             class="l-root-card--reportee-pic"
             :src="require('@/assets/image/root/' + imgPath2 + '.jpg')"
@@ -60,23 +59,6 @@
             <img
               src="@/assets/icons/root/reject-select.svg"
               class="l-root-card--options-reject"
-              v-else
-            />
-          </li>
-          <li
-            class="l-root-card--delete"
-            @mouseover="del"
-            @mouseout="del"
-            @click="toDelete"
-          >
-            <img
-              src="@/assets/icons/root/delete.svg"
-              class="l-root-card--options-delete"
-              v-if="!onDelete"
-            />
-            <img
-              src="@/assets/icons/root/delete-select.svg"
-              class="l-root-card--options-delete"
               v-else
             />
           </li>
@@ -208,20 +190,9 @@ export default {
   color: #6b757b;
   font-weight: 800;
   font-size: 15px;
-  margin-left: 20px;
+  margin-left: 10px;
   margin-right: 5px;
-}
-
-.l-root-card--notice {
-  background-color: #ffb11b;
-  border-radius: 10px;
-  color: #ffffff;
-  cursor: pointer;
-  display: block;
-  height: 15px;
-  margin-right: 25px;
-  text-align: center;
-  width: 15px;
+  width: 80px;
 }
 
 .l-root-card--options {
@@ -243,15 +214,7 @@ export default {
   height: 20px;
   left: 4px;
   position: absolute;
-  top: 8px;
-  width: 20px;
-}
-
-.l-root-card--options-delete {
-  height: 20px;
-  left: 4.5px;
-  position: absolute;
-  top: 4.5px;
+  top: 23.5px;
   width: 20px;
 }
 
@@ -266,22 +229,12 @@ export default {
 }
 
 .l-root-card--reject {
-  clip-path: circle(35px at 0% 100%);
+  clip-path: circle(35px at 0% 50%);
   cursor: pointer;
-  height: 35px;
+  height: 70px;
   left: 50%;
   position: absolute;
   top: 0%;
-  width: 35px;
-}
-
-.l-root-card--delete {
-  clip-path: circle(35px at 0% 0%);
-  cursor: pointer;
-  height: 35px;
-  left: 50%;
-  position: absolute;
-  top: 50%;
   width: 35px;
 }
 

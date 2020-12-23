@@ -1,42 +1,51 @@
 <template>
-  <div class="report-cards--indiser">
-    <div class="report-card" v-for="(item, index) in reportList" :key="index">
-      <l-root-card
-        class="delay"
-        :style="{ 'animation-delay': index * 200 + 'ms' }"
-        :hasRead="item.hasRead"
-        :imgPath1="item.reporterInfo.image"
-        :type="item.reportType"
-        :canShowMore="item.trimmedContent != null"
-        @toShowMore="resetTrim($event, index)"
-        @approveReport="toApprove($event, index)"
-        @rejectReport="toReject($event, index)"
-        @deleteReport="toDelete($event, index)"
-      >
-        <template v-slot:reporterProfile>
-          <div class="report-profile">
-            <span class="report-name">{{ item.reporterInfo.userName }}</span>
-            <span class="report-job">{{ item.reporterInfo.userDegree }}</span>
-          </div>
-        </template>
-        <template v-slot:reportee>
-          <span class="reportee-title"
-            >&quot;{{ item.articleTitle }}&quot;</span
-          >
-        </template>
-        <template v-slot:detail>
-          <span class="report-detail" v-if="item.isTrimmed">
-            {{ item.trimmedContent }}
-          </span>
-          <span class="report-detail" v-else>
-            {{ item.reportContent }}
-          </span>
-        </template>
-      </l-root-card>
+  <div>
+    <div class="report-cards--indiser">
+      <div class="report-card" v-for="(item, index) in reportList" :key="index">
+        <l-root-card
+          class="delay"
+          :style="{ 'animation-delay': index * 200 + 'ms' }"
+          :hasRead="item.hasRead"
+          :imgPath1="item.reporterInfo.image"
+          :type="1"
+          :canShowMore="item.trimmedContent != null"
+          @toShowMore="resetTrim($event, index)"
+          @approveReport="toApprove($event, index)"
+          @rejectReport="toReject($event, index)"
+          @deleteReport="toDelete($event, index)"
+        >
+          <template v-slot:reporterProfile>
+            <div class="report-profile">
+              <span class="report-name">{{ item.reporterInfo.username }}</span>
+              <span class="report-job">{{
+                options[item.reporterInfo.userDegree]
+              }}</span>
+            </div>
+          </template>
+          <template v-slot:reportee>
+            <span class="reportee-title"
+              >&quot;{{ item.articleTitle }}&quot;</span
+            >
+          </template>
+          <template v-slot:detail>
+            <span class="report-detail" v-if="item.trimmed">
+              {{ item.trimmedContent }}
+            </span>
+            <span class="report-detail" v-else>
+              {{ item.reportContent }}
+            </span>
+          </template>
+        </l-root-card>
+      </div>
     </div>
     <m-hover ref="hover" @submit="doReject">
       <div class="reject-hover">
-        <textarea class="reject-input" placeholder="请在此输入驳回原因" autofocus v-model="msgContent"></textarea>
+        <textarea
+          class="reject-input"
+          placeholder="请在此输入驳回原因"
+          autofocus
+          v-model="msgContent"
+        ></textarea>
       </div>
     </m-hover>
   </div>
@@ -44,6 +53,8 @@
 
 <script>
 import LRootCard from "./l-root-card.vue";
+import { approveReport, rejectReport } from "network/root";
+import { getArticleReports } from "network/root";
 
 export default {
   name: "Doc",
@@ -52,117 +63,27 @@ export default {
       temp_index: -1,
       msgContent: "",
       show: false,
-      reportList: [
-        {
-          hasRead: false,
-          articleID: "E387HB9CS1234",
-          articleTitle:
-            "This is a card used to test article reports!!!This is a card used to test article reports!!!This is a card used to test article reports!!!",
-          isTrimmed: true,
-          trimmedContent:
-            "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a veryonylyc is a very handsome bot, his name....",
-          reportContent:
-            "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          reportType: 1,
-          reportID: "",
-          reporterInfo: {
-            userID: "",
-            userName: "Tonylyc",
-            userIdentity: 2,
-            image: "lyc",
-            realName: "",
-            userDegree: "本科生"
-          }
-        },
-        {
-          hasRead: false,
-          articleID: "E387HB9CS1234",
-          articleTitle: "This is a card used to test article reports!!!",
-          isTrimmed: true,
-          trimmedContent:
-            "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a very....",
-          reportContent:
-            "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          reportType: 1,
-          reportID: "",
-          reporterInfo: {
-            userID: "",
-            userName: "Tonylyc",
-            userIdentity: 2,
-            image: "lyc",
-            realName: "",
-            userDegree: "本科生"
-          }
-        },
-        {
-          hasRead: false,
-          articleID: "E387HB9CS1234",
-          articleTitle: "This is a card used to test article reports!!!",
-          isTrimmed: true,
-          trimmedContent:
-            "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a very....",
-          reportContent:
-            "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          reportType: 1,
-          reportID: "",
-          reporterInfo: {
-            userID: "",
-            userName: "Tonylyc",
-            userIdentity: 2,
-            image: "lyc",
-            realName: "",
-            userDegree: "本科生"
-          }
-        },
-        {
-          hasRead: false,
-          articleID: "E387HB9CS1234",
-          articleTitle: "This is a card used to test article reports!!!",
-          isTrimmed: true,
-          trimmedContent:
-            "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a very....",
-          reportContent:
-            "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          reportType: 1,
-          reportID: "",
-          reporterInfo: {
-            userID: "",
-            userName: "Tonylyc",
-            userIdentity: 2,
-            image: "lyc",
-            realName: "",
-            userDegree: "本科生"
-          }
-        },
-        {
-          hasRead: false,
-          articleID: "E387HB9CS1234",
-          articleTitle: "This is a card used to test article reports!!!",
-          isTrimmed: true,
-          trimmedContent:
-            "Tonylyc is a very handsome bot, his name is Tonylyc, Tonylyc is a very....",
-          reportContent:
-            "Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc, Tonylyc is a very handsome boy, his name is Tonylyc",
-          reportType: 1,
-          reportID: "",
-          reporterInfo: {
-            userID: "",
-            userName: "Tonylyc",
-            userIdentity: 2,
-            image: "lyc",
-            realName: "",
-            userDegree: "本科生"
-          }
-        }
-      ]
+      reportList: [],
+      options: ["高中生", "本科生", "研究生", "博士生", "博士后"]
     };
   },
   methods: {
     resetTrim(e, index) {
-      this.reportList[index].isTrimmed = !this.reportList[index].isTrimmed;
+      this.reportList[index].trimmed = !this.reportList[index].trimmed;
     },
     toApprove(e, index) {
-      console.log(index);
+      approveReport(this.reportList[index].reportID).then(res => {
+        if (!res) {
+          this.$notify.error({
+            title: "通过失败",
+            message: "再试一次"
+          });
+          return;
+        } else {
+          this.$notify.success("通过成功");
+          this.reportList.splice(index, 1);
+        }
+      });
     },
     toReject(e, index) {
       this.temp_index = index;
@@ -176,9 +97,50 @@ export default {
       console.log(index);
     },
     doReject() {
-      console.log(this.temp_index);
-      console.log(this.msgContent);
+      if (!this.msgContent || this.msgContent.length == 0) {
+        this.$notify.error({
+          title: "驳回失败",
+          message: "请输入驳回原因！"
+        });
+      } else {
+        rejectReport(
+          this.reportList[this.temp_index].reportID,
+          this.msgContent
+        ).then(res => {
+          if (res == 0) {
+            this.$notify.error({
+              title: "驳回失败",
+              message: "再试一次"
+            });
+          } else {
+            this.$refs.hover.hideHover();
+            this.$notify.success("驳回成功");
+            this.reportList.splice(this.temp_index, 1);
+            this.msgContent = "";
+          }
+        });
+      }
     }
+  },
+  created() {
+    getArticleReports()
+      .then(res => {
+        if (!res || res.length == 0) {
+          this.$notify.info({
+            title: "空列表",
+            message: "可以摸了"
+          });
+          return;
+        } else {
+          this.reportList = res;
+        }
+      })
+      .catch(err => {
+        this.$notify.error({
+          title: "网络错误",
+          message: "请稍后重试~"
+        });
+      });
   },
   components: { LRootCard }
 };
@@ -225,6 +187,10 @@ export default {
   cursor: pointer;
   font-size: 15px;
   margin-bottom: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 70px;
 }
 
 .report-name:hover {
@@ -240,9 +206,10 @@ export default {
 .reportee-title {
   color: #6b757b;
   cursor: pointer;
+  margin-left: 10px;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 540px;
+  width: 530px;
   white-space: nowrap;
 }
 
@@ -253,6 +220,7 @@ export default {
 .report-detail {
   color: #6b757b;
   transition: 0.5s;
+  word-break: break-all;
 }
 
 .delay {
