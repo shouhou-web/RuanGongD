@@ -199,7 +199,11 @@
 </template>
 
 <script>
-import { getAllSectors, getFollowedPosts, isFollowed } from "network/forum.js";
+import {
+  getAllSectors,
+  getFollowedPosts,
+  isFollowedAll
+} from "network/forum.js";
 import MHeader from "../../components/common/m-header/m-header.vue";
 import CreatePost from "./childCpn/create-post.vue";
 import CreateConsultation from "./childCpn/create-consultation.vue";
@@ -318,9 +322,7 @@ export default {
       ]*/
     };
   },
-  watch: {
-  
-  },
+  watch: {},
   methods: {
     closeDg() {
       this.display = false;
@@ -369,12 +371,17 @@ export default {
     },
     handleFollowed() {
       let i;
+      console.log("handleFollowed:sectors");
+      console.log(this.sectors);
       for (i = 0; i < this.sectors.length; i++) {
         isFollowed(this.currentUser, this.sectors[i].sectorId).then(res => {
+          //console.log("sectori:"+i+" "+sectors[i]);
           this.sectors[i].followed = res.followed;
+          console.log("res: " + res);
           if (res.followed == "1") this.followedCount++;
         });
       }
+      console.log("followedCount: " + this.followedCount);
     }
   },
   computed: {
@@ -398,13 +405,30 @@ export default {
         console.log("getAllSectors");
         console.log(res);
         this.sectors = res.sectors;
+        if (this.logined) {
+          isFollowedAll(this.currentUser).then(res => {
+            console.log("isFollowedAll");
+            console.log(res);
+            let followedAll = res.sectors;
+            for (let i = 0; i < this.sectors.length; i++) {
+              let temp = "0";
+              for (let j = 0; j < followedAll.length; j++) {
+                if (followedAll[i].sectorId === this.sectors[i].sectorId) {
+                  temp = followedAll[i].followed;
+                  break;
+                }
+              }
+              if (temp === "1") this.followedCount++;
+              this.sectors[i].followed = temp;
+            }
+          });
+        }
       })
       .catch(err => {
         console.log(err);
       });
     //return;
     if (this.logined) {
-      this.handleFollowed();
       getFollowedPosts(this.currentUser)
         .then(res => {
           console.log("getFollowedPosts");
