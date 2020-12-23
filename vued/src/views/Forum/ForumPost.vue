@@ -265,7 +265,8 @@ import {
   deletePost,
   reportComment,
   deleteComment,
-  commentPost
+  commentPost,
+  getUserIdentity
 } from "@/network/forum";
 import { getLiterature } from "@/network/literature";
 import MHeader from "@/components/common/m-header/m-header";

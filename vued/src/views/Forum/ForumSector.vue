@@ -190,7 +190,8 @@ import {
   getPosts,
   isFollowed,
   followSector,
-  getPostNum
+  getPostNum,
+  getUserIdentity
 } from "network/forum.js";
 import MHeader from "../../components/common/m-header/m-header.vue";
 import CreatePost from "./childCpn/create-post.vue";
@@ -279,9 +280,25 @@ export default {
     },
     goToUser(id) {
       //跳转到用户
-      this.$router.push({
-        path: "/profile",
-        query: { userID: id }
+      getUserIdentity(id).then(res => {
+        console.log(res);
+        if (res.userIdentity == "1") {
+          this.$router.push({
+            path: "/intro",
+            query: {
+              userID: id,
+              authorID: res.authorID,
+              see: 0
+            }
+          });
+        } else {
+          this.$router.push({
+            path: "/profile",
+            query: {
+              userID: id
+            }
+          });
+        }
       });
     },
     goToPost(id) {
