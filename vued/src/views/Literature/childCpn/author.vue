@@ -117,7 +117,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 325px;
+  width: 360px;
   border: 1px solid #95a5a6;
   background: white;
 }
@@ -125,7 +125,7 @@ export default {
 .auth-bottom {
   display: flex;
   flex-direction: column;
-  width: 80%;
+  width: 85%;
   align-self: center;
   align-items: center;
 }

@@ -4,27 +4,31 @@
     <!-- 评论区 -->
     <div class="comment-container" v-if="comments.length >= 1">
       <div class="card">
-        <div
+        <!-- <div
           class="child-card"
           v-for="comment in comments"
           :key="comment.floor"
+        > -->
+        <div
+          class="child-card"
+          v-for="(comment,index) in comments"
         >
-          <div class="card-divider" v-if="comment.floor != 1"></div>
+          <div class="card-divider" v-if="index != 0"></div>
           <div class="card-header">
             <div class="avatar">
               <v-btn
                 fab
                 icon
                 x-small
-                @click="jumpToProfile(comment.commenterId)"
+                @click="jumpToProfile(comment.userID)"
               >
                 <v-avatar size="32px">
-                  <img :src="comment.commenterAvatar" />
+                  <img :src="comment.image" />
                 </v-avatar>
               </v-btn>
             </div>
             <div class="commenter-name">
-              {{ comment.commenterName }}
+              {{ comment.username }}
             </div>
             <div class="comment-time">
               {{ comment.commentTime }}
@@ -32,13 +36,13 @@
             <div class="comment-action">
               <v-btn
                 icon
-                v-if="comment.commenterId == $store.state.user.userID"
-                @click="showDelete(comment.commentId)"
+                v-if="comment.userID == $store.state.user.userID"
+                @click="showDelete(comment.postCommentID)"
               >
                 <!-- 是作者：可以删除评论 -->
                 <v-icon> mdi-delete </v-icon>
               </v-btn>
-              <v-btn icon v-else @click="showReport(comment.commentId)">
+              <v-btn icon v-else @click="showReport(comment.userID)">
                 <!-- 不是作者：可以举报评论 -->
                 <v-icon> mdi-alert-octagon </v-icon>
               </v-btn>
@@ -46,7 +50,7 @@
           </div>
           <div class="card-item">
             <div class="comment-content">
-              {{ comment.commentContent }}
+              {{ comment.content }}
             </div>
           </div>
         </div>
@@ -87,7 +91,7 @@
               <v-btn
                 color="var(--color-main)"
                 :disabled="!commentFormValid"
-                @click="handleComment"
+                @click="handleComment()"
               >
                 <font color="white">发表</font>
               </v-btn>
@@ -104,7 +108,7 @@
           <el-form
             :model="reportForm"
             label-width="80px"
-            :rules="reportRule"
+            
             ref="reportForm"
           >
             <el-form-item label="举报理由" prop="reportContent">
@@ -116,6 +120,7 @@
                 :autosize="{ minRows: 5, maxRows: 12 }"
                 resize="none"
                 maxlength="801"
+                :rules="reportRule"
               ></el-input>
             </el-form-item>
           </el-form>
@@ -167,30 +172,24 @@ export default {
     literature: Object
   },
   created() {
-    console.log(this.literature.literatureID);
     getComment(this.literature.literatureID)
       .then(res => {
-        console.log("comment", res);
+        console.log("文献评论", res);
         if (res == null) this.comments = [];
         else this.comments = res;
-      })
-      .then(
-        // TODO 获取 userName, userAvatar
-        this.comments.sort(function(a, b) {
-          return a.floor - b.floor;
-        }) // 对 comments 按楼层升序排序
-      );
+      });
+      // .then(
+      //   // TODO 获取 userName, userAvatar
+      //   this.comments.sort(function(a, b) {
+      //     return a.floor - b.floor;
+      //   }) // 对 comments 按楼层升序排序
+      // );
+      console.log("文献评论长度"+this.comments.length);
   },
   data() {
     return {
       commentContent: "",
       commentFormValid: false,
-      commentRule: [
-        v => !!v,
-        v =>
-          (v.length <= 800 && v.length >= 5) ||
-          "评论内容长度在 5-800 个字符之间"
-      ],
       reportDialog: false, // 是否展示举报界面
       deleteDialog: false, // 是否展示删除界面
       deleteCommentId: "",
@@ -227,12 +226,14 @@ export default {
       });
     },
     showDelete(commentId) {
+      console.log(123)
+      console.log(commentId.toString())
       this.deleteDialog = true;
       if (commentId == -1) {
         this.deletePost = true;
       } else {
         this.deletePost = false;
-        this.deleteCommentId = commentId;
+        this.deleteCommentId = commentId.toString();
       }
     },
     showReport(commentId) {
@@ -241,6 +242,9 @@ export default {
       this.reportForm.reportCommentId = commentId;
     },
     handleReport() {
+      console.log(this.$store.state.user.userID,
+        this.reportForm.reportCommentId,
+        this.reportForm.reportContent);
       reportComment(
         this.$store.state.user.userID,
         this.reportForm.reportCommentId,
@@ -281,15 +285,15 @@ export default {
             this.deleteDialog = false;
 
             for (var i = 0; i < this.comments.length; i++) {
-              if (this.deleteCommentId == this.comments[i].commentId)
+              if (this.deleteCommentId == this.comments[i].userId)
                 this.comments.splice(i, 1);
             }
-            if (this.comments[0] && this.comments[0].floor == 3)
-              this.comments[0].floor--;
-            for (var i = 1; i < this.comments.length; i++) {
-              if (this.comments[i].floor - this.comments[i - 1].floor == 2)
-                this.comments[i].floor--;
-            }
+            // if (this.comments[0] && this.comments[0].floor == 3)
+            //   this.comments[0].floor--;
+            // for (var i = 1; i < this.comments.length; i++) {
+            //   if (this.comments[i].floor - this.comments[i - 1].floor == 2)
+            //     this.comments[i].floor--;
+            // }
             // FIXME: 跳到其他页面，再使用浏览器的返回时，无法持久存放修改后的数据
 
             this.$notify({
@@ -316,17 +320,15 @@ export default {
     handleComment() {
       comment(this.$store.state.user.userID, this.literature.literatureID, this.commentContent)
         .then(res => {
-          console.log("comment post");
-          console.log(res);
+          console.log("评论成功");
           if (res == 0) {
             var len = this.comments.length;
             this.comments.push({
-              commentId: "1",
-              commenterId: $store.state.user.userID,
-              commenterName: $store.state.user.username,
-              commenterAvatar: $store.state.user.image,
-              floor: len + 2,
-              commentContent: this.commentContent,
+              userID: this.$store.state.user.userID,
+              username: this.$store.state.user.username,
+              image: this.$store.state.user.image,
+              // floor: len + 2,
+              content: this.commentContent,
               commentTime: "刚刚"
             });
             this.commentContent = "";
@@ -336,7 +338,8 @@ export default {
           }
         })
         .catch(err => {
-          this.$notify.error("评论失败，请稍后再试。");
+          console.log("comment post");
+          this.$notify.error("评论失败");
           console.log(err);
         });
     }
@@ -380,9 +383,9 @@ export default {
   display: flex;
   flex-direction: column;
   max-width: 100%;
-  margin-bottom: 30px;
+  /* margin-bottom: 30px; */
   border: 1px solid #ddd;
-  box-shadow: 0 0px 2px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.12);
+  /* box-shadow: 0 0px 2px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.12); */
   padding: 20px 30px 20px 30px;
   background: white;
 }
@@ -474,9 +477,10 @@ export default {
 }
 .nocomment{
   width: 100%;
-  height:65px;
+  height:60px;
   background: white;
   border: 1px solid #ddd;
+  border-bottom: 0;
   display: flex;
   /* justify-content:center; */
   align-items:center;

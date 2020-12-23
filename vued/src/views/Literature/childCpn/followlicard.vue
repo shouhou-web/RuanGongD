@@ -68,7 +68,7 @@ export default {
           literatureID: literatureID
         }
       });
-      this.$router.go(0);
+      location.reload();
     }
   }
 };
