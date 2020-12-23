@@ -172,6 +172,13 @@
               </el-row>
             </v-card>
           </li>
+          <li>
+            <v-bottom-navigation class="bottom" v-if="posts.length > 8">
+              <v-btn @click="jumpToTop" class="jump" fab>
+                返回页首<v-icon>north</v-icon>
+              </v-btn>
+            </v-bottom-navigation>
+          </li>
         </ul>
       </div>
     </div>
@@ -358,6 +365,12 @@ export default {
         }
       });
       this.$router.go(0);
+    },
+    jumpToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
     }
   },
   computed: {
@@ -460,11 +473,6 @@ export default {
 </script>
 
 <style scoped>
-#forumSector {
-  margin: 20px auto;
-  width: 100vw;
-  /*background-image: url();*/
-}
 .pageHeaderBg {
   width: 100vw;
   background-color: white;
@@ -574,5 +582,14 @@ export default {
 }
 .editTime {
   font-size: 12px;
+}
+.bottom {
+  width: 900px;
+  margin: 1px auto;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+.jump {
+  margin-left: 820px;
+  /*margin-top: 8px;*/
 }
 </style>
