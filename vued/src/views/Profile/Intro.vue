@@ -18,6 +18,7 @@
                   <div class="user-name" v-if="isApplied">{{ user.username }} <font class="intro-name">({{ intro.realName }})</font></div>
                   <div class="user-name" v-else>{{ intro.realName }}</div>
                   <img src="../../assets/icons/profile/edit.svg" class="profile-icon" @click="openChangeProfileHover" v-if="isSelfIntro && isApplied">
+                  <img src="../../assets/icons/profile/report.svg" class="profile-icon" @click="openReportIntro">
                 </div>
               </div>
             </div>
@@ -139,6 +140,12 @@
           <i class="el-icon-plus"></i>
         </el-upload>
       </el-main>
+    </m-hover>
+
+    <m-hover ref="report" @submit="reportIntro" @cancel="cancel">
+      <div>
+
+      </div>
     </m-hover>
   </div>
 </template>
@@ -275,6 +282,7 @@ export default {
           if (res == 0) {
             this.$notify.success("头像修改成功")
             this.$store.commit("setImagePath", this.imagePath)
+            this.intro.image = this.imagePath
           }
           else if (res == -1) this.$notify.warning("头像修改失败")
         })
@@ -345,6 +353,13 @@ export default {
         cancelBtn: "取消"
       });
     },
+    openReportIntro() {
+      this.$refs.report.showHover({
+        title: "举报门户",
+        submitBtn: "提交",
+        cancelBtn: "取消"
+      });
+    },
     cancel() {},
     submitEdit() {
       // name
@@ -411,6 +426,9 @@ export default {
             this.$notify.error( { title: "网络错误", message: "请稍后重试~" } )
           })
       }
+    },
+    reportIntro() {
+
     },
     changeEditOp(opID) {
       this.editOp = opID
@@ -569,18 +587,22 @@ export default {
 }
 
 .intro-headshot {
-  width: 130px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  position: relative;
+  border-radius:50%;
+  width:100px;
+  height:100px;
+  display:flex;
+  align-items:center;
+  position:relative;
+  overflow:hidden;
+  margin-top:15px;
 }
 
 .headshot-img {
-  margin: 0 auto;
-  border-radius: 50%;
-  max-width: 80%;
-  border: 1px solid #dddddd;
+  margin:0 auto;
+  width:170%;
+  left:-35%;
+  border:1px solid #dddddd;
+  position:absolute;
 }
 
 .introName {
@@ -907,10 +929,6 @@ export default {
   justify-content: center;
   opacity: 0;
   position: absolute;
-  left: 13px;
-  top: 20px;
-  right: 0;
-  bottom: 0;
   transition: ease-in-out 0.3s;
 }
 
