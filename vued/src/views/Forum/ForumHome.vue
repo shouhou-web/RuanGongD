@@ -151,8 +151,10 @@
                       >
                         {{ handleTitle(item.creatorName, 18) }}
                       </div>
-                      <div class="fPostName" @click="goToPost(item.postId)">
-                        {{ handleTitle(item.postName, 34) }}
+                    </v-card-title>
+                    <v-card-title
+                      ><div class="fPostName" @click="goToPost(item.postId)">
+                        {{ handleTitle(item.postName, 36) }}
                       </div>
                     </v-card-title>
                     <v-card-subtitle>
@@ -336,6 +338,7 @@ export default {
       return num.toString();
     },
     handleTitle(str, len) {
+      //console.log("handleTitle: " + len);
       let maxLength = len;
       if (str.length > maxLength) return str.substring(0, maxLength - 1) + "..";
       return str;
@@ -629,14 +632,15 @@ export default {
   /*border-bottom: 1px solid #ddd;*/
 }
 .creatorName {
-  display: flex;
-  align-items: center;
+  /*display: flex;
+  align-items: center;*/
   font-size: 13px;
   margin-left: 10px;
   cursor: pointer;
 }
 .fPostName {
   font-size: 15px;
+  margin-top: -30px;
   cursor: pointer;
 }
 .fPostInfo {
