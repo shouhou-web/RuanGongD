@@ -14,11 +14,11 @@
         <div class="authorname" @click="gotoIntro(one_author.userID, one_author.authorID)">{{one_author.realName}}</div>
       </div>
     </div>
-<!--    <div class="read-time">-->
-<!--      <div class="read-time-content">-->
-<!--        {{read_time}} Reads-->
-<!--      </div>-->
-<!--    </div>-->
+    <div class="read-time" v-if="year != null">
+      <div class="read-time-content">
+        publish {{year}}
+      </div>
+    </div>
   </div>
 </template>
 
@@ -33,11 +33,8 @@ export default {
     display: {
       Boolean,
       default: false
-    }
-    // read_time: {
-    //   type: Number,
-    //   default: 0
-    // }
+    },
+    year: String
   },
   methods: {
     gotoLiterature() {
@@ -165,6 +162,7 @@ export default {
 .yCard {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
 }
 
 .change-button {

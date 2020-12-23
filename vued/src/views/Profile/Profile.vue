@@ -495,7 +495,6 @@ export default {
 
 <style scoped>
 .profile {
-  font-family: Consolas;
   /*letter-spacing: 2px;*/
 }
 

@@ -22,13 +22,13 @@
           </div>
           <div :class="{'publish': !isSelfIntro, 'publish-n': isSelfIntro}">
             <div v-if="isApplied && isSelfIntro" class="publish-button" @click="gotoPublish">发表文献</div>
-            <div v-if="isApplied && !isSelfIntro && !isFollowing" class="publish-button">关注</div>
+            <div v-if="isApplied && !isSelfIntro && !isFollowing" class="publish-button" @click="followIntro">关注</div>
             <div v-if="isApplied && !isSelfIntro && isFollowing" class="publish-button-nice" @click="cancleFollowIntro">已关注</div>
             <div v-if="!isApplied" class="publish-button-apply" @click="applyIntro">申请认证当前门户</div>
             <div v-if="!isSelfIntro && isApplied" class="publish-button" @click="isSend = true" style="margin-top: 20px">私信</div>
             <create-consultation
               :display="isSend"
-              :senderID="this.$store.state.user.userID"
+              :senderID="user.userID"
               :receiverID="intro.authorID"
               @closeDialog="closeSend"></create-consultation>
           </div>
@@ -167,14 +167,8 @@ export default {
   name: "Intro",
   data() {
     return {
-      intro: {
-        // authorID:"",
-        // realName:"",
-        // organization:"",
-        // userID:"",
-        // image:"",
-        // introduction:"",
-      },
+      user: {},
+      intro: {},
 
       isSelfIntro: false,
       isFollowing: false,
@@ -296,11 +290,24 @@ export default {
           }
       })
     },
+    followIntro() {
+      follow(this.$route.query.userID, this.intro.authorID, 1)
+      .then((res) => {
+        if (res == -1) this.$notify.warning("关注失败，请重试")
+        else {
+          this.$notify.success("关注成功")
+          this.isFollowing = true
+        }
+      })
+    },
     cancleFollowIntro() {
       follow(this.$route.query.userID, this.intro.authorID, 0)
       .then((res) => {
         if (res == -1) this.$notify.warning("取消关注失败，请重试")
-        else this.$notify.success("取消关注成功")
+        else {
+          this.$notify.success("取消关注成功")
+          this.isFollowing = false
+        }
       })
       .catch((err) => {
         this.$notify.error( { title: "网络错误", message: "请稍后重试~" } )
@@ -438,6 +445,8 @@ export default {
   created() {
     console.log("Idn", this.$store.state.user.userIdentity)
 
+    this.user = this.$store.state.user
+
     // 进入个人门户
     let authorID = this.$route.query.authorID
     let authorUserID = this.$route.query.userID
@@ -517,7 +526,6 @@ export default {
 
 <style scoped>
 .intro {
-  font-family: Consolas;
 }
 
 .block-header {

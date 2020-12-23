@@ -85,7 +85,7 @@ export default {
         this.$notify.warning("验证码错误")
       }
       else if (this.application.length > 50) this.$notify.warning("申请理由不可超过50字")
-      else {
+      else if (this.codeInput == this.code && this.code != null && this.application.length <= 50){
         apply(userID, authorID, this.intro.realName, this.email, this.application)
         .then((res) => {
           if (res == 0) {
