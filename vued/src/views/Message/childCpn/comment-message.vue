@@ -85,9 +85,11 @@ export default {
               type: "success"
             });
             this.$emit("delete");
-          }
+            this.$refs.hover.hideHover();
+          } else throw new Error();
         })
         .catch(err => {
+          this.$refs.hover.hideHover();
           this.$notify.error({
             title: "网络错误",
             message: "请稍后重试~"
@@ -198,6 +200,8 @@ export default {
 }
 
 .hover-content {
-  padding: 20px 0 10px;
+  text-indent: 1em;
+  letter-spacing: 0.01em;
+  padding: 20px 0 0;
 }
 </style>

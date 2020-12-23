@@ -29,7 +29,9 @@
     </div>
     <div class="message__div"></div>
     <m-hover ref="hover" @submit="assureDelete">
-      删除消息后不可恢复，是否确认删除？
+      <div class="hover-content">
+        删除消息后不可恢复，是否确认删除？
+      </div>
     </m-hover>
   </div>
 </template>
@@ -111,20 +113,22 @@ export default {
       console.log(this.message.messageID);
       deleteMsg(this.message.messageID)
         .then(res => {
-          if (res == 0) {
+          if (res == 1) {
             this.$notify({
               title: "成功",
               message: "删除消息成功",
               type: "success"
             });
+            this.$refs.hover.hideHover();
             this.$emit("delete");
-          }
+          } else throw new Error();
         })
         .catch(err => {
           this.$notify.error({
             title: "网络错误",
             message: "请稍后重试~"
           });
+          this.$refs.hover.hideHover();
         });
     }
   }
@@ -193,5 +197,11 @@ export default {
 .message-aside__text {
   font-size: 12px;
   margin-top: 10px;
+}
+
+.hover-content {
+  text-indent: 1em;
+  letter-spacing: 0.01em;
+  padding: 20px 0 0;
 }
 </style>

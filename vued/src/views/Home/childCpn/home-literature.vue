@@ -1,8 +1,8 @@
 <template>
   <div id="ciation">
-    <div class="ciation__title">
+    <!-- <div class="ciation__title">
       {{ title }}
-    </div>
+    </div> -->
     <div class="ciation__content">
       <ul>
         <li
@@ -61,7 +61,9 @@ export default {
 
 <style scoped>
 #ciation {
-  height: 350px;
+  /* height: 350px; */
+  width: 830px;
+  margin: 0 auto;
 }
 
 .ciation__title {
@@ -71,7 +73,6 @@ export default {
 }
 
 .ciation__content {
-  height: 320px;
   margin-top: 30px;
 }
 

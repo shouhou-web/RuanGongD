@@ -118,8 +118,8 @@ export default {
 .open {
   display: flex;
   justify-content: space-around;
-  width: 250px;
-  margin: 30px auto 15px;
+  width: 300px;
+  margin: 30px auto;
 }
 
 .open__left,
@@ -133,10 +133,11 @@ export default {
   height: 36px;
   cursor: pointer;
 
-  /* border: 2px solid #ebebeb; */
+  border: 1px solid var(--color-tint);
   border-radius: 8px;
   /* color: #6b757b; */
   color: var(--color-tint);
+  width: 121px;
   font-size: 17px;
   transition: 0.3s;
 }
@@ -156,11 +157,11 @@ export default {
 }
 
 .footer {
-  color: #006621;
+  color: #202124;
   font-weight: normal;
-  font-size: 14px;
+  font-size: small;
   text-align: center;
   line-height: 16px;
-  margin: 0px auto;
+  margin: 15px auto 20px;
 }
 </style>

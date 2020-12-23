@@ -41,11 +41,25 @@ export default {
   },
   watch: {
     start(val, oldVal) {
+      if (val > "2020") {
+        this.$notify.info({
+          title: "提醒",
+          message: "不能查看未来的文献"
+        });
+        this.start = 2020;
+      }
       if (val > this.end) this.end = this._dateAddDays(this.start, 1);
       this._changeTime();
       // console.log(this.start, this.end);
     },
     end(val, oldVal) {
+      if (val > "2020") {
+        this.$notify.info({
+          title: "提醒",
+          message: "不能查看未来的文献"
+        });
+        this.end = 2020;
+      }
       if (val < this.start) this.start = this._dateAddDays(this.end, -1);
       this._changeTime();
       // console.log(this.start, this.end);
