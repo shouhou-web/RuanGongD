@@ -11,7 +11,7 @@
         </ul>
       </div>
     </div>
-    <div class="apply-cards--indiser">
+    <div v-if="!showNone" class="apply-cards--indiser">
       <div
         class="apply-card"
         v-for="(item, index) in applicationList"
@@ -46,24 +46,29 @@
           </template>
         </l-apply-card>
       </div>
-      <m-hover ref="hover" @submit="doReject">
-        <div class="reject-hover">
-          <textarea
-            class="reject-input"
-            placeholder="请在此输入驳回原因"
-            autofocus
-            v-model="msgContent"
-          ></textarea>
-        </div>
-      </m-hover>
     </div>
+    <div class="apply-cards--none" v-if="showNone">
+      <span class="apply-cards--wu">無</span>
+    </div>
+    <m-hover
+      ref="hover"
+      @submit="doReject"
+    >
+      <div class="reject-hover">
+        <textarea
+          class="reject-input"
+          placeholder="请在此输入驳回原因"
+          v-model="msgContent"
+        ></textarea>
+      </div>
+    </m-hover>
   </div>
 </template>
 
 <script>
 import LApplyCard from "./childCpn/l-apply-card.vue";
 import { getAllGateApplication } from "network/root";
-import { approveApplication, rejectApplication} from "network/root";
+import { approveApplication, rejectApplication } from "network/root";
 
 export default {
   name: "Doc",
@@ -72,13 +77,8 @@ export default {
       temp_index: -1,
       msgContent: "",
       applicationList: [],
-      options: [
-        "高中生",
-        "本科生",
-        "研究生",
-        "博士生",
-        "博士后"
-      ]
+      options: ["高中生", "本科生", "研究生", "博士生", "博士后"],
+      showNone: false
     };
   },
   methods: {
@@ -87,18 +87,25 @@ export default {
         .isTrimmed;
     },
     toApprove(e, index) {
-      approveApplication(this.applicationList[index].applicationID).then(res => {
-        if(!res) {
-          this.$notify.error({
-            title: "通过失败",
-            message: "再试一次"
-          });
-          return;
-        } else {
-          this.$notify.success("通过成功");
-          this.applicationList.splice(index, 1);
+      approveApplication(this.applicationList[index].applicationID).then(
+        res => {
+          if (!res) {
+            this.$notify.error({
+              title: "通过失败",
+              message: "再试一次"
+            });
+            return;
+          } else {
+            this.$notify.success("通过成功");
+            this.applicationList.splice(index, 1);
+            if (this.applicationList.length == 0) this.showNone = true;
+          }
         }
-      })
+      );
+    },
+    rejectHover(e) {
+      this.msgContent = e;
+      console.log(this.msgContent);
     },
     toReject(e, index) {
       this.temp_index = index;
@@ -109,12 +116,13 @@ export default {
       });
     },
     doReject() {
-      if (!this.msgContent || this.msgContent.length == 0) {
+      if (this.msgContent == null || this.msgContent.length == 0) {
         this.$notify.error({
           title: "驳回失败",
           message: "请输入驳回原因！"
         });
       } else {
+        console.log(this.msgContent);
         rejectApplication(
           this.applicationList[this.temp_index].applicationID,
           this.msgContent
@@ -129,6 +137,7 @@ export default {
             this.$notify.success("驳回成功");
             this.applicationList.splice(this.temp_index, 1);
             this.msgContent = "";
+            if (this.applicationList.length == 0) this.showNone = true;
           }
         });
       }
@@ -136,23 +145,24 @@ export default {
   },
   created() {
     getAllGateApplication()
-    .then(res => {
-      if(!res || res.length == 0) {
+      .then(res => {
+        if (res == null || res.length == 0) {
           this.$notify.info({
             title: "空列表",
             message: "可以摸了"
           });
+          this.showNone = true;
           return;
-      } else {
-        this.applicationList = res;
-      }
-    })
-    .catch(err => {
-      this.$notify.error({
-        title: "网络错误",
-        message: "请稍后重试~"
+        } else {
+          this.applicationList = res;
+        }
+      })
+      .catch(err => {
+        this.$notify.error({
+          title: "网络错误",
+          message: "请稍后重试~"
+        });
       });
-    });
   },
   components: { LApplyCard }
 };
@@ -283,21 +293,6 @@ export default {
   animation-fill-mode: forwards;
 }
 
-.reject-hover {
-  width: 500px;
-}
-
-.reject-input {
-  border: #cdccd1 solid 0.5px;
-  border-radius: 4px;
-  height: 300px;
-  margin: 30px auto;
-  outline: none;
-  padding: 10px 10px;
-  resize: none;
-  width: 100%;
-}
-
 textarea:-ms-input-placeholder {
   cursor: pointer;
   color: #6b757b;
@@ -314,6 +309,36 @@ textarea:-ms-input-placeholder {
 .reject-input::-webkit-scrollbar-thumb {
   background-color: #d4dadd;
   border-radius: 2px;
+}
+
+.apply-cards--none {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 186px);
+  width: 900px;
+}
+
+.apply-cards--wu {
+  color: #6b757b;
+  font-size: 100px;
+  font-family: FangSong;
+  margin: auto 380px;
+}
+
+.reject-hover {
+  width: 500px;
+}
+
+.reject-input {
+  border: #cdccd1 solid 0.5px;
+  border-radius: 4px;
+  height: 300px;
+  margin: 30px auto;
+  outline: none;
+  padding: 10px 10px;
+  resize: none;
+  width: 100%;
 }
 
 @keyframes outin {
