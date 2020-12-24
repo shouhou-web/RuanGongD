@@ -22,7 +22,7 @@
           </div>
           <img
             class="l-root-card--reportee-pic"
-            :src="require('@/assets/image/root/' + imgPath2 + '.jpg')"
+            :src="imgPath2"
             v-if="type == 2"
           />
           <slot name="reportee"></slot>
@@ -191,7 +191,7 @@ export default {
   font-weight: 800;
   font-size: 15px;
   margin-left: 10px;
-  margin-right: 5px;
+  margin-right: 10px;
   width: 80px;
 }
 
