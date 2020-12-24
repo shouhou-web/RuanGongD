@@ -5,7 +5,7 @@
       <span class="date__title">发表时间：</span>
       <div class="block">
         <el-date-picker
-          v-model="start"
+          v-model="start1"
           type="year"
           value-format="yyyy"
           placeholder="起始"
@@ -15,7 +15,7 @@
       <span class="date__and">--</span>
       <div class="block">
         <el-date-picker
-          v-model="end"
+          v-model="end1"
           type="year"
           value-format="yyyy"
           placeholder="终止"
@@ -31,57 +31,74 @@ export default {
   name: "Search",
   data() {
     return {
-      start: "",
-      end: ""
+      start1: "",
+      end1: ""
     };
   },
+  // computed: {
+  //   start() {
+  //     console.log("start");
+  //     this.start1 = this.$store.state.start;
+  //     return this.$store.state.start;
+  //   },
+  //   end() {
+  //     console.log("end");
+  //     this.end1 = this.$store.state.end;
+  //     return this.$store.state.end;
+  //   }
+  // },
   created() {
-    this.start = this.$store.state.start;
-    this.end = this.$store.state.end;
+    this.start1 = this.$store.state.start;
+    this.end1 = this.$store.state.end;
   },
   watch: {
-    start(val, oldVal) {
+    start1(val, oldVal) {
+      let flag = true;
       if (val > "2020") {
         this.$notify.info({
           title: "提醒",
           message: "不能查看未来的文献"
         });
-        this.start = 2020;
+        this.$store.commit("setStart", "2020");
+        this.start1 = "2020";
+        flag = false;
+      } else {
+        this.$store.commit("setStart", val);
+        this.start1 = val;
       }
-      if (val > this.end) this.end = this._dateAddDays(this.start, 1);
-      this._changeTime();
-      // console.log(this.start, this.end);
+      if (flag && (this.end1 == "" || val > this.end1)) {
+        this.$store.commit("setEnd", this._dateAddDays(val, 1));
+        this.end1 = this._dateAddDays(val, 1);
+      }
     },
-    end(val, oldVal) {
+    end1(val, oldVal) {
+      let flag = true;
       if (val > "2020") {
         this.$notify.info({
           title: "提醒",
           message: "不能查看未来的文献"
         });
-        this.end = 2020;
+        this.$store.commit("setEnd", "2020");
+        this.end1 = "2020";
+        flag = false;
+      } else this.$store.commit("setEnd", val);
+      if (flag && (this.start1 == "" || val < this.start1)) {
+        this.$store.commit("setStart", this._dateAddDays(val, -1));
+        this.start1 = this._dateAddDays(val, -1);
       }
-      if (val < this.start) this.start = this._dateAddDays(this.end, -1);
-      this._changeTime();
-      // console.log(this.start, this.end);
     }
   },
   methods: {
     cancelTime() {
       // 取消选择时间
-      this.start = "";
-      this.end = "";
+      this.$store.commit("setStart", "");
+      this.$store.commit("setEnd", "");
     },
     _dateAddDays(dateStr, dayCount) {
       // 调整日期
       let origin = parseInt(dateStr);
       origin += dayCount;
       return origin.toString();
-    },
-    _changeTime() {
-      this.$emit("change-time", {
-        start: this.start,
-        end: this.end
-      });
     }
   }
 };

@@ -74,7 +74,7 @@
         </div>
       </li>
     </ul>
-    <search-date v-if="isAdvance && isShow" @change-time="changeTime" />
+    <search-date v-if="isAdvance && isShow" />
   </div>
 </template>
 
@@ -138,11 +138,6 @@ export default {
         this.$store.state.searchList.length == 1
       )
         this.$store.commit("initSearchList");
-    },
-    changeTime(e) {
-      console.log(e.start, e.end);
-      this.$store.commit("setStart", e.start);
-      this.$store.commit("setEnd", e.end);
     },
     addItem() {
       this.$store.commit("addSearchList");
