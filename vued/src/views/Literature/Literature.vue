@@ -481,7 +481,7 @@ export default {
         type: "SU",
         value: key
       };
-      // this.$store.commit("setSearchList", item);
+      this.$store.commit("setSearchList", item);
       search(item)
         .then(res => {
           this.$store.commit("setSearchRes", res);
