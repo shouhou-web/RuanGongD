@@ -151,8 +151,10 @@
                       >
                         {{ handleTitle(item.creatorName, 18) }}
                       </div>
-                      <div class="fPostName" @click="goToPost(item.postId)">
-                        {{ handleTitle(item.postName, 34) }}
+                    </v-card-title>
+                    <v-card-title
+                      ><div class="fPostName" @click="goToPost(item.postId)">
+                        {{ handleTitle(item.postName, 36) }}
                       </div>
                     </v-card-title>
                     <v-card-subtitle>
@@ -202,7 +204,8 @@
 import {
   getAllSectors,
   getFollowedPosts,
-  isFollowedAll
+  isFollowedAll,
+  getUserIdentity
 } from "network/forum.js";
 import MHeader from "../../components/common/m-header/m-header.vue";
 import CreatePost from "./childCpn/create-post.vue";
@@ -335,6 +338,7 @@ export default {
       return num.toString();
     },
     handleTitle(str, len) {
+      //console.log("handleTitle: " + len);
       let maxLength = len;
       if (str.length > maxLength) return str.substring(0, maxLength - 1) + "..";
       return str;
@@ -344,9 +348,25 @@ export default {
     },
     goToUser(id) {
       //跳转到用户
-      this.$router.push({
-        path: "/profile",
-        query: { userID: id }
+      getUserIdentity(id).then(res => {
+        console.log(res);
+        if (res.userIdentity == "1") {
+          this.$router.push({
+            path: "/intro",
+            query: {
+              userID: id,
+              authorID: res.authorID,
+              see: 0
+            }
+          });
+        } else {
+          this.$router.push({
+            path: "/profile",
+            query: {
+              userID: id
+            }
+          });
+        }
       });
     },
     goToSector(id, name) {
@@ -612,14 +632,15 @@ export default {
   /*border-bottom: 1px solid #ddd;*/
 }
 .creatorName {
-  display: flex;
-  align-items: center;
+  /*display: flex;
+  align-items: center;*/
   font-size: 13px;
   margin-left: 10px;
   cursor: pointer;
 }
 .fPostName {
   font-size: 15px;
+  margin-top: -30px;
   cursor: pointer;
 }
 .fPostInfo {

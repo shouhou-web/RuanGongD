@@ -265,7 +265,8 @@ import {
   deletePost,
   reportComment,
   deleteComment,
-  commentPost
+  commentPost,
+  getUserIdentity
 } from "@/network/forum";
 import { getLiterature } from "@/network/literature";
 import MHeader from "@/components/common/m-header/m-header";
@@ -322,10 +323,24 @@ export default {
 
     jumpToProfile(userId) {
       console.log("jump to " + userId);
-      this.$router.push({
-        path: "/profile",
-        query: {
-          userID: userId
+      getUserIdentity(userId).then(res => {
+        console.log(res);
+        if (res.userIdentity == "1") {
+          this.$router.push({
+            path: "/intro",
+            query: {
+              userID: userId,
+              authorID: res.authorID,
+              see: 0
+            }
+          })
+        } else {
+          this.$router.push({
+            path: "/profile",
+            query: {
+              userID: userId
+            }
+          });
         }
       });
     },
