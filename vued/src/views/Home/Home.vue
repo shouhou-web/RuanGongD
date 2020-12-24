@@ -4,7 +4,7 @@
     <m-app-header></m-app-header>
     <!-- 主页面 -->
     <div class="logo">
-      <img src="@/assets/image/home/logo2.png" alt="" />
+      <img src="@/assets/image/home/logo5.png" alt="" />
     </div>
     <search-advance
       @change-list="changeList"
@@ -112,8 +112,8 @@ export default {
 }
 
 .logo img {
-  /* width: 124px; */
-  width: 500px;
+  width: 520px;
+  padding-right: 30px;
 }
 
 .open {

@@ -23,7 +23,14 @@
           <div class="message__time">
             {{ message.sendTime }}
           </div>
-          <l-button
+          <span
+            class="message__btn"
+            :class="{ 'message__btn--active': isOpen }"
+            @click="open('reply')"
+          >
+            回复
+          </span>
+          <!-- <l-button
             class="message__btn"
             :active="isOpen"
             @click="open('reply')"
@@ -31,7 +38,7 @@
             size="small"
           >
             回复
-          </l-button>
+          </l-button> -->
         </div>
       </div>
       <div @click="open('delete')" class="message-aside">
@@ -55,9 +62,9 @@
       </div>
       <div class="message__open__right">
         <button @click="reply">
-          发表
+          回复
           <br />
-          评论
+          消息
         </button>
       </div>
     </div>
@@ -206,7 +213,16 @@ export default {
 }
 
 .message__btn {
+  cursor: pointer;
   margin-left: 15px;
+}
+
+.message__btn:hover {
+  color: #2faee3;
+}
+
+.message__btn--active {
+  color: #2faee3;
 }
 
 .my-button {
