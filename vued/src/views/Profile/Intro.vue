@@ -52,8 +52,8 @@
     <div class="intro-content">
       <div class="content-left">
         <manage :authorID="this.$route.query.authorID" :isSelfIntro="isSelfIntro" v-if="opID == 0"></manage>
-        <user-posts :userId="intro.userID" v-if="opID == 1 && isApplied"></user-posts>
-        <favor :userID="intro.userID" v-if="opID == 2 && isApplied"></favor>
+        <user-posts :userId="intro.userID" v-if="opID == 1 && isApplied && isLogin"></user-posts>
+        <favor :userID="intro.userID" v-if="opID == 2 && isApplied && isLogin"></favor>
       </div>
       <div class="content-right">
         <div class="chart-part">
@@ -64,7 +64,7 @@
           <div class="oneChart-style" v-if="introLiteraturesPublishedData != null"><v-chart :options="lineChart"></v-chart></div>
           <div class="oneChart-style" v-if="introLiteraturesPublishedData == null"><img src="../../assets/image/no-data.png"></div>
         </div>
-        <div class="followed">
+        <div class="followed" v-if="isApplied">
           <div class="follow-part-head">follower ({{ followers.length }})</div>
           <div class="following-content" v-if="followers.length > 0">
             <div class="one-following" v-for="(onefollowingUser, i) in followers">
@@ -545,29 +545,31 @@ export default {
       )
     })
 
-    // 判断当前门户状态
-    getIntroFollowStatus(this.$store.state.user.userID, authorID)
-    .then((res) => {
-      if (res == 0) this.isSelfIntro = true
-      else if (res == 1) this.isFollowing = true
-      else if (res == 2) {
-        this.isSelfIntro = false
-        this.isFollowing = false
-      }
-      else if (res == -1) {
-        this.$notify.error("获取当前门户信息出错，请重试")
-      }
-      else this.isApplied = false
-    })
-    .catch((err) => {
-      this.$notify.error(
-        {
-          title: "网络错误",
-          message: "请稍后重试~"
-        }
-      )
-    })
-
+    if (this.$store.state.user != null) {
+      // 判断当前门户状态
+      getIntroFollowStatus(this.$store.state.user.userID, authorID)
+        .then((res) => {
+          if (res == 0) this.isSelfIntro = true
+          else if (res == 1) this.isFollowing = true
+          else if (res == 2) {
+            this.isSelfIntro = false
+            this.isFollowing = false
+          }
+          else if (res == -1) {
+            this.$notify.error("获取当前门户信息出错，请重试")
+          }
+          else this.isApplied = false
+        })
+        .catch((err) => {
+          this.$notify.error(
+            {
+              title: "网络错误",
+              message: "请稍后重试~"
+            }
+          )
+        })
+    }
+    
     // 获取门户信息：文献发布量
     getPublishState(authorID)
     .then((publish) => {
