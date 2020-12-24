@@ -124,7 +124,6 @@ export default {
 <style scoped>
 .manage {
   width: 101%;
-  max-height: 601px;
   overflow: scroll;
 }
 
