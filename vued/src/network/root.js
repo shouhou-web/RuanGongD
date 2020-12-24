@@ -77,7 +77,7 @@ export function getAllGateApplication() {
     url: "getAllGateApplication",
     params: {},
     method: "post"
-  })
+  });
 }
 
 //通过申请
@@ -88,18 +88,19 @@ export function approveApplication(applicationID) {
       applicationID
     },
     method: "post"
-  })
+  });
 }
 
 //驳回申请
-export function rejectApplication(applicationID) {
+export function rejectApplication(applicationID, msgContent) {
   return request(baseURL, {
     url: "rejectApplication",
     params: {
-      applicationID
+      applicationID,
+      msgContent
     },
     method: "post"
-  })
+  });
 }
 
 //发送系统消息

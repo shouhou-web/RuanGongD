@@ -546,6 +546,9 @@ export default {
   margin-top: -10px;
   margin-right: 10px;
 }
+#forumSector {
+  margin: 20px auto;
+}
 /*.postInfo {
 }*/
 .postName {
