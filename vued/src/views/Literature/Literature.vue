@@ -405,11 +405,11 @@ export default {
         });
       }
     },
-    referFormat() {
-      this.$refs.hover.showHover({
-        title: "引用文献",
-      });
-    },
+    // referFormat() {
+    //   this.$refs.hover.showHover({
+    //     title: "引用文献",
+    //   });
+    // },
 
     reportLi() {
       this.reportDialog = true;

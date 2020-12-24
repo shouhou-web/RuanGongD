@@ -221,7 +221,7 @@ export default {
   display: flex;
   justify-content: space-around;
   margin-top: 20px;
-  width: 90%;
+  width: 100%;
 }
 
 .authorcard .auth-part3 .l-button {
