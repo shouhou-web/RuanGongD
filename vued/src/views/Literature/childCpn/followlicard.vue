@@ -17,9 +17,9 @@
           v-for="(item, index) in refer.authors"
           :key="index"
           class="author-list"
+          v-if="index < 3"
         >
           <img
-            v-if="index < 3"
             src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=249589786,2941481629&fm=26&gp=0.jpg"
             class="authorImg"
           />
