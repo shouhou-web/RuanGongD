@@ -574,9 +574,11 @@ export default {
   cursor: pointer;
   font-size: 14px;
 }
-/*.info {
-  
-}*/
+.info {
+  width: 200px;
+  display: flex;
+  justify-content: space-between;
+}
 .userName {
   font-size: 10px;
   cursor: pointer;
