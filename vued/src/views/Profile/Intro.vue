@@ -670,6 +670,7 @@ export default {
   computed: {
     authorIDIN() {
       return this.$route.query.authorID;
+      console.log("computed", this.$route.query.authorID)
     }
   },
   watch: {
@@ -899,7 +900,7 @@ export default {
   /*border: 1px solid black;*/
   border-radius: 2px;
   text-align: center;
-  background-color: #4F6EF2;
+  background-color: #4f6ef2;
   color: white;
   font-size: 0.800rem;
   letter-spacing: 2px;
