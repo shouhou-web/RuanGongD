@@ -669,8 +669,8 @@ export default {
   },
   computed: {
     authorIDIN() {
-      return this.$route.query.authorID;
       console.log("computed", this.$route.query.authorID)
+      return this.$route.query.authorID;
     }
   },
   watch: {
@@ -681,7 +681,6 @@ export default {
       if (this.user != null) this.isLogin = true
 
       // 进入个人门户
-      let authorID = this.$route.query.authorID
       let authorUserID = this.$route.query.userID
       let see = this.$route.query.see
 
@@ -689,7 +688,7 @@ export default {
       else this.opID = see
 
       // 获取intro
-      getAuthorInformation(authorID)
+      getAuthorInformation(newVal)
         .then((intro) => {
           console.log("intro: ", intro)
           this.intro = intro
@@ -699,7 +698,7 @@ export default {
           else this.isApplied = true
         })
         .then((res) => {
-          if (this.intro.userID == null) {
+          if (this.intro.userID != null) {
             // 获取个人信息：我的关注 + 我的收藏 + 我的粉丝
             getUserFollowingList(this.intro.userID)
               .then((follow) => {
@@ -731,9 +730,8 @@ export default {
           )
         })
 
-
       // 判断当前门户状态
-      getIntroFollowStatus(this.$store.state.user.userID, authorID)
+      getIntroFollowStatus(this.$store.state.user.userID, newVal)
         .then((res) => {
           if (res == 0) this.isSelfIntro = true
           else if (res == 1) this.isFollowing = true
@@ -753,7 +751,7 @@ export default {
         })
 
       // 获取门户信息：文献发布量
-      getPublishState(authorID)
+      getPublishState(newVal)
         .then((publish) => {
           this.introLiteraturesPublishedData = publish
           this.lineChart.series[0].data = this.introLiteraturesPublishedData;
