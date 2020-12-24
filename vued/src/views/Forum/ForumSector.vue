@@ -362,7 +362,7 @@ export default {
           query: {
             sectorId: this.sectorId,
             sectorName: this.sectorName,
-            page: this.page,
+            page: "1",
             sort: val,
             keyword: this.keyword
           }
@@ -376,7 +376,7 @@ export default {
         query: {
           sectorId: this.sectorId,
           sectorName: this.sectorName,
-          page: this.page,
+          page: "1",
           sort: this.sort,
           keyword: this.keyword
         }
