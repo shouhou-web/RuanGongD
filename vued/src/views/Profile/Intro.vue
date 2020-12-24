@@ -18,7 +18,7 @@
                   <div class="user-name" v-if="isApplied">{{ intro.username }} <font class="intro-name">({{ intro.realName }})</font></div>
                   <div class="user-name" v-else>{{ intro.realName }}</div>
                   <img src="../../assets/icons/profile/edit.svg" class="profile-icon" title=修改信息 @click="openChangeProfileHover" v-if="isSelfIntro && isApplied">
-                  <img src="../../assets/icons/profile/report.svg" class="profile-icon" title="举报" @click="openReportIntro" v-if="!isSelfIntro && isApplied">
+                  <v-icon title="举报" @click="openReportIntro" v-if="!isSelfIntro && isApplied" class="profile-icon">mdi-alert-octagon</v-icon>
                 </div>
               </div>
             </div>
@@ -121,7 +121,7 @@
         <!--        </div>-->
       </div>
     </m-hover>
-    <m-hover ref="changeHeadshot" @cancel="cancel">
+    <m-hover ref="changeHeadshot" @submit="realEditImg" @cancel="cancel">
       <el-main class="img-load">
         <el-upload
           :class="{ hide: hideUploadEdit }"
@@ -277,9 +277,9 @@ export default {
       this.fileList = fileList;
       this.imagePath = this.imgPathPrefix + this.fileList[0].response.key;
       console.log(response, file, fileList);
-      this.$store.commit("setImagePath", this.imagePath)
       this.hideUploadEdit = true;
-
+    },
+    realEditImg() {
       editUserImage(this.$store.state.user.userID, this.imagePath)
         .then((res) => {
           console.log("img-res", res)
@@ -287,6 +287,7 @@ export default {
             this.$notify.success("头像修改成功")
             this.$store.commit("setImagePath", this.imagePath)
             this.intro.image = this.imagePath
+            this.$refs.changeHeadshot.hideHover()
           }
           else if (res == -1) this.$notify.warning("头像修改失败")
         })
@@ -357,6 +358,7 @@ export default {
     openChangeHeadshot() {
       this.$refs.changeHeadshot.showHover({
         title: "修改头像",
+        submitBtn: "提交",
         cancelBtn: "取消"
       });
     },

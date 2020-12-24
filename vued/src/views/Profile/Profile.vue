@@ -118,7 +118,7 @@
 <!--        </div>-->
       </div>
     </m-hover>
-    <m-hover ref="changeHeadshot" @cancel="cancel">
+    <m-hover ref="changeHeadshot" @submit="realEditImg" @cancel="cancel">
       <el-main class="img-upload">
         <el-upload
           :class="{ hide: hideUploadEdit }"
@@ -230,21 +230,26 @@ export default {
       this.fileList = fileList;
       this.imagePath = this.imgPathPrefix + this.fileList[0].response.key;
       console.log(response, file, fileList);
-      this.$store.commit("setImagePath", this.imagePath)
       this.hideUploadEdit = true;
-
+    },
+    realEditImg() {
       editUserImage(this.$store.state.user.userID, this.imagePath)
-      .then((res) => {
-        if (res == 0) this.$notify.success("头像修改成功")
-        else if (res == -1) this.$notify.warning("头像修改失败")
-      })
-      .catch((err) => {
-        this.$notify.error(
-          {
-            title: "网络错误",
-            message: "请稍后重试~"
-          })
-      })
+        .then((res) => {
+          if (res == 0) {
+            this.$notify.success("头像修改成功")
+            this.$store.commit("setImagePath", this.imagePath)
+          }
+          else if (res == -1) this.$notify.warning("头像修改失败")
+        })
+        .catch((err) => {
+          this.$notify.error(
+            {
+              title: "网络错误",
+              message: "请稍后重试~"
+            })
+        })
+
+      this.$refs.changeHeadshot.hideHover()
     },
     handleRemove() {
       this.hideUploadEdit = false;
@@ -271,6 +276,7 @@ export default {
     openChangeHeadshot() {
       this.$refs.changeHeadshot.showHover({
         title: "修改头像",
+        submitBtn: "提交",
         cancelBtn: "取消"
       });
     },
