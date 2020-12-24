@@ -712,9 +712,9 @@ export default {
 
 .headshot-img {
   margin: 0 auto;
-    width: 170%;
-    left: -35%;
-    border: 1px solid #dddddd;
+    width: 104%;
+    left: -2%;
+    border: 1px solid #ddd;
     position: absolute;
 }
 

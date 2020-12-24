@@ -532,12 +532,11 @@ export default {
 }
 
 .headshot {
-  width: 130px;
-  height: 100%;
-  /*border: 1px solid red;*/
-  display: flex;
-  align-items: center;
-  position: relative;
+  margin: 0 auto;
+    width: 104%;
+    left: -2%;
+    border: 1px solid #ddd;
+    position: absolute;
 }
 
 .headshot-img {
