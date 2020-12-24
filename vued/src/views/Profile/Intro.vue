@@ -493,8 +493,8 @@ export default {
       }
     },
     reportIntro() {
-      if (this.reportContents.length < 50) {
-        this.$notify.info("举报理由不得少于50字")
+      if (this.reportContents.length < 5) {
+        this.$notify.info("举报理由不得少于5个字")
       } else {
         let authorID = this.$route.query.authorID
         let reporterID = this.$store.state.user.userID
