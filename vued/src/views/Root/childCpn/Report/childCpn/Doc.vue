@@ -268,6 +268,21 @@ textarea:-ms-input-placeholder {
   margin: auto 380px;
 }
 
+.reject-hover {
+  width: 500px;
+}
+
+.reject-input {
+  border: #cdccd1 solid 0.5px;
+  border-radius: 4px;
+  height: 300px;
+  margin: 30px auto;
+  outline: none;
+  padding: 10px 10px;
+  resize: none;
+  width: 100%;
+}
+
 @keyframes outin {
   from {
     opacity: 0;
