@@ -8,7 +8,7 @@
         :title="onefollowingLiterature.title"
         :display="true"
         :authors="onefollowingLiterature.authors"
-        :tags="onefollowingLiterature.tags"
+        :tags="onefollowingLiterature.keyWord"
         :key="i"
         @change="openEditWarn(onefollowingLiterature)"
       ></y-literature>
@@ -29,7 +29,6 @@ export default {
   data() {
     return {
       userID: "",
-      showbutton: true,
       myLiteratureList: []
     };
   },
@@ -131,5 +130,11 @@ export default {
   height: 600px;
   border: 1px solid #dddddd;
   background-color: white;
+}
+
+.none-img {
+  width: 30%;
+  margin-left: 34%;
+  margin-top: 180px;
 }
 </style>
