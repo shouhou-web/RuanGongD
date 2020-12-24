@@ -474,7 +474,7 @@ export default {
         });
     }
     //getPostNum
-    getPostNum(this.sectorId)
+    getPostNum(this.sectorId,this.keyword)
       .then(res => {
         console.log("getPostNum");
         console.log(res);

@@ -268,15 +268,16 @@ export function createConsultation(senderId, receiverId, text) {
 
 /**
  * 分区动态总数
- * @param {sectorId}
+ * @param {sectorId, keyword}
  *  sectorId: 讨论区分区Id
+ *  keyword: 搜索关键词
  * @return {total}
  *  total: 该分区下动态总数
  */
-export function getPostNum(sectorId) {
+export function getPostNum(sectorId, keyword) {
   return request(baseURL, {
     url: "/getPostNum",
-    data: { sectorId },
+    data: { sectorId, keyword },
     method: "post"
   });
 }
