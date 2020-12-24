@@ -49,11 +49,7 @@ export default {
 </script>
 
 <style scoped>
-.favor {
-  width: 101%;
-  max-height: 601px;
-  overflow: scroll;
-}
+c
 
 .favor::-webkit-scrollbar {
   /*滚动条整体样式*/

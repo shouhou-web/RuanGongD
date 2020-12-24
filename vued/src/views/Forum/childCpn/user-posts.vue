@@ -1,6 +1,6 @@
 <template>
   <div id="user-posts">
-    <div v-if="posts.length != 0">
+    <div v-if="posts.length != 0" class="posts">
       <div class="post-card" v-for="post in posts" :key="post.postId">
         <div class="card-header">
           <div class="title" @click="gotoPost(post.postId)">
@@ -33,7 +33,7 @@
       </div>
     </div>
     <div class="none" v-else>
-      <img src="../../../assets/image/no-img.png" alt="none-img" />
+      <img src="../../../assets/image/no-img.png" class="none-img" />
     </div>
   </div>
 </template>
@@ -101,9 +101,11 @@ export default {
 
 <style scoped>
 #user-posts {
-  width: 65%;
   height: 100%;
-  /* border: 1px solid red; */
+}
+
+.posts {
+  max-height: 601px;
 }
 
 .post-card {
