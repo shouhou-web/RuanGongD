@@ -645,15 +645,17 @@ export default {
 }
 .fPostInfo {
   display: flex;
+  justify-content: space-between;
 }
 .fPostReplyNum {
-  margin-right: 15px;
+  margin-right: -10px;
 }
 .fPostViewNum {
   margin-right: 50px;
 }
 .fPostTime {
   font-size: 12px;
+  
 }
 .fPostTags {
   margin-top: 6px;
