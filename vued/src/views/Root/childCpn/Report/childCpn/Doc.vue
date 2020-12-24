@@ -128,6 +128,9 @@ export default {
     }
   },
   created() {
+    if (this.$store.state.user == null) {
+      return;
+    }
     getArticleReports()
       .then(res => {
         if (res == null || res.length == 0) {

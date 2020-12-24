@@ -54,7 +54,7 @@
               <span class="lable">DOI：</span>
             </div>
 
-            <span>{{ literature.doi }}</span>
+            <span class="doi-sequence">{{ literature.doi }}</span>
           </div>
           <div class="button">
             <div class="button-left">
@@ -225,10 +225,12 @@
         </div>
       </m-hover>
     </div>
-    <router-view
-      v-if="literature != null"
-      :literature="literature"
-    ></router-view>
+    <transition name="fade" mode="out-in">
+      <router-view
+        v-if="literature != null"
+        :literature="literature"
+      ></router-view>
+    </transition>
   </div>
 </template>
 
@@ -518,9 +520,11 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
 }
+
 .leftmenu {
   position: absolute;
 }
+
 .main {
   display: flex;
   flex-direction: column;
@@ -530,46 +534,62 @@ export default {
   /* background: #ecf0f1; */
   margin: 0 auto;
 }
+
 .info-top-all {
   width: 100%;
   background: white;
   /* padding-bottom: 10px; */
   border-bottom: 1px solid #ddd;
 }
+
 .info-top {
   justify-content: space-between;
   display: flex;
   margin: 0 auto;
   width: 1100px;
 }
+
 .top-left {
   /* background: #dfe6e9; */
   width: 750px;
 }
+
 .top-left .author {
   margin-right: 10px;
 }
+
 .top-left .author-ul {
   display: flex;
 }
+
 .top-right {
   width: 290px;
   margin-top: 30px;
 }
+
 .top-right > .a1 {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
   margin-bottom: 10px;
 }
+
 .top-right > .a2 {
+  align-items: center;
   display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+  width: 160px;
 }
+
 .top-right > .a2 > .b1 > img {
   width: 150px;
 }
+
 .top-right > .a2 > .b2 {
-  margin-top: 50px;
-  margin-left: 20px;
+  color: #6b757b;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 17px;
+  margin-top: 5px;
 }
 
 .liter-op {
@@ -580,13 +600,15 @@ export default {
   /* margin-bottom: 5px; */
   padding-left: 5px;
 }
+
 .op-item {
   margin-top: 10px;
   margin-right: 30px;
   cursor: pointer;
 }
+
 .op-content {
-  font-size: 14px;
+  font-size: 16px;
   padding-bottom: 5px;
 }
 
@@ -659,50 +681,64 @@ export default {
   justify-content: center;
   margin-bottom: 25px;
 }
+
 .abstract {
   text-align: left;
   letter-spacing: 0.5px;
   line-height: 1.4em;
 }
+
 .lable {
   display: inline-block;
-  width: 56px;
+  width: 65px;
   font-weight: 700;
 }
+
 .content {
   margin-top: 15px;
   font-size: 14px;
   display: flex;
   -webkit-user-select: text;
 }
+
 .abstracthide {
+  color: #606266;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 5;
   overflow: hidden;
 }
+
 .el-link {
   margin-right: 8px;
 }
+
 .button {
   display: flex;
   justify-content: space-between;
-  margin-top: 18px;
+  margin-top: 20px;
+  margin-bottom: 20px;
   width: 100%;
 }
+
 .button .l-button {
-  padding: 5px 13px;
+  font-size: 14px;
   margin-right: 25px;
+  padding: 5px 13px;
 }
+
 .button .download {
   justify-self: flex-end;
 }
+
 .el-menu {
   background: #e2ebf0;
 }
+
 .report-content {
   margin-top: 10px;
 }
+
 .footer {
   display: flex;
   justify-content: flex-end;
@@ -710,25 +746,31 @@ export default {
   padding-bottom: 10px;
   width: 80%;
 }
+
 .footer .v-btn {
   margin-right: 20px;
 }
+
 .el-form-item {
   margin-bottom: 0;
 }
+
 .hover-referformat1 {
   font-size: 12px;
   margin-top: 20px;
   -webkit-user-select: text;
 }
+
 .hover-referformat2 {
   font-size: 12px;
   margin-bottom: 30px;
   -webkit-user-select: text;
 }
+
 /* .keywordcontent{
   padding-right: 15px;
 } */
+
 .sh-wrapper {
   padding: 10px 0;
 }
@@ -764,5 +806,17 @@ export default {
   background-color: var(--color-tint);
   color: #ffffff;
   transition: 0.3s;
+}
+
+.doi-sequence {
+  color: #606266;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.25s;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>

@@ -96,7 +96,7 @@ export default {
   /* height: 200px; */
   border: 1px solid #dddddd;
   /* background-color: white; */
-  padding: 30px 25px 18px 25px;
+  padding: 10px 25px 18px 25px;
   margin-top: 20px;
   background: white;
 }
@@ -110,8 +110,9 @@ export default {
 }
 
 .one-follow-literature > .test1 {
-  display: flex;
   align-items: center;
+  display: flex;
+  margin-bottom: 10px;
 }
 
 .time {
@@ -120,7 +121,7 @@ export default {
 }
 
 .title {
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: black;
   font-weight: 700;
   width: 90%;
@@ -128,7 +129,7 @@ export default {
   line-height: 25px;
   padding-left: 5px;
   margin-top: 10px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -195,8 +196,8 @@ export default {
   -webkit-line-clamp: 3;
   overflow: hidden;
   margin-top: 10px;
-  margin-bottom: 10px;
-  line-height: 1.4em;
+  margin-bottom: 15px;
+  line-height: 1.6em;
 }
 
 .literature-ops {
