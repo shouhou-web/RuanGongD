@@ -11,7 +11,7 @@
     </div>
     <div class="authors">
       <div v-for="(one_author, i) in authors" class="author-list">
-        <div class="authorname" @click="gotoIntro(one_author.userID, one_author.authorID)">{{one_author.realName}}</div>
+        <div class="authorname" @click="gotoIntro(one_author.userID, one_author.authorID)">{{one_author.realName}} | </div>
       </div>
     </div>
     <div class="read-time" v-if="year != null">
@@ -59,7 +59,7 @@ export default {
   height: auto;
   border: 1px solid #dddddd;
   background-color: white;
-  padding: 30px 25px 27px 25px;
+  padding: 30px 25px 10px 25px;
   margin-bottom: 20px;
 }
 

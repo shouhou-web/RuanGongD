@@ -435,7 +435,7 @@ export default {
       getUserFollowingList(userID)
         .then((follow) => {
           this.followUsers = follow
-          // console.log("follow:", follow)
+          console.log("follow:", follow)
         })
         .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
     }
