@@ -248,7 +248,7 @@ export default {
     // 按发表时间排序的lit
     this.litList2 = this.$store.state.searchRes.literatureList2.reverse();
     // 按相关度排序的lit
-    this.litList3 = this.$store.state.searchRes.literatureList3.reverse();
+    this.litList3 = this.$store.state.searchRes.literatureList3;
 
     this.authorList = this.$store.state.searchRes.authorList;
     this.venueList = this.$store.state.searchRes.venueList;
@@ -263,7 +263,7 @@ export default {
       console.log('searchRes',newVal)
       this.litList1 = newVal.literatureList1.reverse();
       this.litList2 = newVal.literatureList2.reverse();
-      this.litList3 = newVal.literatureList3.reverse();
+      this.litList3 = newVal.literatureList3;
       this.authorList = newVal.authorList;
       this.venueList = newVal.venueList;
       this.yearList = newVal.yearList;
