@@ -44,6 +44,24 @@ export default {
       .catch(err => {
         this.$notify.error({ title: "网络错误", message: "请稍后重试~" });
       });
+  },
+  watch: {
+    userID(newVal) {
+      getFavorLiteratures(newVal)
+        .then(favor => {
+          this.favorLiteratures = favor;
+          this.favorLiteratures.map(item => {
+            let tags = [];
+            tags.push(item.venue);
+            item.tags = tags;
+            return item;
+          });
+          console.log("favor", favor);
+        })
+        .catch(err => {
+          this.$notify.error({ title: "网络错误", message: "请稍后重试~" });
+        });
+    }
   }
 };
 </script>
