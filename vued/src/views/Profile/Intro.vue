@@ -330,7 +330,7 @@ export default {
       })
     },
     cancleFollowIntro() {
-      follow(this.$store.state.user.userID, this.intro.authorID, 0)
+      follow(this.$store.state.user.userID, this.intro.userID, 0)
       .then((res) => {
         if (res == -1) this.$notify.warning("取消关注失败，请重试")
         else {
