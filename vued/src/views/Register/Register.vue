@@ -105,7 +105,7 @@ export default {
 <style scoped>
 .register-main {
   display: flex;
-  margin: 25px auto 0;
+  margin: 0px auto 0;
   width: var(--width-main);
 }
 
