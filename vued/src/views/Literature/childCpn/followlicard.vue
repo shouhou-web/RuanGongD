@@ -8,12 +8,24 @@
       :read_time="refer.year"
     ></y-literature> -->
 
-    <div class="title" @click="toLiterature(refer.literatureID)">{{ refer.title }}</div>
+    <div class="title" @click="toLiterature(refer.literatureID)">
+      {{ refer.title }}
+    </div>
     <div class="test1">
       <div class="authors">
-        <div v-for="(item, index) in refer.authors" class="author-list" v-if="index<3">
-          <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=249589786,2941481629&fm=26&gp=0.jpg" class="authorImg" />
-          <div class="authorname" @click="toAuthor(item.authorID)">{{ item.realName }}</div>
+        <div
+          v-for="(item, index) in refer.authors"
+          :key="index"
+          class="author-list"
+        >
+          <img
+            v-if="index < 3"
+            src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=249589786,2941481629&fm=26&gp=0.jpg"
+            class="authorImg"
+          />
+          <div class="authorname" @click="toAuthor(item.authorID)">
+            {{ item.realName }}
+          </div>
         </div>
       </div>
       <div class="time">
@@ -25,9 +37,13 @@
       {{ refer.abstract }}
     </div>
     <div class="keyWord">
-      <div v-for="(item, index) in refer.keyWord" class="keyWord-list" v-if="index<3">
-          <div class="key">{{ item}}</div>
-        </div>
+      <div
+        v-for="(item, index) in refer.keyWord"
+        class="keyWord-list"
+        :key="index"
+      >
+        <div class="key" v-if="index < 3">{{ item }}</div>
+      </div>
     </div>
     <!-- <div class="read-time">
       <div class="read-time-content">{{ refer.readTimes }} Reads</div>
@@ -50,7 +66,7 @@ export default {
     YLiterature
   },
   created() {
-    console.log("followingcard"+this.refer);
+    console.log("followingcard" + this.refer);
   },
   methods: {
     toAuthor(authorID) {
@@ -107,12 +123,15 @@ export default {
   font-size: 0.9rem;
   color: black;
   font-weight: 700;
-  width: fit-content;
+  width: 90%;
   height: 25px;
-  line-height: 20px;
+  line-height: 25px;
   padding-left: 5px;
   margin-top: 10px;
   margin-bottom: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .title:hover {

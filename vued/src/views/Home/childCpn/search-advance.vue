@@ -158,7 +158,7 @@ export default {
           if (item.value == "") {
             this.$notify.error({
               title: "错误",
-              message: "请填写所有必填项"
+              message: "请输入搜索内容"
             });
             check = true;
           }
@@ -166,7 +166,7 @@ export default {
       } else if (this.$store.state.searchList[0].value == "") {
         this.$notify.error({
           title: "错误",
-          message: "请填写所有必填项"
+          message: "请输入搜索内容"
         });
         check = true;
       }
