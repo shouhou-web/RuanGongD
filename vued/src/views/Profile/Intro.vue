@@ -51,7 +51,7 @@
     </div>
     <div class="intro-content">
       <div class="content-left">
-        <manage :authorID="this.$route.query.authorID" v-if="opID == 0"></manage>
+        <manage :authorID="this.$route.query.authorID" :isSelfIntro="isSelfIntro" v-if="opID == 0"></manage>
         <user-posts :userId="intro.userID" v-if="opID == 1 && isApplied"></user-posts>
         <favor :userID="intro.userID" v-if="opID == 2 && isApplied"></favor>
       </div>

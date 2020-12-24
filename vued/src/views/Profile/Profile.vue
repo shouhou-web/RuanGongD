@@ -12,7 +12,7 @@
             </a>
           </div>
           <div class="username">
-            <div class="user-nickname" @click="openChangeProfileHover">
+            <div class="user-nickname" @click="openChangeProfileHover" v-if="isSelfProfile">
               {{ user.username }}
               <img src="../../assets/icons/profile/edit.svg" class="profile-icon" @click="openChangeProfileHover">
             </div>
