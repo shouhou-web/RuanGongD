@@ -435,26 +435,41 @@ export default {
     let userID = this.$route.query.userID;
     this.userIDParam = this.$route.query.userID;
 
-    // 当前用户进入自己的主页
-    if (userID == this.$store.state.user.userID) {
-      this.user = this.$store.state.user;
+    // 登录状态
+    if (this.$store.state.user != null) {
+      // 当前用户进入自己的主页
+      if (userID == this.$store.state.user.userID) {
+        this.user = this.$store.state.user;
 
-      // console.log(this.user)
+        // console.log(this.user)
 
-      this.newNickName = this.user.username
-      this.userDegree = this.user.userDegree
-      this.newPhone = this.user.phoneNumber
+        this.newNickName = this.user.username
+        this.userDegree = this.user.userDegree
+        this.newPhone = this.user.phoneNumber
 
-      // 获取个人信息：我的关注 + 我的收藏
-      getUserFollowingList(userID)
-        .then((follow) => {
-          this.followUsers = follow
-          console.log("follow:", follow)
-        })
-        .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
-    }
-    // 进入其他用户个人主页
-    else {
+        // 获取个人信息：我的关注 + 我的收藏
+        getUserFollowingList(userID)
+          .then((follow) => {
+            this.followUsers = follow
+            console.log("follow:", follow)
+          })
+          .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
+      }
+      // 进入其他用户个人主页
+      else {
+        this.isSelfProfile = false
+
+        // 获取当前用户对象
+        getUserInformation(userID)
+          .then((user) => {
+            this.user = user
+            // console.log("user", user)
+          })
+          .catch((err) => {
+            this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) }
+          )
+      }
+    } else {
       this.isSelfProfile = false
 
       // 获取当前用户对象
@@ -463,8 +478,11 @@ export default {
           this.user = user
           // console.log("user", user)
         })
-        .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
+        .catch((err) => {
+          this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) }
+        )
     }
+
   },
   computed:{
     userIDIN() {
