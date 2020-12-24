@@ -58,7 +58,7 @@
             <div class="post-content">{{ postInfo.postContent }}</div>
             <div
               class="post-cite"
-              v-if="postInfo.citeId != '-1'"
+              v-if="postInfo.citeId != '-1' && postInfo.citeId != 'null'"
               @click="jumpToLiterature(citedLiterature.literatureID)"
             >
               <div class="post-cite-item">

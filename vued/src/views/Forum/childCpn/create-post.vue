@@ -104,6 +104,7 @@
                 outlined
                 color="var(--color-main)"
                 clearable
+                :disabled="identity != 1"
               >
                 <v-btn>test</v-btn>
               </v-select>
@@ -154,6 +155,7 @@ export default {
       search: "", // 搜索的 tag
       selectedLiterature: {},
       createPostFormValid: false,
+      identity: 0,
       sectorfixed: false,
       rules: {
         postNameRule: [
@@ -332,6 +334,7 @@ export default {
   },
   created() {
     this.userId = this.$store.state.user.userID; // TODO 等待统一
+    this.identity = this.$store.state.user.userIdentity;
     this.createPostForm.userId = this.userId;
     this.createPostForm.citeId = "-1";
     if (this.sectorId != "") {
