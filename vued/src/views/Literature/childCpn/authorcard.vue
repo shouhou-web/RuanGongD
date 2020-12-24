@@ -30,14 +30,15 @@
           <span class="intro">暂无个人简介</span>
         </div>
       </div>
-      <div class="auth-part3" v-if="isFollowed != null">
-        <l-button @click="followAuthor(author.userID)" v-if="!isFollowed">
+      <div class="auth-part3" >
+        <l-button @click="followAuthor(author.userID)" v-if="!isFollowed" :disabled="isFollowed == null" class="follow1">
           关注
         </l-button>
         <l-button
           @click="followAuthor(author.userID)"
           v-if="isFollowed"
-          class="isfollowed"
+          class="isfollowed follow1"
+          :disabled="isFollowed == null"
         >
           已关注
         </l-button>
@@ -258,5 +259,9 @@ export default {
 .intro {
   font-size: 14px;
   font-weight: 550;
+}
+
+.follow1{
+  margin-right: 20px;
 }
 </style>
