@@ -66,7 +66,7 @@
       <div class="content-right">
         <div class="chart-part">
           <div class="chart-header">
-            <div class="chart-type">line chart</div>
+            <div class="chart-type">Line Chart</div>
             <div class="chart-name">文献发布量统计</div>
           </div>
           <div class="oneChart-style" v-if="introLiteraturesPublishedData != null">
@@ -76,7 +76,7 @@
             src="../../assets/image/no-data.png"></div>
         </div>
         <div class="followed" v-if="isApplied">
-          <div class="follow-part-head">follow ({{ followingList.length }})</div>
+          <div class="follow-part-head">Follow ({{ followingList.length }})</div>
           <div class="following-content" v-if="followingList.length > 0">
             <div class="one-following" v-for="(onefollowingUser, i) in followingList">
               <img :src="onefollowingUser.image" class="intro-img img-plus" @click="gotoIntro(onefollowingUser.authorID)">
@@ -91,7 +91,7 @@
           </div>
         </div>
         <div class="followed" v-if="isApplied">
-          <div class="follow-part-head">follower ({{ followerList.length }})</div>
+          <div class="follow-part-head">Follower ({{ followerList.length }})</div>
           <div class="following-content" v-if="followerList.length > 0">
             <div class="one-following" v-for="(onefollowingUser, i) in followerList">
               <img :src="onefollowingUser.image" class="intro-img img-plus" @click="gotoProfile">
@@ -1491,5 +1491,10 @@ textarea {
   border: 1px solid #dddddd;
   resize: none;
   outline: none;
+}
+
+/deep/.echarts {
+  width: 100% !important;
+  height: 100% !important;
 }
 </style>
