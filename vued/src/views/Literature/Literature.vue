@@ -55,6 +55,7 @@
           </div>
           <div class="button">
             <div class="button-left">
+              <el-tooltip content="Bottom center" placement="bottom" effect="light">
               <l-button
                 size="small"
                 :round="true"
@@ -70,6 +71,7 @@
                 ></i>
                 <span> 收藏</span>
               </l-button>
+              </el-tooltip>
               <l-button
                 size="small"
                 :round="true"
