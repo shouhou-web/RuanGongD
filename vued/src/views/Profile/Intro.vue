@@ -15,10 +15,10 @@
             <div class="introName-top">
               <div class="intro-name-header">
                 <div class="edit-head">
-                  <div class="user-name" v-if="isApplied">{{ user.username }} <font class="intro-name">({{ intro.realName }})</font></div>
+                  <div class="user-name" v-if="isApplied">{{ intro.username }} <font class="intro-name">({{ intro.realName }})</font></div>
                   <div class="user-name" v-else>{{ intro.realName }}</div>
-                  <img src="../../assets/icons/profile/edit.svg" class="profile-icon" @click="openChangeProfileHover" v-if="isSelfIntro && isApplied">
-                  <img src="../../assets/icons/profile/report.svg" class="profile-icon" @click="openReportIntro">
+                  <img src="../../assets/icons/profile/edit.svg" class="profile-icon" title=修改信息 @click="openChangeProfileHover" v-if="isSelfIntro && isApplied">
+                  <img src="../../assets/icons/profile/report.svg" class="profile-icon" title="举报" @click="openReportIntro" v-if="!isSelfIntro && isApplied">
                 </div>
               </div>
             </div>
@@ -26,7 +26,7 @@
             <div class="intro-pos">{{ intro.phoneNumber }}</div>
             <div class="intro-pos">{{ intro.emailAddress }}</div>
           </div>
-          <div :class="{'publish': !isSelfIntro, 'publish-n': isSelfIntro}">
+          <div :class="{'publish': !isSelfIntro, 'publish-n': isSelfIntro}" v-if="isLogin">
             <div v-if="isApplied && isSelfIntro" class="publish-button" @click="gotoPublish">发表文献</div>
             <div v-if="isApplied && !isSelfIntro && !isFollowing" class="publish-button" @click="followIntro">关注</div>
             <div v-if="isApplied && !isSelfIntro && isFollowing" class="publish-button-nice" @click="cancleFollowIntro">已关注</div>
@@ -34,8 +34,8 @@
             <div v-if="!isSelfIntro && isApplied" class="publish-button" @click="isSend = true" style="margin-top: 20px">私信</div>
             <create-consultation
               :display="isSend"
-              :senderID="user.userID"
-              :receiverID="intro.authorID"
+              :senderId="user.userID"
+              :receiverId="intro.userID"
               @closeDialog="closeSend"></create-consultation>
           </div>
         </div>
@@ -143,8 +143,8 @@
     </m-hover>
 
     <m-hover ref="report" @submit="reportIntro" @cancel="cancel">
-      <div>
-
+      <div class="report-body">
+        <textarea class="report-text" placeholder="请输入举报理由" v-model="reportContents"></textarea>
       </div>
     </m-hover>
   </div>
@@ -167,7 +167,8 @@ import {
   editUserEmailAddress,
   editProfile,
   emailVerification,
-  editIntroRealName
+  editIntroRealName,
+  reportGate
 } from "@/network/profile";
 import CreateConsultation from "@/views/Forum/childCpn/create-consultation";
 import random from "string-random";
@@ -190,6 +191,7 @@ export default {
       isSelfIntro: false,
       isFollowing: false,
       isApplied: false,
+      isLogin: false,
 
       opID: 0,
 
@@ -252,6 +254,8 @@ export default {
       editOp: 0,
       emailWarning: false,
       getRightEmail: false,
+
+      reportContents: ""
     }
   },
   methods: {
@@ -313,7 +317,7 @@ export default {
       })
     },
     followIntro() {
-      follow(this.$route.query.userID, this.intro.authorID, 1)
+      follow(this.$store.state.user.userID, this.intro.userID, 1)
       .then((res) => {
         if (res == -1) this.$notify.warning("关注失败，请重试")
         else {
@@ -321,9 +325,12 @@ export default {
           this.isFollowing = true
         }
       })
+      .catch((err) => {
+        this.$notify.error( { title: "网络错误", message: "请稍后重试~" } )
+      })
     },
     cancleFollowIntro() {
-      follow(this.$route.query.userID, this.intro.authorID, 0)
+      follow(this.$store.state.user.userID, this.intro.userID, 0)
       .then((res) => {
         if (res == -1) this.$notify.warning("取消关注失败，请重试")
         else {
@@ -369,6 +376,7 @@ export default {
             if (res == 0) {
               this.$notify.success("用户名修改成功")
               this.$store.commit("setUserName", this.newNickName)
+              this.intro.username = this.newNickName
               this.$refs.changeProfile.hideHover()
               this.editOp = 0
             }
@@ -428,7 +436,35 @@ export default {
       }
     },
     reportIntro() {
+      if (this.reportContents.length < 50) {
+        this.$notify.info("举报理由不得少于50字")
+      } else {
+        let authorID = this.$route.query.authorID
+        let reporterID = this.$store.state.user.userID
 
+        console.log("author:", authorID)
+        console.log("reporter:", reporterID)
+
+        if (authorID != null) {
+          reportGate(reporterID, this.reportContents, authorID)
+          .then((res) => {
+            console.log("report", res)
+            if (res == 0) {
+              this.$notify.success("举报成功")
+              this.$refs.report.hideHover()
+            }
+            else this.$notify.warning("举报失败，请重试")
+          })
+          .catch((err) => {
+            this.$notify.error(
+              {
+                title: "网络错误",
+                message: "请稍后重试~"
+              }
+            )
+          })
+        }
+      }
     },
     changeEditOp(opID) {
       this.editOp = opID
@@ -476,10 +512,9 @@ export default {
   },
   created() {
     this.postData.token = getToken();
-    console.log("token = " + getToken());
-    console.log("Idn", this.$store.state.user.userIdentity)
-
     this.user = this.$store.state.user
+
+    if (this.user != null) this.isLogin = true
 
     // 进入个人门户
     let authorID = this.$route.query.authorID
@@ -517,7 +552,9 @@ export default {
         this.isSelfIntro = false
         this.isFollowing = false
       }
-      else if (res == -1) this.$notify.error("获取当前门户信息出错，请重试")
+      else if (res == -1) {
+        this.$notify.error("获取当前门户信息出错，请重试")
+      }
       else this.isApplied = false
     })
     .catch((err) => {
@@ -543,6 +580,82 @@ export default {
         }
       )
     })
+  },
+  computed:{
+    authorIDIN() {
+      return this.$route.query.authorID;
+    }
+  },
+  watch: {
+    authorIDIN(newVal) {
+      this.postData.token = getToken();
+      this.user = this.$store.state.user
+
+      if (this.user != null) this.isLogin = true
+
+      // 进入个人门户
+      let authorID = this.$route.query.authorID
+      let authorUserID = this.$route.query.userID
+      let see = this.$route.query.see
+
+      if (see == null) this.opID = 0
+      else this.opID = see
+
+      // 获取intro
+      getAuthorInformation(authorID)
+        .then((intro) => {
+          console.log("intro: ", intro)
+          this.intro = intro
+
+          // 该门户是否被认领
+          if (intro.userID == null) this.isApplied = false
+          else this.isApplied = true
+        })
+        .catch((err) => {
+          this.$notify.error(
+            {
+              title: "网络错误",
+              message: "请稍后重试~"
+            }
+          )
+        })
+
+      // 判断当前门户状态
+      getIntroFollowStatus(this.$store.state.user.userID, authorID)
+        .then((res) => {
+          if (res == 0) this.isSelfIntro = true
+          else if (res == 1) this.isFollowing = true
+          else if (res == 2) {
+            this.isSelfIntro = false
+            this.isFollowing = false
+          }
+          else if (res == -1) this.$notify.error("获取当前门户信息出错，请重试")
+          else this.isApplied = false
+        })
+        .catch((err) => {
+          this.$notify.error(
+            {
+              title: "网络错误",
+              message: "请稍后重试~"
+            }
+          )
+        })
+
+      // 获取门户信息：文献发布量
+      getPublishState(authorID)
+        .then((publish) => {
+          this.introLiteraturesPublishedData = publish
+          this.lineChart.series[0].data = this.introLiteraturesPublishedData;
+        })
+        .catch((err) => {
+          this.$notify.error(
+            {
+              title: "网络错误",
+              message: "请稍后重试~"
+            }
+          )
+        })
+    }
   },
   components: {
     CreateConsultation,
@@ -634,6 +747,7 @@ export default {
   /* margin-left: 12px;
   margin-top: 40px;
   margin-bottom: 5px; */
+  font-size: 1.5rem;
 }
 
 .intro-name {
@@ -680,6 +794,7 @@ export default {
   color: white;
   font-size: 0.800rem;
   letter-spacing: 2px;
+  border: 1px solid #4F6EF2;
   transition: ease-in-out 0.3s;
 }
 
@@ -1078,6 +1193,7 @@ export default {
   /* margin-left: 20px;
   margin-top: 30px; */
   width: 15px;
+  margin-left: 20px;
 }
 
 .profile-icon:hover {
@@ -1230,5 +1346,21 @@ select {
 
 .img-load {
   margin-left: 60px;
+}
+
+.report-body {
+  margin-top: 10px;
+}
+
+.report-text {
+  width: 100%;
+  height: 100px;
+}
+
+textarea {
+  padding: 5px;
+  border: 1px solid #dddddd;
+  resize: none;
+  outline: none;
 }
 </style>
