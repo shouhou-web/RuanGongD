@@ -54,18 +54,19 @@
         </div>
         <div class="user-follow">
           <div class="follow-header">
-            <div class="follow-header-content">Follow</div>
+            <div class="follow-header-content">Follow ({{ followUsers.length }})</div>
           </div>
           <div class="following" v-if="followUsers.length > 0">
-            <div class="follow-part-head">following ({{ followUsers.length }})</div>
             <div class="following-content">
               <div class="one-following" v-for="(onefollowingUser, i) in followUsers">
                 <img :src="onefollowingUser.image" class="intro-img img-plus" @click="gotoIntro(onefollowingUser.userID, onefollowingUser.authorID)">
-                <div class="following-info">
-                  <div class="name-style">{{ onefollowingUser.username }}</div>
-                  <div class="intro-style" @click="gotoIntro(onefollowingUser.userID, onefollowingUser.authorID)">{{ onefollowingUser.realName }}</div>
+                <div class="one-follow-style">
+                  <div class="following-info">
+                    <div class="name-style">{{ onefollowingUser.username }}</div>
+                    <div class="intro-style" @click="gotoIntro(onefollowingUser.userID, onefollowingUser.authorID)">{{ onefollowingUser.realName }}</div>
+                  </div>
+                  <div class="following-op" @click="cancleFollow($store.state.user.userID, onefollowingUser.userID)" v-if="isSelfProfile">unfollow</div>
                 </div>
-                <div class="following-op" @click="cancleFollow($store.state.user.userID, onefollowingUser.userID)" v-if="isSelfProfile">unfollow</div>
               </div>
             </div>
           </div>
@@ -503,6 +504,9 @@ export default {
       }
     },
     userIDIN(newVal) {
+      this.userIDParam = newVal
+      this.op = 0
+
       // 获取当前用户对象
       getUserInformation(newVal)
         .then((user) => {
@@ -995,8 +999,9 @@ export default {
 }
 
 .following {
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 20px;
+  margin-top: 20px;
+  /*border-bottom: 1px solid #ddd;*/
+  /*padding-bottom: 20px;*/
 }
 
 .follow-part-head {
@@ -1008,6 +1013,13 @@ export default {
 }
 
 .following-content {
+}
+
+.one-follow-style {
+  width: 70%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .following-info {
@@ -1022,6 +1034,8 @@ export default {
   height: 75px;
   display: flex;
   flex-direction: row;
+  margin-bottom: 20px;
+  /*border-bottom: 1px solid #dddddd;*/
 }
 
 .name-style {
@@ -1046,7 +1060,6 @@ export default {
 }
 
 .following-op {
-  margin: 0 auto;
   color: red;
   font-size: 0.8rem;
   margin-top: 8%;
