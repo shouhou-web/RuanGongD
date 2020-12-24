@@ -470,7 +470,7 @@ export default {
       console.log("从文献关键词过来查");
       console.log(key);
       let item = {
-        legical: "NULL",
+        logical: "NULL",
         type: "SU",
         value: key,
       };
