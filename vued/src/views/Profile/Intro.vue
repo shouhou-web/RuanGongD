@@ -15,10 +15,14 @@
             <div class="introName-top">
               <div class="intro-name-header">
                 <div class="edit-head">
-                  <div class="user-name" v-if="isApplied">{{ intro.username }} <font class="intro-name">({{ intro.realName }})</font></div>
+                  <div class="user-name" v-if="isApplied">{{ intro.username }} <font
+                    class="intro-name">({{ intro.realName }})</font></div>
                   <div class="user-name" v-else>{{ intro.realName }}</div>
-                  <img src="../../assets/icons/profile/edit.svg" class="profile-icon" title=修改信息 @click="openChangeProfileHover" v-if="isSelfIntro && isApplied">
-                  <v-icon title="举报" @click="openReportIntro" v-if="!isSelfIntro && isApplied" class="profile-icon">mdi-alert-octagon</v-icon>
+                  <img src="../../assets/icons/profile/edit.svg" class="profile-icon" title=修改信息
+                       @click="openChangeProfileHover" v-if="isSelfIntro && isApplied">
+                  <v-icon title="举报" @click="openReportIntro" v-if="!isSelfIntro && isApplied" class="profile-icon">
+                    mdi-alert-octagon
+                  </v-icon>
                 </div>
               </div>
             </div>
@@ -29,9 +33,13 @@
           <div :class="{'publish': !isSelfIntro, 'publish-n': isSelfIntro}" v-if="isLogin">
             <div v-if="isApplied && isSelfIntro" class="publish-button" @click="gotoPublish">发表文献</div>
             <div v-if="isApplied && !isSelfIntro && !isFollowing" class="publish-button" @click="followIntro">关注</div>
-            <div v-if="isApplied && !isSelfIntro && isFollowing" class="publish-button-nice" @click="cancleFollowIntro">已关注</div>
+            <div v-if="isApplied && !isSelfIntro && isFollowing" class="publish-button-nice" @click="cancleFollowIntro">
+              已关注
+            </div>
             <div v-if="!isApplied" class="publish-button-apply" @click="applyIntro">申请认证当前门户</div>
-            <div v-if="!isSelfIntro && isApplied" class="publish-button" @click="isSend = true" style="margin-top: 20px">私信</div>
+            <div v-if="!isSelfIntro && isApplied" class="publish-button" @click="isSend = true"
+                 style="margin-top: 20px">私信
+            </div>
             <create-consultation
               :display="isSend"
               :senderId="user.userID"
@@ -61,17 +69,35 @@
             <div class="chart-type">line chart</div>
             <div class="chart-name">文献发布量统计</div>
           </div>
-          <div class="oneChart-style" v-if="introLiteraturesPublishedData != null"><v-chart :options="lineChart"></v-chart></div>
-          <div class="oneChart-style" v-if="introLiteraturesPublishedData == null"><img src="../../assets/image/no-data.png"></div>
+          <div class="oneChart-style" v-if="introLiteraturesPublishedData != null">
+            <v-chart :options="lineChart"></v-chart>
+          </div>
+          <div class="oneChart-style" v-if="introLiteraturesPublishedData == null"><img
+            src="../../assets/image/no-data.png"></div>
         </div>
         <div class="followed" v-if="isApplied">
-          <div class="follow-part-head">follower ({{ followers.length }})</div>
-          <div class="following-content" v-if="followers.length > 0">
-            <div class="one-following" v-for="(onefollowingUser, i) in followers">
-              <img :src="onefollowingUser.image" class="intro-img img-plus">
+          <div class="follow-part-head">follow ({{ followingList.length }})</div>
+          <div class="following-content" v-if="followingList.length > 0">
+            <div class="one-following" v-for="(onefollowingUser, i) in followingList">
+              <img :src="onefollowingUser.image" class="intro-img img-plus" @click="gotoIntro(onefollowingUser.authorID)">
+              <div class="intro-follow">
+                <div class="following-info">
+                  <div class="name-style">{{ onefollowingUser.username }}</div>
+                  <div class="intro-style">{{ onefollowingUser.realName }}</div>
+                </div>
+                <div class="unfollow" @click="cancleFollow($store.state.user.userID, onefollowingUser.userID)">unfollow</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="followed" v-if="isApplied">
+          <div class="follow-part-head">follower ({{ followerList.length }})</div>
+          <div class="following-content" v-if="followerList.length > 0">
+            <div class="one-following" v-for="(onefollowingUser, i) in followerList">
+              <img :src="onefollowingUser.image" class="intro-img img-plus" @click="gotoProfile">
               <div class="following-info">
-                <div class="name-style">{{ onefollowingUser.name }}</div>
-                <div class="intro-style">{{ onefollowingUser.intro }}</div>
+                <div class="name-style">{{ onefollowingUser.username }}</div>
+                <div class="intro-style">{{ onefollowingUser.realName }}</div>
               </div>
             </div>
           </div>
@@ -81,9 +107,13 @@
     <m-hover ref="changeProfile" @submit="submitEdit" @cancel="cancel">
       <div class="edit">
         <div class="edit-header">
-          <div :class="{'edit-button': editOp != 0, 'edit-button-chosen': editOp == 0}" @click="changeEditOp(0)">修改门户名</div>
-          <div :class="{'edit-button': editOp != 1, 'edit-button-chosen': editOp == 1}" @click="changeEditOp(1)">修改邮箱</div>
-          <div :class="{'edit-button': editOp != 2, 'edit-button-chosen': editOp == 2}" @click="changeEditOp(2)">修改其他信息</div>
+          <div :class="{'edit-button': editOp != 0, 'edit-button-chosen': editOp == 0}" @click="changeEditOp(0)">修改门户名
+          </div>
+          <div :class="{'edit-button': editOp != 1, 'edit-button-chosen': editOp == 1}" @click="changeEditOp(1)">修改邮箱
+          </div>
+          <div :class="{'edit-button': editOp != 2, 'edit-button-chosen': editOp == 2}" @click="changeEditOp(2)">
+            修改其他信息
+          </div>
         </div>
         <div class="edit-body">
           <div class="edit-username" v-if="editOp == 0">
@@ -158,21 +188,22 @@ import create_literature from "@/views/Literature/childCpn/create_literature";
 import Favor from "@/views/Profile/Favor";
 import Manage from "@/views/Literature/Manage";
 import {
-  getIntroFollowStatus,
-  getPublishState,
-  getAuthorInformation,
-  follow,
+  editProfile,
+  editUserEmailAddress,
   editUserImage,
   editUserName,
-  editUserEmailAddress,
-  editProfile,
   emailVerification,
-  editIntroRealName,
+  follow,
+  getAuthorInformation,
+  getIntroFollowStatus,
+  getPublishState,
+  getUserFollowersList,
+  getUserFollowingList,
   reportGate
 } from "@/network/profile";
 import CreateConsultation from "@/views/Forum/childCpn/create-consultation";
 import random from "string-random";
-import { getToken } from "@/network/genToken";
+import {getToken} from "@/network/genToken";
 
 require('echarts/lib/chart/bar')
 require('echarts/lib/chart/line')
@@ -195,14 +226,15 @@ export default {
 
       opID: 0,
 
-      // 关注我的用户集合
-      followers: [],
+      // 关注集合
+      followingList: [],
+      followerList: [],
 
       // 门户发布文献数据
       introLiteraturesPublishedData: [],
 
       lineChart: {
-        tooltip: { trigger: 'axis', axisPointer: { type: 'cross' } },
+        tooltip: {trigger: 'axis', axisPointer: {type: 'cross'}},
         xAxis: {
           type: 'category',
           boundaryGap: true,
@@ -210,8 +242,8 @@ export default {
         },
         yAxis: {
           type: 'value',
-          axisLabel: { formatter: '{value}' },
-          axisPointer: { snap: true }
+          axisLabel: {formatter: '{value}'},
+          axisPointer: {snap: true}
         },
         series: [
           {
@@ -236,11 +268,11 @@ export default {
       imagePath: "", // 图片链接
 
       options: [
-        { text: '高中生 (High school)', value: '0' },
-        { text: '本科生 (UnderGraduates)', value: '1' },
-        { text: '研究生 (Graduate)', value: '2' },
-        { text: '博士生 (Doctor)', value: '3' },
-        { text: '博士后 (Post-Doctoral)', value: '4' },
+        {text: '高中生 (High school)', value: '0'},
+        {text: '本科生 (UnderGraduates)', value: '1'},
+        {text: '研究生 (Graduate)', value: '2'},
+        {text: '博士生 (Doctor)', value: '3'},
+        {text: '博士后 (Post-Doctoral)', value: '4'},
       ],
 
       newNickName: "",
@@ -288,8 +320,7 @@ export default {
             this.$store.commit("setImagePath", this.imagePath)
             this.intro.image = this.imagePath
             this.$refs.changeHeadshot.hideHover()
-          }
-          else if (res == -1) this.$notify.warning("头像修改失败")
+          } else if (res == -1) this.$notify.warning("头像修改失败")
         })
         .catch((err) => {
           this.$notify.error(
@@ -315,33 +346,33 @@ export default {
           query: {
             authorID: this.intro.authorID
           }
-      })
+        })
     },
     followIntro() {
       follow(this.$store.state.user.userID, this.intro.userID, 1)
-      .then((res) => {
-        if (res == -1) this.$notify.warning("关注失败，请重试")
-        else {
-          this.$notify.success("关注成功")
-          this.isFollowing = true
-        }
-      })
-      .catch((err) => {
-        this.$notify.error( { title: "网络错误", message: "请稍后重试~" } )
-      })
+        .then((res) => {
+          if (res == -1) this.$notify.warning("关注失败，请重试")
+          else {
+            this.$notify.success("关注成功")
+            this.isFollowing = true
+          }
+        })
+        .catch((err) => {
+          this.$notify.error({title: "网络错误", message: "请稍后重试~"})
+        })
     },
     cancleFollowIntro() {
       follow(this.$store.state.user.userID, this.intro.userID, 0)
-      .then((res) => {
-        if (res == -1) this.$notify.warning("取消关注失败，请重试")
-        else {
-          this.$notify.success("取消关注成功")
-          this.isFollowing = false
-        }
-      })
-      .catch((err) => {
-        this.$notify.error( { title: "网络错误", message: "请稍后重试~" } )
-      })
+        .then((res) => {
+          if (res == -1) this.$notify.warning("取消关注失败，请重试")
+          else {
+            this.$notify.success("取消关注成功")
+            this.isFollowing = false
+          }
+        })
+        .catch((err) => {
+          this.$notify.error({title: "网络错误", message: "请稍后重试~"})
+        })
     },
     applyIntro() {
       this.$router.push(
@@ -369,7 +400,35 @@ export default {
         cancelBtn: "取消"
       });
     },
-    cancel() {},
+    cancleFollow(userID, followID) {
+      let followerID = userID
+      let followedID = followID
+
+      follow(followerID, followedID, 0)
+        .then((res) => {
+          if (res != 0)
+            this.$notify.warning("取消关注失败，请刷新重试")
+          else {
+            this.$notify.success("取消关注成功")
+
+            getUserFollowingList(followerID)
+              .then((follow) => {
+                this.followingList = follow
+              })
+              .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
+          }
+        })
+        .catch((err) => {
+          this.$notify.error(
+            {
+              title: "网络错误",
+              message: "请稍后重试~"
+            }
+          )
+        })
+    },
+    cancel() {
+    },
     submitEdit() {
       // name
       if (this.editOp == 0) {
@@ -381,12 +440,11 @@ export default {
               this.intro.username = this.newNickName
               this.$refs.changeProfile.hideHover()
               this.editOp = 0
-            }
-            else if (res == 1) this.$notify.warning("该用户名已被您或他人使用")
+            } else if (res == 1) this.$notify.warning("该用户名已被您或他人使用")
             else if (res == -1) this.$notify.error("修改异常，请检查网络")
           })
           .catch((err) => {
-            this.$notify.error( { title: "网络错误", message: "请稍后重试~" } )
+            this.$notify.error({title: "网络错误", message: "请稍后重试~"})
           })
       }
       // email
@@ -397,8 +455,7 @@ export default {
         if (!emailReg.test(this.newEmail)) {
           this.emailWarning = true
           this.$notify.warning("请检查邮箱")
-        }
-        else {
+        } else {
           if (this.code == null) this.$notify.warning("请先获取验证码")
           else if (this.editCode != this.code) this.$notify.warning("验证码错误")
           else {
@@ -409,12 +466,11 @@ export default {
                   this.$store.commit("setEmailAddress", this.newEmail)
                   this.$refs.changeProfile.hideHover()
                   this.editOp = 0
-                }
-                else if (res == 1) this.$notify.warning("邮箱已被使用")
+                } else if (res == 1) this.$notify.warning("邮箱已被使用")
                 else if (res == -1) this.$notify.error("修改异常，请检查网络")
               })
               .catch((err) => {
-                this.$notify.error( { title: "网络错误", message: "请稍后重试~" } )
+                this.$notify.error({title: "网络错误", message: "请稍后重试~"})
               })
           }
         }
@@ -429,11 +485,10 @@ export default {
               this.$store.commit("setUserDegree", this.newDegree)
               this.$refs.changeProfile.hideHover()
               this.editOp = 0
-            }
-            else if (res == -1) this.$notify.error("修改异常，请检查网络")
+            } else if (res == -1) this.$notify.error("修改异常，请检查网络")
           })
           .catch((err) => {
-            this.$notify.error( { title: "网络错误", message: "请稍后重试~" } )
+            this.$notify.error({title: "网络错误", message: "请稍后重试~"})
           })
       }
     },
@@ -449,22 +504,21 @@ export default {
 
         if (authorID != null) {
           reportGate(reporterID, this.reportContents, authorID)
-          .then((res) => {
-            console.log("report", res)
-            if (res == 0) {
-              this.$notify.success("举报成功")
-              this.$refs.report.hideHover()
-            }
-            else this.$notify.warning("举报失败，请重试")
-          })
-          .catch((err) => {
-            this.$notify.error(
-              {
-                title: "网络错误",
-                message: "请稍后重试~"
-              }
-            )
-          })
+            .then((res) => {
+              console.log("report", res)
+              if (res == 0) {
+                this.$notify.success("举报成功")
+                this.$refs.report.hideHover()
+              } else this.$notify.warning("举报失败，请重试")
+            })
+            .catch((err) => {
+              this.$notify.error(
+                {
+                  title: "网络错误",
+                  message: "请稍后重试~"
+                }
+              )
+            })
         }
       }
     },
@@ -497,8 +551,7 @@ export default {
       if (!emailReg.test(this.newEmail)) {
         this.emailWarning = true
         this.getRightEmail = false
-      }
-      else {
+      } else {
         this.emailWarning = false
         this.getRightEmail = true
       }
@@ -510,6 +563,17 @@ export default {
         submitBtn: "提交",
         cancelBtn: "取消"
       });
+    },
+    gotoIntro(authorID) {
+      this.$router.push({
+        path: "/intro",
+        query: {
+          authorID: authorID
+        }
+      })
+    },
+    gotoProfile() {
+
     },
   },
   created() {
@@ -528,22 +592,42 @@ export default {
 
     // 获取intro
     getAuthorInformation(authorID)
-    .then((intro) => {
-      console.log("intro: ", intro)
-      this.intro = intro
+      .then((intro) => {
+        console.log("intro: ", intro)
+        this.intro = intro
 
-      // 该门户是否被认领
-      if (intro.userID == null) this.isApplied = false
-      else this.isApplied = true
-    })
-    .catch((err) => {
-      this.$notify.error(
-        {
-          title: "网络错误",
-          message: "请稍后重试~"
+        // 该门户是否被认领
+        if (intro.userID == null) this.isApplied = false
+        else this.isApplied = true
+      })
+      .then((res) => {
+        if (this.intro.userID != null) {
+          // 获取个人信息：我的关注 + 我的收藏
+          getUserFollowingList(this.intro.userID)
+            .then((follow) => {
+              this.followingList = follow
+            })
+            .catch((err) => {
+              this.$notify.error({title: "网络错误", message: "请稍后重试~"})
+            })
+
+          getUserFollowersList(this.intro.userID)
+            .then((follower) => {
+              this.followerList = follower
+            })
+            .catch((err) => {
+              this.$notify.error({title: "网络错误", message: "请稍后重试~"})
+            })
         }
-      )
-    })
+      })
+      .catch((err) => {
+        this.$notify.error(
+          {
+            title: "网络错误",
+            message: "请稍后重试~"
+          }
+        )
+      })
 
     if (this.$store.state.user != null) {
       // 判断当前门户状态
@@ -554,11 +638,9 @@ export default {
           else if (res == 2) {
             this.isSelfIntro = false
             this.isFollowing = false
-          }
-          else if (res == -1) {
+          } else if (res == -1) {
             this.$notify.error("获取当前门户信息出错，请重试")
-          }
-          else this.isApplied = false
+          } else this.isApplied = false
         })
         .catch((err) => {
           this.$notify.error(
@@ -569,23 +651,23 @@ export default {
           )
         })
     }
-    
+
     // 获取门户信息：文献发布量
     getPublishState(authorID)
-    .then((publish) => {
-      this.introLiteraturesPublishedData = publish
-      this.lineChart.series[0].data = this.introLiteraturesPublishedData;
-    })
-    .catch((err) => {
-      this.$notify.error(
-        {
-          title: "网络错误",
-          message: "请稍后重试~"
-        }
-      )
-    })
+      .then((publish) => {
+        this.introLiteraturesPublishedData = publish
+        this.lineChart.series[0].data = this.introLiteraturesPublishedData;
+      })
+      .catch((err) => {
+        this.$notify.error(
+          {
+            title: "网络错误",
+            message: "请稍后重试~"
+          }
+        )
+      })
   },
-  computed:{
+  computed: {
     authorIDIN() {
       return this.$route.query.authorID;
     }
@@ -615,6 +697,30 @@ export default {
           if (intro.userID == null) this.isApplied = false
           else this.isApplied = true
         })
+        .then((res) => {
+          if (this.intro.userID == null) {
+            // 获取个人信息：我的关注 + 我的收藏 + 我的粉丝
+            getUserFollowingList(this.intro.userID)
+              .then((follow) => {
+                this.followingList = follow
+                console.log("follow:", follow)
+              })
+              .catch((err) => {
+                  this.$notify.error({title: "网络错误", message: "请稍后重试~"})
+                }
+              )
+
+            getUserFollowersList(this.intro.userID)
+              .then((follower) => {
+                this.followerList = follower
+                console.log("follower:", follower)
+              })
+              .catch((err) => {
+                this.$notify.error({title: "网络错误", message: "请稍后重试~"})
+              })
+
+          }
+        })
         .catch((err) => {
           this.$notify.error(
             {
@@ -624,6 +730,7 @@ export default {
           )
         })
 
+
       // 判断当前门户状态
       getIntroFollowStatus(this.$store.state.user.userID, authorID)
         .then((res) => {
@@ -632,8 +739,7 @@ export default {
           else if (res == 2) {
             this.isSelfIntro = false
             this.isFollowing = false
-          }
-          else if (res == -1) this.$notify.error("获取当前门户信息出错，请重试")
+          } else if (res == -1) this.$notify.error("获取当前门户信息出错，请重试")
           else this.isApplied = false
         })
         .catch((err) => {
@@ -960,11 +1066,28 @@ export default {
   padding-top: 10px;
 }
 
+.intro-follow {
+  width: 70%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 .following-info {
   display: flex;
   flex-direction: column;
   margin-left: 2%;
   margin-top: 5%;
+}
+
+.unfollow {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 8%;
+}
+
+.unfollow:hover {
+  cursor: pointer;
 }
 
 .one-following {
@@ -997,6 +1120,10 @@ export default {
 .img-plus {
   margin-left: 5%;
   border-radius: 50%;
+}
+
+.img-plus:hover {
+  cursor: pointer;
 }
 
 .content-right {

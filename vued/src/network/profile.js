@@ -10,12 +10,12 @@ export function getFavorLiteratures(userID) {
 
 // 获取用户关注用户列表
 export function getUserFollowingList(userID) {
-  return request(baseURL, { url: "/getUserFollowingList", params: { userID }, method: "get"})
+  return request(baseURL, { url: "/getUserFollowingList", params: { userID }, method: "post"})
 }
 
 // 获取关注自己的用户列表
 export function getUserFollowersList(userID) {
-  return request(baseURL, { url: "/getUserFollowersList", params: { userID }, method: "get"})
+  return request(baseURL, { url: "/getUserFollowersList", params: { userID }, method: "post"})
 }
 
 // 修改用户基本信息
