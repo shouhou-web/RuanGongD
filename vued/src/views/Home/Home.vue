@@ -108,7 +108,7 @@ export default {
 .logo {
   display: flex;
   justify-content: center;
-  margin: 90px 0 40px;
+  margin: 90px 0 30px;
 }
 
 .logo img {
