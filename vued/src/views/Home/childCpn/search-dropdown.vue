@@ -64,6 +64,13 @@ export default {
       infList: []
     };
   },
+  created() {
+    console.log(this.typeList);
+    this.infList = this.typeList.map(n => {
+      n.checked = false;
+      return n;
+    });
+  },
   computed: {
     typeList() {
       return this.typeList;

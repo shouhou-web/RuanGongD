@@ -74,7 +74,7 @@
         </div>
       </li>
     </ul>
-    <search-date v-if="isAdvance && isShow" @change-time="changeTime" />
+    <search-date v-if="isAdvance && isShow" />
   </div>
 </template>
 
@@ -139,11 +139,6 @@ export default {
       )
         this.$store.commit("initSearchList");
     },
-    changeTime(e) {
-      console.log(e.start, e.end);
-      this.$store.commit("setStart", e.start);
-      this.$store.commit("setEnd", e.end);
-    },
     addItem() {
       this.$store.commit("addSearchList");
     },
@@ -158,7 +153,7 @@ export default {
           if (item.value == "") {
             this.$notify.error({
               title: "错误",
-              message: "请填写所有必填项"
+              message: "请输入搜索内容"
             });
             check = true;
           }
@@ -166,7 +161,7 @@ export default {
       } else if (this.$store.state.searchList[0].value == "") {
         this.$notify.error({
           title: "错误",
-          message: "请填写所有必填项"
+          message: "请输入搜索内容"
         });
         check = true;
       }

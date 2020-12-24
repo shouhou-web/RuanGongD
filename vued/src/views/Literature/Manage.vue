@@ -6,9 +6,9 @@
         v-for="(onefollowingLiterature, i) in myLiteratureList"
         :id="onefollowingLiterature.literatureID"
         :title="onefollowingLiterature.title"
-        :display="true"
+        :display="isSelfIntro"
         :authors="onefollowingLiterature.authors"
-        :tags="onefollowingLiterature.tags"
+        :tags="onefollowingLiterature.keyWord"
         :key="i"
         @change="openEditWarn(onefollowingLiterature)"
       ></y-literature>
@@ -24,12 +24,17 @@ import YLiterature from "@/components/common/y-literature/y-literature";
 import { getMyLiterature, editLiterature } from "@/network/literature";
 export default {
   name: "Manage",
-  props: { authorID: String },
+  props: {
+    authorID: String,
+    isSelfIntro: {
+      Boolean,
+      default: false
+    }
+  },
   components: { "y-literature": YLiterature },
   data() {
     return {
       userID: "",
-      showbutton: true,
       myLiteratureList: []
     };
   },
@@ -131,5 +136,11 @@ export default {
   height: 600px;
   border: 1px solid #dddddd;
   background-color: white;
+}
+
+.none-img {
+  width: 30%;
+  margin-left: 34%;
+  margin-top: 180px;
 }
 </style>
