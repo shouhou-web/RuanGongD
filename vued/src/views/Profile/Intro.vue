@@ -716,10 +716,9 @@ export default {
 
 .headshot-img {
   margin: 0 auto;
-    width: 104%;
-    left: -2%;
-    border: 1px solid #ddd;
-    position: absolute;
+  width: 100%;
+  position: absolute;
+  height: 100%;
 }
 
 .introName {

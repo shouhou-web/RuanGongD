@@ -503,9 +503,15 @@ export default {
       }
     },
     userIDIN(newVal) {
-      this.user = this.$store.state.user;
-
-      // console.log(this.user)
+      // 获取当前用户对象
+      getUserInformation(newVal)
+        .then((user) => {
+          this.user = user
+          console.log("user", user)
+        })
+        .catch((err) => {
+          this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) }
+        )
 
       this.newNickName = this.user.username
       this.userDegree = this.user.userDegree
@@ -558,18 +564,21 @@ export default {
 }
 
 .headshot {
-  margin: 0 auto;
-    width: 104%;
-    left: -2%;
-    border: 1px solid #ddd;
-    position: absolute;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  margin-top: 15px;
 }
 
 .headshot-img {
   margin: 0 auto;
-  max-width: 80%;
-  border-radius: 50%;
-  border: 1px solid #dddddd;
+  width: 100%;
+  position: absolute;
+  height: 100%;
 }
 
 .headshot__hide {
@@ -582,10 +591,6 @@ export default {
   justify-content: center;
   opacity: 0;
   position: absolute;
-  left: 13px;
-  top: 20px;
-  right: 0;
-  bottom: 0;
   transition: ease-in-out 0.3s;
 }
 
