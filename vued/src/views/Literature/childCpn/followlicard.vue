@@ -136,7 +136,8 @@ export default {
 
 .title:hover {
   cursor: pointer;
-  border-bottom: 1px solid black;
+  /* border-bottom: 1px solid black; */
+  color: #4F6EF2;
 }
 
 .authors {
@@ -167,7 +168,7 @@ export default {
 
 .authorname:hover {
   cursor: pointer;
-  border-bottom: 1px solid #000000;
+  /* border-bottom: 1px solid #000000; */
 }
 
 .time {
