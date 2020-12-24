@@ -44,9 +44,14 @@
     <m-hover
       ref="hover"
       @submit="doReject"
-      :showLHover="true"
-      v-model="msgContent"
     >
+      <div class="reject-hover">
+        <textarea
+          class="reject-input"
+          placeholder="请在此输入驳回原因"
+          v-model="msgContent"
+        ></textarea>
+      </div>
     </m-hover>
   </div>
 </template>

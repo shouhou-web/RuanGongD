@@ -366,26 +366,29 @@ export default {
       .catch(err => {
         console.log(err);
       });
-    getMyLiterature(this.userId)
-      .then(res => {
-        console.log("getMyLiterature");
-        console.log(res);
-        var tmpLiterature = Object;
-        for (var literature of res) {
-          // for (var literature of tmpList) {
-          tmpLiterature.literatureID = literature.literatureID;
-          tmpLiterature.title = literature.title;
-          tmpLiterature.authors = [];
-          for (var author of literature.authors) {
-            tmpLiterature.authors.push(author.userName);
+
+    if (this.$store.state.user.userIdentity == 1) {
+      getMyLiterature(this.$store.state.user.authorID)
+        .then(res => {
+          console.log("getMyLiterature");
+          console.log(res);
+          var tmpLiterature = Object;
+          for (var literature of res) {
+            // for (var literature of tmpList) {
+            tmpLiterature.literatureID = literature.literatureID;
+            tmpLiterature.title = literature.title;
+            tmpLiterature.authors = [];
+            for (var author of literature.authors) {
+              tmpLiterature.authors.push(author.userName);
+            }
+            this.myLiteratureList.push({ ...tmpLiterature });
           }
-          this.myLiteratureList.push({ ...tmpLiterature });
-        }
-        console.log(this.myLiteratureList);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+          console.log(this.myLiteratureList);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   }
 };
 </script>
