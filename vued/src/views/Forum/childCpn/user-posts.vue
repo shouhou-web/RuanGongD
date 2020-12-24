@@ -1,34 +1,39 @@
 <template>
   <div id="user-posts">
-    <div class="post-card" v-for="post in posts" :key="post.postId">
-      <div class="card-header">
-        <div class="title" @click="gotoPost(post.postId)">
-          {{ post.postName }}
+    <div v-if="posts.length != 0">
+      <div class="post-card" v-for="post in posts" :key="post.postId">
+        <div class="card-header">
+          <div class="title" @click="gotoPost(post.postId)">
+            {{ post.postName }}
+          </div>
+          <div class="sector">
+            {{ post.sectorName }}
+          </div>
         </div>
-        <div class="sector">
-          {{ post.sectorName }}
+        <div class="attr">
+          <div class="post-reply-number">
+            <v-icon size="0.875rem">
+              comment
+            </v-icon>
+            {{ post.replyNum }}
+          </div>
+          <div class="post-view-number">
+            <v-icon size="0.875rem">
+              mdi-eye
+            </v-icon>
+            {{ post.viewNum }}
+          </div>
+          <div class="post-time">发布于 {{ post.createTime }}</div>
+        </div>
+        <div class="tags" v-if="post.tags.length >= 1 && post.tags[0] != ''">
+          <div class="tag" v-for="tag in post.tags" :key="tag">
+            {{ tag }}
+          </div>
         </div>
       </div>
-      <div class="attr">
-        <div class="post-reply-number">
-          <v-icon size="0.875rem">
-            comment
-          </v-icon>
-          {{ post.replyNum }}
-        </div>
-        <div class="post-view-number">
-          <v-icon size="0.875rem">
-            mdi-eye
-          </v-icon>
-          {{ post.viewNum }}
-        </div>
-        <div class="post-time">发布于 {{ post.createTime }}</div>
-      </div>
-      <div class="tags" v-if="post.tags.length >= 1 && post.tags[0] != ''">
-        <div class="tag" v-for="tag in post.tags" :key="tag">
-          {{ tag }}
-        </div>
-      </div>
+    </div>
+    <div class="none" v-else>
+      <img src="../../../assets/image/no-img.png" alt="none-img" />
     </div>
   </div>
 </template>
@@ -176,5 +181,17 @@ export default {
   border: 1px solid #4f6ef2;
   background-color: white;
   color: #4f6ef2;
+}
+
+.none {
+  height: 600px;
+  border: 1px solid #dddddd;
+  background-color: white;
+}
+
+.none-img {
+  width: 30%;
+  margin-left: 34%;
+  margin-top: 180px;
 }
 </style>
