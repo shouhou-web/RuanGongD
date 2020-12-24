@@ -173,13 +173,15 @@ export default {
   flex-direction: column;
   align-self: center;
   align-items: center;
-  padding: 0 10% 20px;
+  padding: 0 8% 20px;
 }
 
 .authorcard .auth-part1 {
-  display: flex;
-  width: 100%;
   align-items: center;
+  display: flex;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  width: 100%;
   /* background: rgb(243, 230, 230); */
 }
 
@@ -189,18 +191,21 @@ export default {
 
 .authorcard .auth-name {
   padding-top: 12px;
+  font-size: 18px;
   font-weight: 600;
 }
 
 .authorcard .auth-workunit {
-  padding-bottom: 8px;
   color: #777;
+  margin-top: 10px;
+  padding-bottom: 8px;
+  word-break: break-all;
 }
 
 .authorcard .auth-part1-right {
-  align-self: flex-end;
+  /* align-self: flex-end; */
   /* padding-top: 10px; */
-  padding-right: 15px;
+  margin-left: 20px;
 }
 
 .authorcard .auth-part2 {

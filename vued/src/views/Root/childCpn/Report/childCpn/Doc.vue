@@ -97,9 +97,6 @@ export default {
         cancelBtn: "取消"
       });
     },
-    toDelete(e, index) {
-      console.log(index);
-    },
     doReject() {
       if (this.msgContent == null || this.msgContent.length == 0) {
         this.$notify.error({

@@ -13,7 +13,6 @@
           @toShowMore="resetTrim($event, index)"
           @approveReport="toApprove($event, index)"
           @rejectReport="toReject($event, index)"
-          @deleteReport="toDelete($event, index)"
         >
           <template v-slot:reporterProfile>
             <div class="report-profile">
@@ -77,6 +76,7 @@ export default {
       this.reportList[index].trimmed = !this.reportList[index].trimmed;
     },
     toApprove(e, index) {
+      console.log(this.reportList[index].reportID);
       approveReport(this.reportList[index].reportID).then(res => {
         if (!res) {
           this.$notify.error({
