@@ -33,7 +33,7 @@
             <div class="comment-time">
               {{ comment.commentTime }}
             </div>
-            <div class="comment-action">
+            <div class="comment-action" v-if="$store.state.user!=null">
               <v-btn
                 icon
                 v-if="comment.userID == $store.state.user.userID"
@@ -62,7 +62,7 @@
       </div>
       
     </div>
-    <div class="input-container">
+    <div class="input-container" v-if="$store.state.user!=null">
       <div class="card">
         <div class="card-header">
           <div class="avatar">
@@ -177,15 +177,11 @@ export default {
         console.log("文献评论", res);
         if (res == null) this.comments = [];
         else this.comments = res;
+console.log("文献评论长度"+this.comments.length);
+console.log(this.comment);
       });
-      // .then(
-      //   // TODO 获取 userName, userAvatar
-      //   this.comments.sort(function(a, b) {
-      //     return a.floor - b.floor;
-      //   }) // 对 comments 按楼层升序排序
-      // );
-      console.log("文献评论长度"+this.comments.length);
-      console.log(this.comment);
+      
+      
   },
   data() {
     return {
@@ -481,7 +477,7 @@ export default {
   height:60px;
   background: white;
   border: 1px solid #ddd;
-  border-bottom: 0;
+  /* border-bottom: 0; */
   display: flex;
   /* justify-content:center; */
   align-items:center;

@@ -17,7 +17,7 @@
         >
           <template v-slot:reporterProfile>
             <div class="report-profile">
-              <span class="report-name">{{ item.reporterInfo.userName }}</span>
+              <span class="report-name">{{ item.reporterInfo.username }}</span>
               <span class="report-job">{{
                 options[item.reporterInfo.userDegree]
               }}</span>
@@ -26,7 +26,9 @@
           <template v-slot:reportee>
             <div class="report-profile">
               <span class="report-name">{{ item.reporteeInfo.username }}</span>
-              <span class="report-job">{{ item.reporteeInfo.userDegree }}</span>
+              <span class="report-job">{{
+                options[item.reporterInfo.userDegree]
+              }}</span>
             </div>
           </template>
           <template v-slot:detail>
@@ -43,7 +45,14 @@
     <div class="report-cards--none" v-if="showNone">
       <span class="report-cards--wu">無</span>
     </div>
-    <m-hover ref="hover" @submit="doReject" :showLHover="true" v-model="msgContent">
+    <m-hover ref="hover" @submit="doReject">
+      <div class="reject-hover">
+        <textarea
+          class="reject-input"
+          placeholder="请在此输入驳回原因"
+          v-model="msgContent"
+        ></textarea>
+      </div>
     </m-hover>
   </div>
 </template>

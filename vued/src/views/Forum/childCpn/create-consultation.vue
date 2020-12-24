@@ -128,6 +128,7 @@ export default {
               message: "咨询消息发送成功",
               type: "success"
             });
+            this.close();
           } else {
             this.$notify.error({
               title: "操作失败",

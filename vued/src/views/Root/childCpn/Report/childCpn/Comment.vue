@@ -41,7 +41,14 @@
     <div class="report-cards--none" v-if="showNone">
       <span class="report-cards--wu">無</span>
     </div>
-    <m-hover ref="hover" @submit="doReject" :showLHover="true" v-model="msgContent">
+    <m-hover ref="hover" @submit="doReject">
+      <div class="reject-hover">
+        <textarea
+          class="reject-input"
+          placeholder="请在此输入驳回原因"
+          v-model="msgContent"
+        ></textarea>
+      </div>
     </m-hover>
   </div>
 </template>
@@ -90,7 +97,7 @@ export default {
       });
     },
     doReject() {
-      if (this.msgContent == null|| this.msgContent.length == 0) {
+      if (this.msgContent == null || this.msgContent.length == 0) {
         this.$notify.error({
           title: "驳回失败",
           message: "请输入驳回原因！"
