@@ -35,7 +35,7 @@
             <create-consultation
               :display="isSend"
               :senderId="user.userID"
-              :receiverId="intro.authorID"
+              :receiverId="intro.userID"
               @closeDialog="closeSend"></create-consultation>
           </div>
         </div>
@@ -316,7 +316,7 @@ export default {
       })
     },
     followIntro() {
-      follow(this.$store.state.user.userID, this.intro.authorID, 1)
+      follow(this.$store.state.user.userID, this.intro.userID, 1)
       .then((res) => {
         if (res == -1) this.$notify.warning("关注失败，请重试")
         else {
@@ -507,9 +507,6 @@ export default {
   },
   created() {
     this.postData.token = getToken();
-    console.log("token = " + getToken());
-    console.log("Idn", this.$store.state.user.userIdentity)
-
     this.user = this.$store.state.user
 
     // 进入个人门户
@@ -574,6 +571,80 @@ export default {
         }
       )
     })
+  },
+  computed:{
+    authorIDIN() {
+      return this.$route.query.authorID;
+    }
+  },
+  watch: {
+    authorIDIN(newVal) {
+      this.postData.token = getToken();
+      this.user = this.$store.state.user
+
+      // 进入个人门户
+      let authorID = this.$route.query.authorID
+      let authorUserID = this.$route.query.userID
+      let see = this.$route.query.see
+
+      if (see == null) this.opID = 0
+      else this.opID = see
+
+      // 获取intro
+      getAuthorInformation(authorID)
+        .then((intro) => {
+          console.log("intro: ", intro)
+          this.intro = intro
+
+          // 该门户是否被认领
+          if (intro.userID == null) this.isApplied = false
+          else this.isApplied = true
+        })
+        .catch((err) => {
+          this.$notify.error(
+            {
+              title: "网络错误",
+              message: "请稍后重试~"
+            }
+          )
+        })
+
+      // 判断当前门户状态
+      getIntroFollowStatus(this.$store.state.user.userID, authorID)
+        .then((res) => {
+          if (res == 0) this.isSelfIntro = true
+          else if (res == 1) this.isFollowing = true
+          else if (res == 2) {
+            this.isSelfIntro = false
+            this.isFollowing = false
+          }
+          else if (res == -1) this.$notify.error("获取当前门户信息出错，请重试")
+          else this.isApplied = false
+        })
+        .catch((err) => {
+          this.$notify.error(
+            {
+              title: "网络错误",
+              message: "请稍后重试~"
+            }
+          )
+        })
+
+      // 获取门户信息：文献发布量
+      getPublishState(authorID)
+        .then((publish) => {
+          this.introLiteraturesPublishedData = publish
+          this.lineChart.series[0].data = this.introLiteraturesPublishedData;
+        })
+        .catch((err) => {
+          this.$notify.error(
+            {
+              title: "网络错误",
+              message: "请稍后重试~"
+            }
+          )
+        })
+    }
   },
   components: {
     CreateConsultation,
