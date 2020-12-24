@@ -17,8 +17,8 @@
                 <div class="edit-head">
                   <div class="user-name" v-if="isApplied">{{ intro.username }} <font class="intro-name">({{ intro.realName }})</font></div>
                   <div class="user-name" v-else>{{ intro.realName }}</div>
-                  <img src="../../assets/icons/profile/edit.svg" class="profile-icon" @click="openChangeProfileHover" v-if="isSelfIntro && isApplied">
-                  <img src="../../assets/icons/profile/report.svg" class="profile-icon" @click="openReportIntro" v-if="!isSelfIntro && isApplied">
+                  <img src="../../assets/icons/profile/edit.svg" class="profile-icon" title=修改信息 @click="openChangeProfileHover" v-if="isSelfIntro && isApplied">
+                  <v-icon title="举报" @click="openReportIntro" v-if="!isSelfIntro && isApplied" class="profile-icon">mdi-alert-octagon</v-icon>
                 </div>
               </div>
             </div>
@@ -26,7 +26,7 @@
             <div class="intro-pos">{{ intro.phoneNumber }}</div>
             <div class="intro-pos">{{ intro.emailAddress }}</div>
           </div>
-          <div :class="{'publish': !isSelfIntro, 'publish-n': isSelfIntro}">
+          <div :class="{'publish': !isSelfIntro, 'publish-n': isSelfIntro}" v-if="isLogin">
             <div v-if="isApplied && isSelfIntro" class="publish-button" @click="gotoPublish">发表文献</div>
             <div v-if="isApplied && !isSelfIntro && !isFollowing" class="publish-button" @click="followIntro">关注</div>
             <div v-if="isApplied && !isSelfIntro && isFollowing" class="publish-button-nice" @click="cancleFollowIntro">已关注</div>
@@ -51,9 +51,9 @@
     </div>
     <div class="intro-content">
       <div class="content-left">
-        <manage :authorID="this.$route.query.authorID" v-if="opID == 0"></manage>
-        <user-posts :userId="intro.userID" v-if="opID == 1 && isApplied"></user-posts>
-        <favor :userID="intro.userID" v-if="opID == 2 && isApplied"></favor>
+        <manage :authorID="this.$route.query.authorID" :isSelfIntro="isSelfIntro" v-if="opID == 0"></manage>
+        <user-posts :userId="intro.userID" v-if="opID == 1 && isApplied && isLogin"></user-posts>
+        <favor :userID="intro.userID" v-if="opID == 2 && isApplied && isLogin"></favor>
       </div>
       <div class="content-right">
         <div class="chart-part">
@@ -64,7 +64,7 @@
           <div class="oneChart-style" v-if="introLiteraturesPublishedData != null"><v-chart :options="lineChart"></v-chart></div>
           <div class="oneChart-style" v-if="introLiteraturesPublishedData == null"><img src="../../assets/image/no-data.png"></div>
         </div>
-        <div class="followed">
+        <div class="followed" v-if="isApplied">
           <div class="follow-part-head">follower ({{ followers.length }})</div>
           <div class="following-content" v-if="followers.length > 0">
             <div class="one-following" v-for="(onefollowingUser, i) in followers">
@@ -121,7 +121,7 @@
         <!--        </div>-->
       </div>
     </m-hover>
-    <m-hover ref="changeHeadshot" @cancel="cancel">
+    <m-hover ref="changeHeadshot" @submit="realEditImg" @cancel="cancel">
       <el-main class="img-load">
         <el-upload
           :class="{ hide: hideUploadEdit }"
@@ -191,6 +191,7 @@ export default {
       isSelfIntro: false,
       isFollowing: false,
       isApplied: false,
+      isLogin: false,
 
       opID: 0,
 
@@ -276,9 +277,9 @@ export default {
       this.fileList = fileList;
       this.imagePath = this.imgPathPrefix + this.fileList[0].response.key;
       console.log(response, file, fileList);
-      this.$store.commit("setImagePath", this.imagePath)
       this.hideUploadEdit = true;
-
+    },
+    realEditImg() {
       editUserImage(this.$store.state.user.userID, this.imagePath)
         .then((res) => {
           console.log("img-res", res)
@@ -286,6 +287,7 @@ export default {
             this.$notify.success("头像修改成功")
             this.$store.commit("setImagePath", this.imagePath)
             this.intro.image = this.imagePath
+            this.$refs.changeHeadshot.hideHover()
           }
           else if (res == -1) this.$notify.warning("头像修改失败")
         })
@@ -329,7 +331,7 @@ export default {
       })
     },
     cancleFollowIntro() {
-      follow(this.$route.query.userID, this.intro.authorID, 0)
+      follow(this.$store.state.user.userID, this.intro.userID, 0)
       .then((res) => {
         if (res == -1) this.$notify.warning("取消关注失败，请重试")
         else {
@@ -356,6 +358,7 @@ export default {
     openChangeHeadshot() {
       this.$refs.changeHeadshot.showHover({
         title: "修改头像",
+        submitBtn: "提交",
         cancelBtn: "取消"
       });
     },
@@ -375,6 +378,7 @@ export default {
             if (res == 0) {
               this.$notify.success("用户名修改成功")
               this.$store.commit("setUserName", this.newNickName)
+              this.intro.username = this.newNickName
               this.$refs.changeProfile.hideHover()
               this.editOp = 0
             }
@@ -446,8 +450,11 @@ export default {
         if (authorID != null) {
           reportGate(reporterID, this.reportContents, authorID)
           .then((res) => {
-            console.log(res)
-            if (res == 0) this.$notify.success("举报成功")
+            console.log("report", res)
+            if (res == 0) {
+              this.$notify.success("举报成功")
+              this.$refs.report.hideHover()
+            }
             else this.$notify.warning("举报失败，请重试")
           })
           .catch((err) => {
@@ -509,6 +516,8 @@ export default {
     this.postData.token = getToken();
     this.user = this.$store.state.user
 
+    if (this.user != null) this.isLogin = true
+
     // 进入个人门户
     let authorID = this.$route.query.authorID
     let authorUserID = this.$route.query.userID
@@ -536,27 +545,31 @@ export default {
       )
     })
 
-    // 判断当前门户状态
-    getIntroFollowStatus(this.$store.state.user.userID, authorID)
-    .then((res) => {
-      if (res == 0) this.isSelfIntro = true
-      else if (res == 1) this.isFollowing = true
-      else if (res == 2) {
-        this.isSelfIntro = false
-        this.isFollowing = false
-      }
-      else if (res == -1) this.$notify.error("获取当前门户信息出错，请重试")
-      else this.isApplied = false
-    })
-    .catch((err) => {
-      this.$notify.error(
-        {
-          title: "网络错误",
-          message: "请稍后重试~"
-        }
-      )
-    })
-
+    if (this.$store.state.user != null) {
+      // 判断当前门户状态
+      getIntroFollowStatus(this.$store.state.user.userID, authorID)
+        .then((res) => {
+          if (res == 0) this.isSelfIntro = true
+          else if (res == 1) this.isFollowing = true
+          else if (res == 2) {
+            this.isSelfIntro = false
+            this.isFollowing = false
+          }
+          else if (res == -1) {
+            this.$notify.error("获取当前门户信息出错，请重试")
+          }
+          else this.isApplied = false
+        })
+        .catch((err) => {
+          this.$notify.error(
+            {
+              title: "网络错误",
+              message: "请稍后重试~"
+            }
+          )
+        })
+    }
+    
     // 获取门户信息：文献发布量
     getPublishState(authorID)
     .then((publish) => {
@@ -581,6 +594,8 @@ export default {
     authorIDIN(newVal) {
       this.postData.token = getToken();
       this.user = this.$store.state.user
+
+      if (this.user != null) this.isLogin = true
 
       // 进入个人门户
       let authorID = this.$route.query.authorID
@@ -736,6 +751,7 @@ export default {
   /* margin-left: 12px;
   margin-top: 40px;
   margin-bottom: 5px; */
+  font-size: 1.5rem;
 }
 
 .intro-name {
@@ -1181,6 +1197,7 @@ export default {
   /* margin-left: 20px;
   margin-top: 30px; */
   width: 15px;
+  margin-left: 20px;
 }
 
 .profile-icon:hover {

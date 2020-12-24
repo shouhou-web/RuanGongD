@@ -12,7 +12,7 @@
             </a>
           </div>
           <div class="username">
-            <div class="user-nickname" @click="openChangeProfileHover">
+            <div class="user-nickname" @click="openChangeProfileHover" v-if="isSelfProfile">
               {{ user.username }}
               <img src="../../assets/icons/profile/edit.svg" class="profile-icon" @click="openChangeProfileHover">
             </div>
@@ -32,14 +32,18 @@
           </div>
         </div>
         <div class="profile-op">
-          <div class="op-favor">收藏文献</div>
-          <div class="bar"></div>
+          <div class="op-header">
+            <div class="op-favor" @click="opSwitch(0)">收藏文献</div>
+            <div class="op-favor" @click="opSwitch(1)">个人动态</div>
+          </div>
+          <div :class="{'bar': op == 0, 'bar-change': op == 1}"></div>
         </div>
       </div>
     </div>
     <div class="profile-content">
       <div class="content-left">
-        <favor :userID="userIDParam"></favor>
+        <favor :userID="userIDParam" v-if="op == 0"></favor>
+        <user-posts :userId="userIDParam" v-if="op == 1"></user-posts>
       </div>
       <div class="content-right">
         <div class="user-intro" v-if="isSelfProfile">
@@ -61,7 +65,7 @@
                   <div class="name-style">{{ onefollowingUser.username }}</div>
                   <div class="intro-style" @click="gotoIntro(onefollowingUser.userID, onefollowingUser.authorID)">{{ onefollowingUser.realName }}</div>
                 </div>
-                <div class="following-op" @click="cancleFollow(this.$store.state.user.userID, onefollowingUser.authorID)" v-if="isSelfProfile">unfollow</div>
+                <div class="following-op" @click="cancleFollow($store.state.user.userID, onefollowingUser.userID)" v-if="isSelfProfile">unfollow</div>
               </div>
             </div>
           </div>
@@ -114,7 +118,7 @@
 <!--        </div>-->
       </div>
     </m-hover>
-    <m-hover ref="changeHeadshot" @cancel="cancel">
+    <m-hover ref="changeHeadshot" @submit="realEditImg" @cancel="cancel">
       <el-main class="img-upload">
         <el-upload
           :class="{ hide: hideUploadEdit }"
@@ -150,7 +154,9 @@ import {
   editUserEmailAddress,
   emailVerification,
   editUserImage,
+  follow
 } from "@/network/profile";
+import UserPosts from "@/views/Forum/childCpn/user-posts";
 
 export default {
   name: "Profile",
@@ -200,7 +206,9 @@ export default {
         key: ""
       },
       fileList: [],
-      imagePath: "" // 图片链接
+      imagePath: "", // 图片链接
+
+      op: 0
     };
   },
   methods: {
@@ -222,21 +230,26 @@ export default {
       this.fileList = fileList;
       this.imagePath = this.imgPathPrefix + this.fileList[0].response.key;
       console.log(response, file, fileList);
-      this.$store.commit("setImagePath", this.imagePath)
       this.hideUploadEdit = true;
-
+    },
+    realEditImg() {
       editUserImage(this.$store.state.user.userID, this.imagePath)
-      .then((res) => {
-        if (res == 0) this.$notify.success("头像修改成功")
-        else if (res == -1) this.$notify.warning("头像修改失败")
-      })
-      .catch((err) => {
-        this.$notify.error(
-          {
-            title: "网络错误",
-            message: "请稍后重试~"
-          })
-      })
+        .then((res) => {
+          if (res == 0) {
+            this.$notify.success("头像修改成功")
+            this.$store.commit("setImagePath", this.imagePath)
+          }
+          else if (res == -1) this.$notify.warning("头像修改失败")
+        })
+        .catch((err) => {
+          this.$notify.error(
+            {
+              title: "网络错误",
+              message: "请稍后重试~"
+            })
+        })
+
+      this.$refs.changeHeadshot.hideHover()
     },
     handleRemove() {
       this.hideUploadEdit = false;
@@ -263,6 +276,7 @@ export default {
     openChangeHeadshot() {
       this.$refs.changeHeadshot.showHover({
         title: "修改头像",
+        submitBtn: "提交",
         cancelBtn: "取消"
       });
     },
@@ -272,7 +286,7 @@ export default {
 
       follow(followerID, followedID, 0)
       .then((res) => {
-        if (res == 0)
+        if (res != 0)
           this.$notify.warning("取消关注失败，请刷新重试")
         else {
           this.$notify.success("取消关注成功")
@@ -421,26 +435,41 @@ export default {
     let userID = this.$route.query.userID;
     this.userIDParam = this.$route.query.userID;
 
-    // 当前用户进入自己的主页
-    if (userID == this.$store.state.user.userID) {
-      this.user = this.$store.state.user;
+    // 登录状态
+    if (this.$store.state.user != null) {
+      // 当前用户进入自己的主页
+      if (userID == this.$store.state.user.userID) {
+        this.user = this.$store.state.user;
 
-      // console.log(this.user)
+        // console.log(this.user)
 
-      this.newNickName = this.user.username
-      this.userDegree = this.user.userDegree
-      this.newPhone = this.user.phoneNumber
+        this.newNickName = this.user.username
+        this.userDegree = this.user.userDegree
+        this.newPhone = this.user.phoneNumber
 
-      // 获取个人信息：我的关注 + 我的收藏
-      getUserFollowingList(userID)
-        .then((follow) => {
-          this.followUsers = follow
-          // console.log("follow:", follow)
-        })
-        .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
-    }
-    // 进入其他用户个人主页
-    else {
+        // 获取个人信息：我的关注 + 我的收藏
+        getUserFollowingList(userID)
+          .then((follow) => {
+            this.followUsers = follow
+            console.log("follow:", follow)
+          })
+          .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
+      }
+      // 进入其他用户个人主页
+      else {
+        this.isSelfProfile = false
+
+        // 获取当前用户对象
+        getUserInformation(userID)
+          .then((user) => {
+            this.user = user
+            // console.log("user", user)
+          })
+          .catch((err) => {
+            this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) }
+          )
+      }
+    } else {
       this.isSelfProfile = false
 
       // 获取当前用户对象
@@ -449,8 +478,11 @@ export default {
           this.user = user
           // console.log("user", user)
         })
-        .catch((err) => { this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) } )
+        .catch((err) => {
+          this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) }
+        )
     }
+
   },
   computed:{
     userIDIN() {
@@ -488,7 +520,8 @@ export default {
   },
   components: {
     'y-literature': yLiterature,
-    'favor': Favor
+    'favor': Favor,
+    'user-posts': UserPosts,
   },
 };
 </script>
@@ -640,6 +673,10 @@ export default {
   flex-direction: column;
 }
 
+.op-header {
+  display: flex;
+  flex-direction: row;
+}
 
 .op-favor {
   margin-top: 20px;
@@ -660,6 +697,17 @@ export default {
   width: 50px;
   margin-top: 10px;
   margin-left: 20px;
+  transition: ease-in-out 0.3s;
+}
+
+.bar-change {
+  background-color: #4F6EF2;
+  border-radius: 2px;
+  height: 2px;
+  width: 50px;
+  margin-top: 10px;
+  margin-left: 125px;
+  transition: ease-in-out 0.3s;
 }
 
 .profile-content {
@@ -905,6 +953,10 @@ export default {
   border-radius: 50%;
 }
 
+.img-plus:hover {
+  cursor: pointer;
+}
+
 .intro-img-details {
   max-width: 100%;
   max-height: 100%;
@@ -969,11 +1021,22 @@ export default {
 .name-style {
   font-size: 1rem;
   color: #555555;
+  transition: ease-in-out 0.3s;
+}
+
+.name-style:hover {
+  color: #4F6EF2;
+  cursor: pointer;
+  transition: ease-in-out 0.3s;
 }
 
 .intro-style {
   font-size: 0.8rem;
   color: #999999;
+}
+
+.intro-style:hover {
+  cursor: pointer;
 }
 
 .following-op {
@@ -984,8 +1047,6 @@ export default {
 }
 
 .following-op:hover {
-  height: fit-content;
-  border-bottom: 1px solid red;
   cursor: pointer;
 }
 

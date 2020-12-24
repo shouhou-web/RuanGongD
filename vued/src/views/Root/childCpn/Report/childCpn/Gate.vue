@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="report-cards--indiser">
+    <div v-if="!showNone" class="report-cards--indiser">
       <div class="report-card" v-for="(item, index) in reportList" :key="index">
         <l-root-card
           class="delay"
@@ -40,15 +40,10 @@
         </l-root-card>
       </div>
     </div>
-    <m-hover ref="hover" @submit="doReject">
-      <div class="reject-hover">
-        <textarea
-          class="reject-input"
-          placeholder="请在此输入驳回原因"
-          autofocus
-          v-model="msgContent"
-        ></textarea>
-      </div>
+    <div class="report-cards--none" v-if="showNone">
+      <span class="report-cards--wu">無</span>
+    </div>
+    <m-hover ref="hover" @submit="doReject" :showLHover="true" v-model="msgContent">
     </m-hover>
   </div>
 </template>
@@ -64,7 +59,8 @@ export default {
     return {
       reportList: [],
       msgContent: "",
-      options: ["高中生", "本科生", "研究生", "博士生", "博士后"]
+      options: ["高中生", "本科生", "研究生", "博士生", "博士后"],
+      showNone: false
     };
   },
   methods: {
@@ -83,6 +79,7 @@ export default {
           this.$notify.success("通过成功");
           this.reportList[index].hasRead = true;
           this.reportList.splice(index, 1);
+          if (this.reportList.length == 0) this.showNone = true;
         }
       });
     },
@@ -95,7 +92,7 @@ export default {
       });
     },
     doReject() {
-      if (!this.msgContent || this.msgContent.length == 0) {
+      if (this.msgContent == null || this.msgContent.length == 0) {
         this.$notify.error({
           title: "驳回失败",
           message: "请输入驳回原因！"
@@ -115,6 +112,7 @@ export default {
             this.$notify.success("驳回成功");
             this.reportList.splice(this.temp_index, 1);
             this.msgContent = "";
+            if (this.reportList.length == 0) this.showNone = true;
           }
         });
       }
@@ -123,11 +121,12 @@ export default {
   created() {
     getGateReports()
       .then(res => {
-        if (!res || res.length == 0) {
+        if (res == null || res.length == 0) {
           this.$notify.info({
             title: "空列表",
             message: "可以摸了"
           });
+          this.showNone = true;
           return;
         } else {
           this.reportList = res;
@@ -244,6 +243,21 @@ textarea:-ms-input-placeholder {
 .reject-input::-webkit-scrollbar-thumb {
   background-color: #d4dadd;
   border-radius: 2px;
+}
+
+.report-cards--none {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 186px);
+  width: 900px;
+}
+
+.report-cards--wu {
+  color: #6b757b;
+  font-size: 100px;
+  font-family: FangSong;
+  margin: auto 380px;
 }
 
 @keyframes outin {
