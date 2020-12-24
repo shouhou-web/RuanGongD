@@ -38,12 +38,15 @@
             <el-link
               v-for="(item, index) in literature.keyWord"
               :key="index"
-              v-if="index < 3"
               href="javascript:void(0);"
             >
-              <span @click="searchKey(item)" class="keywordcontent">{{
-                item
-              }}</span>
+              <span
+                v-if="index < 3"
+                @click="searchKey(item)"
+                class="keywordcontent"
+              >
+                {{ item }}
+              </span>
             </el-link>
           </div>
           <div class="doi content">
@@ -55,22 +58,26 @@
           </div>
           <div class="button">
             <div class="button-left">
-              <el-tooltip content="Bottom center" placement="bottom" effect="light">
-              <l-button
-                size="small"
-                :round="true"
-                type="primary"
-                @click="collectLiterature()"
-                :disabled="this.$store.state.user==null"
+              <el-tooltip
+                content="Bottom center"
+                placement="bottom"
+                effect="light"
               >
-                <i
-                  :class="{
-                    'el-icon-star-off': !iscollect,
-                    'el-icon-star-on': iscollect,
-                  }"
-                ></i>
-                <span> 收藏</span>
-              </l-button>
+                <l-button
+                  size="small"
+                  :round="true"
+                  type="primary"
+                  @click="collectLiterature()"
+                  :disabled="this.$store.state.user == null"
+                >
+                  <i
+                    :class="{
+                      'el-icon-star-off': !iscollect,
+                      'el-icon-star-on': iscollect
+                    }"
+                  ></i>
+                  <span> 收藏</span>
+                </l-button>
               </el-tooltip>
               <l-button
                 size="small"
@@ -92,7 +99,7 @@
                 type="primary"
                 class="report"
                 @click="reportLi()"
-                :disabled="this.$store.state.user==null"
+                :disabled="this.$store.state.user == null"
               >
                 <i class="el-icon-warning-outline"></i>
                 <span> 举报文献 </span>
@@ -102,7 +109,7 @@
                 type="primary"
                 class="download"
                 @click="download()"
-                :disabled="this.$store.state.user==null"
+                :disabled="this.$store.state.user == null"
               >
                 <i class="el-icon-download"></i>
                 <span> 下载文献 </span>
@@ -126,7 +133,7 @@
             class="op-item"
             @click="toChild(index)"
             :class="[
-              currentIndex == index ? 'op-item--active' : 'op-item--inside',
+              currentIndex == index ? 'op-item--active' : 'op-item--inside'
             ]"
             v-for="(item, index) in navList"
             :key="index"
@@ -233,14 +240,14 @@ import {
   collect,
   reportLiterature,
   getcollect,
-  getAuthorInformation,
+  getAuthorInformation
 } from "network/literature";
 import {
   getPostInfo,
   deletePost,
   reportComment,
   deleteComment,
-  commentPost,
+  commentPost
 } from "network/forum.js";
 import { search } from "network/search.js";
 
@@ -248,7 +255,7 @@ export default {
   name: "Literature",
   components: {
     LFollowlicard,
-    LAuthor,
+    LAuthor
   },
   data() {
     return {
@@ -300,63 +307,63 @@ export default {
       navList: [
         {
           name: "相关文献",
-          router: "relation",
+          router: "relation"
         },
         {
           name: "数据统计",
-          router: "stats",
+          router: "stats"
         },
         {
           name: "文献评论",
-          router: "review",
-        },
+          router: "review"
+        }
       ],
       //举报相关
       reportDialog: false,
       reportForm: {
         reportContent: "",
-        reportCommentId: "",
+        reportCommentId: ""
       },
       reportRule: {
         reportContent: [
           {
             required: true,
             message: "请输入举报理由",
-            trigger: "blur",
+            trigger: "blur"
           },
           {
             min: 5,
             max: 800,
             message: "举报理由长度在 5-800 个字符之间",
-            trigger: "blur",
-          },
-        ],
+            trigger: "blur"
+          }
+        ]
       },
       refAPA: "",
-      refMLA: "",
+      refMLA: ""
     };
   },
   created() {
-    getLiterature(this.$route.query.literatureID).then((res) => {
+    getLiterature(this.$route.query.literatureID).then(res => {
       this.literature = res.literature;
       for (let i = 0; i < this.literature.authors.length && i < 3; i++) {
-        getAuthorInformation(this.literature.authors[i]).then((res) => {
+        getAuthorInformation(this.literature.authors[i]).then(res => {
           this.authorList.push(res);
         });
       }
-      if(this.$store.state.user != null)
-      getcollect(
-        this.$store.state.user.userID,
-        this.literature.literatureID
-      ).then((res) => {
-        if (res == 0) {
-          this.iscollect = false;
-        } else if (res == 1) {
-          this.iscollect = true;
-        } else if (res == -1) {
-          this.iscollect = false;
-        }
-      });
+      if (this.$store.state.user != null)
+        getcollect(
+          this.$store.state.user.userID,
+          this.literature.literatureID
+        ).then(res => {
+          if (res == 0) {
+            this.iscollect = false;
+          } else if (res == 1) {
+            this.iscollect = true;
+          } else if (res == -1) {
+            this.iscollect = false;
+          }
+        });
     });
 
     // if(this.literature != null)
@@ -373,7 +380,7 @@ export default {
       this.refAPA = this.literature.APAformat;
       this.refMLA = this.literature.MLAformat;
       this.$refs.hover.showHover({
-        title: "引用",
+        title: "引用"
       });
     },
     download() {
@@ -393,7 +400,7 @@ export default {
           this.literature.venue,
           this.literature.title,
           option
-        ).then((res) => {
+        ).then(res => {
           console.log("collect", res);
           //收藏成功
           if (res == 0) {
@@ -419,7 +426,7 @@ export default {
     // 举报
     handleReport(formName) {
       let pass = false;
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
           pass = true;
         }
@@ -432,7 +439,7 @@ export default {
         this.literature.title,
         this.reportForm.reportContent
       )
-        .then((res) => {
+        .then(res => {
           console.log("report post");
           console.log(res);
           if (res == 0) {
@@ -442,7 +449,7 @@ export default {
             this.$notify.error("举报失败，请稍后再试。");
           }
         })
-        .catch((err) => {
+        .catch(err => {
           this.$notify.error("举报失败，请稍后再试。");
           console.log(err);
           console.log("test");
@@ -453,8 +460,8 @@ export default {
       this.$router.push({
         path: "/literature/" + target,
         query: {
-          literatureID: this.literature.literatureID,
-        },
+          literatureID: this.literature.literatureID
+        }
       });
     },
     toAuthor(authorID) {
@@ -462,8 +469,8 @@ export default {
       this.$router.push({
         path: "/intro",
         query: {
-          authorID: authorID,
-        },
+          authorID: authorID
+        }
       });
     },
     searchKey(key) {
@@ -472,31 +479,23 @@ export default {
       let item = {
         logical: "NULL",
         type: "SU",
-        value: key,
+        value: key
       };
-      this.$store.commit("setSearchList", item);
+      // this.$store.commit("setSearchList", item);
       search(item)
-        .then((res) => {
+        .then(res => {
+          this.$store.commit("setSearchRes", res);
           this.$router.push({
-            path: "/search",
-            query: {
-              start: "",
-              end: "",
-              litList1: res.literatureList1,
-              litList2: res.literatureList2,
-              authorList: res.authorList,
-              venueList: res.venueList,
-              yearList: res.yearList,
-            },
+            path: "/search"
           });
         })
-        .catch((err) => {
+        .catch(err => {
           this.$notify.error({
             title: "错误",
-            message: "网络异常，请稍后重试",
+            message: "网络异常，请稍后重试"
           });
         });
-    },
+    }
   },
   computed: {
     currentIndex() {
@@ -508,8 +507,8 @@ export default {
         case "/literature/review":
           return 2;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

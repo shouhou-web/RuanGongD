@@ -92,6 +92,19 @@ export default {
       //修改文章申请，将跳转到发布页面
     }
   },
+  watch: {
+    authorID(newVal) {
+      getMyLiterature(newVal)
+        .then(res => {
+          console.log("getMyList");
+          console.log(res);
+          this.myLiteratureList = res;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  },
   created() {
     // this.userID = this.$store.state.user.userID;
     // console.log(this.userID);

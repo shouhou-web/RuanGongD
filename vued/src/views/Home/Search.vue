@@ -260,6 +260,7 @@ export default {
   },
   watch: {
     searchRes(newVal) {
+      console.log('searchRes',newVal)
       this.litList1 = newVal.literatureList1.reverse();
       this.litList2 = newVal.literatureList2.reverse();
       this.litList3 = newVal.literatureList3.reverse();
