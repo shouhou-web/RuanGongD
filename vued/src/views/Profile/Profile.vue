@@ -503,9 +503,15 @@ export default {
       }
     },
     userIDIN(newVal) {
-      this.user = this.$store.state.user;
-
-      // console.log(this.user)
+      // 获取当前用户对象
+      getUserInformation(newVal)
+        .then((user) => {
+          this.user = user
+          console.log("user", user)
+        })
+        .catch((err) => {
+          this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) }
+        )
 
       this.newNickName = this.user.username
       this.userDegree = this.user.userDegree
