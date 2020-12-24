@@ -93,8 +93,8 @@ export default {
     }
   },
   created() {
-    this.userID = this.$store.state.user.userID;
-    console.log(this.userID);
+    // this.userID = this.$store.state.user.userID;
+    // console.log(this.userID);
     getMyLiterature(this.authorID)
       .then(res => {
         console.log("getMyList");
