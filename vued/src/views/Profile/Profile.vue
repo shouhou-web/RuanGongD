@@ -12,9 +12,9 @@
             </a>
           </div>
           <div class="username">
-            <div class="user-nickname" @click="openChangeProfileHover" v-if="isSelfProfile">
+            <div class="user-nickname" @click="openChangeProfileHover">
               {{ user.username }}
-              <img src="../../assets/icons/profile/edit.svg" class="profile-icon" @click="openChangeProfileHover">
+              <img src="../../assets/icons/profile/edit.svg" class="profile-icon" @click="openChangeProfileHover" v-if="isSelfProfile">
             </div>
             <div class="user-degree" v-if="!isSelfProfile">
               {{ retUserDegree() }}
@@ -258,11 +258,11 @@ export default {
       this.$notify.info("最多上传 1 张头像");
     },
     retUserDegree() {
-      if (this.userDegree == 0) return "高中生 (High school)";
-      else if (this.userDegree == 1) return "本科生 (UnderGraduates)";
-      else if (this.userDegree == 2) return "研究生 (Graduate)";
-      else if (this.userDegree == 3) return "博士生 (Doctor)";
-      else if (this.userDegree == 4) return "博士后 (Post-Doctoral)";
+      if (this.user.userDegree == 0) return "高中生 (High school)";
+      else if (this.user.userDegree == 1) return "本科生 (UnderGraduates)";
+      else if (this.user.userDegree == 2) return "研究生 (Graduate)";
+      else if (this.user.userDegree == 3) return "博士生 (Doctor)";
+      else if (this.user.userDegree == 4) return "博士后 (Post-Doctoral)";
       else return "";
     },
     openChangeProfileHover() {
@@ -469,14 +469,16 @@ export default {
             this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) }
           )
       }
-    } else {
+    }
+    // 未登录状态
+    else {
       this.isSelfProfile = false
 
       // 获取当前用户对象
       getUserInformation(userID)
         .then((user) => {
           this.user = user
-          // console.log("user", user)
+          console.log("user", user)
         })
         .catch((err) => {
           this.$notify.error( { title: "网络错误", message: "请稍后重试~" } ) }
