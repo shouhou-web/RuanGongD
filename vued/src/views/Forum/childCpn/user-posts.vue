@@ -45,35 +45,7 @@ export default {
   props: { userId: "" },
   data() {
     return {
-      posts: [
-        {
-          postId: "1",
-          postName: "dbznb",
-          replyNum: "1023",
-          viewNum: "1002001",
-          sectorName: "计蒜姬科学与技术",
-          createTime: "10分钟前",
-          tags: ["软件工程"]
-        },
-        {
-          postId: "3",
-          postName: "删除失败，请稍后再试。\t",
-          replyNum: "0",
-          viewNum: "12",
-          sectorName: "人因工程",
-          createTime: "源赖氏佐天",
-          tags: [] // empty tags
-        },
-        {
-          postId: "233",
-          postName: "yhmnb",
-          replyNum: "1023",
-          viewNum: "10021",
-          sectorName: "软妹工程",
-          createTime: "2020-02-02",
-          tags: ["原力系统", "沟通技巧"]
-        }
-      ]
+      posts: []
     };
   },
   methods: {
