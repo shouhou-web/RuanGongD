@@ -566,6 +566,7 @@ export default {
   margin-top: 10px;
   display: flex;
   flex-wrap: wrap;
+  line-height: 28px;
 }
 .tag {
   margin-right: 3px;
