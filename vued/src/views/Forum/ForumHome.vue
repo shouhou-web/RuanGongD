@@ -657,7 +657,6 @@ export default {
 }
 .fPostTime {
   font-size: 12px;
-  
 }
 .fPostTags {
   margin-top: 6px;
